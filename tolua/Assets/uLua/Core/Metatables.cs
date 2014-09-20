@@ -24,7 +24,7 @@ namespace LuaInterface
 			@"
         local function index(obj,name)
         local meta=getmetatable(obj)
-        local cached=meta.cache[name]
+        local cached=meta.cache[name]        
         if cached then
            return cached
         else
@@ -47,15 +47,15 @@ namespace LuaInterface
 		public MetaFunctions(ObjectTranslator translator)
 		{
 			this.translator = translator;
-			gcFunction = new LuaCSFunction(this.collectObject);
-			toStringFunction = new LuaCSFunction(this.toString);
-			indexFunction = new LuaCSFunction(this.getMethod);
-			newindexFunction = new LuaCSFunction(this.setFieldOrProperty);
-			baseIndexFunction = new LuaCSFunction(this.getBaseMethod);
-			callConstructorFunction = new LuaCSFunction(this.callConstructor);
-			classIndexFunction = new LuaCSFunction(this.getClassMethod);
-			classNewindexFunction = new LuaCSFunction(this.setClassFieldOrProperty);
-			execDelegateFunction = new LuaCSFunction(this.runFunctionDelegate);
+			gcFunction = new LuaCSFunction(collectObject);
+			toStringFunction = new LuaCSFunction(toString);
+			indexFunction = new LuaCSFunction(getMethod);
+			newindexFunction = new LuaCSFunction(setFieldOrProperty);
+			baseIndexFunction = new LuaCSFunction(getBaseMethod);
+			callConstructorFunction = new LuaCSFunction(callConstructor);
+			classIndexFunction = new LuaCSFunction(getClassMethod);
+			classNewindexFunction = new LuaCSFunction(setClassFieldOrProperty);
+			execDelegateFunction = new LuaCSFunction(runFunctionDelegate);
 		}
 		
 		/*
@@ -84,7 +84,7 @@ namespace LuaInterface
 			}
 			else
 			{
-				// Debug.WriteLine("not found: " + udata);
+				 //Debug.WriteLine("not found: " + udata);
 			}
 			return 0;
 		}
@@ -307,30 +307,30 @@ namespace LuaInterface
 				translator.push(luaState, true);
 				return 2;
 			}
-			else if (cachedMember != null)
-			{
-				member = (MemberInfo)cachedMember;
-			}
-			else
-			{
-				//CP: Removed NonPublic binding search
-				MemberInfo[] members = objType.GetMember(methodName, bindingType | BindingFlags.Public | BindingFlags.IgnoreCase/*| BindingFlags.NonPublic*/);
-				if (members.Length > 0)
-					member = members[0];
-				else
-				{
-					// If we can't find any suitable instance members, try to find them as statics - but we only want to allow implicit static
-					// lookups for fields/properties/events -kevinh
-					//CP: Removed NonPublic binding search and made case insensitive
-					members = objType.GetMember(methodName, bindingType | BindingFlags.Static | BindingFlags.Public | BindingFlags.IgnoreCase/*| BindingFlags.NonPublic*/);
-					
-					if (members.Length > 0)
-					{
-						member = members[0];
-						implicitStatic = true;
-					}
-				}
-			}
+            else if (cachedMember != null)
+            {
+                member = (MemberInfo)cachedMember;
+            }
+            else
+            {
+                //CP: Removed NonPublic binding search
+                MemberInfo[] members = objType.GetMember(methodName, bindingType | BindingFlags.Public | BindingFlags.IgnoreCase/*| BindingFlags.NonPublic*/);
+                if (members.Length > 0)
+                    member = members[0];
+                else
+                {
+                    // If we can't find any suitable instance members, try to find them as statics - but we only want to allow implicit static
+                    // lookups for fields/properties/events -kevinh
+                    //CP: Removed NonPublic binding search and made case insensitive
+                    members = objType.GetMember(methodName, bindingType | BindingFlags.Static | BindingFlags.Public | BindingFlags.IgnoreCase/*| BindingFlags.NonPublic*/);
+
+                    if (members.Length > 0)
+                    {
+                        member = members[0];
+                        implicitStatic = true;
+                    }
+                }
+            }
 			if (member != null)
 			{
 				if (member.MemberType == MemberTypes.Field)
