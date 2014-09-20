@@ -42,7 +42,7 @@ public static class LuaBinding
         new BindType("MonoBehaviour", typeof(MonoBehaviour), false, "Behaviour"),                        
     };
 
-    [MenuItem("Thinky/Gen LuaBinding Files", false, 11)]
+    [MenuItem("Lua/Gen LuaBinding Files", false, 11)]
     public static void Binding()
     {
         if (!Application.isPlaying)
@@ -61,6 +61,7 @@ public static class LuaBinding
             ToLua.Generate(null);
         }
 
-        Debug.Log("Generate lua binding files over");        
+        Debug.Log("Generate lua binding files over");
+        AssetDatabase.Refresh();
     }
 }

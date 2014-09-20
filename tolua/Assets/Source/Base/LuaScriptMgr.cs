@@ -284,6 +284,9 @@ public class LuaScriptMgr
             LuaDLL.lua_pushstdcallcfunction(L, fn);
             LuaDLL.lua_setfield(L, -2, regs[i].name);
         }
+        
+        LuaDLL.lua_pushstdcallcfunction(L, __gc);
+        LuaDLL.lua_setfield(L, -2, "__gc");
 
         LuaDLL.lua_setmetatable(l.L, -2);
         LuaDLL.lua_settop(L, 0);
@@ -498,7 +501,8 @@ public class LuaScriptMgr
         }
     }
 
-    public static int _GC(IntPtr L)
+    [MonoPInvokeCallbackAttribute(typeof(LuaCSFunction))]
+    public static int __gc(IntPtr L)
     {
         int udata = LuaDLL.luanet_rawnetobj(L, 1);
 
