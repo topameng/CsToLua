@@ -24,8 +24,9 @@ namespace LuaInterface
             {
                 _cachedMethod = value;
                 MethodInfo mi = value as MethodInfo;
+
                 if (mi != null)
-                {
+                {                    
                     //SJD this is guaranteed to be correct irrespective of actual name used for type..
                     IsReturnVoid = mi.ReturnType == typeof(void);
                 }

@@ -50,15 +50,15 @@ namespace LuaInterface
 			assemblies=new List<Assembly>();
 			assemblies.Add(Assembly.GetExecutingAssembly());
 
-			importTypeFunction=new LuaCSFunction(this.importType);
-			loadAssemblyFunction=new LuaCSFunction(this.loadAssembly);
-			registerTableFunction=new LuaCSFunction(this.registerTable);
-			unregisterTableFunction=new LuaCSFunction(this.unregisterTable);
-			getMethodSigFunction=new LuaCSFunction(this.getMethodSignature);
-			getConstructorSigFunction=new LuaCSFunction(this.getConstructorSignature);
+			importTypeFunction=new LuaCSFunction(importType);
+			loadAssemblyFunction=new LuaCSFunction(loadAssembly);
+			registerTableFunction=new LuaCSFunction(registerTable);
+			unregisterTableFunction=new LuaCSFunction(unregisterTable);
+			getMethodSigFunction=new LuaCSFunction(getMethodSignature);
+			getConstructorSigFunction=new LuaCSFunction(getConstructorSignature);
 			
-			ctypeFunction = new LuaCSFunction(this.ctype);
-			enumFromIntFunction = new LuaCSFunction(this.enumFromInt);
+			ctypeFunction = new LuaCSFunction(ctype);
+			enumFromIntFunction = new LuaCSFunction(enumFromInt);
 			
 			createLuaObjectList(luaState);
 			createIndexingMetaFunction(luaState);
@@ -141,7 +141,7 @@ namespace LuaInterface
          * Registers the global functions used by LuaInterface
          */
 		private void setGlobalFunctions(IntPtr luaState)
-		{
+		{                       
 			LuaDLL.lua_pushstdcallcfunction(luaState,metaFunctions.indexFunction);
 			LuaDLL.lua_setglobal(luaState,"get_object_member");
 			LuaDLL.lua_pushstdcallcfunction(luaState,importTypeFunction);
@@ -157,7 +157,7 @@ namespace LuaInterface
 			LuaDLL.lua_pushstdcallcfunction(luaState,getConstructorSigFunction);
 			LuaDLL.lua_setglobal(luaState,"get_constructor_bysig");
 			LuaDLL.lua_pushstdcallcfunction(luaState,ctypeFunction);
-			LuaDLL.lua_setglobal(luaState,"ctype");
+			LuaDLL.lua_setglobal(luaState,"ctype");            
 			LuaDLL.lua_pushstdcallcfunction(luaState,enumFromIntFunction);
 			LuaDLL.lua_setglobal(luaState,"enum");
 			
@@ -446,17 +446,20 @@ namespace LuaInterface
 			}
 			return 1;
 		}
-		
-		private Type typeOf(IntPtr luaState, int idx)
-		{
-			int udata=LuaDLL.luanet_checkudata(luaState,1,"luaNet_class");
-			if (udata == -1) {
-				return null;
-			} else {
-				ProxyType pt = (ProxyType)objects[udata];
-				return pt.UnderlyingSystemType;
-			}
-		}
+
+        private Type typeOf(IntPtr luaState, int idx)
+        {
+            int udata = LuaDLL.luanet_checkudata(luaState, 1, "luaNet_class");
+            if (udata == -1)
+            {
+                return null;
+            }
+            else
+            {
+                ProxyType pt = (ProxyType)objects[udata];
+                return pt.UnderlyingSystemType;
+            }
+        }
 		
 		public int pushError(IntPtr luaState, string msg)
 		{
@@ -527,7 +530,7 @@ namespace LuaInterface
          * Pushes a CLR object into the Lua stack as an userdata
          * with the provided metatable
          */
-		internal void pushObject(IntPtr luaState, object o, string metatable)
+		public void pushObject(IntPtr luaState, object o, string metatable)
 		{
 			int index = -1;
 			// Pushes nil
@@ -538,7 +541,8 @@ namespace LuaInterface
 			}
 			
 			// Object already in the list of Lua objects? Push the stored reference.
-			bool found = objectsBackMap.TryGetValue(o, out index);
+			bool found = (!o.GetType().IsValueType) && objectsBackMap.TryGetValue(o, out index);
+
 			if(found)
 			{
 				LuaDLL.luaL_getmetatable(luaState,"luaNet_objects");
@@ -563,11 +567,48 @@ namespace LuaInterface
 				
 				collectObject(o, index);            // Remove from both our tables and fall out to get a new ID
 			}
-			index = addObject(o);
-			
+
+			index = addObject(o);			
 			pushNewObject(luaState,o,index,metatable);
 		}
-		
+
+        void CreateMetaTable(IntPtr luaState, object o, string metatable)
+        {
+            if (metatable == "luaNet_metatable")
+            {
+                // Gets or creates the metatable for the object's type
+                LuaDLL.luaL_getmetatable(luaState, o.GetType().AssemblyQualifiedName);
+
+                if (LuaDLL.lua_isnil(luaState, -1))
+                {
+                    LuaDLL.lua_settop(luaState, -2);
+                    LuaDLL.luaL_newmetatable(luaState, o.GetType().AssemblyQualifiedName);
+                    LuaDLL.lua_pushstring(luaState, "cache");
+                    LuaDLL.lua_newtable(luaState);
+                    LuaDLL.lua_rawset(luaState, -3);
+                    LuaDLL.lua_pushlightuserdata(luaState, LuaDLL.luanet_gettag());
+                    LuaDLL.lua_pushnumber(luaState, 1);
+                    LuaDLL.lua_rawset(luaState, -3);
+                    LuaDLL.lua_pushstring(luaState, "__index");
+                    LuaDLL.lua_pushstring(luaState, "luaNet_indexfunction");
+                    LuaDLL.lua_rawget(luaState, (int)LuaIndexes.LUA_REGISTRYINDEX);
+                    LuaDLL.lua_rawset(luaState, -3);
+                    LuaDLL.lua_pushstring(luaState, "__gc");
+                    LuaDLL.lua_pushstdcallcfunction(luaState, metaFunctions.gcFunction);
+                    LuaDLL.lua_rawset(luaState, -3);
+                    LuaDLL.lua_pushstring(luaState, "__tostring");
+                    LuaDLL.lua_pushstdcallcfunction(luaState, metaFunctions.toStringFunction);
+                    LuaDLL.lua_rawset(luaState, -3);
+                    LuaDLL.lua_pushstring(luaState, "__newindex");
+                    LuaDLL.lua_pushstdcallcfunction(luaState, metaFunctions.newindexFunction);
+                    LuaDLL.lua_rawset(luaState, -3);
+                }
+            }
+            else
+            {
+                LuaDLL.luaL_getmetatable(luaState, metatable);
+            }
+        }
 		
 		/*
          * Pushes a new object into the Lua stack with the provided
@@ -575,52 +616,37 @@ namespace LuaInterface
          */
 		private void pushNewObject(IntPtr luaState,object o,int index,string metatable)
 		{
-			if(metatable=="luaNet_metatable")
-			{
-				// Gets or creates the metatable for the object's type
-				LuaDLL.luaL_getmetatable(luaState,o.GetType().AssemblyQualifiedName);
-				
-				if(LuaDLL.lua_isnil(luaState,-1))
-				{
-					LuaDLL.lua_settop(luaState,-2);
-					LuaDLL.luaL_newmetatable(luaState,o.GetType().AssemblyQualifiedName);
-					LuaDLL.lua_pushstring(luaState,"cache");
-					LuaDLL.lua_newtable(luaState);
-					LuaDLL.lua_rawset(luaState,-3);
-					LuaDLL.lua_pushlightuserdata(luaState,LuaDLL.luanet_gettag());
-					LuaDLL.lua_pushnumber(luaState,1);
-					LuaDLL.lua_rawset(luaState,-3);
-					LuaDLL.lua_pushstring(luaState,"__index");
-					LuaDLL.lua_pushstring(luaState,"luaNet_indexfunction");
-					LuaDLL.lua_rawget(luaState, (int) LuaIndexes.LUA_REGISTRYINDEX);
-					LuaDLL.lua_rawset(luaState,-3);
-					LuaDLL.lua_pushstring(luaState,"__gc");
-					LuaDLL.lua_pushstdcallcfunction(luaState,metaFunctions.gcFunction);
-					LuaDLL.lua_rawset(luaState,-3);
-					LuaDLL.lua_pushstring(luaState,"__tostring");
-					LuaDLL.lua_pushstdcallcfunction(luaState,metaFunctions.toStringFunction);
-					LuaDLL.lua_rawset(luaState,-3);
-					LuaDLL.lua_pushstring(luaState,"__newindex");
-					LuaDLL.lua_pushstdcallcfunction(luaState,metaFunctions.newindexFunction);
-					LuaDLL.lua_rawset(luaState,-3);
-				}
-			}
-			else
-			{
-				LuaDLL.luaL_getmetatable(luaState,metatable);
-			}
+            CreateMetaTable(luaState, o, metatable);
 			
-			// Stores the object index in the Lua list and pushes the
-			// index into the Lua stack
-			LuaDLL.luaL_getmetatable(luaState,"luaNet_objects");
-			LuaDLL.luanet_newudata(luaState,index);
-			LuaDLL.lua_pushvalue(luaState,-3);
-			LuaDLL.lua_remove(luaState,-4);
-			LuaDLL.lua_setmetatable(luaState,-2);
-			LuaDLL.lua_pushvalue(luaState,-1);
-			LuaDLL.lua_rawseti(luaState,-3,index);
-			LuaDLL.lua_remove(luaState,-2);
+			// Stores the object index in the Lua list and pushes the index into the Lua stack              
+            //if (!o.GetType().IsValueType)
+            //{
+                LuaDLL.luaL_getmetatable(luaState, "luaNet_objects");
+                LuaDLL.luanet_newudata(luaState, index);
+                LuaDLL.lua_pushvalue(luaState, -3);
+                LuaDLL.lua_remove(luaState, -4);
+                LuaDLL.lua_setmetatable(luaState, -2);
+                LuaDLL.lua_pushvalue(luaState, -1);
+                LuaDLL.lua_rawseti(luaState, -3, index);
+                LuaDLL.lua_remove(luaState, -2);
+            //}
+            //else
+            //{
+            //    LuaDLL.luanet_newudata(luaState, index);
+            //    LuaDLL.lua_pushvalue(luaState, -2);
+            //    LuaDLL.lua_remove(luaState, -3);
+            //    LuaDLL.lua_setmetatable(luaState, -2);                
+            //}
 		}
+
+        public void PushNewValueObject(IntPtr luaState, object o, int index, string metatable)
+        {
+            CreateMetaTable(luaState, o, metatable);
+            LuaDLL.luanet_newudata(luaState, index);
+            LuaDLL.lua_pushvalue(luaState, -2);
+            LuaDLL.lua_remove(luaState, -3);
+            LuaDLL.lua_setmetatable(luaState, -2); 
+        }
 		/*
          * Gets an object from the Lua stack with the desired type, if it matches, otherwise
          * returns null.
@@ -644,11 +670,8 @@ namespace LuaInterface
 			
 			// The other variant of collectObject might have gotten here first, in that case we will silently ignore the missing entry
 			if (found)
-			{
-				// Debug.WriteLine("Removing " + o.ToString() + " @ " + udata);
-				
-				objects.Remove(udata);
-				objectsBackMap.Remove(o);
+			{															
+                collectObject(o, udata);
 			}
 		}
 		
@@ -662,7 +685,11 @@ namespace LuaInterface
 			// Debug.WriteLine("Removing " + o.ToString() + " @ " + udata);
 			
 			objects.Remove(udata);
-			objectsBackMap.Remove(o);
+
+            if (!o.GetType().IsValueType)
+            {
+                objectsBackMap.Remove(o);
+            }
 		}
 		
 		
@@ -671,15 +698,17 @@ namespace LuaInterface
 		/// </summary>
 		int nextObj = 0;
 		
-		int addObject(object obj)
+		private int addObject(object obj)
 		{
 			// New object: inserts it in the list
 			int index = nextObj++;
 			
-			// Debug.WriteLine("Adding " + obj.ToString() + " @ " + index);
-			
+			// Debug.WriteLine("Adding " + obj.ToString() + " @ " + index);			
 			objects[index] = obj;
-			objectsBackMap[obj] = index;
+            if (!obj.GetType().IsValueType)
+            {
+                objectsBackMap[obj] = index;
+            }
 			
 			return index;
 		}
@@ -775,22 +804,61 @@ namespace LuaInterface
 			}
 			return null;
 		}
+
+        public void SetValueObject(IntPtr luaState, int stackPos, object obj)
+        {
+            int udata = LuaDLL.luanet_rawnetobj(luaState, stackPos);
+
+            if (udata != -1)
+            {
+                objects[udata] = obj;
+            }            
+        }
+
+        public int CacheObject(IntPtr luaState, object o)
+        {
+            int index = addObject(o);
+            pushNewObject(luaState, o, index, "luaNet_metatable");
+            return index;
+        }
+
+        public void PushCachedObject(IntPtr luaState, int index)
+        {
+            LuaDLL.luaL_getmetatable(luaState, "luaNet_objects");
+            LuaTypes type = LuaDLL.lua_type(luaState, -1);
+            LuaDLL.lua_rawgeti(luaState, -1, index);
+            type = LuaDLL.lua_type(luaState, -1);
+
+            if (type != LuaTypes.LUA_TNIL)
+            {
+                LuaDLL.lua_remove(luaState, -2);     // drop the metatable - we're going to leave our object on the stack					                
+            }
+            else
+            {
+                LuaDLL.lua_remove(luaState, -1);    // remove the nil object value
+                LuaDLL.lua_remove(luaState, -1);    // remove the metatable
+
+                UnityEngine.Debug.LogError("cache object is lost");
+            }
+        }
+
 		/*
          * Pushes the entire array into the Lua stack and returns the number
          * of elements pushed.
          */
-		internal int returnValues(IntPtr luaState, object[] returnValues)
-		{
-			if(LuaDLL.lua_checkstack(luaState,returnValues.Length+5))
-			{
-				for(int i=0;i<returnValues.Length;i++)
-				{
-					push(luaState,returnValues[i]);
-				}
-				return returnValues.Length;
-			} else
-				return 0;
-		}
+        internal int returnValues(IntPtr luaState, object[] returnValues)
+        {
+            if (LuaDLL.lua_checkstack(luaState, returnValues.Length + 5))
+            {
+                for (int i = 0; i < returnValues.Length; i++)
+                {
+                    push(luaState, returnValues[i]);
+                }
+                return returnValues.Length;
+            }
+            else
+                return 0;
+        }
 		/*
          * Gets the values from the provided index to
          * the top of the stack and returns them in an array.
@@ -804,7 +872,7 @@ namespace LuaInterface
 			}
 			else
 			{
-				ArrayList returnValues=new ArrayList();
+                List<object> returnValues = new List<object>();
 				for(int i=oldTop+1;i<=newTop;i++)
 				{
 					returnValues.Add(getObject(luaState,i));
@@ -828,7 +896,7 @@ namespace LuaInterface
 			else
 			{
 				int iTypes;
-				ArrayList returnValues=new ArrayList();
+                List<object> returnValues = new List<object>();
 				if(popTypes[0] == typeof(void))
 					iTypes=1;
 				else
@@ -865,35 +933,28 @@ namespace LuaInterface
          */
 		internal void push(IntPtr luaState, object o)
 		{
-			if((object)o==(object)null)
+            if (o == null)
+            {
+                LuaDLL.lua_pushnil(luaState);
+                return;
+            }
+
+            Type t = o.GetType();
+
+            if(t == typeof(bool))
 			{
-				LuaDLL.lua_pushnil(luaState);
+				bool b=(bool)o;
+				LuaDLL.lua_pushboolean(luaState,b);
 			}
-			else if (o is UnityEngine.GameObject && (UnityEngine.GameObject)o==null)
-			{
-				LuaDLL.lua_pushnil(luaState);
-			}
-			else if(o is sbyte || o is byte || o is short || o is ushort ||
-			        o is int || o is uint || o is long || o is float ||
-			        o is ulong || o is decimal || o is double)
+			else if(t.IsPrimitive)
 			{
 				double d=Convert.ToDouble(o);
 				LuaDLL.lua_pushnumber(luaState,d);
 			}
-			else if(o is char)
-			{
-				double d = (char)o;
-				LuaDLL.lua_pushnumber(luaState,d);
-			}
-			else if(o is string)
+			else if(t == typeof(string))
 			{
 				string str=(string)o;
 				LuaDLL.lua_pushstring(luaState,str);
-			}
-			else if(o is bool)
-			{
-				bool b=(bool)o;
-				LuaDLL.lua_pushboolean(luaState,b);
 			}
 			else if(IsILua(o))
 			{
@@ -901,22 +962,27 @@ namespace LuaInterface
 				(((ILuaGeneratedType)o).__luaInterface_getLuaTable()).push(luaState);
 				#endif
 			}
-			else if(o is LuaTable)
+			else if(t == typeof(LuaTable))
 			{
 				((LuaTable)o).push(luaState);
 			}
-			else if(o is LuaCSFunction)
+			else if(t == typeof(LuaCSFunction))
 			{
 				pushFunction(luaState,(LuaCSFunction)o);
 			}
-			else if(o is LuaFunction)
+			else if(t == typeof(LuaFunction))
 			{
 				((LuaFunction)o).push(luaState);
 			}
-			else
-			{
-				pushObject(luaState,o,"luaNet_metatable");
-			}
+            else if (t.IsValueType)
+            {
+                int index = addObject(o);
+                PushNewValueObject(luaState, o, index, "luaNet_metatable");
+            }
+            else
+            {
+                pushObject(luaState, o, "luaNet_metatable");
+            }
 		}
 		/*
          * Checks if the method matches the arguments in the Lua stack, getting

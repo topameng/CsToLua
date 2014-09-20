@@ -1,0 +1,9 @@
+D:\tolua\CsToLua\tolua\obj\Debug\UnityVS.tolua.CSharp.csprojResolveAssemblyReference.cache
+D:\tolua\CsToLua\tolua\Temp\UnityVS_bin\Debug\Assembly-CSharp.dll
+D:\tolua\CsToLua\tolua\Temp\UnityVS_bin\Debug\Assembly-CSharp.pdb
+D:\tolua\CsToLua\tolua\Temp\UnityVS_bin\Debug\UnityEditor.dll
+D:\tolua\CsToLua\tolua\Temp\UnityVS_bin\Debug\UnityEngine.dll
+D:\tolua\CsToLua\tolua\Temp\UnityVS_bin\Debug\UnityEngine.xml
+D:\tolua\CsToLua\tolua\Temp\UnityVS_bin\Debug\UnityEditor.xml
+D:\tolua\CsToLua\tolua\obj\Debug\Assembly-CSharp.dll
+D:\tolua\CsToLua\tolua\obj\Debug\Assembly-CSharp.pdb

@@ -103,6 +103,37 @@ namespace LuaInterface
 			LuaDLL.lua_pop(_Interpreter.L, 1);
 		}
 
+        //把一个table func 放在栈顶
+        public bool RawGetField(string field)
+        {
+            IntPtr L = _Interpreter.L;
+            LuaTypes type = LuaTypes.LUA_TNONE;
+            
+            LuaDLL.lua_getref(L, _Reference);            
+            LuaDLL.lua_pushstring(L, field);            
+            LuaDLL.lua_rawget(L, -2);            
+
+            if (LuaDLL.lua_isnil(L, -1))
+            {
+                LuaDLL.lua_pop(L, 1);
+                
+                if (LuaDLL.lua_getmetatable(L, -1) > 0)
+                {
+                    LuaDLL.lua_pushstring(L, field);                 
+                    LuaDLL.lua_rawget(L, -2);
+                }
+            }
+            
+            type = LuaDLL.lua_type(L, -1);
+
+            if (type == LuaTypes.LUA_TFUNCTION)
+            {
+                return true;
+            }
+
+            return false;
+        }
+
         /*
          * Gets an string fields of a table ignoring its metatable,
          * if it exists

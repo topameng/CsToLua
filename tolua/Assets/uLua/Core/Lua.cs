@@ -1,6 +1,6 @@
-#if UNITY_IPHONE
+//#if UNITY_IPHONE
     #define __NOGEN__
-#endif
+//#endif
 
 namespace LuaInterface
 {
@@ -107,6 +107,11 @@ namespace LuaInterface
             }
         }
 
+        public ObjectTranslator GetTranslator()
+        {
+            return translator;
+        }
+
         /// <summary>
         /// Assuming we have a Lua error string sitting on the stack, throw a C# exception out to the user's app
         /// </summary>
@@ -117,8 +122,9 @@ namespace LuaInterface
             LuaDLL.lua_settop(L, oldTop);
 
             // A pre-wrapped exception - just rethrow it (stack trace of InnerException will be preserved)
-            LuaScriptException luaEx = err as LuaScriptException;
-            if (luaEx != null) throw luaEx;
+            // comment by topameng
+            //LuaScriptException luaEx = err as LuaScriptException;
+            //if (luaEx != null) throw luaEx;
 
             // A non-wrapped Lua error (best interpreted as a string) - wrap it and throw it
             if (err == null) err = "Unknown Lua Error";
@@ -156,8 +162,9 @@ namespace LuaInterface
         public LuaFunction LoadString(string chunk, string name, LuaTable env)
         {
             int oldTop = LuaDLL.lua_gettop(L);
+            byte[] bt = Encoding.Default.GetBytes(chunk);
 
-            if (LuaDLL.luaL_loadbuffer(L, chunk, Encoding.UTF8.GetByteCount(chunk), name) != 0)
+            if (LuaDLL.luaL_loadbuffer(L, bt, bt.Length, name) != 0)
                 ThrowExceptionFromError(oldTop);
 
             if (env != null)
@@ -169,7 +176,7 @@ namespace LuaInterface
             LuaFunction result = translator.getFunction(L, -1);
             translator.popValues(L, oldTop);
 
-            return result;
+            return result;            
         }
 
         public LuaFunction LoadString(string chunk, string name)
@@ -183,17 +190,29 @@ namespace LuaInterface
         /// <param name="fileName"></param>
         /// <returns></returns>
         public LuaFunction LoadFile(string fileName)
-        {
+        {            
             int oldTop = LuaDLL.lua_gettop(L);
 
-            // Load with Unity3D resources
-            TextAsset file = (TextAsset)Resources.Load(fileName);
-            if( file == null )
-            {
-                ThrowExceptionFromError(oldTop);
+            // Load with Unity3D resources            
+            //string text = LuaHelper.Load(fileName);
+
+            byte[] bt = null;
+            string path = Application.dataPath + "/Resources/Lua/" + fileName + ".txt";
+
+            using (FileStream fs = new FileStream(path, FileMode.Open))
+            {                            
+                BinaryReader br = new BinaryReader(fs);
+                bt = br.ReadBytes((int)fs.Length);                               
+                fs.Close();
             }
 
-            if( LuaDLL.luaL_loadbuffer(L, file.text, Encoding.UTF8.GetByteCount(file.text), fileName) != 0 )
+
+            //if( text == null )
+            //{
+            //    ThrowExceptionFromError(oldTop);
+            //}
+
+            if (LuaDLL.luaL_loadbuffer(L, bt, bt.Length, fileName) != 0)
             {
                 ThrowExceptionFromError(oldTop);
             }
@@ -223,13 +242,15 @@ namespace LuaInterface
         public object[] DoString(string chunk, string chunkName, LuaTable env)
         {
             int oldTop = LuaDLL.lua_gettop(L);
-            if (LuaDLL.luaL_loadbuffer(L, chunk, Encoding.UTF8.GetByteCount(chunk), chunkName) == 0)
+            byte[] bt = Encoding.Default.GetBytes(chunk);
+
+            if (LuaDLL.luaL_loadbuffer(L, bt, bt.Length, chunkName) == 0)
             {
                 if (env != null)
                 {
                     env.push(L);
                     //LuaDLL.lua_setfenv(L, -1);
-					LuaDLL.lua_setfenv(L, -2);
+                    LuaDLL.lua_setfenv(L, -2);
                 }
 
                 if (LuaDLL.lua_pcall(L, 0, -1, 0) == 0)
@@ -253,41 +274,43 @@ namespace LuaInterface
          * values in an array
          */
         public object[] DoFile(string fileName, LuaTable env)
-        {
+        {            
             LuaDLL.lua_pushstdcallcfunction(L,tracebackFunction);
             int oldTop=LuaDLL.lua_gettop(L);
 
-            // Load with Unity3D resources
-            TextAsset file = (TextAsset)Resources.Load(fileName);
-            if( file == null )
+            // Load with Unity3D resources            
+            byte[] text = LuaStatic.LoadLua(fileName);
+
+            if (text == null)
             {
                 ThrowExceptionFromError(oldTop);
             }
 
-            if( LuaDLL.luaL_loadbuffer(L, file.text, Encoding.UTF8.GetByteCount(file.text), fileName) == 0 )
+            //Encoding.UTF8.GetByteCount(text)
+            if (LuaDLL.luaL_loadbuffer(L, text, text.Length, fileName) == 0)
             {
                 if (env != null)
                 {
                     env.push(L);
                     //LuaDLL.lua_setfenv(L, -1);
-					LuaDLL.lua_setfenv(L, -2);
+                    LuaDLL.lua_setfenv(L, -2);
                 }
 
                 if (LuaDLL.lua_pcall(L, 0, -1, -2) == 0)
-				{
-					object[] results = translator.popValues(L, oldTop);
-					LuaDLL.lua_pop(L, 1);
+                {
+                    object[] results = translator.popValues(L, oldTop);
+                    LuaDLL.lua_pop(L, 1);
                     return results;
-				}
+                }
                 else
-				{
-                        ThrowExceptionFromError(oldTop);
-				}
+                {
+                    ThrowExceptionFromError(oldTop);
+                }
             }
-			else
-			{
-				ThrowExceptionFromError(oldTop);
-			}
+            else
+            {
+                ThrowExceptionFromError(oldTop);
+            }
 
             return null;            // Never reached - keeps compiler happy
         }
@@ -298,7 +321,7 @@ namespace LuaInterface
          * Supports navigation of tables by using . operator
          */
         public object this[string fullPath]
-        {
+        {            
             get
             {
                 object returnValue=null;
@@ -314,7 +337,7 @@ namespace LuaInterface
                 }
                 LuaDLL.lua_settop(L,oldTop);
                 return returnValue;
-            }
+            }            
             set
             {
                 int oldTop=LuaDLL.lua_gettop(L);
@@ -332,9 +355,10 @@ namespace LuaInterface
                     setObject(remainingPath,value);
                 }
                 LuaDLL.lua_settop(L,oldTop);
-
+                
                 // Globals auto-complete
-                if (value == null)
+                // comment by topameng, too many time cost, you shound register you type in other position                
+                /*if (value == null)
                 {
                     // Remove now obsolete entries
                     globals.Remove(fullPath);
@@ -344,32 +368,33 @@ namespace LuaInterface
                     // Add new entries
                     if (!globals.Contains(fullPath))
                         registerGlobal(fullPath, value.GetType(), 0);
-                }
+                }*/
             }
         }
 
         #region Globals auto-complete
-        private readonly List<string> globals = new List<string>();
-        private bool globalsSorted;
+        //完全无用, 但会造成性能问题 LuaTable["gameObject"] = gameObject; 这种卡
+        //private readonly List<string> globals = new List<string>();     
+        //private bool globalsSorted;
 
         /// <summary>
         /// An alphabetically sorted list of all globals (objects, methods, etc.) externally added to this Lua instance
         /// </summary>
         /// <remarks>Members of globals are also listed. The formatting is optimized for text input auto-completion.</remarks>
-        public IEnumerable<string> Globals
-        {
-            get
-            {
-                // Only sort list when necessary
-                if (!globalsSorted)
-                {
-                    globals.Sort();
-                    globalsSorted = true;
-                }
+        //public IEnumerable<string> Globals
+        //{
+        //    get
+        //    {
+        //        // Only sort list when necessary
+        //        if (!globalsSorted)
+        //        {
+        //            globals.Sort();
+        //            globalsSorted = true;
+        //        }
 
-                return globals;
-            }
-        }
+        //        return globals;
+        //    }
+        //}
 
         /// <summary>
         /// Adds an entry to <see cref="globals"/> (recursivley handles 2 levels of members)
@@ -377,77 +402,77 @@ namespace LuaInterface
         /// <param name="path">The index accessor path ot the entry</param>
         /// <param name="type">The type of the entry</param>
         /// <param name="recursionCounter">How deep have we gone with recursion?</param>
-        private void registerGlobal(string path, Type type, int recursionCounter)
-        {
-            // If the type is a global method, list it directly
-            if (type == typeof(LuaCSFunction))
-            {
-                // Format for easy method invocation
-                globals.Add(path + "(");
-            }
-            // If the type is a class or an interface and recursion hasn't been running too long, list the members
-            else if ((type.IsClass || type.IsInterface) && type != typeof(string) && recursionCounter < 2)
-            {
-                #region Methods
-                foreach (MethodInfo method in type.GetMethods(BindingFlags.Public | BindingFlags.Instance))
-                {
-                    if (
-                        // Check that the LuaHideAttribute and LuaGlobalAttribute were not applied
-                        (method.GetCustomAttributes(typeof(LuaHideAttribute), false).Length == 0) &&
-                        (method.GetCustomAttributes(typeof(LuaGlobalAttribute), false).Length == 0) &&
-                        // Exclude some generic .NET methods that wouldn't be very usefull in Lua
-                        method.Name != "GetType" && method.Name != "GetHashCode" && method.Name != "Equals" &&
-                        method.Name != "ToString" && method.Name != "Clone" && method.Name != "Dispose" &&
-                        method.Name != "GetEnumerator" && method.Name != "CopyTo" &&
-                        !method.Name.StartsWith("get_", StringComparison.Ordinal) &&
-                        !method.Name.StartsWith("set_", StringComparison.Ordinal) &&
-                        !method.Name.StartsWith("add_", StringComparison.Ordinal) &&
-                        !method.Name.StartsWith("remove_", StringComparison.Ordinal))
-                    {
-                        // Format for easy method invocation
-                        string command = path + ":" + method.Name + "(";
-                        if (method.GetParameters().Length == 0) command += ")";
-                        globals.Add(command);
-                    }
-                }
-                #endregion
+        //private void registerGlobal(string path, Type type, int recursionCounter)
+        //{
+        //    // If the type is a global method, list it directly
+        //    if (type == typeof(LuaCSFunction))
+        //    {
+        //        // Format for easy method invocation
+        //        globals.Add(path + "(");
+        //    }
+        //    // If the type is a class or an interface and recursion hasn't been running too long, list the members
+        //    else if ((type.IsClass || type.IsInterface) && type != typeof(string) && recursionCounter < 2)
+        //    {
+        //        #region Methods
+        //        foreach (MethodInfo method in type.GetMethods(BindingFlags.Public | BindingFlags.Instance))
+        //        {
+        //            if (
+        //                // Check that the LuaHideAttribute and LuaGlobalAttribute were not applied
+        //                (method.GetCustomAttributes(typeof(LuaHideAttribute), false).Length == 0) &&
+        //                (method.GetCustomAttributes(typeof(LuaGlobalAttribute), false).Length == 0) &&
+        //                // Exclude some generic .NET methods that wouldn't be very usefull in Lua
+        //                method.Name != "GetType" && method.Name != "GetHashCode" && method.Name != "Equals" &&
+        //                method.Name != "ToString" && method.Name != "Clone" && method.Name != "Dispose" &&
+        //                method.Name != "GetEnumerator" && method.Name != "CopyTo" &&
+        //                !method.Name.StartsWith("get_", StringComparison.Ordinal) &&
+        //                !method.Name.StartsWith("set_", StringComparison.Ordinal) &&
+        //                !method.Name.StartsWith("add_", StringComparison.Ordinal) &&
+        //                !method.Name.StartsWith("remove_", StringComparison.Ordinal))
+        //            {
+        //                // Format for easy method invocation
+        //                string command = path + ":" + method.Name + "(";
+        //                if (method.GetParameters().Length == 0) command += ")";
+        //                globals.Add(command);
+        //            }
+        //        }
+        //        #endregion
 
-                #region Fields
-                foreach (FieldInfo field in type.GetFields(BindingFlags.Public | BindingFlags.Instance))
-                {
-                    if (
-                        // Check that the LuaHideAttribute and LuaGlobalAttribute were not applied
-                        (field.GetCustomAttributes(typeof(LuaHideAttribute), false).Length == 0) &&
-                        (field.GetCustomAttributes(typeof(LuaGlobalAttribute), false).Length == 0))
-                    {
-                        // Go into recursion for members
-                        registerGlobal(path + "." + field.Name, field.FieldType, recursionCounter + 1);
-                    }
-                }
-                #endregion
+        //        #region Fields
+        //        foreach (FieldInfo field in type.GetFields(BindingFlags.Public | BindingFlags.Instance))
+        //        {
+        //            if (
+        //                // Check that the LuaHideAttribute and LuaGlobalAttribute were not applied
+        //                (field.GetCustomAttributes(typeof(LuaHideAttribute), false).Length == 0) &&
+        //                (field.GetCustomAttributes(typeof(LuaGlobalAttribute), false).Length == 0))
+        //            {
+        //                // Go into recursion for members
+        //                registerGlobal(path + "." + field.Name, field.FieldType, recursionCounter + 1);
+        //            }
+        //        }
+        //        #endregion
 
-                #region Properties
-                foreach (PropertyInfo property in type.GetProperties(BindingFlags.Public | BindingFlags.Instance))
-                {
-                    if (
-                        // Check that the LuaHideAttribute and LuaGlobalAttribute were not applied
-                        (property.GetCustomAttributes(typeof(LuaHideAttribute), false).Length == 0) &&
-                        (property.GetCustomAttributes(typeof(LuaGlobalAttribute), false).Length == 0)
-                        // Exclude some generic .NET properties that wouldn't be very usefull in Lua
-                        && property.Name != "Item")
-                    {
-                        // Go into recursion for members
-                        registerGlobal(path + "." + property.Name, property.PropertyType, recursionCounter + 1);
-                    }
-                }
-                #endregion
-            }
-            // Otherwise simply add the element to the list
-            else globals.Add(path);
+        //        #region Properties
+        //        foreach (PropertyInfo property in type.GetProperties(BindingFlags.Public | BindingFlags.Instance))
+        //        {
+        //            if (
+        //                // Check that the LuaHideAttribute and LuaGlobalAttribute were not applied
+        //                (property.GetCustomAttributes(typeof(LuaHideAttribute), false).Length == 0) &&
+        //                (property.GetCustomAttributes(typeof(LuaGlobalAttribute), false).Length == 0)
+        //                // Exclude some generic .NET properties that wouldn't be very usefull in Lua
+        //                && property.Name != "Item")
+        //            {
+        //                // Go into recursion for members
+        //                registerGlobal(path + "." + property.Name, property.PropertyType, recursionCounter + 1);
+        //            }
+        //        }
+        //        #endregion
+        //    }
+        //    // Otherwise simply add the element to the list
+        //    else globals.Add(path);
 
-            // List will need to be sorted on next access
-            globalsSorted = false;
-        }
+        //    // List will need to be sorted on next access
+        //    globalsSorted = false;
+        //}
         #endregion
 
         /*
@@ -514,7 +539,7 @@ namespace LuaInterface
         public Delegate GetFunction(Type delegateType,string fullPath)
         {
 #if __NOGEN__
-				translator.throwError(L,"function delegates not implemnented");
+            translator.throwError(L,"function delegates not implemnented");
             return null;
 #else
             return CodeGeneration.Instance.GetDelegate(delegateType,GetFunction(fullPath));
@@ -569,9 +594,28 @@ namespace LuaInterface
                 LuaDLL.lua_pushstring(L,remainingPath[i]);
                 LuaDLL.lua_gettable(L,-2);
             }
-            LuaDLL.lua_pushstring(L,remainingPath[remainingPath.Length-1]);
-            translator.push(L,val);
-            LuaDLL.lua_settable(L,-3);
+
+            LuaDLL.lua_pushstring(L, remainingPath[remainingPath.Length - 1]);
+
+            //可以释放先
+            //if (val == null)
+            //{
+            //    LuaDLL.lua_gettable(L, -2);               
+            //    LuaTypes type = LuaDLL.lua_type(L, -1);
+
+            //    if (type == LuaTypes.LUA_TUSERDATA)
+            //    {
+            //        int udata = LuaDLL.luanet_tonetobject(L, -1);
+
+            //        if (udata != -1)
+            //        {
+            //            translator.collectObject(udata);
+            //        }
+            //    }
+            //}
+                        
+            translator.push(L, val);
+            LuaDLL.lua_settable(L, -3);
         }
         /*
          * Creates a new table as a global variable or as a field

@@ -10,8 +10,32 @@ namespace LuaInterface
     using System.Text;
 	using UnityEngine;
 	
-	public class LuaStatic
+    public delegate byte[] LoadLuaFile(string name);
+
+	public static class LuaStatic
 	{
+        public static LoadLuaFile LoadLua = null;
+
+        static LuaStatic()
+        {
+            LoadLua = LoadLuaDefault;
+        }
+
+        public static byte[] LoadLuaDefault(string name)
+        {
+            byte[] str = null;
+            string path = Application.dataPath + "/Lua/" + name;
+
+            using (FileStream file = new FileStream(path, FileMode.Open))
+            {
+                str = new byte[(int)file.Length];
+                file.Read(str, 0, str.Length);
+                file.Close();
+            }
+
+            return str;
+        }
+            
 		[MonoPInvokeCallbackAttribute(typeof(LuaCSFunction))]
 		public static int panic(IntPtr L)
 		{
@@ -60,28 +84,29 @@ namespace LuaInterface
 		
 		[MonoPInvokeCallbackAttribute(typeof(LuaCSFunction))]
 		public static int loader(IntPtr L)
-		{
+		{            
 			// Get script to load
 			string fileName = String.Empty;
 			fileName = LuaDLL.lua_tostring(L, 1);
 			fileName = fileName.Replace('.', '/');
 			fileName += ".lua";
 			
-			// Load with Unity3D resources
-			TextAsset file = (TextAsset)Resources.Load(fileName);
-			if( file == null )
+			// Load with Unity3D resources			
+            byte[] text = LoadLua(fileName);
+
+			if( text == null )
 			{
 				return 0;
 			}
 			
-			LuaDLL.luaL_loadbuffer(L, file.text, Encoding.UTF8.GetByteCount(file.text), fileName);
+			LuaDLL.luaL_loadbuffer(L, text, text.Length, fileName);
 			
 			return 1;
 		}
 		
 		[MonoPInvokeCallbackAttribute(typeof(LuaCSFunction))]
 		public static int dofile(IntPtr L)
-		{
+		{            
 			// Get script to load
 			string fileName = String.Empty;
 			fileName = LuaDLL.lua_tostring(L, 1);
@@ -90,17 +115,18 @@ namespace LuaInterface
 			
 			int n = LuaDLL.lua_gettop(L);
 			
-			// Load with Unity3D resources
-			TextAsset file = (TextAsset)Resources.Load(fileName);
-			if( file == null )
+			// Load with Unity3D resources			
+            byte[] text = LoadLua(fileName);
+
+			if( text == null )
 			{
 				return LuaDLL.lua_gettop(L) - n;
 			}
-			
-			if( LuaDLL.luaL_loadbuffer(L, file.text, Encoding.UTF8.GetByteCount(file.text), fileName) == 0 )
-			{
-				LuaDLL.lua_call(L, 0, LuaDLL.LUA_MULTRET);
-			}
+
+            if (LuaDLL.luaL_loadbuffer(L, text, text.Length, fileName) == 0)
+            {
+                LuaDLL.lua_call(L, 0, LuaDLL.LUA_MULTRET);
+            }
 			
 			return LuaDLL.lua_gettop(L) - n;
 		}

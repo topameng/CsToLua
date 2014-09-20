@@ -1,3 +1,5 @@
+#define __NOGEN__
+
 using System;
 using System.Collections.Generic;
 using System.Reflection;
@@ -164,7 +166,8 @@ namespace LuaInterface
             }
             else
             {
-                object obj = translator.getNetObject(luaState, stackPos);
+                //object obj = translator.getNetObject(luaState, stackPos);  //topameng 修改这里使支持注册到c#的lua类
+                object obj = translator.getRawNetObject(luaState, stackPos);
                 if (obj != null && paramType.IsAssignableFrom(obj.GetType()))
                     return extractNetObject;
             }
@@ -293,7 +296,8 @@ namespace LuaInterface
         }
         public object getAsNetObject(IntPtr luaState,int stackPos)
         {
-            object obj=translator.getNetObject(luaState,stackPos);
+            //object obj=translator.getNetObject(luaState,stackPos);    //同上 topameng
+            object obj = translator.getRawNetObject(luaState, stackPos);
             if(obj==null && LuaDLL.lua_type(luaState,stackPos)==LuaTypes.LUA_TTABLE)
             {
                 if(LuaDLL.luaL_getmetafield(luaState,stackPos,"__index"))
