@@ -313,7 +313,7 @@ public static class ToLua
 
         for (int i = 0; i < props.Length; i++)
         {
-            if (props[i].CanRead && props[i].CanWrite)
+            if (props[i].CanRead && props[i].CanWrite && props[i].GetSetMethod(true).IsPublic)
             {
                 sb.AppendFormat("\t\tnew LuaField(\"{0}\", get_{0}, set_{0}),\r\n", props[i].Name);
             }
@@ -1440,7 +1440,7 @@ public static class ToLua
 
         for (int i = 0; i < props.Length; i++)
         {
-            if (!props[i].CanWrite)
+            if (!props[i].CanWrite || !props[i].GetSetMethod(true).IsPublic)
             {
                 continue;
             }
