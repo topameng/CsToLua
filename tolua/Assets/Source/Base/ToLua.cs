@@ -373,7 +373,6 @@ public static class ToLua
         sb.AppendLine("\t\t\tnew LuaMethod(\"__index\", Lua_Index),");
         sb.AppendLine("\t\t\tnew LuaMethod(\"__newindex\", Lua_NewIndex),");
 
-        //ConstructorInfo[] constructors = type.GetConstructors(BindingFlags.Instance | binding);
         int index = Array.FindIndex<MethodInfo>(methods, (p) => {return p.Name == "ToString";});
 
         if (index >= 0)
@@ -470,7 +469,7 @@ public static class ToLua
             return;
         }
 
-        ConstructorInfo[] constructors = type.GetConstructors(BindingFlags.Instance | binding);
+        ConstructorInfo[] constructors = type.GetConstructors(binding);
 
         if (constructors.Length == 0)
         {
