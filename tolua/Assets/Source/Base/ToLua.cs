@@ -458,7 +458,7 @@ public static class ToLua
 
     static void GenConstruct()
     {
-        if (isStaticClass)
+        if (isStaticClass  || baseClassName == "MonoBehaviour")
         {
             sb.AppendLine("\r\n\t[MonoPInvokeCallbackAttribute(typeof(LuaCSFunction))]");
             sb.AppendFormat("\tstatic int {0}(IntPtr l)\r\n", "Create");
@@ -469,7 +469,7 @@ public static class ToLua
             return;
         }
 
-        ConstructorInfo[] constructors = type.GetConstructors(binding);
+        ConstructorInfo[] constructors = type.GetConstructors(BindingFlags.Instance | binding);
 
         if (constructors.Length == 0)
         {
