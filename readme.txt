@@ -1,4 +1,9 @@
-﻿tolua# 是一个类似于tolua++的工具
+﻿2014.9.23
+MonoBehaviour 继承类出现构造函数的问题
+private set 属性被导出问题
+
+
+tolua# 是一个类似于tolua++的工具
 目的是为了快速导出unity3d类对象到lua中
 依赖对象 luainterface 一个导出c#到lua的库
 自己导出对象有各种好处如：
