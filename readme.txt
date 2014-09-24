@@ -1,6 +1,6 @@
 ﻿2014.9.23
-MonoBehaviour 继承类出现构造函数的问题
-private set 属性被导出问题
+修复MonoBehaviour 继承类出现构造函数的问题
+修复private set 属性被导出问题
 
 
 tolua# 是一个类似于tolua++的工具
