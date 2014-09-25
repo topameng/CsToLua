@@ -546,6 +546,29 @@ public class LuaScriptMgr
         return true;
     }
 
+    public bool CheckParamsType(Type t, int begin, int count)
+    {
+        IntPtr L = l.L;
+
+        //默认都可以转 string
+        if (t == typeof(string))
+        {
+            return true;
+        }
+
+        for (int i = 0; i < count; i++)
+        {
+            LuaTypes luaType = LuaDLL.lua_type(L, i + begin);
+
+            if (!CheckType(luaType, t, i + begin))
+            {
+                return false;
+            }
+        }
+
+        return true;
+    }
+
     bool CheckType(LuaTypes luaType, Type t, int pos)
     {                
         if (t == typeof(bool))
