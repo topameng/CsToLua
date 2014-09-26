@@ -8,6 +8,7 @@ using LuaInterface;
 
 using Object = UnityEngine.Object;
 using System.IO;
+using System.Text.RegularExpressions;
 
 public enum MetaOp
 {
@@ -1123,9 +1124,23 @@ public static class ToLua
         return null;
     }
 
+    //转模版内参数
+    static string _TC(string str)
+    {
+        if (str.Contains("[]"))
+        {
+            str = str.Substring(0, str.Length - 2);
+            str = _C(str);
+            str += "[]";
+            return str;
+        }
+
+        return _C(str);
+    }
+
     static string _C(string str)
     {        
-        if (str[str.Length - 1] == '&')
+        if (str.Length > 1 && str[str.Length - 1] == '&')
         {
             str = str.Remove(str.Length - 1);
             return _C(str);
@@ -1196,19 +1211,31 @@ public static class ToLua
         {
             return str.Replace('+', '.');
         }
-        else if (str.Contains("`1["))
+        else if (str.Contains("`"))
         {
-            //处理泛型
-            //System.Collections.Generic.List`1[System.Int32]
-            usingList.Add("System.Collections.Generic");
-            int pos2 = str.IndexOf("`1");
-            string ss = str.Substring(0, pos2);
-            int pos1 = ss.LastIndexOf('.');
-            string s1 = str.Substring(pos1 + 1, pos2 - pos1 - 1);
-            pos1 = str.LastIndexOf('[');
-            pos2 = str.IndexOf("]");
-            string s2 = str.Substring(pos1 + 1, pos2 - pos1 - 1);
-            s2 = _C(s2);
+            string use = str.Substring(0, str.IndexOf('`'));
+            use = use.Substring(0, use.LastIndexOf('.'));
+            usingList.Add(use);
+
+            Regex r = new Regex(@"^.*\.(?<s1>.*?)`[1-9]\[(?<s2>.*?)\]$", RegexOptions.None);
+            Match mc = r.Match(str);
+            string s1 = mc.Groups["s1"].Value;
+            string s2 = mc.Groups["s2"].Value;
+            string[] ss = s2.Split(new char[] {','}, System.StringSplitOptions.RemoveEmptyEntries);
+            s2 = string.Empty;
+
+            for (int i = 0; i < ss.Length; i++)
+            {
+                ss[i] = _TC(ss[i]);
+            }
+
+            for (int i = 0; i < ss.Length - 1; i++)
+            {
+                s2 += ss[i];
+                s2 += ",";
+            }
+
+            s2 += ss[ss.Length - 1];
             string s3 = string.Format("{0}<{1}>", s1, s2);
             return s3;
         }
@@ -1390,8 +1417,6 @@ public static class ToLua
             sb.AppendFormat("\tstatic int set_{0}(IntPtr L)\r\n", fields[i].Name);
             sb.AppendLine("\t{");
             string o = fields[i].IsStatic ? className : "obj";                        
-            string t = _C(fields[i].FieldType.Name);
-            t = t.Replace('+', '.');
 
             if (!fields[i].IsStatic)
             {                                
@@ -1435,8 +1460,6 @@ public static class ToLua
             sb.AppendFormat("\tstatic int set_{0}(IntPtr L)\r\n", props[i].Name);
             sb.AppendLine("\t{");
             string o = isStatic ? className : "obj";
-            string t = _C(props[i].PropertyType.Name);
-            t = t.Replace('+', '.');
 
             if (!isStatic)
             {
