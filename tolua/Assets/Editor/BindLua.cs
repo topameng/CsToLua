@@ -2,10 +2,10 @@
 using UnityEditor;
 using System;
 using System.Collections;
-
-using Object = UnityEngine.Object;
 using System.Text;
 using System.IO;
+
+using Object = UnityEngine.Object;
 
 public static class LuaBinding
 {
