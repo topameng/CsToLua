@@ -7,6 +7,7 @@ using System.IO;
 
 using Object = UnityEngine.Object;
 
+//
 public static class LuaBinding
 {
     public class BindType
