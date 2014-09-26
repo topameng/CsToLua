@@ -376,10 +376,6 @@ public class LuaScriptMgr
             LuaDLL.lua_rawset(L, -3);
         }
 
-        LuaDLL.lua_pushlightuserdata(L, LuaDLL.luanet_gettag());
-        LuaDLL.lua_pushnumber(L, 1);
-        LuaDLL.lua_rawset(L, -3);
-
         LuaDLL.lua_pushstring(L, "__index");
         LuaDLL.lua_pushstring(L, "ToLua_Index");
         LuaDLL.lua_rawget(L, (int)LuaIndexes.LUA_REGISTRYINDEX);
@@ -707,7 +703,7 @@ public class LuaScriptMgr
         } while (!file.Contains("Wrap"));
 
         int index1 = file.LastIndexOf('\\');
-        int index2 = file.IndexOf("Wrap");
+        int index2 = file.LastIndexOf("Wrap");
         string className = file.Substring(index1 + 1, index2 - index1 - 1);
         return string.Format("{0}.{1}", className, sf.GetMethod().Name);                
     }
