@@ -2,11 +2,8 @@
 using System;
 using LuaInterface;
 
-public class TimeWrap : ILuaWrap
+public class TimeWrap
 {
-	public static LuaScriptMgr luaMgr = null;
-	public static int reference = -1;
-
 	public static LuaMethod[] regs = new LuaMethod[]
 	{
 		new LuaMethod("New", Create),
@@ -31,194 +28,153 @@ public class TimeWrap : ILuaWrap
 	};
 
 	[MonoPInvokeCallbackAttribute(typeof(LuaCSFunction))]
-	static int Create(IntPtr l)
+	static int Create(IntPtr L)
 	{
-		int count = LuaDLL.lua_gettop(l);
+		int count = LuaDLL.lua_gettop(L);
 		object obj = null;
 
 		if (count == 0)
 		{
 			obj = new Time();
-			luaMgr.PushResult(obj);
+			LuaScriptMgr.PushResult(L, obj);
 			return 1;
 		}
 		else
 		{
-			LuaDLL.luaL_error(l, "The best overloaded method match for 'Time.New' has some invalid arguments");
+			LuaDLL.luaL_error(L, "invalid arguments to method: Time.New");
 		}
 
 		return 0;
 	}
 
-	public void Register()
+	public static void Register(IntPtr L)
 	{
-		LuaMethod[] metas = new LuaMethod[]
-		{
-			new LuaMethod("__index", Lua_Index),
-			new LuaMethod("__newindex", Lua_NewIndex),
-		};
-
-		luaMgr = LuaScriptMgr.Instance;
-		reference = luaMgr.RegisterLib("Time", regs);
-		luaMgr.CreateMetaTable("Time", metas, typeof(Time));
-		luaMgr.RegisterField(typeof(Time), fields);
-	}
-
-	static bool get_time(IntPtr l)
-	{
-		luaMgr.PushResult(Time.time);
-		return true;
-	}
-
-	static bool get_timeSinceLevelLoad(IntPtr l)
-	{
-		luaMgr.PushResult(Time.timeSinceLevelLoad);
-		return true;
-	}
-
-	static bool get_deltaTime(IntPtr l)
-	{
-		luaMgr.PushResult(Time.deltaTime);
-		return true;
-	}
-
-	static bool get_fixedTime(IntPtr l)
-	{
-		luaMgr.PushResult(Time.fixedTime);
-		return true;
-	}
-
-	static bool get_unscaledTime(IntPtr l)
-	{
-		luaMgr.PushResult(Time.unscaledTime);
-		return true;
-	}
-
-	static bool get_unscaledDeltaTime(IntPtr l)
-	{
-		luaMgr.PushResult(Time.unscaledDeltaTime);
-		return true;
-	}
-
-	static bool get_fixedDeltaTime(IntPtr l)
-	{
-		luaMgr.PushResult(Time.fixedDeltaTime);
-		return true;
-	}
-
-	static bool get_maximumDeltaTime(IntPtr l)
-	{
-		luaMgr.PushResult(Time.maximumDeltaTime);
-		return true;
-	}
-
-	static bool get_smoothDeltaTime(IntPtr l)
-	{
-		luaMgr.PushResult(Time.smoothDeltaTime);
-		return true;
-	}
-
-	static bool get_timeScale(IntPtr l)
-	{
-		luaMgr.PushResult(Time.timeScale);
-		return true;
-	}
-
-	static bool get_frameCount(IntPtr l)
-	{
-		luaMgr.PushResult(Time.frameCount);
-		return true;
-	}
-
-	static bool get_renderedFrameCount(IntPtr l)
-	{
-		luaMgr.PushResult(Time.renderedFrameCount);
-		return true;
-	}
-
-	static bool get_realtimeSinceStartup(IntPtr l)
-	{
-		luaMgr.PushResult(Time.realtimeSinceStartup);
-		return true;
-	}
-
-	static bool get_captureFramerate(IntPtr l)
-	{
-		luaMgr.PushResult(Time.captureFramerate);
-		return true;
-	}
-
-	public static bool TryLuaIndex(IntPtr l)
-	{
-		string str = luaMgr.GetString(2);
-
-		if (luaMgr.Index(reference, str, fields))
-		{
-			return true;
-		}
-
-		return objectWrap.TryLuaIndex(l);
+		LuaScriptMgr.RegisterLib(L, "Time", typeof(Time), regs, fields, "object");
 	}
 
 	[MonoPInvokeCallbackAttribute(typeof(LuaCSFunction))]
-	static int Lua_Index(IntPtr l)
+	static int get_time(IntPtr L)
 	{
-		if (TryLuaIndex(l))
-		{
-			return 1;
-		}
+		LuaScriptMgr.PushResult(L, Time.time);
+		return 1;
+	}
 
-		string str = luaMgr.GetString(2);
-		LuaDLL.luaL_error(l, string.Format("'Time' does not contain a definition for '{0}'", str));
+	[MonoPInvokeCallbackAttribute(typeof(LuaCSFunction))]
+	static int get_timeSinceLevelLoad(IntPtr L)
+	{
+		LuaScriptMgr.PushResult(L, Time.timeSinceLevelLoad);
+		return 1;
+	}
+
+	[MonoPInvokeCallbackAttribute(typeof(LuaCSFunction))]
+	static int get_deltaTime(IntPtr L)
+	{
+		LuaScriptMgr.PushResult(L, Time.deltaTime);
+		return 1;
+	}
+
+	[MonoPInvokeCallbackAttribute(typeof(LuaCSFunction))]
+	static int get_fixedTime(IntPtr L)
+	{
+		LuaScriptMgr.PushResult(L, Time.fixedTime);
+		return 1;
+	}
+
+	[MonoPInvokeCallbackAttribute(typeof(LuaCSFunction))]
+	static int get_unscaledTime(IntPtr L)
+	{
+		LuaScriptMgr.PushResult(L, Time.unscaledTime);
+		return 1;
+	}
+
+	[MonoPInvokeCallbackAttribute(typeof(LuaCSFunction))]
+	static int get_unscaledDeltaTime(IntPtr L)
+	{
+		LuaScriptMgr.PushResult(L, Time.unscaledDeltaTime);
+		return 1;
+	}
+
+	[MonoPInvokeCallbackAttribute(typeof(LuaCSFunction))]
+	static int get_fixedDeltaTime(IntPtr L)
+	{
+		LuaScriptMgr.PushResult(L, Time.fixedDeltaTime);
+		return 1;
+	}
+
+	[MonoPInvokeCallbackAttribute(typeof(LuaCSFunction))]
+	static int get_maximumDeltaTime(IntPtr L)
+	{
+		LuaScriptMgr.PushResult(L, Time.maximumDeltaTime);
+		return 1;
+	}
+
+	[MonoPInvokeCallbackAttribute(typeof(LuaCSFunction))]
+	static int get_smoothDeltaTime(IntPtr L)
+	{
+		LuaScriptMgr.PushResult(L, Time.smoothDeltaTime);
+		return 1;
+	}
+
+	[MonoPInvokeCallbackAttribute(typeof(LuaCSFunction))]
+	static int get_timeScale(IntPtr L)
+	{
+		LuaScriptMgr.PushResult(L, Time.timeScale);
+		return 1;
+	}
+
+	[MonoPInvokeCallbackAttribute(typeof(LuaCSFunction))]
+	static int get_frameCount(IntPtr L)
+	{
+		LuaScriptMgr.PushResult(L, Time.frameCount);
+		return 1;
+	}
+
+	[MonoPInvokeCallbackAttribute(typeof(LuaCSFunction))]
+	static int get_renderedFrameCount(IntPtr L)
+	{
+		LuaScriptMgr.PushResult(L, Time.renderedFrameCount);
+		return 1;
+	}
+
+	[MonoPInvokeCallbackAttribute(typeof(LuaCSFunction))]
+	static int get_realtimeSinceStartup(IntPtr L)
+	{
+		LuaScriptMgr.PushResult(L, Time.realtimeSinceStartup);
+		return 1;
+	}
+
+	[MonoPInvokeCallbackAttribute(typeof(LuaCSFunction))]
+	static int get_captureFramerate(IntPtr L)
+	{
+		LuaScriptMgr.PushResult(L, Time.captureFramerate);
+		return 1;
+	}
+
+	[MonoPInvokeCallbackAttribute(typeof(LuaCSFunction))]
+	static int set_fixedDeltaTime(IntPtr L)
+	{
+		Time.fixedDeltaTime = (float)LuaScriptMgr.GetNumber(L, 3);
 		return 0;
 	}
 
-	static bool set_fixedDeltaTime(IntPtr l)
+	[MonoPInvokeCallbackAttribute(typeof(LuaCSFunction))]
+	static int set_maximumDeltaTime(IntPtr L)
 	{
-		Time.fixedDeltaTime = (float)luaMgr.GetNumber(3);
-		return true;
-	}
-
-	static bool set_maximumDeltaTime(IntPtr l)
-	{
-		Time.maximumDeltaTime = (float)luaMgr.GetNumber(3);
-		return true;
-	}
-
-	static bool set_timeScale(IntPtr l)
-	{
-		Time.timeScale = (float)luaMgr.GetNumber(3);
-		return true;
-	}
-
-	static bool set_captureFramerate(IntPtr l)
-	{
-		Time.captureFramerate = (int)luaMgr.GetNumber(3);
-		return true;
-	}
-
-	public static bool TryLuaNewIndex(IntPtr l)
-	{
-		string str = luaMgr.GetString(2);
-
-		if (luaMgr.NewIndex(reference, str, fields))
-		{
-			return true;
-		}
-
-		return objectWrap.TryLuaNewIndex(l);
+		Time.maximumDeltaTime = (float)LuaScriptMgr.GetNumber(L, 3);
+		return 0;
 	}
 
 	[MonoPInvokeCallbackAttribute(typeof(LuaCSFunction))]
-	static int Lua_NewIndex(IntPtr l)
+	static int set_timeScale(IntPtr L)
 	{
-		if (TryLuaNewIndex(l))
-		{
-			return 0;
-		}
+		Time.timeScale = (float)LuaScriptMgr.GetNumber(L, 3);
+		return 0;
+	}
 
-		string str = luaMgr.GetString(2);
-		LuaDLL.luaL_error(l, string.Format("'Time' does not contain a definition for '{0}'", str));
+	[MonoPInvokeCallbackAttribute(typeof(LuaCSFunction))]
+	static int set_captureFramerate(IntPtr L)
+	{
+		Time.captureFramerate = (int)LuaScriptMgr.GetNumber(L, 3);
 		return 0;
 	}
 }

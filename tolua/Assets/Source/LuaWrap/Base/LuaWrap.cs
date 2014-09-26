@@ -17,18 +17,26 @@ public struct LuaMethod
 public struct LuaField
 {
     public string name;
-    public Func<IntPtr, bool> getter;
-    public Func<IntPtr, bool> setter;
+    public LuaCSFunction getter;
+    public LuaCSFunction setter;
 
-    public LuaField(string str, Func<IntPtr, bool> g, Func<IntPtr, bool> s)
+    public LuaField(string str, LuaCSFunction g, LuaCSFunction s)
     {
         name = str;
         getter = g;
-        setter = s;        
+        setter = s;
     }
 };
 
-public interface ILuaWrap 
+//public interface ILuaWrap 
+//{
+//    void Register();
+//}
+
+public class NoToLuaAttribute : System.Attribute
 {
-    void Register();
+    public NoToLuaAttribute()
+    {
+
+    }
 }

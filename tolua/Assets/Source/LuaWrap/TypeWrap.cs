@@ -4,11 +4,8 @@ using System.Globalization;
 using UnityEngine;
 using LuaInterface;
 
-public class TypeWrap : ILuaWrap
+public class TypeWrap
 {
-	public static LuaScriptMgr luaMgr = null;
-	public static int reference = -1;
-
 	public static LuaMethod[] regs = new LuaMethod[]
 	{
 		new LuaMethod("Equals", Equals),
@@ -58,6 +55,7 @@ public class TypeWrap : ILuaWrap
 		new LuaMethod("IsDefined", IsDefined),
 		new LuaMethod("GetCustomAttributes", GetCustomAttributes),
 		new LuaMethod("New", Create),
+		new LuaMethod("__tostring", Lua_ToString),
 	};
 
 	static LuaField[] fields = new LuaField[]
@@ -129,1360 +127,1649 @@ public class TypeWrap : ILuaWrap
 	};
 
 	[MonoPInvokeCallbackAttribute(typeof(LuaCSFunction))]
-	static int Create(IntPtr l)
+	static int Create(IntPtr L)
 	{
-		LuaDLL.luaL_error(l, "Type class does not have a constructor function");
+		LuaDLL.luaL_error(L, "Type class does not have a constructor function");
 		return 0;
 	}
 
-	public void Register()
+	public static void Register(IntPtr L)
 	{
-		LuaMethod[] metas = new LuaMethod[]
-		{
-			new LuaMethod("__index", Lua_Index),
-			new LuaMethod("__newindex", Lua_NewIndex),
-			new LuaMethod("__tostring", Lua_ToString),
-		};
-
-		luaMgr = LuaScriptMgr.Instance;
-		reference = luaMgr.RegisterLib("Type", regs);
-		luaMgr.CreateMetaTable("Type", metas, typeof(Type));
-		luaMgr.RegisterField(typeof(Type), fields);
-	}
-
-	static bool get_Delimiter(IntPtr l)
-	{
-		luaMgr.PushResult(Type.Delimiter);
-		return true;
-	}
-
-	static bool get_EmptyTypes(IntPtr l)
-	{
-		luaMgr.PushResult(Type.EmptyTypes);
-		return true;
-	}
-
-	static bool get_FilterAttribute(IntPtr l)
-	{
-		luaMgr.PushResult(Type.FilterAttribute);
-		return true;
-	}
-
-	static bool get_FilterName(IntPtr l)
-	{
-		luaMgr.PushResult(Type.FilterName);
-		return true;
-	}
-
-	static bool get_FilterNameIgnoreCase(IntPtr l)
-	{
-		luaMgr.PushResult(Type.FilterNameIgnoreCase);
-		return true;
-	}
-
-	static bool get_Missing(IntPtr l)
-	{
-		luaMgr.PushResult(Type.Missing);
-		return true;
-	}
-
-	static bool get_Assembly(IntPtr l)
-	{
-		object o = luaMgr.GetLuaObject(1);
-		if (o == null) return false;
-		Type obj = (Type)o;
-		luaMgr.PushResult(obj.Assembly);
-		return true;
-	}
-
-	static bool get_AssemblyQualifiedName(IntPtr l)
-	{
-		object o = luaMgr.GetLuaObject(1);
-		if (o == null) return false;
-		Type obj = (Type)o;
-		luaMgr.PushResult(obj.AssemblyQualifiedName);
-		return true;
-	}
-
-	static bool get_Attributes(IntPtr l)
-	{
-		object o = luaMgr.GetLuaObject(1);
-		if (o == null) return false;
-		Type obj = (Type)o;
-		luaMgr.PushResult(obj.Attributes);
-		return true;
-	}
-
-	static bool get_BaseType(IntPtr l)
-	{
-		object o = luaMgr.GetLuaObject(1);
-		if (o == null) return false;
-		Type obj = (Type)o;
-		luaMgr.PushResult(obj.BaseType);
-		return true;
-	}
-
-	static bool get_DeclaringType(IntPtr l)
-	{
-		object o = luaMgr.GetLuaObject(1);
-		if (o == null) return false;
-		Type obj = (Type)o;
-		luaMgr.PushResult(obj.DeclaringType);
-		return true;
-	}
-
-	static bool get_DefaultBinder(IntPtr l)
-	{
-		luaMgr.PushResult(Type.DefaultBinder);
-		return true;
-	}
-
-	static bool get_FullName(IntPtr l)
-	{
-		object o = luaMgr.GetLuaObject(1);
-		if (o == null) return false;
-		Type obj = (Type)o;
-		luaMgr.PushResult(obj.FullName);
-		return true;
-	}
-
-	static bool get_GUID(IntPtr l)
-	{
-		object o = luaMgr.GetLuaObject(1);
-		if (o == null) return false;
-		Type obj = (Type)o;
-		luaMgr.PushResult(obj.GUID);
-		return true;
-	}
-
-	static bool get_HasElementType(IntPtr l)
-	{
-		object o = luaMgr.GetLuaObject(1);
-		if (o == null) return false;
-		Type obj = (Type)o;
-		luaMgr.PushResult(obj.HasElementType);
-		return true;
-	}
-
-	static bool get_IsAbstract(IntPtr l)
-	{
-		object o = luaMgr.GetLuaObject(1);
-		if (o == null) return false;
-		Type obj = (Type)o;
-		luaMgr.PushResult(obj.IsAbstract);
-		return true;
-	}
-
-	static bool get_IsAnsiClass(IntPtr l)
-	{
-		object o = luaMgr.GetLuaObject(1);
-		if (o == null) return false;
-		Type obj = (Type)o;
-		luaMgr.PushResult(obj.IsAnsiClass);
-		return true;
-	}
-
-	static bool get_IsArray(IntPtr l)
-	{
-		object o = luaMgr.GetLuaObject(1);
-		if (o == null) return false;
-		Type obj = (Type)o;
-		luaMgr.PushResult(obj.IsArray);
-		return true;
-	}
-
-	static bool get_IsAutoClass(IntPtr l)
-	{
-		object o = luaMgr.GetLuaObject(1);
-		if (o == null) return false;
-		Type obj = (Type)o;
-		luaMgr.PushResult(obj.IsAutoClass);
-		return true;
-	}
-
-	static bool get_IsAutoLayout(IntPtr l)
-	{
-		object o = luaMgr.GetLuaObject(1);
-		if (o == null) return false;
-		Type obj = (Type)o;
-		luaMgr.PushResult(obj.IsAutoLayout);
-		return true;
-	}
-
-	static bool get_IsByRef(IntPtr l)
-	{
-		object o = luaMgr.GetLuaObject(1);
-		if (o == null) return false;
-		Type obj = (Type)o;
-		luaMgr.PushResult(obj.IsByRef);
-		return true;
-	}
-
-	static bool get_IsClass(IntPtr l)
-	{
-		object o = luaMgr.GetLuaObject(1);
-		if (o == null) return false;
-		Type obj = (Type)o;
-		luaMgr.PushResult(obj.IsClass);
-		return true;
-	}
-
-	static bool get_IsCOMObject(IntPtr l)
-	{
-		object o = luaMgr.GetLuaObject(1);
-		if (o == null) return false;
-		Type obj = (Type)o;
-		luaMgr.PushResult(obj.IsCOMObject);
-		return true;
-	}
-
-	static bool get_IsContextful(IntPtr l)
-	{
-		object o = luaMgr.GetLuaObject(1);
-		if (o == null) return false;
-		Type obj = (Type)o;
-		luaMgr.PushResult(obj.IsContextful);
-		return true;
-	}
-
-	static bool get_IsEnum(IntPtr l)
-	{
-		object o = luaMgr.GetLuaObject(1);
-		if (o == null) return false;
-		Type obj = (Type)o;
-		luaMgr.PushResult(obj.IsEnum);
-		return true;
-	}
-
-	static bool get_IsExplicitLayout(IntPtr l)
-	{
-		object o = luaMgr.GetLuaObject(1);
-		if (o == null) return false;
-		Type obj = (Type)o;
-		luaMgr.PushResult(obj.IsExplicitLayout);
-		return true;
-	}
-
-	static bool get_IsImport(IntPtr l)
-	{
-		object o = luaMgr.GetLuaObject(1);
-		if (o == null) return false;
-		Type obj = (Type)o;
-		luaMgr.PushResult(obj.IsImport);
-		return true;
-	}
-
-	static bool get_IsInterface(IntPtr l)
-	{
-		object o = luaMgr.GetLuaObject(1);
-		if (o == null) return false;
-		Type obj = (Type)o;
-		luaMgr.PushResult(obj.IsInterface);
-		return true;
-	}
-
-	static bool get_IsLayoutSequential(IntPtr l)
-	{
-		object o = luaMgr.GetLuaObject(1);
-		if (o == null) return false;
-		Type obj = (Type)o;
-		luaMgr.PushResult(obj.IsLayoutSequential);
-		return true;
-	}
-
-	static bool get_IsMarshalByRef(IntPtr l)
-	{
-		object o = luaMgr.GetLuaObject(1);
-		if (o == null) return false;
-		Type obj = (Type)o;
-		luaMgr.PushResult(obj.IsMarshalByRef);
-		return true;
-	}
-
-	static bool get_IsNestedAssembly(IntPtr l)
-	{
-		object o = luaMgr.GetLuaObject(1);
-		if (o == null) return false;
-		Type obj = (Type)o;
-		luaMgr.PushResult(obj.IsNestedAssembly);
-		return true;
-	}
-
-	static bool get_IsNestedFamANDAssem(IntPtr l)
-	{
-		object o = luaMgr.GetLuaObject(1);
-		if (o == null) return false;
-		Type obj = (Type)o;
-		luaMgr.PushResult(obj.IsNestedFamANDAssem);
-		return true;
-	}
-
-	static bool get_IsNestedFamily(IntPtr l)
-	{
-		object o = luaMgr.GetLuaObject(1);
-		if (o == null) return false;
-		Type obj = (Type)o;
-		luaMgr.PushResult(obj.IsNestedFamily);
-		return true;
-	}
-
-	static bool get_IsNestedFamORAssem(IntPtr l)
-	{
-		object o = luaMgr.GetLuaObject(1);
-		if (o == null) return false;
-		Type obj = (Type)o;
-		luaMgr.PushResult(obj.IsNestedFamORAssem);
-		return true;
-	}
-
-	static bool get_IsNestedPrivate(IntPtr l)
-	{
-		object o = luaMgr.GetLuaObject(1);
-		if (o == null) return false;
-		Type obj = (Type)o;
-		luaMgr.PushResult(obj.IsNestedPrivate);
-		return true;
-	}
-
-	static bool get_IsNestedPublic(IntPtr l)
-	{
-		object o = luaMgr.GetLuaObject(1);
-		if (o == null) return false;
-		Type obj = (Type)o;
-		luaMgr.PushResult(obj.IsNestedPublic);
-		return true;
-	}
-
-	static bool get_IsNotPublic(IntPtr l)
-	{
-		object o = luaMgr.GetLuaObject(1);
-		if (o == null) return false;
-		Type obj = (Type)o;
-		luaMgr.PushResult(obj.IsNotPublic);
-		return true;
-	}
-
-	static bool get_IsPointer(IntPtr l)
-	{
-		object o = luaMgr.GetLuaObject(1);
-		if (o == null) return false;
-		Type obj = (Type)o;
-		luaMgr.PushResult(obj.IsPointer);
-		return true;
-	}
-
-	static bool get_IsPrimitive(IntPtr l)
-	{
-		object o = luaMgr.GetLuaObject(1);
-		if (o == null) return false;
-		Type obj = (Type)o;
-		luaMgr.PushResult(obj.IsPrimitive);
-		return true;
-	}
-
-	static bool get_IsPublic(IntPtr l)
-	{
-		object o = luaMgr.GetLuaObject(1);
-		if (o == null) return false;
-		Type obj = (Type)o;
-		luaMgr.PushResult(obj.IsPublic);
-		return true;
-	}
-
-	static bool get_IsSealed(IntPtr l)
-	{
-		object o = luaMgr.GetLuaObject(1);
-		if (o == null) return false;
-		Type obj = (Type)o;
-		luaMgr.PushResult(obj.IsSealed);
-		return true;
-	}
-
-	static bool get_IsSerializable(IntPtr l)
-	{
-		object o = luaMgr.GetLuaObject(1);
-		if (o == null) return false;
-		Type obj = (Type)o;
-		luaMgr.PushResult(obj.IsSerializable);
-		return true;
-	}
-
-	static bool get_IsSpecialName(IntPtr l)
-	{
-		object o = luaMgr.GetLuaObject(1);
-		if (o == null) return false;
-		Type obj = (Type)o;
-		luaMgr.PushResult(obj.IsSpecialName);
-		return true;
-	}
-
-	static bool get_IsUnicodeClass(IntPtr l)
-	{
-		object o = luaMgr.GetLuaObject(1);
-		if (o == null) return false;
-		Type obj = (Type)o;
-		luaMgr.PushResult(obj.IsUnicodeClass);
-		return true;
-	}
-
-	static bool get_IsValueType(IntPtr l)
-	{
-		object o = luaMgr.GetLuaObject(1);
-		if (o == null) return false;
-		Type obj = (Type)o;
-		luaMgr.PushResult(obj.IsValueType);
-		return true;
-	}
-
-	static bool get_MemberType(IntPtr l)
-	{
-		object o = luaMgr.GetLuaObject(1);
-		if (o == null) return false;
-		Type obj = (Type)o;
-		luaMgr.PushResult(obj.MemberType);
-		return true;
-	}
-
-	static bool get_Module(IntPtr l)
-	{
-		object o = luaMgr.GetLuaObject(1);
-		if (o == null) return false;
-		Type obj = (Type)o;
-		luaMgr.PushResult(obj.Module);
-		return true;
-	}
-
-	static bool get_Namespace(IntPtr l)
-	{
-		object o = luaMgr.GetLuaObject(1);
-		if (o == null) return false;
-		Type obj = (Type)o;
-		luaMgr.PushResult(obj.Namespace);
-		return true;
-	}
-
-	static bool get_ReflectedType(IntPtr l)
-	{
-		object o = luaMgr.GetLuaObject(1);
-		if (o == null) return false;
-		Type obj = (Type)o;
-		luaMgr.PushResult(obj.ReflectedType);
-		return true;
-	}
-
-	static bool get_TypeHandle(IntPtr l)
-	{
-		object o = luaMgr.GetLuaObject(1);
-		if (o == null) return false;
-		Type obj = (Type)o;
-		luaMgr.PushResult(obj.TypeHandle);
-		return true;
-	}
-
-	static bool get_TypeInitializer(IntPtr l)
-	{
-		object o = luaMgr.GetLuaObject(1);
-		if (o == null) return false;
-		Type obj = (Type)o;
-		luaMgr.PushResult(obj.TypeInitializer);
-		return true;
-	}
-
-	static bool get_UnderlyingSystemType(IntPtr l)
-	{
-		object o = luaMgr.GetLuaObject(1);
-		if (o == null) return false;
-		Type obj = (Type)o;
-		luaMgr.PushResult(obj.UnderlyingSystemType);
-		return true;
-	}
-
-	static bool get_ContainsGenericParameters(IntPtr l)
-	{
-		object o = luaMgr.GetLuaObject(1);
-		if (o == null) return false;
-		Type obj = (Type)o;
-		luaMgr.PushResult(obj.ContainsGenericParameters);
-		return true;
-	}
-
-	static bool get_IsGenericTypeDefinition(IntPtr l)
-	{
-		object o = luaMgr.GetLuaObject(1);
-		if (o == null) return false;
-		Type obj = (Type)o;
-		luaMgr.PushResult(obj.IsGenericTypeDefinition);
-		return true;
-	}
-
-	static bool get_IsGenericType(IntPtr l)
-	{
-		object o = luaMgr.GetLuaObject(1);
-		if (o == null) return false;
-		Type obj = (Type)o;
-		luaMgr.PushResult(obj.IsGenericType);
-		return true;
-	}
-
-	static bool get_IsGenericParameter(IntPtr l)
-	{
-		object o = luaMgr.GetLuaObject(1);
-		if (o == null) return false;
-		Type obj = (Type)o;
-		luaMgr.PushResult(obj.IsGenericParameter);
-		return true;
-	}
-
-	static bool get_IsNested(IntPtr l)
-	{
-		object o = luaMgr.GetLuaObject(1);
-		if (o == null) return false;
-		Type obj = (Type)o;
-		luaMgr.PushResult(obj.IsNested);
-		return true;
-	}
-
-	static bool get_IsVisible(IntPtr l)
-	{
-		object o = luaMgr.GetLuaObject(1);
-		if (o == null) return false;
-		Type obj = (Type)o;
-		luaMgr.PushResult(obj.IsVisible);
-		return true;
-	}
-
-	static bool get_GenericParameterPosition(IntPtr l)
-	{
-		object o = luaMgr.GetLuaObject(1);
-		if (o == null) return false;
-		Type obj = (Type)o;
-		luaMgr.PushResult(obj.GenericParameterPosition);
-		return true;
-	}
-
-	static bool get_GenericParameterAttributes(IntPtr l)
-	{
-		object o = luaMgr.GetLuaObject(1);
-		if (o == null) return false;
-		Type obj = (Type)o;
-		luaMgr.PushResult(obj.GenericParameterAttributes);
-		return true;
-	}
-
-	static bool get_DeclaringMethod(IntPtr l)
-	{
-		object o = luaMgr.GetLuaObject(1);
-		if (o == null) return false;
-		Type obj = (Type)o;
-		luaMgr.PushResult(obj.DeclaringMethod);
-		return true;
-	}
-
-	static bool get_StructLayoutAttribute(IntPtr l)
-	{
-		object o = luaMgr.GetLuaObject(1);
-		if (o == null) return false;
-		Type obj = (Type)o;
-		luaMgr.PushResult(obj.StructLayoutAttribute);
-		return true;
-	}
-
-	static bool get_Name(IntPtr l)
-	{
-		object o = luaMgr.GetLuaObject(1);
-		if (o == null) return false;
-		Type obj = (Type)o;
-		luaMgr.PushResult(obj.Name);
-		return true;
-	}
-
-	static bool get_MetadataToken(IntPtr l)
-	{
-		object o = luaMgr.GetLuaObject(1);
-		if (o == null) return false;
-		Type obj = (Type)o;
-		luaMgr.PushResult(obj.MetadataToken);
-		return true;
-	}
-
-	public static bool TryLuaIndex(IntPtr l)
-	{
-		string str = luaMgr.GetString(2);
-
-		if (luaMgr.Index(reference, str, fields))
-		{
-			return true;
-		}
-
-		return false;
+		LuaScriptMgr.RegisterLib(L, "Type", typeof(Type), regs, fields, null);
 	}
 
 	[MonoPInvokeCallbackAttribute(typeof(LuaCSFunction))]
-	static int Lua_Index(IntPtr l)
+	static int get_Delimiter(IntPtr L)
 	{
-		if (TryLuaIndex(l))
-		{
-			return 1;
-		}
-
-		string str = luaMgr.GetString(2);
-		LuaDLL.luaL_error(l, string.Format("'Type' does not contain a definition for '{0}'", str));
-		return 0;
-	}
-
-	public static bool TryLuaNewIndex(IntPtr l)
-	{
-		string str = luaMgr.GetString(2);
-
-		if (luaMgr.NewIndex(reference, str, fields))
-		{
-			return true;
-		}
-
-		return false;
-	}
-
-	[MonoPInvokeCallbackAttribute(typeof(LuaCSFunction))]
-	static int Lua_NewIndex(IntPtr l)
-	{
-		if (TryLuaNewIndex(l))
-		{
-			return 0;
-		}
-
-		string str = luaMgr.GetString(2);
-		LuaDLL.luaL_error(l, string.Format("'Type' does not contain a definition for '{0}'", str));
-		return 0;
-	}
-
-	[MonoPInvokeCallbackAttribute(typeof(LuaCSFunction))]
-	static int Lua_ToString(IntPtr l)
-	{
-		Type obj = (Type)luaMgr.GetNetObject(1);
-		luaMgr.PushResult(obj.ToString());
+		LuaScriptMgr.PushResult(L, Type.Delimiter);
 		return 1;
 	}
 
 	[MonoPInvokeCallbackAttribute(typeof(LuaCSFunction))]
-	static int Equals(IntPtr l)
+	static int get_EmptyTypes(IntPtr L)
 	{
-		int count = LuaDLL.lua_gettop(l);
+		LuaScriptMgr.PushResult(L, Type.EmptyTypes);
+		return 1;
+	}
+
+	[MonoPInvokeCallbackAttribute(typeof(LuaCSFunction))]
+	static int get_FilterAttribute(IntPtr L)
+	{
+		LuaScriptMgr.PushResult(L, Type.FilterAttribute);
+		return 1;
+	}
+
+	[MonoPInvokeCallbackAttribute(typeof(LuaCSFunction))]
+	static int get_FilterName(IntPtr L)
+	{
+		LuaScriptMgr.PushResult(L, Type.FilterName);
+		return 1;
+	}
+
+	[MonoPInvokeCallbackAttribute(typeof(LuaCSFunction))]
+	static int get_FilterNameIgnoreCase(IntPtr L)
+	{
+		LuaScriptMgr.PushResult(L, Type.FilterNameIgnoreCase);
+		return 1;
+	}
+
+	[MonoPInvokeCallbackAttribute(typeof(LuaCSFunction))]
+	static int get_Missing(IntPtr L)
+	{
+		LuaScriptMgr.PushResult(L, Type.Missing);
+		return 1;
+	}
+
+	[MonoPInvokeCallbackAttribute(typeof(LuaCSFunction))]
+	static int get_Assembly(IntPtr L)
+	{
+		object o = LuaScriptMgr.GetLuaObject(L, 1);
+
+		if (o == null)
+		{
+			LuaDLL.luaL_error(L, "unknown member name Assembly");
+		}
+
+		Type obj = (Type)o;
+		LuaScriptMgr.PushResult(L, obj.Assembly);
+		return 1;
+	}
+
+	[MonoPInvokeCallbackAttribute(typeof(LuaCSFunction))]
+	static int get_AssemblyQualifiedName(IntPtr L)
+	{
+		object o = LuaScriptMgr.GetLuaObject(L, 1);
+
+		if (o == null)
+		{
+			LuaDLL.luaL_error(L, "unknown member name AssemblyQualifiedName");
+		}
+
+		Type obj = (Type)o;
+		LuaScriptMgr.PushResult(L, obj.AssemblyQualifiedName);
+		return 1;
+	}
+
+	[MonoPInvokeCallbackAttribute(typeof(LuaCSFunction))]
+	static int get_Attributes(IntPtr L)
+	{
+		object o = LuaScriptMgr.GetLuaObject(L, 1);
+
+		if (o == null)
+		{
+			LuaDLL.luaL_error(L, "unknown member name Attributes");
+		}
+
+		Type obj = (Type)o;
+		LuaScriptMgr.PushResult(L, obj.Attributes);
+		return 1;
+	}
+
+	[MonoPInvokeCallbackAttribute(typeof(LuaCSFunction))]
+	static int get_BaseType(IntPtr L)
+	{
+		object o = LuaScriptMgr.GetLuaObject(L, 1);
+
+		if (o == null)
+		{
+			LuaDLL.luaL_error(L, "unknown member name BaseType");
+		}
+
+		Type obj = (Type)o;
+		LuaScriptMgr.PushResult(L, obj.BaseType);
+		return 1;
+	}
+
+	[MonoPInvokeCallbackAttribute(typeof(LuaCSFunction))]
+	static int get_DeclaringType(IntPtr L)
+	{
+		object o = LuaScriptMgr.GetLuaObject(L, 1);
+
+		if (o == null)
+		{
+			LuaDLL.luaL_error(L, "unknown member name DeclaringType");
+		}
+
+		Type obj = (Type)o;
+		LuaScriptMgr.PushResult(L, obj.DeclaringType);
+		return 1;
+	}
+
+	[MonoPInvokeCallbackAttribute(typeof(LuaCSFunction))]
+	static int get_DefaultBinder(IntPtr L)
+	{
+		LuaScriptMgr.PushResult(L, Type.DefaultBinder);
+		return 1;
+	}
+
+	[MonoPInvokeCallbackAttribute(typeof(LuaCSFunction))]
+	static int get_FullName(IntPtr L)
+	{
+		object o = LuaScriptMgr.GetLuaObject(L, 1);
+
+		if (o == null)
+		{
+			LuaDLL.luaL_error(L, "unknown member name FullName");
+		}
+
+		Type obj = (Type)o;
+		LuaScriptMgr.PushResult(L, obj.FullName);
+		return 1;
+	}
+
+	[MonoPInvokeCallbackAttribute(typeof(LuaCSFunction))]
+	static int get_GUID(IntPtr L)
+	{
+		object o = LuaScriptMgr.GetLuaObject(L, 1);
+
+		if (o == null)
+		{
+			LuaDLL.luaL_error(L, "unknown member name GUID");
+		}
+
+		Type obj = (Type)o;
+		LuaScriptMgr.PushResult(L, obj.GUID);
+		return 1;
+	}
+
+	[MonoPInvokeCallbackAttribute(typeof(LuaCSFunction))]
+	static int get_HasElementType(IntPtr L)
+	{
+		object o = LuaScriptMgr.GetLuaObject(L, 1);
+
+		if (o == null)
+		{
+			LuaDLL.luaL_error(L, "unknown member name HasElementType");
+		}
+
+		Type obj = (Type)o;
+		LuaScriptMgr.PushResult(L, obj.HasElementType);
+		return 1;
+	}
+
+	[MonoPInvokeCallbackAttribute(typeof(LuaCSFunction))]
+	static int get_IsAbstract(IntPtr L)
+	{
+		object o = LuaScriptMgr.GetLuaObject(L, 1);
+
+		if (o == null)
+		{
+			LuaDLL.luaL_error(L, "unknown member name IsAbstract");
+		}
+
+		Type obj = (Type)o;
+		LuaScriptMgr.PushResult(L, obj.IsAbstract);
+		return 1;
+	}
+
+	[MonoPInvokeCallbackAttribute(typeof(LuaCSFunction))]
+	static int get_IsAnsiClass(IntPtr L)
+	{
+		object o = LuaScriptMgr.GetLuaObject(L, 1);
+
+		if (o == null)
+		{
+			LuaDLL.luaL_error(L, "unknown member name IsAnsiClass");
+		}
+
+		Type obj = (Type)o;
+		LuaScriptMgr.PushResult(L, obj.IsAnsiClass);
+		return 1;
+	}
+
+	[MonoPInvokeCallbackAttribute(typeof(LuaCSFunction))]
+	static int get_IsArray(IntPtr L)
+	{
+		object o = LuaScriptMgr.GetLuaObject(L, 1);
+
+		if (o == null)
+		{
+			LuaDLL.luaL_error(L, "unknown member name IsArray");
+		}
+
+		Type obj = (Type)o;
+		LuaScriptMgr.PushResult(L, obj.IsArray);
+		return 1;
+	}
+
+	[MonoPInvokeCallbackAttribute(typeof(LuaCSFunction))]
+	static int get_IsAutoClass(IntPtr L)
+	{
+		object o = LuaScriptMgr.GetLuaObject(L, 1);
+
+		if (o == null)
+		{
+			LuaDLL.luaL_error(L, "unknown member name IsAutoClass");
+		}
+
+		Type obj = (Type)o;
+		LuaScriptMgr.PushResult(L, obj.IsAutoClass);
+		return 1;
+	}
+
+	[MonoPInvokeCallbackAttribute(typeof(LuaCSFunction))]
+	static int get_IsAutoLayout(IntPtr L)
+	{
+		object o = LuaScriptMgr.GetLuaObject(L, 1);
+
+		if (o == null)
+		{
+			LuaDLL.luaL_error(L, "unknown member name IsAutoLayout");
+		}
+
+		Type obj = (Type)o;
+		LuaScriptMgr.PushResult(L, obj.IsAutoLayout);
+		return 1;
+	}
+
+	[MonoPInvokeCallbackAttribute(typeof(LuaCSFunction))]
+	static int get_IsByRef(IntPtr L)
+	{
+		object o = LuaScriptMgr.GetLuaObject(L, 1);
+
+		if (o == null)
+		{
+			LuaDLL.luaL_error(L, "unknown member name IsByRef");
+		}
+
+		Type obj = (Type)o;
+		LuaScriptMgr.PushResult(L, obj.IsByRef);
+		return 1;
+	}
+
+	[MonoPInvokeCallbackAttribute(typeof(LuaCSFunction))]
+	static int get_IsClass(IntPtr L)
+	{
+		object o = LuaScriptMgr.GetLuaObject(L, 1);
+
+		if (o == null)
+		{
+			LuaDLL.luaL_error(L, "unknown member name IsClass");
+		}
+
+		Type obj = (Type)o;
+		LuaScriptMgr.PushResult(L, obj.IsClass);
+		return 1;
+	}
+
+	[MonoPInvokeCallbackAttribute(typeof(LuaCSFunction))]
+	static int get_IsCOMObject(IntPtr L)
+	{
+		object o = LuaScriptMgr.GetLuaObject(L, 1);
+
+		if (o == null)
+		{
+			LuaDLL.luaL_error(L, "unknown member name IsCOMObject");
+		}
+
+		Type obj = (Type)o;
+		LuaScriptMgr.PushResult(L, obj.IsCOMObject);
+		return 1;
+	}
+
+	[MonoPInvokeCallbackAttribute(typeof(LuaCSFunction))]
+	static int get_IsContextful(IntPtr L)
+	{
+		object o = LuaScriptMgr.GetLuaObject(L, 1);
+
+		if (o == null)
+		{
+			LuaDLL.luaL_error(L, "unknown member name IsContextful");
+		}
+
+		Type obj = (Type)o;
+		LuaScriptMgr.PushResult(L, obj.IsContextful);
+		return 1;
+	}
+
+	[MonoPInvokeCallbackAttribute(typeof(LuaCSFunction))]
+	static int get_IsEnum(IntPtr L)
+	{
+		object o = LuaScriptMgr.GetLuaObject(L, 1);
+
+		if (o == null)
+		{
+			LuaDLL.luaL_error(L, "unknown member name IsEnum");
+		}
+
+		Type obj = (Type)o;
+		LuaScriptMgr.PushResult(L, obj.IsEnum);
+		return 1;
+	}
+
+	[MonoPInvokeCallbackAttribute(typeof(LuaCSFunction))]
+	static int get_IsExplicitLayout(IntPtr L)
+	{
+		object o = LuaScriptMgr.GetLuaObject(L, 1);
+
+		if (o == null)
+		{
+			LuaDLL.luaL_error(L, "unknown member name IsExplicitLayout");
+		}
+
+		Type obj = (Type)o;
+		LuaScriptMgr.PushResult(L, obj.IsExplicitLayout);
+		return 1;
+	}
+
+	[MonoPInvokeCallbackAttribute(typeof(LuaCSFunction))]
+	static int get_IsImport(IntPtr L)
+	{
+		object o = LuaScriptMgr.GetLuaObject(L, 1);
+
+		if (o == null)
+		{
+			LuaDLL.luaL_error(L, "unknown member name IsImport");
+		}
+
+		Type obj = (Type)o;
+		LuaScriptMgr.PushResult(L, obj.IsImport);
+		return 1;
+	}
+
+	[MonoPInvokeCallbackAttribute(typeof(LuaCSFunction))]
+	static int get_IsInterface(IntPtr L)
+	{
+		object o = LuaScriptMgr.GetLuaObject(L, 1);
+
+		if (o == null)
+		{
+			LuaDLL.luaL_error(L, "unknown member name IsInterface");
+		}
+
+		Type obj = (Type)o;
+		LuaScriptMgr.PushResult(L, obj.IsInterface);
+		return 1;
+	}
+
+	[MonoPInvokeCallbackAttribute(typeof(LuaCSFunction))]
+	static int get_IsLayoutSequential(IntPtr L)
+	{
+		object o = LuaScriptMgr.GetLuaObject(L, 1);
+
+		if (o == null)
+		{
+			LuaDLL.luaL_error(L, "unknown member name IsLayoutSequential");
+		}
+
+		Type obj = (Type)o;
+		LuaScriptMgr.PushResult(L, obj.IsLayoutSequential);
+		return 1;
+	}
+
+	[MonoPInvokeCallbackAttribute(typeof(LuaCSFunction))]
+	static int get_IsMarshalByRef(IntPtr L)
+	{
+		object o = LuaScriptMgr.GetLuaObject(L, 1);
+
+		if (o == null)
+		{
+			LuaDLL.luaL_error(L, "unknown member name IsMarshalByRef");
+		}
+
+		Type obj = (Type)o;
+		LuaScriptMgr.PushResult(L, obj.IsMarshalByRef);
+		return 1;
+	}
+
+	[MonoPInvokeCallbackAttribute(typeof(LuaCSFunction))]
+	static int get_IsNestedAssembly(IntPtr L)
+	{
+		object o = LuaScriptMgr.GetLuaObject(L, 1);
+
+		if (o == null)
+		{
+			LuaDLL.luaL_error(L, "unknown member name IsNestedAssembly");
+		}
+
+		Type obj = (Type)o;
+		LuaScriptMgr.PushResult(L, obj.IsNestedAssembly);
+		return 1;
+	}
+
+	[MonoPInvokeCallbackAttribute(typeof(LuaCSFunction))]
+	static int get_IsNestedFamANDAssem(IntPtr L)
+	{
+		object o = LuaScriptMgr.GetLuaObject(L, 1);
+
+		if (o == null)
+		{
+			LuaDLL.luaL_error(L, "unknown member name IsNestedFamANDAssem");
+		}
+
+		Type obj = (Type)o;
+		LuaScriptMgr.PushResult(L, obj.IsNestedFamANDAssem);
+		return 1;
+	}
+
+	[MonoPInvokeCallbackAttribute(typeof(LuaCSFunction))]
+	static int get_IsNestedFamily(IntPtr L)
+	{
+		object o = LuaScriptMgr.GetLuaObject(L, 1);
+
+		if (o == null)
+		{
+			LuaDLL.luaL_error(L, "unknown member name IsNestedFamily");
+		}
+
+		Type obj = (Type)o;
+		LuaScriptMgr.PushResult(L, obj.IsNestedFamily);
+		return 1;
+	}
+
+	[MonoPInvokeCallbackAttribute(typeof(LuaCSFunction))]
+	static int get_IsNestedFamORAssem(IntPtr L)
+	{
+		object o = LuaScriptMgr.GetLuaObject(L, 1);
+
+		if (o == null)
+		{
+			LuaDLL.luaL_error(L, "unknown member name IsNestedFamORAssem");
+		}
+
+		Type obj = (Type)o;
+		LuaScriptMgr.PushResult(L, obj.IsNestedFamORAssem);
+		return 1;
+	}
+
+	[MonoPInvokeCallbackAttribute(typeof(LuaCSFunction))]
+	static int get_IsNestedPrivate(IntPtr L)
+	{
+		object o = LuaScriptMgr.GetLuaObject(L, 1);
+
+		if (o == null)
+		{
+			LuaDLL.luaL_error(L, "unknown member name IsNestedPrivate");
+		}
+
+		Type obj = (Type)o;
+		LuaScriptMgr.PushResult(L, obj.IsNestedPrivate);
+		return 1;
+	}
+
+	[MonoPInvokeCallbackAttribute(typeof(LuaCSFunction))]
+	static int get_IsNestedPublic(IntPtr L)
+	{
+		object o = LuaScriptMgr.GetLuaObject(L, 1);
+
+		if (o == null)
+		{
+			LuaDLL.luaL_error(L, "unknown member name IsNestedPublic");
+		}
+
+		Type obj = (Type)o;
+		LuaScriptMgr.PushResult(L, obj.IsNestedPublic);
+		return 1;
+	}
+
+	[MonoPInvokeCallbackAttribute(typeof(LuaCSFunction))]
+	static int get_IsNotPublic(IntPtr L)
+	{
+		object o = LuaScriptMgr.GetLuaObject(L, 1);
+
+		if (o == null)
+		{
+			LuaDLL.luaL_error(L, "unknown member name IsNotPublic");
+		}
+
+		Type obj = (Type)o;
+		LuaScriptMgr.PushResult(L, obj.IsNotPublic);
+		return 1;
+	}
+
+	[MonoPInvokeCallbackAttribute(typeof(LuaCSFunction))]
+	static int get_IsPointer(IntPtr L)
+	{
+		object o = LuaScriptMgr.GetLuaObject(L, 1);
+
+		if (o == null)
+		{
+			LuaDLL.luaL_error(L, "unknown member name IsPointer");
+		}
+
+		Type obj = (Type)o;
+		LuaScriptMgr.PushResult(L, obj.IsPointer);
+		return 1;
+	}
+
+	[MonoPInvokeCallbackAttribute(typeof(LuaCSFunction))]
+	static int get_IsPrimitive(IntPtr L)
+	{
+		object o = LuaScriptMgr.GetLuaObject(L, 1);
+
+		if (o == null)
+		{
+			LuaDLL.luaL_error(L, "unknown member name IsPrimitive");
+		}
+
+		Type obj = (Type)o;
+		LuaScriptMgr.PushResult(L, obj.IsPrimitive);
+		return 1;
+	}
+
+	[MonoPInvokeCallbackAttribute(typeof(LuaCSFunction))]
+	static int get_IsPublic(IntPtr L)
+	{
+		object o = LuaScriptMgr.GetLuaObject(L, 1);
+
+		if (o == null)
+		{
+			LuaDLL.luaL_error(L, "unknown member name IsPublic");
+		}
+
+		Type obj = (Type)o;
+		LuaScriptMgr.PushResult(L, obj.IsPublic);
+		return 1;
+	}
+
+	[MonoPInvokeCallbackAttribute(typeof(LuaCSFunction))]
+	static int get_IsSealed(IntPtr L)
+	{
+		object o = LuaScriptMgr.GetLuaObject(L, 1);
+
+		if (o == null)
+		{
+			LuaDLL.luaL_error(L, "unknown member name IsSealed");
+		}
+
+		Type obj = (Type)o;
+		LuaScriptMgr.PushResult(L, obj.IsSealed);
+		return 1;
+	}
+
+	[MonoPInvokeCallbackAttribute(typeof(LuaCSFunction))]
+	static int get_IsSerializable(IntPtr L)
+	{
+		object o = LuaScriptMgr.GetLuaObject(L, 1);
+
+		if (o == null)
+		{
+			LuaDLL.luaL_error(L, "unknown member name IsSerializable");
+		}
+
+		Type obj = (Type)o;
+		LuaScriptMgr.PushResult(L, obj.IsSerializable);
+		return 1;
+	}
+
+	[MonoPInvokeCallbackAttribute(typeof(LuaCSFunction))]
+	static int get_IsSpecialName(IntPtr L)
+	{
+		object o = LuaScriptMgr.GetLuaObject(L, 1);
+
+		if (o == null)
+		{
+			LuaDLL.luaL_error(L, "unknown member name IsSpecialName");
+		}
+
+		Type obj = (Type)o;
+		LuaScriptMgr.PushResult(L, obj.IsSpecialName);
+		return 1;
+	}
+
+	[MonoPInvokeCallbackAttribute(typeof(LuaCSFunction))]
+	static int get_IsUnicodeClass(IntPtr L)
+	{
+		object o = LuaScriptMgr.GetLuaObject(L, 1);
+
+		if (o == null)
+		{
+			LuaDLL.luaL_error(L, "unknown member name IsUnicodeClass");
+		}
+
+		Type obj = (Type)o;
+		LuaScriptMgr.PushResult(L, obj.IsUnicodeClass);
+		return 1;
+	}
+
+	[MonoPInvokeCallbackAttribute(typeof(LuaCSFunction))]
+	static int get_IsValueType(IntPtr L)
+	{
+		object o = LuaScriptMgr.GetLuaObject(L, 1);
+
+		if (o == null)
+		{
+			LuaDLL.luaL_error(L, "unknown member name IsValueType");
+		}
+
+		Type obj = (Type)o;
+		LuaScriptMgr.PushResult(L, obj.IsValueType);
+		return 1;
+	}
+
+	[MonoPInvokeCallbackAttribute(typeof(LuaCSFunction))]
+	static int get_MemberType(IntPtr L)
+	{
+		object o = LuaScriptMgr.GetLuaObject(L, 1);
+
+		if (o == null)
+		{
+			LuaDLL.luaL_error(L, "unknown member name MemberType");
+		}
+
+		Type obj = (Type)o;
+		LuaScriptMgr.PushResult(L, obj.MemberType);
+		return 1;
+	}
+
+	[MonoPInvokeCallbackAttribute(typeof(LuaCSFunction))]
+	static int get_Module(IntPtr L)
+	{
+		object o = LuaScriptMgr.GetLuaObject(L, 1);
+
+		if (o == null)
+		{
+			LuaDLL.luaL_error(L, "unknown member name Module");
+		}
+
+		Type obj = (Type)o;
+		LuaScriptMgr.PushResult(L, obj.Module);
+		return 1;
+	}
+
+	[MonoPInvokeCallbackAttribute(typeof(LuaCSFunction))]
+	static int get_Namespace(IntPtr L)
+	{
+		object o = LuaScriptMgr.GetLuaObject(L, 1);
+
+		if (o == null)
+		{
+			LuaDLL.luaL_error(L, "unknown member name Namespace");
+		}
+
+		Type obj = (Type)o;
+		LuaScriptMgr.PushResult(L, obj.Namespace);
+		return 1;
+	}
+
+	[MonoPInvokeCallbackAttribute(typeof(LuaCSFunction))]
+	static int get_ReflectedType(IntPtr L)
+	{
+		object o = LuaScriptMgr.GetLuaObject(L, 1);
+
+		if (o == null)
+		{
+			LuaDLL.luaL_error(L, "unknown member name ReflectedType");
+		}
+
+		Type obj = (Type)o;
+		LuaScriptMgr.PushResult(L, obj.ReflectedType);
+		return 1;
+	}
+
+	[MonoPInvokeCallbackAttribute(typeof(LuaCSFunction))]
+	static int get_TypeHandle(IntPtr L)
+	{
+		object o = LuaScriptMgr.GetLuaObject(L, 1);
+
+		if (o == null)
+		{
+			LuaDLL.luaL_error(L, "unknown member name TypeHandle");
+		}
+
+		Type obj = (Type)o;
+		LuaScriptMgr.PushResult(L, obj.TypeHandle);
+		return 1;
+	}
+
+	[MonoPInvokeCallbackAttribute(typeof(LuaCSFunction))]
+	static int get_TypeInitializer(IntPtr L)
+	{
+		object o = LuaScriptMgr.GetLuaObject(L, 1);
+
+		if (o == null)
+		{
+			LuaDLL.luaL_error(L, "unknown member name TypeInitializer");
+		}
+
+		Type obj = (Type)o;
+		LuaScriptMgr.PushResult(L, obj.TypeInitializer);
+		return 1;
+	}
+
+	[MonoPInvokeCallbackAttribute(typeof(LuaCSFunction))]
+	static int get_UnderlyingSystemType(IntPtr L)
+	{
+		object o = LuaScriptMgr.GetLuaObject(L, 1);
+
+		if (o == null)
+		{
+			LuaDLL.luaL_error(L, "unknown member name UnderlyingSystemType");
+		}
+
+		Type obj = (Type)o;
+		LuaScriptMgr.PushResult(L, obj.UnderlyingSystemType);
+		return 1;
+	}
+
+	[MonoPInvokeCallbackAttribute(typeof(LuaCSFunction))]
+	static int get_ContainsGenericParameters(IntPtr L)
+	{
+		object o = LuaScriptMgr.GetLuaObject(L, 1);
+
+		if (o == null)
+		{
+			LuaDLL.luaL_error(L, "unknown member name ContainsGenericParameters");
+		}
+
+		Type obj = (Type)o;
+		LuaScriptMgr.PushResult(L, obj.ContainsGenericParameters);
+		return 1;
+	}
+
+	[MonoPInvokeCallbackAttribute(typeof(LuaCSFunction))]
+	static int get_IsGenericTypeDefinition(IntPtr L)
+	{
+		object o = LuaScriptMgr.GetLuaObject(L, 1);
+
+		if (o == null)
+		{
+			LuaDLL.luaL_error(L, "unknown member name IsGenericTypeDefinition");
+		}
+
+		Type obj = (Type)o;
+		LuaScriptMgr.PushResult(L, obj.IsGenericTypeDefinition);
+		return 1;
+	}
+
+	[MonoPInvokeCallbackAttribute(typeof(LuaCSFunction))]
+	static int get_IsGenericType(IntPtr L)
+	{
+		object o = LuaScriptMgr.GetLuaObject(L, 1);
+
+		if (o == null)
+		{
+			LuaDLL.luaL_error(L, "unknown member name IsGenericType");
+		}
+
+		Type obj = (Type)o;
+		LuaScriptMgr.PushResult(L, obj.IsGenericType);
+		return 1;
+	}
+
+	[MonoPInvokeCallbackAttribute(typeof(LuaCSFunction))]
+	static int get_IsGenericParameter(IntPtr L)
+	{
+		object o = LuaScriptMgr.GetLuaObject(L, 1);
+
+		if (o == null)
+		{
+			LuaDLL.luaL_error(L, "unknown member name IsGenericParameter");
+		}
+
+		Type obj = (Type)o;
+		LuaScriptMgr.PushResult(L, obj.IsGenericParameter);
+		return 1;
+	}
+
+	[MonoPInvokeCallbackAttribute(typeof(LuaCSFunction))]
+	static int get_IsNested(IntPtr L)
+	{
+		object o = LuaScriptMgr.GetLuaObject(L, 1);
+
+		if (o == null)
+		{
+			LuaDLL.luaL_error(L, "unknown member name IsNested");
+		}
+
+		Type obj = (Type)o;
+		LuaScriptMgr.PushResult(L, obj.IsNested);
+		return 1;
+	}
+
+	[MonoPInvokeCallbackAttribute(typeof(LuaCSFunction))]
+	static int get_IsVisible(IntPtr L)
+	{
+		object o = LuaScriptMgr.GetLuaObject(L, 1);
+
+		if (o == null)
+		{
+			LuaDLL.luaL_error(L, "unknown member name IsVisible");
+		}
+
+		Type obj = (Type)o;
+		LuaScriptMgr.PushResult(L, obj.IsVisible);
+		return 1;
+	}
+
+	[MonoPInvokeCallbackAttribute(typeof(LuaCSFunction))]
+	static int get_GenericParameterPosition(IntPtr L)
+	{
+		object o = LuaScriptMgr.GetLuaObject(L, 1);
+
+		if (o == null)
+		{
+			LuaDLL.luaL_error(L, "unknown member name GenericParameterPosition");
+		}
+
+		Type obj = (Type)o;
+		LuaScriptMgr.PushResult(L, obj.GenericParameterPosition);
+		return 1;
+	}
+
+	[MonoPInvokeCallbackAttribute(typeof(LuaCSFunction))]
+	static int get_GenericParameterAttributes(IntPtr L)
+	{
+		object o = LuaScriptMgr.GetLuaObject(L, 1);
+
+		if (o == null)
+		{
+			LuaDLL.luaL_error(L, "unknown member name GenericParameterAttributes");
+		}
+
+		Type obj = (Type)o;
+		LuaScriptMgr.PushResult(L, obj.GenericParameterAttributes);
+		return 1;
+	}
+
+	[MonoPInvokeCallbackAttribute(typeof(LuaCSFunction))]
+	static int get_DeclaringMethod(IntPtr L)
+	{
+		object o = LuaScriptMgr.GetLuaObject(L, 1);
+
+		if (o == null)
+		{
+			LuaDLL.luaL_error(L, "unknown member name DeclaringMethod");
+		}
+
+		Type obj = (Type)o;
+		LuaScriptMgr.PushResult(L, obj.DeclaringMethod);
+		return 1;
+	}
+
+	[MonoPInvokeCallbackAttribute(typeof(LuaCSFunction))]
+	static int get_StructLayoutAttribute(IntPtr L)
+	{
+		object o = LuaScriptMgr.GetLuaObject(L, 1);
+
+		if (o == null)
+		{
+			LuaDLL.luaL_error(L, "unknown member name StructLayoutAttribute");
+		}
+
+		Type obj = (Type)o;
+		LuaScriptMgr.PushResult(L, obj.StructLayoutAttribute);
+		return 1;
+	}
+
+	[MonoPInvokeCallbackAttribute(typeof(LuaCSFunction))]
+	static int get_Name(IntPtr L)
+	{
+		object o = LuaScriptMgr.GetLuaObject(L, 1);
+
+		if (o == null)
+		{
+			LuaDLL.luaL_error(L, "unknown member name Name");
+		}
+
+		Type obj = (Type)o;
+		LuaScriptMgr.PushResult(L, obj.Name);
+		return 1;
+	}
+
+	[MonoPInvokeCallbackAttribute(typeof(LuaCSFunction))]
+	static int get_MetadataToken(IntPtr L)
+	{
+		object o = LuaScriptMgr.GetLuaObject(L, 1);
+
+		if (o == null)
+		{
+			LuaDLL.luaL_error(L, "unknown member name MetadataToken");
+		}
+
+		Type obj = (Type)o;
+		LuaScriptMgr.PushResult(L, obj.MetadataToken);
+		return 1;
+	}
+
+	[MonoPInvokeCallbackAttribute(typeof(LuaCSFunction))]
+	static int Lua_ToString(IntPtr L)
+	{
+		Type obj = (Type)LuaScriptMgr.GetNetObject(L, 1);
+		LuaScriptMgr.PushResult(L, obj.ToString());
+		return 1;
+	}
+
+	[MonoPInvokeCallbackAttribute(typeof(LuaCSFunction))]
+	static int Equals(IntPtr L)
+	{
+		int count = LuaDLL.lua_gettop(L);
 
 		Type[] types0 = {typeof(Type), typeof(Type)};
 		Type[] types1 = {typeof(Type), typeof(object)};
 
-		if (count == 2 && luaMgr.CheckTypes(types0, 1))
+		if (count == 2 && LuaScriptMgr.CheckTypes(L, types0, 1))
 		{
-			Type obj = (Type)luaMgr.GetNetObject(1);
-			Type arg0 = (Type)luaMgr.GetNetObject(2);
+			Type obj = (Type)LuaScriptMgr.GetNetObject(L, 1);
+			Type arg0 = (Type)LuaScriptMgr.GetNetObject(L, 2);
 			bool o = obj.Equals(arg0);
-			luaMgr.PushResult(o);
+			LuaScriptMgr.PushResult(L, o);
 			return 1;
 		}
-		else if (count == 2 && luaMgr.CheckTypes(types1, 1))
+		else if (count == 2 && LuaScriptMgr.CheckTypes(L, types1, 1))
 		{
-			Type obj = (Type)luaMgr.GetNetObject(1);
-			object arg0 = (object)luaMgr.GetNetObject(2);
+			Type obj = (Type)LuaScriptMgr.GetNetObject(L, 1);
+			object arg0 = (object)LuaScriptMgr.GetNetObject(L, 2);
 			bool o = obj.Equals(arg0);
-			luaMgr.PushResult(o);
+			LuaScriptMgr.PushResult(L, o);
 			return 1;
 		}
 		else
 		{
-			LuaDLL.luaL_error(l, "The best overloaded method match for 'Type.Equals' has some invalid arguments");
+			LuaDLL.luaL_error(L, "invalid arguments to method: Type.Equals");
 		}
 
 		return 0;
 	}
 
 	[MonoPInvokeCallbackAttribute(typeof(LuaCSFunction))]
-	static int GetType(IntPtr l)
+	static int GetType(IntPtr L)
 	{
-		int count = LuaDLL.lua_gettop(l);
+		int count = LuaDLL.lua_gettop(L);
 
 		Type[] types0 = {typeof(Type)};
 		Type[] types1 = {typeof(string)};
 
-		if (count == 1 && luaMgr.CheckTypes(types0, 1))
+		if (count == 1 && LuaScriptMgr.CheckTypes(L, types0, 1))
 		{
-			Type obj = (Type)luaMgr.GetNetObject(1);
+			Type obj = (Type)LuaScriptMgr.GetNetObject(L, 1);
 			Type o = obj.GetType();
-			luaMgr.PushResult(o);
+			LuaScriptMgr.PushResult(L, o);
 			return 1;
 		}
-		else if (count == 1 && luaMgr.CheckTypes(types1, 1))
+		else if (count == 1 && LuaScriptMgr.CheckTypes(L, types1, 1))
 		{
-			string arg0 = luaMgr.GetString(1);
+			string arg0 = LuaScriptMgr.GetString(L, 1);
 			Type o = Type.GetType(arg0);
-			luaMgr.PushResult(o);
+			LuaScriptMgr.PushResult(L, o);
 			return 1;
 		}
 		else if (count == 2)
 		{
-			string arg0 = luaMgr.GetString(1);
-			bool arg1 = luaMgr.GetBoolean(2);
+			string arg0 = LuaScriptMgr.GetString(L, 1);
+			bool arg1 = LuaScriptMgr.GetBoolean(L, 2);
 			Type o = Type.GetType(arg0,arg1);
-			luaMgr.PushResult(o);
+			LuaScriptMgr.PushResult(L, o);
 			return 1;
 		}
 		else if (count == 3)
 		{
-			string arg0 = luaMgr.GetString(1);
-			bool arg1 = luaMgr.GetBoolean(2);
-			bool arg2 = luaMgr.GetBoolean(3);
+			string arg0 = LuaScriptMgr.GetString(L, 1);
+			bool arg1 = LuaScriptMgr.GetBoolean(L, 2);
+			bool arg2 = LuaScriptMgr.GetBoolean(L, 3);
 			Type o = Type.GetType(arg0,arg1,arg2);
-			luaMgr.PushResult(o);
+			LuaScriptMgr.PushResult(L, o);
 			return 1;
 		}
 		else
 		{
-			LuaDLL.luaL_error(l, "The best overloaded method match for 'Type.GetType' has some invalid arguments");
+			LuaDLL.luaL_error(L, "invalid arguments to method: Type.GetType");
 		}
 
 		return 0;
 	}
 
 	[MonoPInvokeCallbackAttribute(typeof(LuaCSFunction))]
-	static int GetTypeArray(IntPtr l)
+	static int GetTypeArray(IntPtr L)
 	{
-		luaMgr.CheckArgsCount(1);
-		object[] objs0 = luaMgr.GetArrayObject<object>(1);
+		LuaScriptMgr.CheckArgsCount(L, 1);
+		object[] objs0 = LuaScriptMgr.GetArrayObject<object>(L, 1);
 		Type[] o = Type.GetTypeArray(objs0);
-		luaMgr.PushResult(o);
+		LuaScriptMgr.PushResult(L, o);
 		return 1;
 	}
 
 	[MonoPInvokeCallbackAttribute(typeof(LuaCSFunction))]
-	static int GetTypeCode(IntPtr l)
+	static int GetTypeCode(IntPtr L)
 	{
-		luaMgr.CheckArgsCount(1);
-		Type arg0 = (Type)luaMgr.GetNetObject(1);
+		LuaScriptMgr.CheckArgsCount(L, 1);
+		Type arg0 = (Type)LuaScriptMgr.GetNetObject(L, 1);
 		TypeCode o = Type.GetTypeCode(arg0);
-		luaMgr.PushResult(o);
+		LuaScriptMgr.PushResult(L, o);
 		return 1;
 	}
 
 	[MonoPInvokeCallbackAttribute(typeof(LuaCSFunction))]
-	static int GetTypeFromCLSID(IntPtr l)
+	static int GetTypeFromCLSID(IntPtr L)
 	{
-		int count = LuaDLL.lua_gettop(l);
+		int count = LuaDLL.lua_gettop(L);
 
 		Type[] types1 = {typeof(Guid), typeof(string)};
 		Type[] types2 = {typeof(Guid), typeof(bool)};
 
 		if (count == 1)
 		{
-			Guid arg0 = (Guid)luaMgr.GetNetObject(1);
+			Guid arg0 = (Guid)LuaScriptMgr.GetNetObject(L, 1);
 			Type o = Type.GetTypeFromCLSID(arg0);
-			luaMgr.PushResult(o);
+			LuaScriptMgr.PushResult(L, o);
 			return 1;
 		}
-		else if (count == 2 && luaMgr.CheckTypes(types1, 1))
+		else if (count == 2 && LuaScriptMgr.CheckTypes(L, types1, 1))
 		{
-			Guid arg0 = (Guid)luaMgr.GetNetObject(1);
-			string arg1 = luaMgr.GetString(2);
+			Guid arg0 = (Guid)LuaScriptMgr.GetNetObject(L, 1);
+			string arg1 = LuaScriptMgr.GetString(L, 2);
 			Type o = Type.GetTypeFromCLSID(arg0,arg1);
-			luaMgr.PushResult(o);
+			LuaScriptMgr.PushResult(L, o);
 			return 1;
 		}
-		else if (count == 2 && luaMgr.CheckTypes(types2, 1))
+		else if (count == 2 && LuaScriptMgr.CheckTypes(L, types2, 1))
 		{
-			Guid arg0 = (Guid)luaMgr.GetNetObject(1);
-			bool arg1 = luaMgr.GetBoolean(2);
+			Guid arg0 = (Guid)LuaScriptMgr.GetNetObject(L, 1);
+			bool arg1 = LuaScriptMgr.GetBoolean(L, 2);
 			Type o = Type.GetTypeFromCLSID(arg0,arg1);
-			luaMgr.PushResult(o);
+			LuaScriptMgr.PushResult(L, o);
 			return 1;
 		}
 		else if (count == 3)
 		{
-			Guid arg0 = (Guid)luaMgr.GetNetObject(1);
-			string arg1 = luaMgr.GetString(2);
-			bool arg2 = luaMgr.GetBoolean(3);
+			Guid arg0 = (Guid)LuaScriptMgr.GetNetObject(L, 1);
+			string arg1 = LuaScriptMgr.GetString(L, 2);
+			bool arg2 = LuaScriptMgr.GetBoolean(L, 3);
 			Type o = Type.GetTypeFromCLSID(arg0,arg1,arg2);
-			luaMgr.PushResult(o);
+			LuaScriptMgr.PushResult(L, o);
 			return 1;
 		}
 		else
 		{
-			LuaDLL.luaL_error(l, "The best overloaded method match for 'Type.GetTypeFromCLSID' has some invalid arguments");
+			LuaDLL.luaL_error(L, "invalid arguments to method: Type.GetTypeFromCLSID");
 		}
 
 		return 0;
 	}
 
 	[MonoPInvokeCallbackAttribute(typeof(LuaCSFunction))]
-	static int GetTypeFromHandle(IntPtr l)
+	static int GetTypeFromHandle(IntPtr L)
 	{
-		luaMgr.CheckArgsCount(1);
-		RuntimeTypeHandle arg0 = (RuntimeTypeHandle)luaMgr.GetNetObject(1);
+		LuaScriptMgr.CheckArgsCount(L, 1);
+		RuntimeTypeHandle arg0 = (RuntimeTypeHandle)LuaScriptMgr.GetNetObject(L, 1);
 		Type o = Type.GetTypeFromHandle(arg0);
-		luaMgr.PushResult(o);
+		LuaScriptMgr.PushResult(L, o);
 		return 1;
 	}
 
 	[MonoPInvokeCallbackAttribute(typeof(LuaCSFunction))]
-	static int GetTypeFromProgID(IntPtr l)
+	static int GetTypeFromProgID(IntPtr L)
 	{
-		int count = LuaDLL.lua_gettop(l);
+		int count = LuaDLL.lua_gettop(L);
 
 		Type[] types1 = {typeof(string), typeof(string)};
 		Type[] types2 = {typeof(string), typeof(bool)};
 
 		if (count == 1)
 		{
-			string arg0 = luaMgr.GetString(1);
+			string arg0 = LuaScriptMgr.GetString(L, 1);
 			Type o = Type.GetTypeFromProgID(arg0);
-			luaMgr.PushResult(o);
+			LuaScriptMgr.PushResult(L, o);
 			return 1;
 		}
-		else if (count == 2 && luaMgr.CheckTypes(types1, 1))
+		else if (count == 2 && LuaScriptMgr.CheckTypes(L, types1, 1))
 		{
-			string arg0 = luaMgr.GetString(1);
-			string arg1 = luaMgr.GetString(2);
+			string arg0 = LuaScriptMgr.GetString(L, 1);
+			string arg1 = LuaScriptMgr.GetString(L, 2);
 			Type o = Type.GetTypeFromProgID(arg0,arg1);
-			luaMgr.PushResult(o);
+			LuaScriptMgr.PushResult(L, o);
 			return 1;
 		}
-		else if (count == 2 && luaMgr.CheckTypes(types2, 1))
+		else if (count == 2 && LuaScriptMgr.CheckTypes(L, types2, 1))
 		{
-			string arg0 = luaMgr.GetString(1);
-			bool arg1 = luaMgr.GetBoolean(2);
+			string arg0 = LuaScriptMgr.GetString(L, 1);
+			bool arg1 = LuaScriptMgr.GetBoolean(L, 2);
 			Type o = Type.GetTypeFromProgID(arg0,arg1);
-			luaMgr.PushResult(o);
+			LuaScriptMgr.PushResult(L, o);
 			return 1;
 		}
 		else if (count == 3)
 		{
-			string arg0 = luaMgr.GetString(1);
-			string arg1 = luaMgr.GetString(2);
-			bool arg2 = luaMgr.GetBoolean(3);
+			string arg0 = LuaScriptMgr.GetString(L, 1);
+			string arg1 = LuaScriptMgr.GetString(L, 2);
+			bool arg2 = LuaScriptMgr.GetBoolean(L, 3);
 			Type o = Type.GetTypeFromProgID(arg0,arg1,arg2);
-			luaMgr.PushResult(o);
+			LuaScriptMgr.PushResult(L, o);
 			return 1;
 		}
 		else
 		{
-			LuaDLL.luaL_error(l, "The best overloaded method match for 'Type.GetTypeFromProgID' has some invalid arguments");
+			LuaDLL.luaL_error(L, "invalid arguments to method: Type.GetTypeFromProgID");
 		}
 
 		return 0;
 	}
 
 	[MonoPInvokeCallbackAttribute(typeof(LuaCSFunction))]
-	static int GetTypeHandle(IntPtr l)
+	static int GetTypeHandle(IntPtr L)
 	{
-		luaMgr.CheckArgsCount(1);
-		object arg0 = (object)luaMgr.GetNetObject(1);
+		LuaScriptMgr.CheckArgsCount(L, 1);
+		object arg0 = (object)LuaScriptMgr.GetNetObject(L, 1);
 		RuntimeTypeHandle o = Type.GetTypeHandle(arg0);
-		luaMgr.PushResult(o);
+		LuaScriptMgr.PushResult(L, o);
 		return 1;
 	}
 
 	[MonoPInvokeCallbackAttribute(typeof(LuaCSFunction))]
-	static int IsSubclassOf(IntPtr l)
+	static int IsSubclassOf(IntPtr L)
 	{
-		luaMgr.CheckArgsCount(2);
-		Type obj = (Type)luaMgr.GetNetObject(1);
-		Type arg0 = (Type)luaMgr.GetNetObject(2);
+		LuaScriptMgr.CheckArgsCount(L, 2);
+		Type obj = (Type)LuaScriptMgr.GetNetObject(L, 1);
+		Type arg0 = (Type)LuaScriptMgr.GetNetObject(L, 2);
 		bool o = obj.IsSubclassOf(arg0);
-		luaMgr.PushResult(o);
+		LuaScriptMgr.PushResult(L, o);
 		return 1;
 	}
 
 	[MonoPInvokeCallbackAttribute(typeof(LuaCSFunction))]
-	static int FindInterfaces(IntPtr l)
+	static int FindInterfaces(IntPtr L)
 	{
-		luaMgr.CheckArgsCount(3);
-		Type obj = (Type)luaMgr.GetNetObject(1);
-		TypeFilter arg0 = (TypeFilter)luaMgr.GetNetObject(2);
-		object arg1 = (object)luaMgr.GetNetObject(3);
+		LuaScriptMgr.CheckArgsCount(L, 3);
+		Type obj = (Type)LuaScriptMgr.GetNetObject(L, 1);
+		TypeFilter arg0 = (TypeFilter)LuaScriptMgr.GetNetObject(L, 2);
+		object arg1 = (object)LuaScriptMgr.GetNetObject(L, 3);
 		Type[] o = obj.FindInterfaces(arg0,arg1);
-		luaMgr.PushResult(o);
+		LuaScriptMgr.PushResult(L, o);
 		return 1;
 	}
 
 	[MonoPInvokeCallbackAttribute(typeof(LuaCSFunction))]
-	static int GetInterface(IntPtr l)
+	static int GetInterface(IntPtr L)
 	{
-		int count = LuaDLL.lua_gettop(l);
+		int count = LuaDLL.lua_gettop(L);
 
 		if (count == 2)
 		{
-			Type obj = (Type)luaMgr.GetNetObject(1);
-			string arg0 = luaMgr.GetString(2);
+			Type obj = (Type)LuaScriptMgr.GetNetObject(L, 1);
+			string arg0 = LuaScriptMgr.GetString(L, 2);
 			Type o = obj.GetInterface(arg0);
-			luaMgr.PushResult(o);
+			LuaScriptMgr.PushResult(L, o);
 			return 1;
 		}
 		else if (count == 3)
 		{
-			Type obj = (Type)luaMgr.GetNetObject(1);
-			string arg0 = luaMgr.GetString(2);
-			bool arg1 = luaMgr.GetBoolean(3);
+			Type obj = (Type)LuaScriptMgr.GetNetObject(L, 1);
+			string arg0 = LuaScriptMgr.GetString(L, 2);
+			bool arg1 = LuaScriptMgr.GetBoolean(L, 3);
 			Type o = obj.GetInterface(arg0,arg1);
-			luaMgr.PushResult(o);
+			LuaScriptMgr.PushResult(L, o);
 			return 1;
 		}
 		else
 		{
-			LuaDLL.luaL_error(l, "The best overloaded method match for 'Type.GetInterface' has some invalid arguments");
+			LuaDLL.luaL_error(L, "invalid arguments to method: Type.GetInterface");
 		}
 
 		return 0;
 	}
 
 	[MonoPInvokeCallbackAttribute(typeof(LuaCSFunction))]
-	static int GetInterfaceMap(IntPtr l)
+	static int GetInterfaceMap(IntPtr L)
 	{
-		luaMgr.CheckArgsCount(2);
-		Type obj = (Type)luaMgr.GetNetObject(1);
-		Type arg0 = (Type)luaMgr.GetNetObject(2);
+		LuaScriptMgr.CheckArgsCount(L, 2);
+		Type obj = (Type)LuaScriptMgr.GetNetObject(L, 1);
+		Type arg0 = (Type)LuaScriptMgr.GetNetObject(L, 2);
 		InterfaceMapping o = obj.GetInterfaceMap(arg0);
-		luaMgr.PushResult(o);
+		LuaScriptMgr.PushResult(L, o);
 		return 1;
 	}
 
 	[MonoPInvokeCallbackAttribute(typeof(LuaCSFunction))]
-	static int GetInterfaces(IntPtr l)
+	static int GetInterfaces(IntPtr L)
 	{
-		luaMgr.CheckArgsCount(1);
-		Type obj = (Type)luaMgr.GetNetObject(1);
+		LuaScriptMgr.CheckArgsCount(L, 1);
+		Type obj = (Type)LuaScriptMgr.GetNetObject(L, 1);
 		Type[] o = obj.GetInterfaces();
-		luaMgr.PushResult(o);
+		LuaScriptMgr.PushResult(L, o);
 		return 1;
 	}
 
 	[MonoPInvokeCallbackAttribute(typeof(LuaCSFunction))]
-	static int IsAssignableFrom(IntPtr l)
+	static int IsAssignableFrom(IntPtr L)
 	{
-		luaMgr.CheckArgsCount(2);
-		Type obj = (Type)luaMgr.GetNetObject(1);
-		Type arg0 = (Type)luaMgr.GetNetObject(2);
+		LuaScriptMgr.CheckArgsCount(L, 2);
+		Type obj = (Type)LuaScriptMgr.GetNetObject(L, 1);
+		Type arg0 = (Type)LuaScriptMgr.GetNetObject(L, 2);
 		bool o = obj.IsAssignableFrom(arg0);
-		luaMgr.PushResult(o);
+		LuaScriptMgr.PushResult(L, o);
 		return 1;
 	}
 
 	[MonoPInvokeCallbackAttribute(typeof(LuaCSFunction))]
-	static int IsInstanceOfType(IntPtr l)
+	static int IsInstanceOfType(IntPtr L)
 	{
-		luaMgr.CheckArgsCount(2);
-		Type obj = (Type)luaMgr.GetNetObject(1);
-		object arg0 = (object)luaMgr.GetNetObject(2);
+		LuaScriptMgr.CheckArgsCount(L, 2);
+		Type obj = (Type)LuaScriptMgr.GetNetObject(L, 1);
+		object arg0 = (object)LuaScriptMgr.GetNetObject(L, 2);
 		bool o = obj.IsInstanceOfType(arg0);
-		luaMgr.PushResult(o);
+		LuaScriptMgr.PushResult(L, o);
 		return 1;
 	}
 
 	[MonoPInvokeCallbackAttribute(typeof(LuaCSFunction))]
-	static int GetArrayRank(IntPtr l)
+	static int GetArrayRank(IntPtr L)
 	{
-		luaMgr.CheckArgsCount(1);
-		Type obj = (Type)luaMgr.GetNetObject(1);
+		LuaScriptMgr.CheckArgsCount(L, 1);
+		Type obj = (Type)LuaScriptMgr.GetNetObject(L, 1);
 		int o = obj.GetArrayRank();
-		luaMgr.PushResult(o);
+		LuaScriptMgr.PushResult(L, o);
 		return 1;
 	}
 
 	[MonoPInvokeCallbackAttribute(typeof(LuaCSFunction))]
-	static int GetElementType(IntPtr l)
+	static int GetElementType(IntPtr L)
 	{
-		luaMgr.CheckArgsCount(1);
-		Type obj = (Type)luaMgr.GetNetObject(1);
+		LuaScriptMgr.CheckArgsCount(L, 1);
+		Type obj = (Type)LuaScriptMgr.GetNetObject(L, 1);
 		Type o = obj.GetElementType();
-		luaMgr.PushResult(o);
+		LuaScriptMgr.PushResult(L, o);
 		return 1;
 	}
 
 	[MonoPInvokeCallbackAttribute(typeof(LuaCSFunction))]
-	static int GetEvent(IntPtr l)
+	static int GetEvent(IntPtr L)
 	{
-		int count = LuaDLL.lua_gettop(l);
+		int count = LuaDLL.lua_gettop(L);
 
 		if (count == 2)
 		{
-			Type obj = (Type)luaMgr.GetNetObject(1);
-			string arg0 = luaMgr.GetString(2);
+			Type obj = (Type)LuaScriptMgr.GetNetObject(L, 1);
+			string arg0 = LuaScriptMgr.GetString(L, 2);
 			EventInfo o = obj.GetEvent(arg0);
-			luaMgr.PushResult(o);
+			LuaScriptMgr.PushResult(L, o);
 			return 1;
 		}
 		else if (count == 3)
 		{
-			Type obj = (Type)luaMgr.GetNetObject(1);
-			string arg0 = luaMgr.GetString(2);
-			BindingFlags arg1 = (BindingFlags)luaMgr.GetNetObject(3);
+			Type obj = (Type)LuaScriptMgr.GetNetObject(L, 1);
+			string arg0 = LuaScriptMgr.GetString(L, 2);
+			BindingFlags arg1 = (BindingFlags)LuaScriptMgr.GetNetObject(L, 3);
 			EventInfo o = obj.GetEvent(arg0,arg1);
-			luaMgr.PushResult(o);
+			LuaScriptMgr.PushResult(L, o);
 			return 1;
 		}
 		else
 		{
-			LuaDLL.luaL_error(l, "The best overloaded method match for 'Type.GetEvent' has some invalid arguments");
+			LuaDLL.luaL_error(L, "invalid arguments to method: Type.GetEvent");
 		}
 
 		return 0;
 	}
 
 	[MonoPInvokeCallbackAttribute(typeof(LuaCSFunction))]
-	static int GetEvents(IntPtr l)
+	static int GetEvents(IntPtr L)
 	{
-		int count = LuaDLL.lua_gettop(l);
+		int count = LuaDLL.lua_gettop(L);
 
 		if (count == 1)
 		{
-			Type obj = (Type)luaMgr.GetNetObject(1);
+			Type obj = (Type)LuaScriptMgr.GetNetObject(L, 1);
 			EventInfo[] o = obj.GetEvents();
-			luaMgr.PushResult(o);
+			LuaScriptMgr.PushResult(L, o);
 			return 1;
 		}
 		else if (count == 2)
 		{
-			Type obj = (Type)luaMgr.GetNetObject(1);
-			BindingFlags arg0 = (BindingFlags)luaMgr.GetNetObject(2);
+			Type obj = (Type)LuaScriptMgr.GetNetObject(L, 1);
+			BindingFlags arg0 = (BindingFlags)LuaScriptMgr.GetNetObject(L, 2);
 			EventInfo[] o = obj.GetEvents(arg0);
-			luaMgr.PushResult(o);
+			LuaScriptMgr.PushResult(L, o);
 			return 1;
 		}
 		else
 		{
-			LuaDLL.luaL_error(l, "The best overloaded method match for 'Type.GetEvents' has some invalid arguments");
+			LuaDLL.luaL_error(L, "invalid arguments to method: Type.GetEvents");
 		}
 
 		return 0;
 	}
 
 	[MonoPInvokeCallbackAttribute(typeof(LuaCSFunction))]
-	static int GetField(IntPtr l)
+	static int GetField(IntPtr L)
 	{
-		int count = LuaDLL.lua_gettop(l);
+		int count = LuaDLL.lua_gettop(L);
 
 		if (count == 2)
 		{
-			Type obj = (Type)luaMgr.GetNetObject(1);
-			string arg0 = luaMgr.GetString(2);
+			Type obj = (Type)LuaScriptMgr.GetNetObject(L, 1);
+			string arg0 = LuaScriptMgr.GetString(L, 2);
 			FieldInfo o = obj.GetField(arg0);
-			luaMgr.PushResult(o);
+			LuaScriptMgr.PushResult(L, o);
 			return 1;
 		}
 		else if (count == 3)
 		{
-			Type obj = (Type)luaMgr.GetNetObject(1);
-			string arg0 = luaMgr.GetString(2);
-			BindingFlags arg1 = (BindingFlags)luaMgr.GetNetObject(3);
+			Type obj = (Type)LuaScriptMgr.GetNetObject(L, 1);
+			string arg0 = LuaScriptMgr.GetString(L, 2);
+			BindingFlags arg1 = (BindingFlags)LuaScriptMgr.GetNetObject(L, 3);
 			FieldInfo o = obj.GetField(arg0,arg1);
-			luaMgr.PushResult(o);
+			LuaScriptMgr.PushResult(L, o);
 			return 1;
 		}
 		else
 		{
-			LuaDLL.luaL_error(l, "The best overloaded method match for 'Type.GetField' has some invalid arguments");
+			LuaDLL.luaL_error(L, "invalid arguments to method: Type.GetField");
 		}
 
 		return 0;
 	}
 
 	[MonoPInvokeCallbackAttribute(typeof(LuaCSFunction))]
-	static int GetFields(IntPtr l)
+	static int GetFields(IntPtr L)
 	{
-		int count = LuaDLL.lua_gettop(l);
+		int count = LuaDLL.lua_gettop(L);
 
 		if (count == 1)
 		{
-			Type obj = (Type)luaMgr.GetNetObject(1);
+			Type obj = (Type)LuaScriptMgr.GetNetObject(L, 1);
 			FieldInfo[] o = obj.GetFields();
-			luaMgr.PushResult(o);
+			LuaScriptMgr.PushResult(L, o);
 			return 1;
 		}
 		else if (count == 2)
 		{
-			Type obj = (Type)luaMgr.GetNetObject(1);
-			BindingFlags arg0 = (BindingFlags)luaMgr.GetNetObject(2);
+			Type obj = (Type)LuaScriptMgr.GetNetObject(L, 1);
+			BindingFlags arg0 = (BindingFlags)LuaScriptMgr.GetNetObject(L, 2);
 			FieldInfo[] o = obj.GetFields(arg0);
-			luaMgr.PushResult(o);
+			LuaScriptMgr.PushResult(L, o);
 			return 1;
 		}
 		else
 		{
-			LuaDLL.luaL_error(l, "The best overloaded method match for 'Type.GetFields' has some invalid arguments");
+			LuaDLL.luaL_error(L, "invalid arguments to method: Type.GetFields");
 		}
 
 		return 0;
 	}
 
 	[MonoPInvokeCallbackAttribute(typeof(LuaCSFunction))]
-	static int GetHashCode(IntPtr l)
+	static int GetHashCode(IntPtr L)
 	{
-		luaMgr.CheckArgsCount(1);
-		Type obj = (Type)luaMgr.GetNetObject(1);
+		LuaScriptMgr.CheckArgsCount(L, 1);
+		Type obj = (Type)LuaScriptMgr.GetNetObject(L, 1);
 		int o = obj.GetHashCode();
-		luaMgr.PushResult(o);
+		LuaScriptMgr.PushResult(L, o);
 		return 1;
 	}
 
 	[MonoPInvokeCallbackAttribute(typeof(LuaCSFunction))]
-	static int GetMember(IntPtr l)
+	static int GetMember(IntPtr L)
 	{
-		int count = LuaDLL.lua_gettop(l);
+		int count = LuaDLL.lua_gettop(L);
 
 		if (count == 2)
 		{
-			Type obj = (Type)luaMgr.GetNetObject(1);
-			string arg0 = luaMgr.GetString(2);
+			Type obj = (Type)LuaScriptMgr.GetNetObject(L, 1);
+			string arg0 = LuaScriptMgr.GetString(L, 2);
 			MemberInfo[] o = obj.GetMember(arg0);
-			luaMgr.PushResult(o);
+			LuaScriptMgr.PushResult(L, o);
 			return 1;
 		}
 		else if (count == 3)
 		{
-			Type obj = (Type)luaMgr.GetNetObject(1);
-			string arg0 = luaMgr.GetString(2);
-			BindingFlags arg1 = (BindingFlags)luaMgr.GetNetObject(3);
+			Type obj = (Type)LuaScriptMgr.GetNetObject(L, 1);
+			string arg0 = LuaScriptMgr.GetString(L, 2);
+			BindingFlags arg1 = (BindingFlags)LuaScriptMgr.GetNetObject(L, 3);
 			MemberInfo[] o = obj.GetMember(arg0,arg1);
-			luaMgr.PushResult(o);
+			LuaScriptMgr.PushResult(L, o);
 			return 1;
 		}
 		else if (count == 4)
 		{
-			Type obj = (Type)luaMgr.GetNetObject(1);
-			string arg0 = luaMgr.GetString(2);
-			MemberTypes arg1 = (MemberTypes)luaMgr.GetNetObject(3);
-			BindingFlags arg2 = (BindingFlags)luaMgr.GetNetObject(4);
+			Type obj = (Type)LuaScriptMgr.GetNetObject(L, 1);
+			string arg0 = LuaScriptMgr.GetString(L, 2);
+			MemberTypes arg1 = (MemberTypes)LuaScriptMgr.GetNetObject(L, 3);
+			BindingFlags arg2 = (BindingFlags)LuaScriptMgr.GetNetObject(L, 4);
 			MemberInfo[] o = obj.GetMember(arg0,arg1,arg2);
-			luaMgr.PushResult(o);
+			LuaScriptMgr.PushResult(L, o);
 			return 1;
 		}
 		else
 		{
-			LuaDLL.luaL_error(l, "The best overloaded method match for 'Type.GetMember' has some invalid arguments");
+			LuaDLL.luaL_error(L, "invalid arguments to method: Type.GetMember");
 		}
 
 		return 0;
 	}
 
 	[MonoPInvokeCallbackAttribute(typeof(LuaCSFunction))]
-	static int GetMembers(IntPtr l)
+	static int GetMembers(IntPtr L)
 	{
-		int count = LuaDLL.lua_gettop(l);
+		int count = LuaDLL.lua_gettop(L);
 
 		if (count == 1)
 		{
-			Type obj = (Type)luaMgr.GetNetObject(1);
+			Type obj = (Type)LuaScriptMgr.GetNetObject(L, 1);
 			MemberInfo[] o = obj.GetMembers();
-			luaMgr.PushResult(o);
+			LuaScriptMgr.PushResult(L, o);
 			return 1;
 		}
 		else if (count == 2)
 		{
-			Type obj = (Type)luaMgr.GetNetObject(1);
-			BindingFlags arg0 = (BindingFlags)luaMgr.GetNetObject(2);
+			Type obj = (Type)LuaScriptMgr.GetNetObject(L, 1);
+			BindingFlags arg0 = (BindingFlags)LuaScriptMgr.GetNetObject(L, 2);
 			MemberInfo[] o = obj.GetMembers(arg0);
-			luaMgr.PushResult(o);
+			LuaScriptMgr.PushResult(L, o);
 			return 1;
 		}
 		else
 		{
-			LuaDLL.luaL_error(l, "The best overloaded method match for 'Type.GetMembers' has some invalid arguments");
+			LuaDLL.luaL_error(L, "invalid arguments to method: Type.GetMembers");
 		}
 
 		return 0;
 	}
 
 	[MonoPInvokeCallbackAttribute(typeof(LuaCSFunction))]
-	static int GetMethod(IntPtr l)
+	static int GetMethod(IntPtr L)
 	{
-		int count = LuaDLL.lua_gettop(l);
+		int count = LuaDLL.lua_gettop(L);
 
 		Type[] types1 = {typeof(Type), typeof(string), typeof(Type[])};
 		Type[] types2 = {typeof(Type), typeof(string), typeof(BindingFlags)};
 
 		if (count == 2)
 		{
-			Type obj = (Type)luaMgr.GetNetObject(1);
-			string arg0 = luaMgr.GetString(2);
+			Type obj = (Type)LuaScriptMgr.GetNetObject(L, 1);
+			string arg0 = LuaScriptMgr.GetString(L, 2);
 			MethodInfo o = obj.GetMethod(arg0);
-			luaMgr.PushResult(o);
+			LuaScriptMgr.PushResult(L, o);
 			return 1;
 		}
-		else if (count == 3 && luaMgr.CheckTypes(types1, 1))
+		else if (count == 3 && LuaScriptMgr.CheckTypes(L, types1, 1))
 		{
-			Type obj = (Type)luaMgr.GetNetObject(1);
-			string arg0 = luaMgr.GetString(2);
-			Type[] objs1 = luaMgr.GetArrayObject<Type>(3);
+			Type obj = (Type)LuaScriptMgr.GetNetObject(L, 1);
+			string arg0 = LuaScriptMgr.GetString(L, 2);
+			Type[] objs1 = LuaScriptMgr.GetArrayObject<Type>(L, 3);
 			MethodInfo o = obj.GetMethod(arg0,objs1);
-			luaMgr.PushResult(o);
+			LuaScriptMgr.PushResult(L, o);
 			return 1;
 		}
-		else if (count == 3 && luaMgr.CheckTypes(types2, 1))
+		else if (count == 3 && LuaScriptMgr.CheckTypes(L, types2, 1))
 		{
-			Type obj = (Type)luaMgr.GetNetObject(1);
-			string arg0 = luaMgr.GetString(2);
-			BindingFlags arg1 = (BindingFlags)luaMgr.GetNetObject(3);
+			Type obj = (Type)LuaScriptMgr.GetNetObject(L, 1);
+			string arg0 = LuaScriptMgr.GetString(L, 2);
+			BindingFlags arg1 = (BindingFlags)LuaScriptMgr.GetNetObject(L, 3);
 			MethodInfo o = obj.GetMethod(arg0,arg1);
-			luaMgr.PushResult(o);
+			LuaScriptMgr.PushResult(L, o);
 			return 1;
 		}
 		else if (count == 4)
 		{
-			Type obj = (Type)luaMgr.GetNetObject(1);
-			string arg0 = luaMgr.GetString(2);
-			Type[] objs1 = luaMgr.GetArrayObject<Type>(3);
-			ParameterModifier[] objs2 = luaMgr.GetArrayObject<ParameterModifier>(4);
+			Type obj = (Type)LuaScriptMgr.GetNetObject(L, 1);
+			string arg0 = LuaScriptMgr.GetString(L, 2);
+			Type[] objs1 = LuaScriptMgr.GetArrayObject<Type>(L, 3);
+			ParameterModifier[] objs2 = LuaScriptMgr.GetArrayObject<ParameterModifier>(L, 4);
 			MethodInfo o = obj.GetMethod(arg0,objs1,objs2);
-			luaMgr.PushResult(o);
+			LuaScriptMgr.PushResult(L, o);
 			return 1;
 		}
 		else if (count == 6)
 		{
-			Type obj = (Type)luaMgr.GetNetObject(1);
-			string arg0 = luaMgr.GetString(2);
-			BindingFlags arg1 = (BindingFlags)luaMgr.GetNetObject(3);
-			Binder arg2 = (Binder)luaMgr.GetNetObject(4);
-			Type[] objs3 = luaMgr.GetArrayObject<Type>(5);
-			ParameterModifier[] objs4 = luaMgr.GetArrayObject<ParameterModifier>(6);
+			Type obj = (Type)LuaScriptMgr.GetNetObject(L, 1);
+			string arg0 = LuaScriptMgr.GetString(L, 2);
+			BindingFlags arg1 = (BindingFlags)LuaScriptMgr.GetNetObject(L, 3);
+			Binder arg2 = (Binder)LuaScriptMgr.GetNetObject(L, 4);
+			Type[] objs3 = LuaScriptMgr.GetArrayObject<Type>(L, 5);
+			ParameterModifier[] objs4 = LuaScriptMgr.GetArrayObject<ParameterModifier>(L, 6);
 			MethodInfo o = obj.GetMethod(arg0,arg1,arg2,objs3,objs4);
-			luaMgr.PushResult(o);
+			LuaScriptMgr.PushResult(L, o);
 			return 1;
 		}
 		else if (count == 7)
 		{
-			Type obj = (Type)luaMgr.GetNetObject(1);
-			string arg0 = luaMgr.GetString(2);
-			BindingFlags arg1 = (BindingFlags)luaMgr.GetNetObject(3);
-			Binder arg2 = (Binder)luaMgr.GetNetObject(4);
-			CallingConventions arg3 = (CallingConventions)luaMgr.GetNetObject(5);
-			Type[] objs4 = luaMgr.GetArrayObject<Type>(6);
-			ParameterModifier[] objs5 = luaMgr.GetArrayObject<ParameterModifier>(7);
+			Type obj = (Type)LuaScriptMgr.GetNetObject(L, 1);
+			string arg0 = LuaScriptMgr.GetString(L, 2);
+			BindingFlags arg1 = (BindingFlags)LuaScriptMgr.GetNetObject(L, 3);
+			Binder arg2 = (Binder)LuaScriptMgr.GetNetObject(L, 4);
+			CallingConventions arg3 = (CallingConventions)LuaScriptMgr.GetNetObject(L, 5);
+			Type[] objs4 = LuaScriptMgr.GetArrayObject<Type>(L, 6);
+			ParameterModifier[] objs5 = LuaScriptMgr.GetArrayObject<ParameterModifier>(L, 7);
 			MethodInfo o = obj.GetMethod(arg0,arg1,arg2,arg3,objs4,objs5);
-			luaMgr.PushResult(o);
+			LuaScriptMgr.PushResult(L, o);
 			return 1;
 		}
 		else
 		{
-			LuaDLL.luaL_error(l, "The best overloaded method match for 'Type.GetMethod' has some invalid arguments");
+			LuaDLL.luaL_error(L, "invalid arguments to method: Type.GetMethod");
 		}
 
 		return 0;
 	}
 
 	[MonoPInvokeCallbackAttribute(typeof(LuaCSFunction))]
-	static int GetMethods(IntPtr l)
+	static int GetMethods(IntPtr L)
 	{
-		int count = LuaDLL.lua_gettop(l);
+		int count = LuaDLL.lua_gettop(L);
 
 		if (count == 1)
 		{
-			Type obj = (Type)luaMgr.GetNetObject(1);
+			Type obj = (Type)LuaScriptMgr.GetNetObject(L, 1);
 			MethodInfo[] o = obj.GetMethods();
-			luaMgr.PushResult(o);
+			LuaScriptMgr.PushResult(L, o);
 			return 1;
 		}
 		else if (count == 2)
 		{
-			Type obj = (Type)luaMgr.GetNetObject(1);
-			BindingFlags arg0 = (BindingFlags)luaMgr.GetNetObject(2);
+			Type obj = (Type)LuaScriptMgr.GetNetObject(L, 1);
+			BindingFlags arg0 = (BindingFlags)LuaScriptMgr.GetNetObject(L, 2);
 			MethodInfo[] o = obj.GetMethods(arg0);
-			luaMgr.PushResult(o);
+			LuaScriptMgr.PushResult(L, o);
 			return 1;
 		}
 		else
 		{
-			LuaDLL.luaL_error(l, "The best overloaded method match for 'Type.GetMethods' has some invalid arguments");
+			LuaDLL.luaL_error(L, "invalid arguments to method: Type.GetMethods");
 		}
 
 		return 0;
 	}
 
 	[MonoPInvokeCallbackAttribute(typeof(LuaCSFunction))]
-	static int GetNestedType(IntPtr l)
+	static int GetNestedType(IntPtr L)
 	{
-		int count = LuaDLL.lua_gettop(l);
+		int count = LuaDLL.lua_gettop(L);
 
 		if (count == 2)
 		{
-			Type obj = (Type)luaMgr.GetNetObject(1);
-			string arg0 = luaMgr.GetString(2);
+			Type obj = (Type)LuaScriptMgr.GetNetObject(L, 1);
+			string arg0 = LuaScriptMgr.GetString(L, 2);
 			Type o = obj.GetNestedType(arg0);
-			luaMgr.PushResult(o);
+			LuaScriptMgr.PushResult(L, o);
 			return 1;
 		}
 		else if (count == 3)
 		{
-			Type obj = (Type)luaMgr.GetNetObject(1);
-			string arg0 = luaMgr.GetString(2);
-			BindingFlags arg1 = (BindingFlags)luaMgr.GetNetObject(3);
+			Type obj = (Type)LuaScriptMgr.GetNetObject(L, 1);
+			string arg0 = LuaScriptMgr.GetString(L, 2);
+			BindingFlags arg1 = (BindingFlags)LuaScriptMgr.GetNetObject(L, 3);
 			Type o = obj.GetNestedType(arg0,arg1);
-			luaMgr.PushResult(o);
+			LuaScriptMgr.PushResult(L, o);
 			return 1;
 		}
 		else
 		{
-			LuaDLL.luaL_error(l, "The best overloaded method match for 'Type.GetNestedType' has some invalid arguments");
+			LuaDLL.luaL_error(L, "invalid arguments to method: Type.GetNestedType");
 		}
 
 		return 0;
 	}
 
 	[MonoPInvokeCallbackAttribute(typeof(LuaCSFunction))]
-	static int GetNestedTypes(IntPtr l)
+	static int GetNestedTypes(IntPtr L)
 	{
-		int count = LuaDLL.lua_gettop(l);
+		int count = LuaDLL.lua_gettop(L);
 
 		if (count == 1)
 		{
-			Type obj = (Type)luaMgr.GetNetObject(1);
+			Type obj = (Type)LuaScriptMgr.GetNetObject(L, 1);
 			Type[] o = obj.GetNestedTypes();
-			luaMgr.PushResult(o);
+			LuaScriptMgr.PushResult(L, o);
 			return 1;
 		}
 		else if (count == 2)
 		{
-			Type obj = (Type)luaMgr.GetNetObject(1);
-			BindingFlags arg0 = (BindingFlags)luaMgr.GetNetObject(2);
+			Type obj = (Type)LuaScriptMgr.GetNetObject(L, 1);
+			BindingFlags arg0 = (BindingFlags)LuaScriptMgr.GetNetObject(L, 2);
 			Type[] o = obj.GetNestedTypes(arg0);
-			luaMgr.PushResult(o);
+			LuaScriptMgr.PushResult(L, o);
 			return 1;
 		}
 		else
 		{
-			LuaDLL.luaL_error(l, "The best overloaded method match for 'Type.GetNestedTypes' has some invalid arguments");
+			LuaDLL.luaL_error(L, "invalid arguments to method: Type.GetNestedTypes");
 		}
 
 		return 0;
 	}
 
 	[MonoPInvokeCallbackAttribute(typeof(LuaCSFunction))]
-	static int GetProperties(IntPtr l)
+	static int GetProperties(IntPtr L)
 	{
-		int count = LuaDLL.lua_gettop(l);
+		int count = LuaDLL.lua_gettop(L);
 
 		if (count == 1)
 		{
-			Type obj = (Type)luaMgr.GetNetObject(1);
+			Type obj = (Type)LuaScriptMgr.GetNetObject(L, 1);
 			PropertyInfo[] o = obj.GetProperties();
-			luaMgr.PushResult(o);
+			LuaScriptMgr.PushResult(L, o);
 			return 1;
 		}
 		else if (count == 2)
 		{
-			Type obj = (Type)luaMgr.GetNetObject(1);
-			BindingFlags arg0 = (BindingFlags)luaMgr.GetNetObject(2);
+			Type obj = (Type)LuaScriptMgr.GetNetObject(L, 1);
+			BindingFlags arg0 = (BindingFlags)LuaScriptMgr.GetNetObject(L, 2);
 			PropertyInfo[] o = obj.GetProperties(arg0);
-			luaMgr.PushResult(o);
+			LuaScriptMgr.PushResult(L, o);
 			return 1;
 		}
 		else
 		{
-			LuaDLL.luaL_error(l, "The best overloaded method match for 'Type.GetProperties' has some invalid arguments");
+			LuaDLL.luaL_error(L, "invalid arguments to method: Type.GetProperties");
 		}
 
 		return 0;
 	}
 
 	[MonoPInvokeCallbackAttribute(typeof(LuaCSFunction))]
-	static int GetProperty(IntPtr l)
+	static int GetProperty(IntPtr L)
 	{
-		int count = LuaDLL.lua_gettop(l);
+		int count = LuaDLL.lua_gettop(L);
 
 		Type[] types1 = {typeof(Type), typeof(string), typeof(Type[])};
 		Type[] types2 = {typeof(Type), typeof(string), typeof(Type)};
@@ -1490,378 +1777,378 @@ public class TypeWrap : ILuaWrap
 
 		if (count == 2)
 		{
-			Type obj = (Type)luaMgr.GetNetObject(1);
-			string arg0 = luaMgr.GetString(2);
+			Type obj = (Type)LuaScriptMgr.GetNetObject(L, 1);
+			string arg0 = LuaScriptMgr.GetString(L, 2);
 			PropertyInfo o = obj.GetProperty(arg0);
-			luaMgr.PushResult(o);
+			LuaScriptMgr.PushResult(L, o);
 			return 1;
 		}
-		else if (count == 3 && luaMgr.CheckTypes(types1, 1))
+		else if (count == 3 && LuaScriptMgr.CheckTypes(L, types1, 1))
 		{
-			Type obj = (Type)luaMgr.GetNetObject(1);
-			string arg0 = luaMgr.GetString(2);
-			Type[] objs1 = luaMgr.GetArrayObject<Type>(3);
+			Type obj = (Type)LuaScriptMgr.GetNetObject(L, 1);
+			string arg0 = LuaScriptMgr.GetString(L, 2);
+			Type[] objs1 = LuaScriptMgr.GetArrayObject<Type>(L, 3);
 			PropertyInfo o = obj.GetProperty(arg0,objs1);
-			luaMgr.PushResult(o);
+			LuaScriptMgr.PushResult(L, o);
 			return 1;
 		}
-		else if (count == 3 && luaMgr.CheckTypes(types2, 1))
+		else if (count == 3 && LuaScriptMgr.CheckTypes(L, types2, 1))
 		{
-			Type obj = (Type)luaMgr.GetNetObject(1);
-			string arg0 = luaMgr.GetString(2);
-			Type arg1 = (Type)luaMgr.GetNetObject(3);
+			Type obj = (Type)LuaScriptMgr.GetNetObject(L, 1);
+			string arg0 = LuaScriptMgr.GetString(L, 2);
+			Type arg1 = (Type)LuaScriptMgr.GetNetObject(L, 3);
 			PropertyInfo o = obj.GetProperty(arg0,arg1);
-			luaMgr.PushResult(o);
+			LuaScriptMgr.PushResult(L, o);
 			return 1;
 		}
-		else if (count == 3 && luaMgr.CheckTypes(types3, 1))
+		else if (count == 3 && LuaScriptMgr.CheckTypes(L, types3, 1))
 		{
-			Type obj = (Type)luaMgr.GetNetObject(1);
-			string arg0 = luaMgr.GetString(2);
-			BindingFlags arg1 = (BindingFlags)luaMgr.GetNetObject(3);
+			Type obj = (Type)LuaScriptMgr.GetNetObject(L, 1);
+			string arg0 = LuaScriptMgr.GetString(L, 2);
+			BindingFlags arg1 = (BindingFlags)LuaScriptMgr.GetNetObject(L, 3);
 			PropertyInfo o = obj.GetProperty(arg0,arg1);
-			luaMgr.PushResult(o);
+			LuaScriptMgr.PushResult(L, o);
 			return 1;
 		}
 		else if (count == 4)
 		{
-			Type obj = (Type)luaMgr.GetNetObject(1);
-			string arg0 = luaMgr.GetString(2);
-			Type arg1 = (Type)luaMgr.GetNetObject(3);
-			Type[] objs2 = luaMgr.GetArrayObject<Type>(4);
+			Type obj = (Type)LuaScriptMgr.GetNetObject(L, 1);
+			string arg0 = LuaScriptMgr.GetString(L, 2);
+			Type arg1 = (Type)LuaScriptMgr.GetNetObject(L, 3);
+			Type[] objs2 = LuaScriptMgr.GetArrayObject<Type>(L, 4);
 			PropertyInfo o = obj.GetProperty(arg0,arg1,objs2);
-			luaMgr.PushResult(o);
+			LuaScriptMgr.PushResult(L, o);
 			return 1;
 		}
 		else if (count == 5)
 		{
-			Type obj = (Type)luaMgr.GetNetObject(1);
-			string arg0 = luaMgr.GetString(2);
-			Type arg1 = (Type)luaMgr.GetNetObject(3);
-			Type[] objs2 = luaMgr.GetArrayObject<Type>(4);
-			ParameterModifier[] objs3 = luaMgr.GetArrayObject<ParameterModifier>(5);
+			Type obj = (Type)LuaScriptMgr.GetNetObject(L, 1);
+			string arg0 = LuaScriptMgr.GetString(L, 2);
+			Type arg1 = (Type)LuaScriptMgr.GetNetObject(L, 3);
+			Type[] objs2 = LuaScriptMgr.GetArrayObject<Type>(L, 4);
+			ParameterModifier[] objs3 = LuaScriptMgr.GetArrayObject<ParameterModifier>(L, 5);
 			PropertyInfo o = obj.GetProperty(arg0,arg1,objs2,objs3);
-			luaMgr.PushResult(o);
+			LuaScriptMgr.PushResult(L, o);
 			return 1;
 		}
 		else if (count == 7)
 		{
-			Type obj = (Type)luaMgr.GetNetObject(1);
-			string arg0 = luaMgr.GetString(2);
-			BindingFlags arg1 = (BindingFlags)luaMgr.GetNetObject(3);
-			Binder arg2 = (Binder)luaMgr.GetNetObject(4);
-			Type arg3 = (Type)luaMgr.GetNetObject(5);
-			Type[] objs4 = luaMgr.GetArrayObject<Type>(6);
-			ParameterModifier[] objs5 = luaMgr.GetArrayObject<ParameterModifier>(7);
+			Type obj = (Type)LuaScriptMgr.GetNetObject(L, 1);
+			string arg0 = LuaScriptMgr.GetString(L, 2);
+			BindingFlags arg1 = (BindingFlags)LuaScriptMgr.GetNetObject(L, 3);
+			Binder arg2 = (Binder)LuaScriptMgr.GetNetObject(L, 4);
+			Type arg3 = (Type)LuaScriptMgr.GetNetObject(L, 5);
+			Type[] objs4 = LuaScriptMgr.GetArrayObject<Type>(L, 6);
+			ParameterModifier[] objs5 = LuaScriptMgr.GetArrayObject<ParameterModifier>(L, 7);
 			PropertyInfo o = obj.GetProperty(arg0,arg1,arg2,arg3,objs4,objs5);
-			luaMgr.PushResult(o);
+			LuaScriptMgr.PushResult(L, o);
 			return 1;
 		}
 		else
 		{
-			LuaDLL.luaL_error(l, "The best overloaded method match for 'Type.GetProperty' has some invalid arguments");
+			LuaDLL.luaL_error(L, "invalid arguments to method: Type.GetProperty");
 		}
 
 		return 0;
 	}
 
 	[MonoPInvokeCallbackAttribute(typeof(LuaCSFunction))]
-	static int GetConstructor(IntPtr l)
+	static int GetConstructor(IntPtr L)
 	{
-		int count = LuaDLL.lua_gettop(l);
+		int count = LuaDLL.lua_gettop(L);
 
 		if (count == 2)
 		{
-			Type obj = (Type)luaMgr.GetNetObject(1);
-			Type[] objs0 = luaMgr.GetArrayObject<Type>(2);
+			Type obj = (Type)LuaScriptMgr.GetNetObject(L, 1);
+			Type[] objs0 = LuaScriptMgr.GetArrayObject<Type>(L, 2);
 			ConstructorInfo o = obj.GetConstructor(objs0);
-			luaMgr.PushResult(o);
+			LuaScriptMgr.PushResult(L, o);
 			return 1;
 		}
 		else if (count == 5)
 		{
-			Type obj = (Type)luaMgr.GetNetObject(1);
-			BindingFlags arg0 = (BindingFlags)luaMgr.GetNetObject(2);
-			Binder arg1 = (Binder)luaMgr.GetNetObject(3);
-			Type[] objs2 = luaMgr.GetArrayObject<Type>(4);
-			ParameterModifier[] objs3 = luaMgr.GetArrayObject<ParameterModifier>(5);
+			Type obj = (Type)LuaScriptMgr.GetNetObject(L, 1);
+			BindingFlags arg0 = (BindingFlags)LuaScriptMgr.GetNetObject(L, 2);
+			Binder arg1 = (Binder)LuaScriptMgr.GetNetObject(L, 3);
+			Type[] objs2 = LuaScriptMgr.GetArrayObject<Type>(L, 4);
+			ParameterModifier[] objs3 = LuaScriptMgr.GetArrayObject<ParameterModifier>(L, 5);
 			ConstructorInfo o = obj.GetConstructor(arg0,arg1,objs2,objs3);
-			luaMgr.PushResult(o);
+			LuaScriptMgr.PushResult(L, o);
 			return 1;
 		}
 		else if (count == 6)
 		{
-			Type obj = (Type)luaMgr.GetNetObject(1);
-			BindingFlags arg0 = (BindingFlags)luaMgr.GetNetObject(2);
-			Binder arg1 = (Binder)luaMgr.GetNetObject(3);
-			CallingConventions arg2 = (CallingConventions)luaMgr.GetNetObject(4);
-			Type[] objs3 = luaMgr.GetArrayObject<Type>(5);
-			ParameterModifier[] objs4 = luaMgr.GetArrayObject<ParameterModifier>(6);
+			Type obj = (Type)LuaScriptMgr.GetNetObject(L, 1);
+			BindingFlags arg0 = (BindingFlags)LuaScriptMgr.GetNetObject(L, 2);
+			Binder arg1 = (Binder)LuaScriptMgr.GetNetObject(L, 3);
+			CallingConventions arg2 = (CallingConventions)LuaScriptMgr.GetNetObject(L, 4);
+			Type[] objs3 = LuaScriptMgr.GetArrayObject<Type>(L, 5);
+			ParameterModifier[] objs4 = LuaScriptMgr.GetArrayObject<ParameterModifier>(L, 6);
 			ConstructorInfo o = obj.GetConstructor(arg0,arg1,arg2,objs3,objs4);
-			luaMgr.PushResult(o);
+			LuaScriptMgr.PushResult(L, o);
 			return 1;
 		}
 		else
 		{
-			LuaDLL.luaL_error(l, "The best overloaded method match for 'Type.GetConstructor' has some invalid arguments");
+			LuaDLL.luaL_error(L, "invalid arguments to method: Type.GetConstructor");
 		}
 
 		return 0;
 	}
 
 	[MonoPInvokeCallbackAttribute(typeof(LuaCSFunction))]
-	static int GetConstructors(IntPtr l)
+	static int GetConstructors(IntPtr L)
 	{
-		int count = LuaDLL.lua_gettop(l);
+		int count = LuaDLL.lua_gettop(L);
 
 		if (count == 1)
 		{
-			Type obj = (Type)luaMgr.GetNetObject(1);
+			Type obj = (Type)LuaScriptMgr.GetNetObject(L, 1);
 			ConstructorInfo[] o = obj.GetConstructors();
-			luaMgr.PushResult(o);
+			LuaScriptMgr.PushResult(L, o);
 			return 1;
 		}
 		else if (count == 2)
 		{
-			Type obj = (Type)luaMgr.GetNetObject(1);
-			BindingFlags arg0 = (BindingFlags)luaMgr.GetNetObject(2);
+			Type obj = (Type)LuaScriptMgr.GetNetObject(L, 1);
+			BindingFlags arg0 = (BindingFlags)LuaScriptMgr.GetNetObject(L, 2);
 			ConstructorInfo[] o = obj.GetConstructors(arg0);
-			luaMgr.PushResult(o);
+			LuaScriptMgr.PushResult(L, o);
 			return 1;
 		}
 		else
 		{
-			LuaDLL.luaL_error(l, "The best overloaded method match for 'Type.GetConstructors' has some invalid arguments");
+			LuaDLL.luaL_error(L, "invalid arguments to method: Type.GetConstructors");
 		}
 
 		return 0;
 	}
 
 	[MonoPInvokeCallbackAttribute(typeof(LuaCSFunction))]
-	static int GetDefaultMembers(IntPtr l)
+	static int GetDefaultMembers(IntPtr L)
 	{
-		luaMgr.CheckArgsCount(1);
-		Type obj = (Type)luaMgr.GetNetObject(1);
+		LuaScriptMgr.CheckArgsCount(L, 1);
+		Type obj = (Type)LuaScriptMgr.GetNetObject(L, 1);
 		MemberInfo[] o = obj.GetDefaultMembers();
-		luaMgr.PushResult(o);
+		LuaScriptMgr.PushResult(L, o);
 		return 1;
 	}
 
 	[MonoPInvokeCallbackAttribute(typeof(LuaCSFunction))]
-	static int FindMembers(IntPtr l)
+	static int FindMembers(IntPtr L)
 	{
-		luaMgr.CheckArgsCount(5);
-		Type obj = (Type)luaMgr.GetNetObject(1);
-		MemberTypes arg0 = (MemberTypes)luaMgr.GetNetObject(2);
-		BindingFlags arg1 = (BindingFlags)luaMgr.GetNetObject(3);
-		MemberFilter arg2 = (MemberFilter)luaMgr.GetNetObject(4);
-		object arg3 = (object)luaMgr.GetNetObject(5);
+		LuaScriptMgr.CheckArgsCount(L, 5);
+		Type obj = (Type)LuaScriptMgr.GetNetObject(L, 1);
+		MemberTypes arg0 = (MemberTypes)LuaScriptMgr.GetNetObject(L, 2);
+		BindingFlags arg1 = (BindingFlags)LuaScriptMgr.GetNetObject(L, 3);
+		MemberFilter arg2 = (MemberFilter)LuaScriptMgr.GetNetObject(L, 4);
+		object arg3 = (object)LuaScriptMgr.GetNetObject(L, 5);
 		MemberInfo[] o = obj.FindMembers(arg0,arg1,arg2,arg3);
-		luaMgr.PushResult(o);
+		LuaScriptMgr.PushResult(L, o);
 		return 1;
 	}
 
 	[MonoPInvokeCallbackAttribute(typeof(LuaCSFunction))]
-	static int InvokeMember(IntPtr l)
+	static int InvokeMember(IntPtr L)
 	{
-		int count = LuaDLL.lua_gettop(l);
+		int count = LuaDLL.lua_gettop(L);
 
 		if (count == 6)
 		{
-			Type obj = (Type)luaMgr.GetNetObject(1);
-			string arg0 = luaMgr.GetString(2);
-			BindingFlags arg1 = (BindingFlags)luaMgr.GetNetObject(3);
-			Binder arg2 = (Binder)luaMgr.GetNetObject(4);
-			object arg3 = (object)luaMgr.GetNetObject(5);
-			object[] objs4 = luaMgr.GetArrayObject<object>(6);
+			Type obj = (Type)LuaScriptMgr.GetNetObject(L, 1);
+			string arg0 = LuaScriptMgr.GetString(L, 2);
+			BindingFlags arg1 = (BindingFlags)LuaScriptMgr.GetNetObject(L, 3);
+			Binder arg2 = (Binder)LuaScriptMgr.GetNetObject(L, 4);
+			object arg3 = (object)LuaScriptMgr.GetNetObject(L, 5);
+			object[] objs4 = LuaScriptMgr.GetArrayObject<object>(L, 6);
 			object o = obj.InvokeMember(arg0,arg1,arg2,arg3,objs4);
-			luaMgr.PushResult(o);
+			LuaScriptMgr.PushResult(L, o);
 			return 1;
 		}
 		else if (count == 7)
 		{
-			Type obj = (Type)luaMgr.GetNetObject(1);
-			string arg0 = luaMgr.GetString(2);
-			BindingFlags arg1 = (BindingFlags)luaMgr.GetNetObject(3);
-			Binder arg2 = (Binder)luaMgr.GetNetObject(4);
-			object arg3 = (object)luaMgr.GetNetObject(5);
-			object[] objs4 = luaMgr.GetArrayObject<object>(6);
-			CultureInfo arg5 = (CultureInfo)luaMgr.GetNetObject(7);
+			Type obj = (Type)LuaScriptMgr.GetNetObject(L, 1);
+			string arg0 = LuaScriptMgr.GetString(L, 2);
+			BindingFlags arg1 = (BindingFlags)LuaScriptMgr.GetNetObject(L, 3);
+			Binder arg2 = (Binder)LuaScriptMgr.GetNetObject(L, 4);
+			object arg3 = (object)LuaScriptMgr.GetNetObject(L, 5);
+			object[] objs4 = LuaScriptMgr.GetArrayObject<object>(L, 6);
+			CultureInfo arg5 = (CultureInfo)LuaScriptMgr.GetNetObject(L, 7);
 			object o = obj.InvokeMember(arg0,arg1,arg2,arg3,objs4,arg5);
-			luaMgr.PushResult(o);
+			LuaScriptMgr.PushResult(L, o);
 			return 1;
 		}
 		else if (count == 9)
 		{
-			Type obj = (Type)luaMgr.GetNetObject(1);
-			string arg0 = luaMgr.GetString(2);
-			BindingFlags arg1 = (BindingFlags)luaMgr.GetNetObject(3);
-			Binder arg2 = (Binder)luaMgr.GetNetObject(4);
-			object arg3 = (object)luaMgr.GetNetObject(5);
-			object[] objs4 = luaMgr.GetArrayObject<object>(6);
-			ParameterModifier[] objs5 = luaMgr.GetArrayObject<ParameterModifier>(7);
-			CultureInfo arg6 = (CultureInfo)luaMgr.GetNetObject(8);
-			string[] objs7 = luaMgr.GetArrayString(9);
+			Type obj = (Type)LuaScriptMgr.GetNetObject(L, 1);
+			string arg0 = LuaScriptMgr.GetString(L, 2);
+			BindingFlags arg1 = (BindingFlags)LuaScriptMgr.GetNetObject(L, 3);
+			Binder arg2 = (Binder)LuaScriptMgr.GetNetObject(L, 4);
+			object arg3 = (object)LuaScriptMgr.GetNetObject(L, 5);
+			object[] objs4 = LuaScriptMgr.GetArrayObject<object>(L, 6);
+			ParameterModifier[] objs5 = LuaScriptMgr.GetArrayObject<ParameterModifier>(L, 7);
+			CultureInfo arg6 = (CultureInfo)LuaScriptMgr.GetNetObject(L, 8);
+			string[] objs7 = LuaScriptMgr.GetArrayString(L, 9);
 			object o = obj.InvokeMember(arg0,arg1,arg2,arg3,objs4,objs5,arg6,objs7);
-			luaMgr.PushResult(o);
+			LuaScriptMgr.PushResult(L, o);
 			return 1;
 		}
 		else
 		{
-			LuaDLL.luaL_error(l, "The best overloaded method match for 'Type.InvokeMember' has some invalid arguments");
+			LuaDLL.luaL_error(L, "invalid arguments to method: Type.InvokeMember");
 		}
 
 		return 0;
 	}
 
 	[MonoPInvokeCallbackAttribute(typeof(LuaCSFunction))]
-	static int ToString(IntPtr l)
+	static int ToString(IntPtr L)
 	{
-		luaMgr.CheckArgsCount(1);
-		Type obj = (Type)luaMgr.GetNetObject(1);
+		LuaScriptMgr.CheckArgsCount(L, 1);
+		Type obj = (Type)LuaScriptMgr.GetNetObject(L, 1);
 		string o = obj.ToString();
-		luaMgr.PushResult(o);
+		LuaScriptMgr.PushResult(L, o);
 		return 1;
 	}
 
 	[MonoPInvokeCallbackAttribute(typeof(LuaCSFunction))]
-	static int GetGenericArguments(IntPtr l)
+	static int GetGenericArguments(IntPtr L)
 	{
-		luaMgr.CheckArgsCount(1);
-		Type obj = (Type)luaMgr.GetNetObject(1);
+		LuaScriptMgr.CheckArgsCount(L, 1);
+		Type obj = (Type)LuaScriptMgr.GetNetObject(L, 1);
 		Type[] o = obj.GetGenericArguments();
-		luaMgr.PushResult(o);
+		LuaScriptMgr.PushResult(L, o);
 		return 1;
 	}
 
 	[MonoPInvokeCallbackAttribute(typeof(LuaCSFunction))]
-	static int GetGenericTypeDefinition(IntPtr l)
+	static int GetGenericTypeDefinition(IntPtr L)
 	{
-		luaMgr.CheckArgsCount(1);
-		Type obj = (Type)luaMgr.GetNetObject(1);
+		LuaScriptMgr.CheckArgsCount(L, 1);
+		Type obj = (Type)LuaScriptMgr.GetNetObject(L, 1);
 		Type o = obj.GetGenericTypeDefinition();
-		luaMgr.PushResult(o);
+		LuaScriptMgr.PushResult(L, o);
 		return 1;
 	}
 
 	[MonoPInvokeCallbackAttribute(typeof(LuaCSFunction))]
-	static int MakeGenericType(IntPtr l)
+	static int MakeGenericType(IntPtr L)
 	{
-		int count = LuaDLL.lua_gettop(l);
-		Type obj = (Type)luaMgr.GetNetObject(1);
-		Type[] objs0 = luaMgr.GetParamsObject<Type>(2, count - 1);
+		int count = LuaDLL.lua_gettop(L);
+		Type obj = (Type)LuaScriptMgr.GetNetObject(L, 1);
+		Type[] objs0 = LuaScriptMgr.GetParamsObject<Type>(L, 2, count - 1);
 		Type o = obj.MakeGenericType(objs0);
-		luaMgr.PushResult(o);
+		LuaScriptMgr.PushResult(L, o);
 		return 1;
 	}
 
 	[MonoPInvokeCallbackAttribute(typeof(LuaCSFunction))]
-	static int GetGenericParameterConstraints(IntPtr l)
+	static int GetGenericParameterConstraints(IntPtr L)
 	{
-		luaMgr.CheckArgsCount(1);
-		Type obj = (Type)luaMgr.GetNetObject(1);
+		LuaScriptMgr.CheckArgsCount(L, 1);
+		Type obj = (Type)LuaScriptMgr.GetNetObject(L, 1);
 		Type[] o = obj.GetGenericParameterConstraints();
-		luaMgr.PushResult(o);
+		LuaScriptMgr.PushResult(L, o);
 		return 1;
 	}
 
 	[MonoPInvokeCallbackAttribute(typeof(LuaCSFunction))]
-	static int MakeArrayType(IntPtr l)
+	static int MakeArrayType(IntPtr L)
 	{
-		int count = LuaDLL.lua_gettop(l);
+		int count = LuaDLL.lua_gettop(L);
 
 		if (count == 1)
 		{
-			Type obj = (Type)luaMgr.GetNetObject(1);
+			Type obj = (Type)LuaScriptMgr.GetNetObject(L, 1);
 			Type o = obj.MakeArrayType();
-			luaMgr.PushResult(o);
+			LuaScriptMgr.PushResult(L, o);
 			return 1;
 		}
 		else if (count == 2)
 		{
-			Type obj = (Type)luaMgr.GetNetObject(1);
-			int arg0 = (int)luaMgr.GetNumber(2);
+			Type obj = (Type)LuaScriptMgr.GetNetObject(L, 1);
+			int arg0 = (int)LuaScriptMgr.GetNumber(L, 2);
 			Type o = obj.MakeArrayType(arg0);
-			luaMgr.PushResult(o);
+			LuaScriptMgr.PushResult(L, o);
 			return 1;
 		}
 		else
 		{
-			LuaDLL.luaL_error(l, "The best overloaded method match for 'Type.MakeArrayType' has some invalid arguments");
+			LuaDLL.luaL_error(L, "invalid arguments to method: Type.MakeArrayType");
 		}
 
 		return 0;
 	}
 
 	[MonoPInvokeCallbackAttribute(typeof(LuaCSFunction))]
-	static int MakeByRefType(IntPtr l)
+	static int MakeByRefType(IntPtr L)
 	{
-		luaMgr.CheckArgsCount(1);
-		Type obj = (Type)luaMgr.GetNetObject(1);
+		LuaScriptMgr.CheckArgsCount(L, 1);
+		Type obj = (Type)LuaScriptMgr.GetNetObject(L, 1);
 		Type o = obj.MakeByRefType();
-		luaMgr.PushResult(o);
+		LuaScriptMgr.PushResult(L, o);
 		return 1;
 	}
 
 	[MonoPInvokeCallbackAttribute(typeof(LuaCSFunction))]
-	static int MakePointerType(IntPtr l)
+	static int MakePointerType(IntPtr L)
 	{
-		luaMgr.CheckArgsCount(1);
-		Type obj = (Type)luaMgr.GetNetObject(1);
+		LuaScriptMgr.CheckArgsCount(L, 1);
+		Type obj = (Type)LuaScriptMgr.GetNetObject(L, 1);
 		Type o = obj.MakePointerType();
-		luaMgr.PushResult(o);
+		LuaScriptMgr.PushResult(L, o);
 		return 1;
 	}
 
 	[MonoPInvokeCallbackAttribute(typeof(LuaCSFunction))]
-	static int ReflectionOnlyGetType(IntPtr l)
+	static int ReflectionOnlyGetType(IntPtr L)
 	{
-		luaMgr.CheckArgsCount(3);
-		string arg0 = luaMgr.GetString(1);
-		bool arg1 = luaMgr.GetBoolean(2);
-		bool arg2 = luaMgr.GetBoolean(3);
+		LuaScriptMgr.CheckArgsCount(L, 3);
+		string arg0 = LuaScriptMgr.GetString(L, 1);
+		bool arg1 = LuaScriptMgr.GetBoolean(L, 2);
+		bool arg2 = LuaScriptMgr.GetBoolean(L, 3);
 		Type o = Type.ReflectionOnlyGetType(arg0,arg1,arg2);
-		luaMgr.PushResult(o);
+		LuaScriptMgr.PushResult(L, o);
 		return 1;
 	}
 
 	[MonoPInvokeCallbackAttribute(typeof(LuaCSFunction))]
-	static int IsDefined(IntPtr l)
+	static int IsDefined(IntPtr L)
 	{
-		luaMgr.CheckArgsCount(3);
-		Type obj = (Type)luaMgr.GetNetObject(1);
-		Type arg0 = (Type)luaMgr.GetNetObject(2);
-		bool arg1 = luaMgr.GetBoolean(3);
+		LuaScriptMgr.CheckArgsCount(L, 3);
+		Type obj = (Type)LuaScriptMgr.GetNetObject(L, 1);
+		Type arg0 = (Type)LuaScriptMgr.GetNetObject(L, 2);
+		bool arg1 = LuaScriptMgr.GetBoolean(L, 3);
 		bool o = obj.IsDefined(arg0,arg1);
-		luaMgr.PushResult(o);
+		LuaScriptMgr.PushResult(L, o);
 		return 1;
 	}
 
 	[MonoPInvokeCallbackAttribute(typeof(LuaCSFunction))]
-	static int GetCustomAttributes(IntPtr l)
+	static int GetCustomAttributes(IntPtr L)
 	{
-		int count = LuaDLL.lua_gettop(l);
+		int count = LuaDLL.lua_gettop(L);
 
 		if (count == 2)
 		{
-			Type obj = (Type)luaMgr.GetNetObject(1);
-			bool arg0 = luaMgr.GetBoolean(2);
+			Type obj = (Type)LuaScriptMgr.GetNetObject(L, 1);
+			bool arg0 = LuaScriptMgr.GetBoolean(L, 2);
 			object[] o = obj.GetCustomAttributes(arg0);
-			luaMgr.PushResult(o);
+			LuaScriptMgr.PushResult(L, o);
 			return 1;
 		}
 		else if (count == 3)
 		{
-			Type obj = (Type)luaMgr.GetNetObject(1);
-			Type arg0 = (Type)luaMgr.GetNetObject(2);
-			bool arg1 = luaMgr.GetBoolean(3);
+			Type obj = (Type)LuaScriptMgr.GetNetObject(L, 1);
+			Type arg0 = (Type)LuaScriptMgr.GetNetObject(L, 2);
+			bool arg1 = LuaScriptMgr.GetBoolean(L, 3);
 			object[] o = obj.GetCustomAttributes(arg0,arg1);
-			luaMgr.PushResult(o);
+			LuaScriptMgr.PushResult(L, o);
 			return 1;
 		}
 		else
 		{
-			LuaDLL.luaL_error(l, "The best overloaded method match for 'Type.GetCustomAttributes' has some invalid arguments");
+			LuaDLL.luaL_error(L, "invalid arguments to method: Type.GetCustomAttributes");
 		}
 
 		return 0;

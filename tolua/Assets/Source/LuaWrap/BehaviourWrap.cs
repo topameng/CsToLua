@@ -1,13 +1,9 @@
 ﻿using UnityEngine;
 using System;
 using LuaInterface;
-using Object = UnityEngine.Object;
 
-public class BehaviourWrap : ILuaWrap
+public class BehaviourWrap
 {
-	public static LuaScriptMgr luaMgr = null;
-	public static int reference = -1;
-
 	public static LuaMethod[] regs = new LuaMethod[]
 	{
 		new LuaMethod("New", Create),
@@ -19,104 +15,57 @@ public class BehaviourWrap : ILuaWrap
 	};
 
 	[MonoPInvokeCallbackAttribute(typeof(LuaCSFunction))]
-	static int Create(IntPtr l)
+	static int Create(IntPtr L)
 	{
-		int count = LuaDLL.lua_gettop(l);
+		int count = LuaDLL.lua_gettop(L);
 		object obj = null;
 
 		if (count == 0)
 		{
 			obj = new Behaviour();
-			luaMgr.PushResult(obj);
+			LuaScriptMgr.PushResult(L, obj);
 			return 1;
 		}
 		else
 		{
-			LuaDLL.luaL_error(l, "The best overloaded method match for 'Behaviour.New' has some invalid arguments");
+			LuaDLL.luaL_error(L, "invalid arguments to method: Behaviour.New");
 		}
 
 		return 0;
 	}
 
-	public void Register()
+	public static void Register(IntPtr L)
 	{
-		LuaMethod[] metas = new LuaMethod[]
-		{
-			new LuaMethod("__index", Lua_Index),
-			new LuaMethod("__newindex", Lua_NewIndex),
-		};
-
-		luaMgr = LuaScriptMgr.Instance;
-		reference = luaMgr.RegisterLib("Behaviour", regs);
-		luaMgr.CreateMetaTable("Behaviour", metas, typeof(Behaviour));
-		luaMgr.RegisterField(typeof(Behaviour), fields);
-	}
-
-	static bool get_enabled(IntPtr l)
-	{
-		object o = luaMgr.GetLuaObject(1);
-		if (o == null) return false;
-		Behaviour obj = (Behaviour)o;
-		luaMgr.PushResult(obj.enabled);
-		return true;
-	}
-
-	public static bool TryLuaIndex(IntPtr l)
-	{
-		string str = luaMgr.GetString(2);
-
-		if (luaMgr.Index(reference, str, fields))
-		{
-			return true;
-		}
-
-		return ComponentWrap.TryLuaIndex(l);
+		LuaScriptMgr.RegisterLib(L, "Behaviour", typeof(Behaviour), regs, fields, "Component");
 	}
 
 	[MonoPInvokeCallbackAttribute(typeof(LuaCSFunction))]
-	static int Lua_Index(IntPtr l)
+	static int get_enabled(IntPtr L)
 	{
-		if (TryLuaIndex(l))
+		object o = LuaScriptMgr.GetLuaObject(L, 1);
+
+		if (o == null)
 		{
-			return 1;
+			LuaDLL.luaL_error(L, "unknown member name enabled");
 		}
 
-		string str = luaMgr.GetString(2);
-		LuaDLL.luaL_error(l, string.Format("'Behaviour' does not contain a definition for '{0}'", str));
-		return 0;
-	}
-
-	static bool set_enabled(IntPtr l)
-	{
-		object o = luaMgr.GetLuaObject(1);
-		if (o == null) return false;
 		Behaviour obj = (Behaviour)o;
-		obj.enabled = luaMgr.GetBoolean(3);
-		return true;
-	}
-
-	public static bool TryLuaNewIndex(IntPtr l)
-	{
-		string str = luaMgr.GetString(2);
-
-		if (luaMgr.NewIndex(reference, str, fields))
-		{
-			return true;
-		}
-
-		return ComponentWrap.TryLuaNewIndex(l);
+		LuaScriptMgr.PushResult(L, obj.enabled);
+		return 1;
 	}
 
 	[MonoPInvokeCallbackAttribute(typeof(LuaCSFunction))]
-	static int Lua_NewIndex(IntPtr l)
+	static int set_enabled(IntPtr L)
 	{
-		if (TryLuaNewIndex(l))
+		object o = LuaScriptMgr.GetLuaObject(L, 1);
+
+		if (o == null)
 		{
-			return 0;
+			LuaDLL.luaL_error(L, "unknown member name enabled");
 		}
 
-		string str = luaMgr.GetString(2);
-		LuaDLL.luaL_error(l, string.Format("'Behaviour' does not contain a definition for '{0}'", str));
+		Behaviour obj = (Behaviour)o;
+		obj.enabled = LuaScriptMgr.GetBoolean(L, 3);
 		return 0;
 	}
 }

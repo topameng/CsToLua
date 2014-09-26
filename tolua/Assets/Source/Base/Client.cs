@@ -3,46 +3,41 @@ using System.Collections;
 using System.Collections.Generic;
 using System;
 using System.Reflection;
+using LuaInterface;
 
 public class Client : MonoBehaviour 
 {
-    LuaScriptMgr lua = null;
+    LuaScriptMgr luaMgr = null;
+    LuaThread thread = null;
 
     void Awake()
     {
-        lua = new LuaScriptMgr();
-        lua.Start();   
-     
-        Assembly assembly = Assembly.GetExecutingAssembly();
-        Type[] types = assembly.GetTypes();
-        List<Type> wrapList = new List<Type>();
-        Type wrapType = typeof(ILuaWrap);
+        luaMgr = new LuaScriptMgr();
+        luaMgr.Start();
 
-        for (int i = 0; i < types.Length; i++)
-        {
-            Type t = types[i];
-
-            if (wrapType.IsAssignableFrom(t) && !t.IsAbstract)
-            {
-                wrapList.Add(t);
-            }
-        }
-
-        lua.LuaBinding(wrapList);
+        luaMgr.DoFile("Test.Lua");
     }
 
 	void Start () 
-    {        
+    {
+
 	}
+
+    void Update()
+    {
+        if (thread != null && !thread.IsDead())
+        {
+            thread.Resume();
+        }
+    }
 		
 	void OnGUI() 
     {
 	    if (GUI.Button(new Rect(10,10,120,50), "Test"))
-        {
-            lua.DoFile("Test.Lua");
+        {            
             float time = Time.realtimeSinceStartup;
 
-            for (int i = 0; i < 10000; i++)
+            for (int i = 0; i < 100000; i++)
             {
                 transform.position = Vector3.one;
             }
@@ -50,9 +45,13 @@ public class Client : MonoBehaviour
             Debug.Log("c# cost time: " + (Time.realtimeSinceStartup - time));
             time = Time.realtimeSinceStartup;
 
-            lua.CallLuaFunction("Test", transform);
-
-            Debug.Log("lua cost time: " + (Time.realtimeSinceStartup - time));
+            luaMgr.CallLuaFunction("Test", transform);            
+        }
+        else if (GUI.Button(new Rect(10, 80, 120, 50), "Coroutine"))
+        {
+            LuaFunction func = luaMgr.GetLuaFunction("myFunc");
+            thread = new LuaThread(luaMgr.lua, func);
+            thread.Start();
         }
 	}
 }

@@ -2,13 +2,9 @@
 using System.Collections;
 using System;
 using LuaInterface;
-using Object = UnityEngine.Object;
 
-public class TransformWrap : ILuaWrap
+public class TransformWrap
 {
-	public static LuaScriptMgr luaMgr = null;
-	public static int reference = -1;
-
 	public static LuaMethod[] regs = new LuaMethod[]
 	{
 		new LuaMethod("Translate", Translate),
@@ -54,341 +50,456 @@ public class TransformWrap : ILuaWrap
 	};
 
 	[MonoPInvokeCallbackAttribute(typeof(LuaCSFunction))]
-	static int Create(IntPtr l)
+	static int Create(IntPtr L)
 	{
-		LuaDLL.luaL_error(l, "Transform class does not have a constructor function");
+		LuaDLL.luaL_error(L, "Transform class does not have a constructor function");
 		return 0;
 	}
 
-	public void Register()
+	public static void Register(IntPtr L)
 	{
-		LuaMethod[] metas = new LuaMethod[]
-		{
-			new LuaMethod("__index", Lua_Index),
-			new LuaMethod("__newindex", Lua_NewIndex),
-		};
-
-		luaMgr = LuaScriptMgr.Instance;
-		reference = luaMgr.RegisterLib("Transform", regs);
-		luaMgr.CreateMetaTable("Transform", metas, typeof(Transform));
-		luaMgr.RegisterField(typeof(Transform), fields);
-	}
-
-	static bool get_position(IntPtr l)
-	{
-		object o = luaMgr.GetLuaObject(1);
-		if (o == null) return false;
-		Transform obj = (Transform)o;
-		luaMgr.PushResult(obj.position);
-		return true;
-	}
-
-	static bool get_localPosition(IntPtr l)
-	{
-		object o = luaMgr.GetLuaObject(1);
-		if (o == null) return false;
-		Transform obj = (Transform)o;
-		luaMgr.PushResult(obj.localPosition);
-		return true;
-	}
-
-	static bool get_eulerAngles(IntPtr l)
-	{
-		object o = luaMgr.GetLuaObject(1);
-		if (o == null) return false;
-		Transform obj = (Transform)o;
-		luaMgr.PushResult(obj.eulerAngles);
-		return true;
-	}
-
-	static bool get_localEulerAngles(IntPtr l)
-	{
-		object o = luaMgr.GetLuaObject(1);
-		if (o == null) return false;
-		Transform obj = (Transform)o;
-		luaMgr.PushResult(obj.localEulerAngles);
-		return true;
-	}
-
-	static bool get_right(IntPtr l)
-	{
-		object o = luaMgr.GetLuaObject(1);
-		if (o == null) return false;
-		Transform obj = (Transform)o;
-		luaMgr.PushResult(obj.right);
-		return true;
-	}
-
-	static bool get_up(IntPtr l)
-	{
-		object o = luaMgr.GetLuaObject(1);
-		if (o == null) return false;
-		Transform obj = (Transform)o;
-		luaMgr.PushResult(obj.up);
-		return true;
-	}
-
-	static bool get_forward(IntPtr l)
-	{
-		object o = luaMgr.GetLuaObject(1);
-		if (o == null) return false;
-		Transform obj = (Transform)o;
-		luaMgr.PushResult(obj.forward);
-		return true;
-	}
-
-	static bool get_rotation(IntPtr l)
-	{
-		object o = luaMgr.GetLuaObject(1);
-		if (o == null) return false;
-		Transform obj = (Transform)o;
-		luaMgr.PushResult(obj.rotation);
-		return true;
-	}
-
-	static bool get_localRotation(IntPtr l)
-	{
-		object o = luaMgr.GetLuaObject(1);
-		if (o == null) return false;
-		Transform obj = (Transform)o;
-		luaMgr.PushResult(obj.localRotation);
-		return true;
-	}
-
-	static bool get_localScale(IntPtr l)
-	{
-		object o = luaMgr.GetLuaObject(1);
-		if (o == null) return false;
-		Transform obj = (Transform)o;
-		luaMgr.PushResult(obj.localScale);
-		return true;
-	}
-
-	static bool get_parent(IntPtr l)
-	{
-		object o = luaMgr.GetLuaObject(1);
-		if (o == null) return false;
-		Transform obj = (Transform)o;
-		luaMgr.PushResult(obj.parent);
-		return true;
-	}
-
-	static bool get_worldToLocalMatrix(IntPtr l)
-	{
-		object o = luaMgr.GetLuaObject(1);
-		if (o == null) return false;
-		Transform obj = (Transform)o;
-		luaMgr.PushResult(obj.worldToLocalMatrix);
-		return true;
-	}
-
-	static bool get_localToWorldMatrix(IntPtr l)
-	{
-		object o = luaMgr.GetLuaObject(1);
-		if (o == null) return false;
-		Transform obj = (Transform)o;
-		luaMgr.PushResult(obj.localToWorldMatrix);
-		return true;
-	}
-
-	static bool get_root(IntPtr l)
-	{
-		object o = luaMgr.GetLuaObject(1);
-		if (o == null) return false;
-		Transform obj = (Transform)o;
-		luaMgr.PushResult(obj.root);
-		return true;
-	}
-
-	static bool get_childCount(IntPtr l)
-	{
-		object o = luaMgr.GetLuaObject(1);
-		if (o == null) return false;
-		Transform obj = (Transform)o;
-		luaMgr.PushResult(obj.childCount);
-		return true;
-	}
-
-	static bool get_lossyScale(IntPtr l)
-	{
-		object o = luaMgr.GetLuaObject(1);
-		if (o == null) return false;
-		Transform obj = (Transform)o;
-		luaMgr.PushResult(obj.lossyScale);
-		return true;
-	}
-
-	static bool get_hasChanged(IntPtr l)
-	{
-		object o = luaMgr.GetLuaObject(1);
-		if (o == null) return false;
-		Transform obj = (Transform)o;
-		luaMgr.PushResult(obj.hasChanged);
-		return true;
-	}
-
-	public static bool TryLuaIndex(IntPtr l)
-	{
-		string str = luaMgr.GetString(2);
-
-		if (luaMgr.Index(reference, str, fields))
-		{
-			return true;
-		}
-
-		return ComponentWrap.TryLuaIndex(l);
+		LuaScriptMgr.RegisterLib(L, "Transform", typeof(Transform), regs, fields, "Component");
 	}
 
 	[MonoPInvokeCallbackAttribute(typeof(LuaCSFunction))]
-	static int Lua_Index(IntPtr l)
+	static int get_position(IntPtr L)
 	{
-		if (TryLuaIndex(l))
+		object o = LuaScriptMgr.GetLuaObject(L, 1);
+
+		if (o == null)
 		{
-			return 1;
+			LuaDLL.luaL_error(L, "unknown member name position");
 		}
 
-		string str = luaMgr.GetString(2);
-		LuaDLL.luaL_error(l, string.Format("'Transform' does not contain a definition for '{0}'", str));
-		return 0;
-	}
-
-	static bool set_position(IntPtr l)
-	{
-		object o = luaMgr.GetLuaObject(1);
-		if (o == null) return false;
 		Transform obj = (Transform)o;
-		obj.position = (Vector3)luaMgr.GetNetObject(3);
-		return true;
-	}
-
-	static bool set_localPosition(IntPtr l)
-	{
-		object o = luaMgr.GetLuaObject(1);
-		if (o == null) return false;
-		Transform obj = (Transform)o;
-		obj.localPosition = (Vector3)luaMgr.GetNetObject(3);
-		return true;
-	}
-
-	static bool set_eulerAngles(IntPtr l)
-	{
-		object o = luaMgr.GetLuaObject(1);
-		if (o == null) return false;
-		Transform obj = (Transform)o;
-		obj.eulerAngles = (Vector3)luaMgr.GetNetObject(3);
-		return true;
-	}
-
-	static bool set_localEulerAngles(IntPtr l)
-	{
-		object o = luaMgr.GetLuaObject(1);
-		if (o == null) return false;
-		Transform obj = (Transform)o;
-		obj.localEulerAngles = (Vector3)luaMgr.GetNetObject(3);
-		return true;
-	}
-
-	static bool set_right(IntPtr l)
-	{
-		object o = luaMgr.GetLuaObject(1);
-		if (o == null) return false;
-		Transform obj = (Transform)o;
-		obj.right = (Vector3)luaMgr.GetNetObject(3);
-		return true;
-	}
-
-	static bool set_up(IntPtr l)
-	{
-		object o = luaMgr.GetLuaObject(1);
-		if (o == null) return false;
-		Transform obj = (Transform)o;
-		obj.up = (Vector3)luaMgr.GetNetObject(3);
-		return true;
-	}
-
-	static bool set_forward(IntPtr l)
-	{
-		object o = luaMgr.GetLuaObject(1);
-		if (o == null) return false;
-		Transform obj = (Transform)o;
-		obj.forward = (Vector3)luaMgr.GetNetObject(3);
-		return true;
-	}
-
-	static bool set_rotation(IntPtr l)
-	{
-		object o = luaMgr.GetLuaObject(1);
-		if (o == null) return false;
-		Transform obj = (Transform)o;
-		obj.rotation = (Quaternion)luaMgr.GetNetObject(3);
-		return true;
-	}
-
-	static bool set_localRotation(IntPtr l)
-	{
-		object o = luaMgr.GetLuaObject(1);
-		if (o == null) return false;
-		Transform obj = (Transform)o;
-		obj.localRotation = (Quaternion)luaMgr.GetNetObject(3);
-		return true;
-	}
-
-	static bool set_localScale(IntPtr l)
-	{
-		object o = luaMgr.GetLuaObject(1);
-		if (o == null) return false;
-		Transform obj = (Transform)o;
-		obj.localScale = (Vector3)luaMgr.GetNetObject(3);
-		return true;
-	}
-
-	static bool set_parent(IntPtr l)
-	{
-		object o = luaMgr.GetLuaObject(1);
-		if (o == null) return false;
-		Transform obj = (Transform)o;
-		obj.parent = (Transform)luaMgr.GetNetObject(3);
-		return true;
-	}
-
-	static bool set_hasChanged(IntPtr l)
-	{
-		object o = luaMgr.GetLuaObject(1);
-		if (o == null) return false;
-		Transform obj = (Transform)o;
-		obj.hasChanged = luaMgr.GetBoolean(3);
-		return true;
-	}
-
-	public static bool TryLuaNewIndex(IntPtr l)
-	{
-		string str = luaMgr.GetString(2);
-
-		if (luaMgr.NewIndex(reference, str, fields))
-		{
-			return true;
-		}
-
-		return ComponentWrap.TryLuaNewIndex(l);
+		LuaScriptMgr.PushResult(L, obj.position);
+		return 1;
 	}
 
 	[MonoPInvokeCallbackAttribute(typeof(LuaCSFunction))]
-	static int Lua_NewIndex(IntPtr l)
+	static int get_localPosition(IntPtr L)
 	{
-		if (TryLuaNewIndex(l))
+		object o = LuaScriptMgr.GetLuaObject(L, 1);
+
+		if (o == null)
 		{
-			return 0;
+			LuaDLL.luaL_error(L, "unknown member name localPosition");
 		}
 
-		string str = luaMgr.GetString(2);
-		LuaDLL.luaL_error(l, string.Format("'Transform' does not contain a definition for '{0}'", str));
+		Transform obj = (Transform)o;
+		LuaScriptMgr.PushResult(L, obj.localPosition);
+		return 1;
+	}
+
+	[MonoPInvokeCallbackAttribute(typeof(LuaCSFunction))]
+	static int get_eulerAngles(IntPtr L)
+	{
+		object o = LuaScriptMgr.GetLuaObject(L, 1);
+
+		if (o == null)
+		{
+			LuaDLL.luaL_error(L, "unknown member name eulerAngles");
+		}
+
+		Transform obj = (Transform)o;
+		LuaScriptMgr.PushResult(L, obj.eulerAngles);
+		return 1;
+	}
+
+	[MonoPInvokeCallbackAttribute(typeof(LuaCSFunction))]
+	static int get_localEulerAngles(IntPtr L)
+	{
+		object o = LuaScriptMgr.GetLuaObject(L, 1);
+
+		if (o == null)
+		{
+			LuaDLL.luaL_error(L, "unknown member name localEulerAngles");
+		}
+
+		Transform obj = (Transform)o;
+		LuaScriptMgr.PushResult(L, obj.localEulerAngles);
+		return 1;
+	}
+
+	[MonoPInvokeCallbackAttribute(typeof(LuaCSFunction))]
+	static int get_right(IntPtr L)
+	{
+		object o = LuaScriptMgr.GetLuaObject(L, 1);
+
+		if (o == null)
+		{
+			LuaDLL.luaL_error(L, "unknown member name right");
+		}
+
+		Transform obj = (Transform)o;
+		LuaScriptMgr.PushResult(L, obj.right);
+		return 1;
+	}
+
+	[MonoPInvokeCallbackAttribute(typeof(LuaCSFunction))]
+	static int get_up(IntPtr L)
+	{
+		object o = LuaScriptMgr.GetLuaObject(L, 1);
+
+		if (o == null)
+		{
+			LuaDLL.luaL_error(L, "unknown member name up");
+		}
+
+		Transform obj = (Transform)o;
+		LuaScriptMgr.PushResult(L, obj.up);
+		return 1;
+	}
+
+	[MonoPInvokeCallbackAttribute(typeof(LuaCSFunction))]
+	static int get_forward(IntPtr L)
+	{
+		object o = LuaScriptMgr.GetLuaObject(L, 1);
+
+		if (o == null)
+		{
+			LuaDLL.luaL_error(L, "unknown member name forward");
+		}
+
+		Transform obj = (Transform)o;
+		LuaScriptMgr.PushResult(L, obj.forward);
+		return 1;
+	}
+
+	[MonoPInvokeCallbackAttribute(typeof(LuaCSFunction))]
+	static int get_rotation(IntPtr L)
+	{
+		object o = LuaScriptMgr.GetLuaObject(L, 1);
+
+		if (o == null)
+		{
+			LuaDLL.luaL_error(L, "unknown member name rotation");
+		}
+
+		Transform obj = (Transform)o;
+		LuaScriptMgr.PushResult(L, obj.rotation);
+		return 1;
+	}
+
+	[MonoPInvokeCallbackAttribute(typeof(LuaCSFunction))]
+	static int get_localRotation(IntPtr L)
+	{
+		object o = LuaScriptMgr.GetLuaObject(L, 1);
+
+		if (o == null)
+		{
+			LuaDLL.luaL_error(L, "unknown member name localRotation");
+		}
+
+		Transform obj = (Transform)o;
+		LuaScriptMgr.PushResult(L, obj.localRotation);
+		return 1;
+	}
+
+	[MonoPInvokeCallbackAttribute(typeof(LuaCSFunction))]
+	static int get_localScale(IntPtr L)
+	{
+		object o = LuaScriptMgr.GetLuaObject(L, 1);
+
+		if (o == null)
+		{
+			LuaDLL.luaL_error(L, "unknown member name localScale");
+		}
+
+		Transform obj = (Transform)o;
+		LuaScriptMgr.PushResult(L, obj.localScale);
+		return 1;
+	}
+
+	[MonoPInvokeCallbackAttribute(typeof(LuaCSFunction))]
+	static int get_parent(IntPtr L)
+	{
+		object o = LuaScriptMgr.GetLuaObject(L, 1);
+
+		if (o == null)
+		{
+			LuaDLL.luaL_error(L, "unknown member name parent");
+		}
+
+		Transform obj = (Transform)o;
+		LuaScriptMgr.PushResult(L, obj.parent);
+		return 1;
+	}
+
+	[MonoPInvokeCallbackAttribute(typeof(LuaCSFunction))]
+	static int get_worldToLocalMatrix(IntPtr L)
+	{
+		object o = LuaScriptMgr.GetLuaObject(L, 1);
+
+		if (o == null)
+		{
+			LuaDLL.luaL_error(L, "unknown member name worldToLocalMatrix");
+		}
+
+		Transform obj = (Transform)o;
+		LuaScriptMgr.PushResult(L, obj.worldToLocalMatrix);
+		return 1;
+	}
+
+	[MonoPInvokeCallbackAttribute(typeof(LuaCSFunction))]
+	static int get_localToWorldMatrix(IntPtr L)
+	{
+		object o = LuaScriptMgr.GetLuaObject(L, 1);
+
+		if (o == null)
+		{
+			LuaDLL.luaL_error(L, "unknown member name localToWorldMatrix");
+		}
+
+		Transform obj = (Transform)o;
+		LuaScriptMgr.PushResult(L, obj.localToWorldMatrix);
+		return 1;
+	}
+
+	[MonoPInvokeCallbackAttribute(typeof(LuaCSFunction))]
+	static int get_root(IntPtr L)
+	{
+		object o = LuaScriptMgr.GetLuaObject(L, 1);
+
+		if (o == null)
+		{
+			LuaDLL.luaL_error(L, "unknown member name root");
+		}
+
+		Transform obj = (Transform)o;
+		LuaScriptMgr.PushResult(L, obj.root);
+		return 1;
+	}
+
+	[MonoPInvokeCallbackAttribute(typeof(LuaCSFunction))]
+	static int get_childCount(IntPtr L)
+	{
+		object o = LuaScriptMgr.GetLuaObject(L, 1);
+
+		if (o == null)
+		{
+			LuaDLL.luaL_error(L, "unknown member name childCount");
+		}
+
+		Transform obj = (Transform)o;
+		LuaScriptMgr.PushResult(L, obj.childCount);
+		return 1;
+	}
+
+	[MonoPInvokeCallbackAttribute(typeof(LuaCSFunction))]
+	static int get_lossyScale(IntPtr L)
+	{
+		object o = LuaScriptMgr.GetLuaObject(L, 1);
+
+		if (o == null)
+		{
+			LuaDLL.luaL_error(L, "unknown member name lossyScale");
+		}
+
+		Transform obj = (Transform)o;
+		LuaScriptMgr.PushResult(L, obj.lossyScale);
+		return 1;
+	}
+
+	[MonoPInvokeCallbackAttribute(typeof(LuaCSFunction))]
+	static int get_hasChanged(IntPtr L)
+	{
+		object o = LuaScriptMgr.GetLuaObject(L, 1);
+
+		if (o == null)
+		{
+			LuaDLL.luaL_error(L, "unknown member name hasChanged");
+		}
+
+		Transform obj = (Transform)o;
+		LuaScriptMgr.PushResult(L, obj.hasChanged);
+		return 1;
+	}
+
+	[MonoPInvokeCallbackAttribute(typeof(LuaCSFunction))]
+	static int set_position(IntPtr L)
+	{
+		object o = LuaScriptMgr.GetLuaObject(L, 1);
+
+		if (o == null)
+		{
+			LuaDLL.luaL_error(L, "unknown member name position");
+		}
+
+		Transform obj = (Transform)o;
+		obj.position = (Vector3)LuaScriptMgr.GetNetObject(L, 3);
 		return 0;
 	}
 
 	[MonoPInvokeCallbackAttribute(typeof(LuaCSFunction))]
-	static int Translate(IntPtr l)
+	static int set_localPosition(IntPtr L)
 	{
-		int count = LuaDLL.lua_gettop(l);
+		object o = LuaScriptMgr.GetLuaObject(L, 1);
+
+		if (o == null)
+		{
+			LuaDLL.luaL_error(L, "unknown member name localPosition");
+		}
+
+		Transform obj = (Transform)o;
+		obj.localPosition = (Vector3)LuaScriptMgr.GetNetObject(L, 3);
+		return 0;
+	}
+
+	[MonoPInvokeCallbackAttribute(typeof(LuaCSFunction))]
+	static int set_eulerAngles(IntPtr L)
+	{
+		object o = LuaScriptMgr.GetLuaObject(L, 1);
+
+		if (o == null)
+		{
+			LuaDLL.luaL_error(L, "unknown member name eulerAngles");
+		}
+
+		Transform obj = (Transform)o;
+		obj.eulerAngles = (Vector3)LuaScriptMgr.GetNetObject(L, 3);
+		return 0;
+	}
+
+	[MonoPInvokeCallbackAttribute(typeof(LuaCSFunction))]
+	static int set_localEulerAngles(IntPtr L)
+	{
+		object o = LuaScriptMgr.GetLuaObject(L, 1);
+
+		if (o == null)
+		{
+			LuaDLL.luaL_error(L, "unknown member name localEulerAngles");
+		}
+
+		Transform obj = (Transform)o;
+		obj.localEulerAngles = (Vector3)LuaScriptMgr.GetNetObject(L, 3);
+		return 0;
+	}
+
+	[MonoPInvokeCallbackAttribute(typeof(LuaCSFunction))]
+	static int set_right(IntPtr L)
+	{
+		object o = LuaScriptMgr.GetLuaObject(L, 1);
+
+		if (o == null)
+		{
+			LuaDLL.luaL_error(L, "unknown member name right");
+		}
+
+		Transform obj = (Transform)o;
+		obj.right = (Vector3)LuaScriptMgr.GetNetObject(L, 3);
+		return 0;
+	}
+
+	[MonoPInvokeCallbackAttribute(typeof(LuaCSFunction))]
+	static int set_up(IntPtr L)
+	{
+		object o = LuaScriptMgr.GetLuaObject(L, 1);
+
+		if (o == null)
+		{
+			LuaDLL.luaL_error(L, "unknown member name up");
+		}
+
+		Transform obj = (Transform)o;
+		obj.up = (Vector3)LuaScriptMgr.GetNetObject(L, 3);
+		return 0;
+	}
+
+	[MonoPInvokeCallbackAttribute(typeof(LuaCSFunction))]
+	static int set_forward(IntPtr L)
+	{
+		object o = LuaScriptMgr.GetLuaObject(L, 1);
+
+		if (o == null)
+		{
+			LuaDLL.luaL_error(L, "unknown member name forward");
+		}
+
+		Transform obj = (Transform)o;
+		obj.forward = (Vector3)LuaScriptMgr.GetNetObject(L, 3);
+		return 0;
+	}
+
+	[MonoPInvokeCallbackAttribute(typeof(LuaCSFunction))]
+	static int set_rotation(IntPtr L)
+	{
+		object o = LuaScriptMgr.GetLuaObject(L, 1);
+
+		if (o == null)
+		{
+			LuaDLL.luaL_error(L, "unknown member name rotation");
+		}
+
+		Transform obj = (Transform)o;
+		obj.rotation = (Quaternion)LuaScriptMgr.GetNetObject(L, 3);
+		return 0;
+	}
+
+	[MonoPInvokeCallbackAttribute(typeof(LuaCSFunction))]
+	static int set_localRotation(IntPtr L)
+	{
+		object o = LuaScriptMgr.GetLuaObject(L, 1);
+
+		if (o == null)
+		{
+			LuaDLL.luaL_error(L, "unknown member name localRotation");
+		}
+
+		Transform obj = (Transform)o;
+		obj.localRotation = (Quaternion)LuaScriptMgr.GetNetObject(L, 3);
+		return 0;
+	}
+
+	[MonoPInvokeCallbackAttribute(typeof(LuaCSFunction))]
+	static int set_localScale(IntPtr L)
+	{
+		object o = LuaScriptMgr.GetLuaObject(L, 1);
+
+		if (o == null)
+		{
+			LuaDLL.luaL_error(L, "unknown member name localScale");
+		}
+
+		Transform obj = (Transform)o;
+		obj.localScale = (Vector3)LuaScriptMgr.GetNetObject(L, 3);
+		return 0;
+	}
+
+	[MonoPInvokeCallbackAttribute(typeof(LuaCSFunction))]
+	static int set_parent(IntPtr L)
+	{
+		object o = LuaScriptMgr.GetLuaObject(L, 1);
+
+		if (o == null)
+		{
+			LuaDLL.luaL_error(L, "unknown member name parent");
+		}
+
+		Transform obj = (Transform)o;
+		obj.parent = (Transform)LuaScriptMgr.GetNetObject(L, 3);
+		return 0;
+	}
+
+	[MonoPInvokeCallbackAttribute(typeof(LuaCSFunction))]
+	static int set_hasChanged(IntPtr L)
+	{
+		object o = LuaScriptMgr.GetLuaObject(L, 1);
+
+		if (o == null)
+		{
+			LuaDLL.luaL_error(L, "unknown member name hasChanged");
+		}
+
+		Transform obj = (Transform)o;
+		obj.hasChanged = LuaScriptMgr.GetBoolean(L, 3);
+		return 0;
+	}
+
+	[MonoPInvokeCallbackAttribute(typeof(LuaCSFunction))]
+	static int Translate(IntPtr L)
+	{
+		int count = LuaDLL.lua_gettop(L);
 
 		Type[] types1 = {typeof(Transform), typeof(Vector3), typeof(Transform)};
 		Type[] types2 = {typeof(Transform), typeof(Vector3), typeof(Space)};
@@ -397,68 +508,68 @@ public class TransformWrap : ILuaWrap
 
 		if (count == 2)
 		{
-			Transform obj = (Transform)luaMgr.GetNetObject(1);
-			Vector3 arg0 = (Vector3)luaMgr.GetNetObject(2);
+			Transform obj = (Transform)LuaScriptMgr.GetNetObject(L, 1);
+			Vector3 arg0 = (Vector3)LuaScriptMgr.GetNetObject(L, 2);
 			obj.Translate(arg0);
 			return 0;
 		}
-		else if (count == 3 && luaMgr.CheckTypes(types1, 1))
+		else if (count == 3 && LuaScriptMgr.CheckTypes(L, types1, 1))
 		{
-			Transform obj = (Transform)luaMgr.GetNetObject(1);
-			Vector3 arg0 = (Vector3)luaMgr.GetNetObject(2);
-			Transform arg1 = (Transform)luaMgr.GetNetObject(3);
+			Transform obj = (Transform)LuaScriptMgr.GetNetObject(L, 1);
+			Vector3 arg0 = (Vector3)LuaScriptMgr.GetNetObject(L, 2);
+			Transform arg1 = (Transform)LuaScriptMgr.GetNetObject(L, 3);
 			obj.Translate(arg0,arg1);
 			return 0;
 		}
-		else if (count == 3 && luaMgr.CheckTypes(types2, 1))
+		else if (count == 3 && LuaScriptMgr.CheckTypes(L, types2, 1))
 		{
-			Transform obj = (Transform)luaMgr.GetNetObject(1);
-			Vector3 arg0 = (Vector3)luaMgr.GetNetObject(2);
-			Space arg1 = (Space)luaMgr.GetNetObject(3);
+			Transform obj = (Transform)LuaScriptMgr.GetNetObject(L, 1);
+			Vector3 arg0 = (Vector3)LuaScriptMgr.GetNetObject(L, 2);
+			Space arg1 = (Space)LuaScriptMgr.GetNetObject(L, 3);
 			obj.Translate(arg0,arg1);
 			return 0;
 		}
 		else if (count == 4)
 		{
-			Transform obj = (Transform)luaMgr.GetNetObject(1);
-			float arg0 = (float)luaMgr.GetNumber(2);
-			float arg1 = (float)luaMgr.GetNumber(3);
-			float arg2 = (float)luaMgr.GetNumber(4);
+			Transform obj = (Transform)LuaScriptMgr.GetNetObject(L, 1);
+			float arg0 = (float)LuaScriptMgr.GetNumber(L, 2);
+			float arg1 = (float)LuaScriptMgr.GetNumber(L, 3);
+			float arg2 = (float)LuaScriptMgr.GetNumber(L, 4);
 			obj.Translate(arg0,arg1,arg2);
 			return 0;
 		}
-		else if (count == 5 && luaMgr.CheckTypes(types4, 1))
+		else if (count == 5 && LuaScriptMgr.CheckTypes(L, types4, 1))
 		{
-			Transform obj = (Transform)luaMgr.GetNetObject(1);
-			float arg0 = (float)luaMgr.GetNumber(2);
-			float arg1 = (float)luaMgr.GetNumber(3);
-			float arg2 = (float)luaMgr.GetNumber(4);
-			Transform arg3 = (Transform)luaMgr.GetNetObject(5);
+			Transform obj = (Transform)LuaScriptMgr.GetNetObject(L, 1);
+			float arg0 = (float)LuaScriptMgr.GetNumber(L, 2);
+			float arg1 = (float)LuaScriptMgr.GetNumber(L, 3);
+			float arg2 = (float)LuaScriptMgr.GetNumber(L, 4);
+			Transform arg3 = (Transform)LuaScriptMgr.GetNetObject(L, 5);
 			obj.Translate(arg0,arg1,arg2,arg3);
 			return 0;
 		}
-		else if (count == 5 && luaMgr.CheckTypes(types5, 1))
+		else if (count == 5 && LuaScriptMgr.CheckTypes(L, types5, 1))
 		{
-			Transform obj = (Transform)luaMgr.GetNetObject(1);
-			float arg0 = (float)luaMgr.GetNumber(2);
-			float arg1 = (float)luaMgr.GetNumber(3);
-			float arg2 = (float)luaMgr.GetNumber(4);
-			Space arg3 = (Space)luaMgr.GetNetObject(5);
+			Transform obj = (Transform)LuaScriptMgr.GetNetObject(L, 1);
+			float arg0 = (float)LuaScriptMgr.GetNumber(L, 2);
+			float arg1 = (float)LuaScriptMgr.GetNumber(L, 3);
+			float arg2 = (float)LuaScriptMgr.GetNumber(L, 4);
+			Space arg3 = (Space)LuaScriptMgr.GetNetObject(L, 5);
 			obj.Translate(arg0,arg1,arg2,arg3);
 			return 0;
 		}
 		else
 		{
-			LuaDLL.luaL_error(l, "The best overloaded method match for 'Transform.Translate' has some invalid arguments");
+			LuaDLL.luaL_error(L, "invalid arguments to method: Transform.Translate");
 		}
 
 		return 0;
 	}
 
 	[MonoPInvokeCallbackAttribute(typeof(LuaCSFunction))]
-	static int Rotate(IntPtr l)
+	static int Rotate(IntPtr L)
 	{
-		int count = LuaDLL.lua_gettop(l);
+		int count = LuaDLL.lua_gettop(L);
 
 		Type[] types1 = {typeof(Transform), typeof(Vector3), typeof(float)};
 		Type[] types2 = {typeof(Transform), typeof(Vector3), typeof(Space)};
@@ -467,345 +578,345 @@ public class TransformWrap : ILuaWrap
 
 		if (count == 2)
 		{
-			Transform obj = (Transform)luaMgr.GetNetObject(1);
-			Vector3 arg0 = (Vector3)luaMgr.GetNetObject(2);
+			Transform obj = (Transform)LuaScriptMgr.GetNetObject(L, 1);
+			Vector3 arg0 = (Vector3)LuaScriptMgr.GetNetObject(L, 2);
 			obj.Rotate(arg0);
 			return 0;
 		}
-		else if (count == 3 && luaMgr.CheckTypes(types1, 1))
+		else if (count == 3 && LuaScriptMgr.CheckTypes(L, types1, 1))
 		{
-			Transform obj = (Transform)luaMgr.GetNetObject(1);
-			Vector3 arg0 = (Vector3)luaMgr.GetNetObject(2);
-			float arg1 = (float)luaMgr.GetNumber(3);
+			Transform obj = (Transform)LuaScriptMgr.GetNetObject(L, 1);
+			Vector3 arg0 = (Vector3)LuaScriptMgr.GetNetObject(L, 2);
+			float arg1 = (float)LuaScriptMgr.GetNumber(L, 3);
 			obj.Rotate(arg0,arg1);
 			return 0;
 		}
-		else if (count == 3 && luaMgr.CheckTypes(types2, 1))
+		else if (count == 3 && LuaScriptMgr.CheckTypes(L, types2, 1))
 		{
-			Transform obj = (Transform)luaMgr.GetNetObject(1);
-			Vector3 arg0 = (Vector3)luaMgr.GetNetObject(2);
-			Space arg1 = (Space)luaMgr.GetNetObject(3);
+			Transform obj = (Transform)LuaScriptMgr.GetNetObject(L, 1);
+			Vector3 arg0 = (Vector3)LuaScriptMgr.GetNetObject(L, 2);
+			Space arg1 = (Space)LuaScriptMgr.GetNetObject(L, 3);
 			obj.Rotate(arg0,arg1);
 			return 0;
 		}
-		else if (count == 4 && luaMgr.CheckTypes(types3, 1))
+		else if (count == 4 && LuaScriptMgr.CheckTypes(L, types3, 1))
 		{
-			Transform obj = (Transform)luaMgr.GetNetObject(1);
-			Vector3 arg0 = (Vector3)luaMgr.GetNetObject(2);
-			float arg1 = (float)luaMgr.GetNumber(3);
-			Space arg2 = (Space)luaMgr.GetNetObject(4);
+			Transform obj = (Transform)LuaScriptMgr.GetNetObject(L, 1);
+			Vector3 arg0 = (Vector3)LuaScriptMgr.GetNetObject(L, 2);
+			float arg1 = (float)LuaScriptMgr.GetNumber(L, 3);
+			Space arg2 = (Space)LuaScriptMgr.GetNetObject(L, 4);
 			obj.Rotate(arg0,arg1,arg2);
 			return 0;
 		}
-		else if (count == 4 && luaMgr.CheckTypes(types4, 1))
+		else if (count == 4 && LuaScriptMgr.CheckTypes(L, types4, 1))
 		{
-			Transform obj = (Transform)luaMgr.GetNetObject(1);
-			float arg0 = (float)luaMgr.GetNumber(2);
-			float arg1 = (float)luaMgr.GetNumber(3);
-			float arg2 = (float)luaMgr.GetNumber(4);
+			Transform obj = (Transform)LuaScriptMgr.GetNetObject(L, 1);
+			float arg0 = (float)LuaScriptMgr.GetNumber(L, 2);
+			float arg1 = (float)LuaScriptMgr.GetNumber(L, 3);
+			float arg2 = (float)LuaScriptMgr.GetNumber(L, 4);
 			obj.Rotate(arg0,arg1,arg2);
 			return 0;
 		}
 		else if (count == 5)
 		{
-			Transform obj = (Transform)luaMgr.GetNetObject(1);
-			float arg0 = (float)luaMgr.GetNumber(2);
-			float arg1 = (float)luaMgr.GetNumber(3);
-			float arg2 = (float)luaMgr.GetNumber(4);
-			Space arg3 = (Space)luaMgr.GetNetObject(5);
+			Transform obj = (Transform)LuaScriptMgr.GetNetObject(L, 1);
+			float arg0 = (float)LuaScriptMgr.GetNumber(L, 2);
+			float arg1 = (float)LuaScriptMgr.GetNumber(L, 3);
+			float arg2 = (float)LuaScriptMgr.GetNumber(L, 4);
+			Space arg3 = (Space)LuaScriptMgr.GetNetObject(L, 5);
 			obj.Rotate(arg0,arg1,arg2,arg3);
 			return 0;
 		}
 		else
 		{
-			LuaDLL.luaL_error(l, "The best overloaded method match for 'Transform.Rotate' has some invalid arguments");
+			LuaDLL.luaL_error(L, "invalid arguments to method: Transform.Rotate");
 		}
 
 		return 0;
 	}
 
 	[MonoPInvokeCallbackAttribute(typeof(LuaCSFunction))]
-	static int RotateAround(IntPtr l)
+	static int RotateAround(IntPtr L)
 	{
-		luaMgr.CheckArgsCount(4);
-		Transform obj = (Transform)luaMgr.GetNetObject(1);
-		Vector3 arg0 = (Vector3)luaMgr.GetNetObject(2);
-		Vector3 arg1 = (Vector3)luaMgr.GetNetObject(3);
-		float arg2 = (float)luaMgr.GetNumber(4);
+		LuaScriptMgr.CheckArgsCount(L, 4);
+		Transform obj = (Transform)LuaScriptMgr.GetNetObject(L, 1);
+		Vector3 arg0 = (Vector3)LuaScriptMgr.GetNetObject(L, 2);
+		Vector3 arg1 = (Vector3)LuaScriptMgr.GetNetObject(L, 3);
+		float arg2 = (float)LuaScriptMgr.GetNumber(L, 4);
 		obj.RotateAround(arg0,arg1,arg2);
 		return 0;
 	}
 
 	[MonoPInvokeCallbackAttribute(typeof(LuaCSFunction))]
-	static int LookAt(IntPtr l)
+	static int LookAt(IntPtr L)
 	{
-		int count = LuaDLL.lua_gettop(l);
+		int count = LuaDLL.lua_gettop(L);
 
 		Type[] types0 = {typeof(Transform), typeof(Vector3)};
 		Type[] types1 = {typeof(Transform), typeof(Transform)};
 		Type[] types2 = {typeof(Transform), typeof(Vector3), typeof(Vector3)};
 		Type[] types3 = {typeof(Transform), typeof(Transform), typeof(Vector3)};
 
-		if (count == 2 && luaMgr.CheckTypes(types0, 1))
+		if (count == 2 && LuaScriptMgr.CheckTypes(L, types0, 1))
 		{
-			Transform obj = (Transform)luaMgr.GetNetObject(1);
-			Vector3 arg0 = (Vector3)luaMgr.GetNetObject(2);
+			Transform obj = (Transform)LuaScriptMgr.GetNetObject(L, 1);
+			Vector3 arg0 = (Vector3)LuaScriptMgr.GetNetObject(L, 2);
 			obj.LookAt(arg0);
 			return 0;
 		}
-		else if (count == 2 && luaMgr.CheckTypes(types1, 1))
+		else if (count == 2 && LuaScriptMgr.CheckTypes(L, types1, 1))
 		{
-			Transform obj = (Transform)luaMgr.GetNetObject(1);
-			Transform arg0 = (Transform)luaMgr.GetNetObject(2);
+			Transform obj = (Transform)LuaScriptMgr.GetNetObject(L, 1);
+			Transform arg0 = (Transform)LuaScriptMgr.GetNetObject(L, 2);
 			obj.LookAt(arg0);
 			return 0;
 		}
-		else if (count == 3 && luaMgr.CheckTypes(types2, 1))
+		else if (count == 3 && LuaScriptMgr.CheckTypes(L, types2, 1))
 		{
-			Transform obj = (Transform)luaMgr.GetNetObject(1);
-			Vector3 arg0 = (Vector3)luaMgr.GetNetObject(2);
-			Vector3 arg1 = (Vector3)luaMgr.GetNetObject(3);
+			Transform obj = (Transform)LuaScriptMgr.GetNetObject(L, 1);
+			Vector3 arg0 = (Vector3)LuaScriptMgr.GetNetObject(L, 2);
+			Vector3 arg1 = (Vector3)LuaScriptMgr.GetNetObject(L, 3);
 			obj.LookAt(arg0,arg1);
 			return 0;
 		}
-		else if (count == 3 && luaMgr.CheckTypes(types3, 1))
+		else if (count == 3 && LuaScriptMgr.CheckTypes(L, types3, 1))
 		{
-			Transform obj = (Transform)luaMgr.GetNetObject(1);
-			Transform arg0 = (Transform)luaMgr.GetNetObject(2);
-			Vector3 arg1 = (Vector3)luaMgr.GetNetObject(3);
+			Transform obj = (Transform)LuaScriptMgr.GetNetObject(L, 1);
+			Transform arg0 = (Transform)LuaScriptMgr.GetNetObject(L, 2);
+			Vector3 arg1 = (Vector3)LuaScriptMgr.GetNetObject(L, 3);
 			obj.LookAt(arg0,arg1);
 			return 0;
 		}
 		else
 		{
-			LuaDLL.luaL_error(l, "The best overloaded method match for 'Transform.LookAt' has some invalid arguments");
+			LuaDLL.luaL_error(L, "invalid arguments to method: Transform.LookAt");
 		}
 
 		return 0;
 	}
 
 	[MonoPInvokeCallbackAttribute(typeof(LuaCSFunction))]
-	static int TransformDirection(IntPtr l)
+	static int TransformDirection(IntPtr L)
 	{
-		int count = LuaDLL.lua_gettop(l);
+		int count = LuaDLL.lua_gettop(L);
 
 		if (count == 2)
 		{
-			Transform obj = (Transform)luaMgr.GetNetObject(1);
-			Vector3 arg0 = (Vector3)luaMgr.GetNetObject(2);
+			Transform obj = (Transform)LuaScriptMgr.GetNetObject(L, 1);
+			Vector3 arg0 = (Vector3)LuaScriptMgr.GetNetObject(L, 2);
 			Vector3 o = obj.TransformDirection(arg0);
-			luaMgr.PushResult(o);
+			LuaScriptMgr.PushResult(L, o);
 			return 1;
 		}
 		else if (count == 4)
 		{
-			Transform obj = (Transform)luaMgr.GetNetObject(1);
-			float arg0 = (float)luaMgr.GetNumber(2);
-			float arg1 = (float)luaMgr.GetNumber(3);
-			float arg2 = (float)luaMgr.GetNumber(4);
+			Transform obj = (Transform)LuaScriptMgr.GetNetObject(L, 1);
+			float arg0 = (float)LuaScriptMgr.GetNumber(L, 2);
+			float arg1 = (float)LuaScriptMgr.GetNumber(L, 3);
+			float arg2 = (float)LuaScriptMgr.GetNumber(L, 4);
 			Vector3 o = obj.TransformDirection(arg0,arg1,arg2);
-			luaMgr.PushResult(o);
+			LuaScriptMgr.PushResult(L, o);
 			return 1;
 		}
 		else
 		{
-			LuaDLL.luaL_error(l, "The best overloaded method match for 'Transform.TransformDirection' has some invalid arguments");
+			LuaDLL.luaL_error(L, "invalid arguments to method: Transform.TransformDirection");
 		}
 
 		return 0;
 	}
 
 	[MonoPInvokeCallbackAttribute(typeof(LuaCSFunction))]
-	static int InverseTransformDirection(IntPtr l)
+	static int InverseTransformDirection(IntPtr L)
 	{
-		int count = LuaDLL.lua_gettop(l);
+		int count = LuaDLL.lua_gettop(L);
 
 		if (count == 2)
 		{
-			Transform obj = (Transform)luaMgr.GetNetObject(1);
-			Vector3 arg0 = (Vector3)luaMgr.GetNetObject(2);
+			Transform obj = (Transform)LuaScriptMgr.GetNetObject(L, 1);
+			Vector3 arg0 = (Vector3)LuaScriptMgr.GetNetObject(L, 2);
 			Vector3 o = obj.InverseTransformDirection(arg0);
-			luaMgr.PushResult(o);
+			LuaScriptMgr.PushResult(L, o);
 			return 1;
 		}
 		else if (count == 4)
 		{
-			Transform obj = (Transform)luaMgr.GetNetObject(1);
-			float arg0 = (float)luaMgr.GetNumber(2);
-			float arg1 = (float)luaMgr.GetNumber(3);
-			float arg2 = (float)luaMgr.GetNumber(4);
+			Transform obj = (Transform)LuaScriptMgr.GetNetObject(L, 1);
+			float arg0 = (float)LuaScriptMgr.GetNumber(L, 2);
+			float arg1 = (float)LuaScriptMgr.GetNumber(L, 3);
+			float arg2 = (float)LuaScriptMgr.GetNumber(L, 4);
 			Vector3 o = obj.InverseTransformDirection(arg0,arg1,arg2);
-			luaMgr.PushResult(o);
+			LuaScriptMgr.PushResult(L, o);
 			return 1;
 		}
 		else
 		{
-			LuaDLL.luaL_error(l, "The best overloaded method match for 'Transform.InverseTransformDirection' has some invalid arguments");
+			LuaDLL.luaL_error(L, "invalid arguments to method: Transform.InverseTransformDirection");
 		}
 
 		return 0;
 	}
 
 	[MonoPInvokeCallbackAttribute(typeof(LuaCSFunction))]
-	static int TransformPoint(IntPtr l)
+	static int TransformPoint(IntPtr L)
 	{
-		int count = LuaDLL.lua_gettop(l);
+		int count = LuaDLL.lua_gettop(L);
 
 		if (count == 2)
 		{
-			Transform obj = (Transform)luaMgr.GetNetObject(1);
-			Vector3 arg0 = (Vector3)luaMgr.GetNetObject(2);
+			Transform obj = (Transform)LuaScriptMgr.GetNetObject(L, 1);
+			Vector3 arg0 = (Vector3)LuaScriptMgr.GetNetObject(L, 2);
 			Vector3 o = obj.TransformPoint(arg0);
-			luaMgr.PushResult(o);
+			LuaScriptMgr.PushResult(L, o);
 			return 1;
 		}
 		else if (count == 4)
 		{
-			Transform obj = (Transform)luaMgr.GetNetObject(1);
-			float arg0 = (float)luaMgr.GetNumber(2);
-			float arg1 = (float)luaMgr.GetNumber(3);
-			float arg2 = (float)luaMgr.GetNumber(4);
+			Transform obj = (Transform)LuaScriptMgr.GetNetObject(L, 1);
+			float arg0 = (float)LuaScriptMgr.GetNumber(L, 2);
+			float arg1 = (float)LuaScriptMgr.GetNumber(L, 3);
+			float arg2 = (float)LuaScriptMgr.GetNumber(L, 4);
 			Vector3 o = obj.TransformPoint(arg0,arg1,arg2);
-			luaMgr.PushResult(o);
+			LuaScriptMgr.PushResult(L, o);
 			return 1;
 		}
 		else
 		{
-			LuaDLL.luaL_error(l, "The best overloaded method match for 'Transform.TransformPoint' has some invalid arguments");
+			LuaDLL.luaL_error(L, "invalid arguments to method: Transform.TransformPoint");
 		}
 
 		return 0;
 	}
 
 	[MonoPInvokeCallbackAttribute(typeof(LuaCSFunction))]
-	static int InverseTransformPoint(IntPtr l)
+	static int InverseTransformPoint(IntPtr L)
 	{
-		int count = LuaDLL.lua_gettop(l);
+		int count = LuaDLL.lua_gettop(L);
 
 		if (count == 2)
 		{
-			Transform obj = (Transform)luaMgr.GetNetObject(1);
-			Vector3 arg0 = (Vector3)luaMgr.GetNetObject(2);
+			Transform obj = (Transform)LuaScriptMgr.GetNetObject(L, 1);
+			Vector3 arg0 = (Vector3)LuaScriptMgr.GetNetObject(L, 2);
 			Vector3 o = obj.InverseTransformPoint(arg0);
-			luaMgr.PushResult(o);
+			LuaScriptMgr.PushResult(L, o);
 			return 1;
 		}
 		else if (count == 4)
 		{
-			Transform obj = (Transform)luaMgr.GetNetObject(1);
-			float arg0 = (float)luaMgr.GetNumber(2);
-			float arg1 = (float)luaMgr.GetNumber(3);
-			float arg2 = (float)luaMgr.GetNumber(4);
+			Transform obj = (Transform)LuaScriptMgr.GetNetObject(L, 1);
+			float arg0 = (float)LuaScriptMgr.GetNumber(L, 2);
+			float arg1 = (float)LuaScriptMgr.GetNumber(L, 3);
+			float arg2 = (float)LuaScriptMgr.GetNumber(L, 4);
 			Vector3 o = obj.InverseTransformPoint(arg0,arg1,arg2);
-			luaMgr.PushResult(o);
+			LuaScriptMgr.PushResult(L, o);
 			return 1;
 		}
 		else
 		{
-			LuaDLL.luaL_error(l, "The best overloaded method match for 'Transform.InverseTransformPoint' has some invalid arguments");
+			LuaDLL.luaL_error(L, "invalid arguments to method: Transform.InverseTransformPoint");
 		}
 
 		return 0;
 	}
 
 	[MonoPInvokeCallbackAttribute(typeof(LuaCSFunction))]
-	static int DetachChildren(IntPtr l)
+	static int DetachChildren(IntPtr L)
 	{
-		luaMgr.CheckArgsCount(1);
-		Transform obj = (Transform)luaMgr.GetNetObject(1);
+		LuaScriptMgr.CheckArgsCount(L, 1);
+		Transform obj = (Transform)LuaScriptMgr.GetNetObject(L, 1);
 		obj.DetachChildren();
 		return 0;
 	}
 
 	[MonoPInvokeCallbackAttribute(typeof(LuaCSFunction))]
-	static int SetAsFirstSibling(IntPtr l)
+	static int SetAsFirstSibling(IntPtr L)
 	{
-		luaMgr.CheckArgsCount(1);
-		Transform obj = (Transform)luaMgr.GetNetObject(1);
+		LuaScriptMgr.CheckArgsCount(L, 1);
+		Transform obj = (Transform)LuaScriptMgr.GetNetObject(L, 1);
 		obj.SetAsFirstSibling();
 		return 0;
 	}
 
 	[MonoPInvokeCallbackAttribute(typeof(LuaCSFunction))]
-	static int SetAsLastSibling(IntPtr l)
+	static int SetAsLastSibling(IntPtr L)
 	{
-		luaMgr.CheckArgsCount(1);
-		Transform obj = (Transform)luaMgr.GetNetObject(1);
+		LuaScriptMgr.CheckArgsCount(L, 1);
+		Transform obj = (Transform)LuaScriptMgr.GetNetObject(L, 1);
 		obj.SetAsLastSibling();
 		return 0;
 	}
 
 	[MonoPInvokeCallbackAttribute(typeof(LuaCSFunction))]
-	static int SetSiblingIndex(IntPtr l)
+	static int SetSiblingIndex(IntPtr L)
 	{
-		luaMgr.CheckArgsCount(2);
-		Transform obj = (Transform)luaMgr.GetNetObject(1);
-		int arg0 = (int)luaMgr.GetNumber(2);
+		LuaScriptMgr.CheckArgsCount(L, 2);
+		Transform obj = (Transform)LuaScriptMgr.GetNetObject(L, 1);
+		int arg0 = (int)LuaScriptMgr.GetNumber(L, 2);
 		obj.SetSiblingIndex(arg0);
 		return 0;
 	}
 
 	[MonoPInvokeCallbackAttribute(typeof(LuaCSFunction))]
-	static int GetSiblingIndex(IntPtr l)
+	static int GetSiblingIndex(IntPtr L)
 	{
-		luaMgr.CheckArgsCount(1);
-		Transform obj = (Transform)luaMgr.GetNetObject(1);
+		LuaScriptMgr.CheckArgsCount(L, 1);
+		Transform obj = (Transform)LuaScriptMgr.GetNetObject(L, 1);
 		int o = obj.GetSiblingIndex();
-		luaMgr.PushResult(o);
+		LuaScriptMgr.PushResult(L, o);
 		return 1;
 	}
 
 	[MonoPInvokeCallbackAttribute(typeof(LuaCSFunction))]
-	static int Find(IntPtr l)
+	static int Find(IntPtr L)
 	{
-		luaMgr.CheckArgsCount(2);
-		Transform obj = (Transform)luaMgr.GetNetObject(1);
-		string arg0 = luaMgr.GetString(2);
+		LuaScriptMgr.CheckArgsCount(L, 2);
+		Transform obj = (Transform)LuaScriptMgr.GetNetObject(L, 1);
+		string arg0 = LuaScriptMgr.GetString(L, 2);
 		Transform o = obj.Find(arg0);
-		luaMgr.PushResult(o);
+		LuaScriptMgr.PushResult(L, o);
 		return 1;
 	}
 
 	[MonoPInvokeCallbackAttribute(typeof(LuaCSFunction))]
-	static int IsChildOf(IntPtr l)
+	static int IsChildOf(IntPtr L)
 	{
-		luaMgr.CheckArgsCount(2);
-		Transform obj = (Transform)luaMgr.GetNetObject(1);
-		Transform arg0 = (Transform)luaMgr.GetNetObject(2);
+		LuaScriptMgr.CheckArgsCount(L, 2);
+		Transform obj = (Transform)LuaScriptMgr.GetNetObject(L, 1);
+		Transform arg0 = (Transform)LuaScriptMgr.GetNetObject(L, 2);
 		bool o = obj.IsChildOf(arg0);
-		luaMgr.PushResult(o);
+		LuaScriptMgr.PushResult(L, o);
 		return 1;
 	}
 
 	[MonoPInvokeCallbackAttribute(typeof(LuaCSFunction))]
-	static int FindChild(IntPtr l)
+	static int FindChild(IntPtr L)
 	{
-		luaMgr.CheckArgsCount(2);
-		Transform obj = (Transform)luaMgr.GetNetObject(1);
-		string arg0 = luaMgr.GetString(2);
+		LuaScriptMgr.CheckArgsCount(L, 2);
+		Transform obj = (Transform)LuaScriptMgr.GetNetObject(L, 1);
+		string arg0 = LuaScriptMgr.GetString(L, 2);
 		Transform o = obj.FindChild(arg0);
-		luaMgr.PushResult(o);
+		LuaScriptMgr.PushResult(L, o);
 		return 1;
 	}
 
 	[MonoPInvokeCallbackAttribute(typeof(LuaCSFunction))]
-	static int GetEnumerator(IntPtr l)
+	static int GetEnumerator(IntPtr L)
 	{
-		luaMgr.CheckArgsCount(1);
-		Transform obj = (Transform)luaMgr.GetNetObject(1);
+		LuaScriptMgr.CheckArgsCount(L, 1);
+		Transform obj = (Transform)LuaScriptMgr.GetNetObject(L, 1);
 		IEnumerator o = obj.GetEnumerator();
-		luaMgr.PushResult(o);
+		LuaScriptMgr.PushResult(L, o);
 		return 1;
 	}
 
 	[MonoPInvokeCallbackAttribute(typeof(LuaCSFunction))]
-	static int GetChild(IntPtr l)
+	static int GetChild(IntPtr L)
 	{
-		luaMgr.CheckArgsCount(2);
-		Transform obj = (Transform)luaMgr.GetNetObject(1);
-		int arg0 = (int)luaMgr.GetNumber(2);
+		LuaScriptMgr.CheckArgsCount(L, 2);
+		Transform obj = (Transform)LuaScriptMgr.GetNetObject(L, 1);
+		int arg0 = (int)LuaScriptMgr.GetNumber(L, 2);
 		Transform o = obj.GetChild(arg0);
-		luaMgr.PushResult(o);
+		LuaScriptMgr.PushResult(L, o);
 		return 1;
 	}
 }

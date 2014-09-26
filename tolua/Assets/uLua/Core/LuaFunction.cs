@@ -9,12 +9,16 @@ namespace LuaInterface
         //private Lua interpreter;
         internal LuaCSFunction function;
         //internal int reference;
+        ObjectTranslator translator = null;
+        IntPtr L;
 
         public LuaFunction(int reference, LuaState interpreter)
         {
             _Reference = reference;
             this.function = null;
             _Interpreter = interpreter;
+            L = _Interpreter.L;
+            translator = _Interpreter.translator;
         }
 
         public LuaFunction(LuaCSFunction function, LuaState interpreter)
@@ -22,6 +26,17 @@ namespace LuaInterface
             _Reference = 0;
             this.function = function;
             _Interpreter = interpreter;
+            L = _Interpreter.L;
+            translator = _Interpreter.translator;
+        }
+
+        public LuaFunction(int reference, IntPtr l)
+        {
+            _Reference = reference;
+            this.function = null;
+            _Interpreter = null;
+            L = l;
+            translator = ObjectTranslator.FromState(L);
         }
 
         //~LuaFunction()
@@ -63,15 +78,45 @@ namespace LuaInterface
          */
         internal object[] call(object[] args, Type[] returnTypes)
         {
-            return _Interpreter.callFunction(this, args, returnTypes);
+            //return _Interpreter.callFunction(this, args, returnTypes);
+            int nArgs = 0;
+            int oldTop = LuaDLL.lua_gettop(L);
+            if (!LuaDLL.lua_checkstack(L, args.Length + 6))
+                throw new LuaException("Lua stack overflow");
+            translator.push(L, this);
+            if (args != null)
+            {
+                nArgs = args.Length;
+                for (int i = 0; i < args.Length; i++)
+                {
+                    translator.push(L, args[i]);
+                }
+            }
+            int error = LuaDLL.lua_pcall(L, nArgs, -1, 0);
+            if (error != 0)
+                ThrowExceptionFromError(oldTop);
+
+            if (returnTypes != null)
+                return translator.popValues(L, oldTop, returnTypes);
+            else
+                return translator.popValues(L, oldTop);
         }
+
+        internal void ThrowExceptionFromError(int oldTop)
+        {
+            object err = translator.getObject(L, -1);
+            LuaDLL.lua_settop(L, oldTop);
+            if (err == null) err = "Unknown Lua Error";
+            throw new LuaScriptException(err.ToString(), "");
+        }
+
         /*
          * Calls the function and returns its return values inside
          * an array
          */
         public object[] Call(params object[] args)
         {
-            return _Interpreter.callFunction(this, args);
+            return call(args, null);
         }
         /*
          * Pushes the function into the Lua stack
