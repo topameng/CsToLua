@@ -3,6 +3,8 @@ public static class LuaBinder
 {
 	public static void Bind(IntPtr L)
 	{
+        objectWrap.Register(L);
+        ObjectWrap.Register(L);
 		TypeWrap.Register(L);
 		TimeWrap.Register(L);
 		Vector2Wrap.Register(L);
