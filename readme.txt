@@ -2,6 +2,8 @@
 修改了__index函数加快了索引过程,性能有很好的提升
 修改了LuaScriptMgr支持多luastate
 修复了协同堆栈不对的bug
+
+感谢Chiuan、骏擎【CP】 同学的试用和反馈
 2014.9.23
 修复MonoBehaviour 继承类出现构造函数的问题
 修复private set 属性被导出问题
