@@ -191,6 +191,7 @@ public class ObjectWrap
 		{
 			Object arg0 = (Object)LuaScriptMgr.GetNetObject(L, 1);
 			Object.Destroy(arg0);
+			LuaScriptMgr.__gc(L);
 			return 0;
 		}
 		else if (count == 2)
@@ -198,6 +199,7 @@ public class ObjectWrap
 			Object arg0 = (Object)LuaScriptMgr.GetNetObject(L, 1);
 			float arg1 = (float)LuaScriptMgr.GetNumber(L, 2);
 			Object.Destroy(arg0,arg1);
+			LuaScriptMgr.__gc(L);
 			return 0;
 		}
 		else
@@ -217,6 +219,7 @@ public class ObjectWrap
 		{
 			Object arg0 = (Object)LuaScriptMgr.GetNetObject(L, 1);
 			Object.DestroyImmediate(arg0);
+			LuaScriptMgr.__gc(L);
 			return 0;
 		}
 		else if (count == 2)
@@ -224,6 +227,7 @@ public class ObjectWrap
 			Object arg0 = (Object)LuaScriptMgr.GetNetObject(L, 1);
 			bool arg1 = LuaScriptMgr.GetBoolean(L, 2);
 			Object.DestroyImmediate(arg0,arg1);
+			LuaScriptMgr.__gc(L);
 			return 0;
 		}
 		else
@@ -272,6 +276,7 @@ public class ObjectWrap
 		{
 			Object arg0 = (Object)LuaScriptMgr.GetNetObject(L, 1);
 			Object.DestroyObject(arg0);
+			LuaScriptMgr.__gc(L);
 			return 0;
 		}
 		else if (count == 2)
@@ -279,6 +284,7 @@ public class ObjectWrap
 			Object arg0 = (Object)LuaScriptMgr.GetNetObject(L, 1);
 			float arg1 = (float)LuaScriptMgr.GetNumber(L, 2);
 			Object.DestroyObject(arg0,arg1);
+			LuaScriptMgr.__gc(L);
 			return 0;
 		}
 		else
