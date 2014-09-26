@@ -86,6 +86,8 @@ public static class LuaBinding
         sb.AppendLine("{");
         sb.AppendLine("\tpublic static void Bind(IntPtr L)");
         sb.AppendLine("\t{");
+        sb.AppendLine("\t\tobjectWrap.Register(L);");
+        sb.AppendLine("\t\tObjectWrap.Register(L)");
 
         for (int i = 0; i < binds.Length; i++)
         {
