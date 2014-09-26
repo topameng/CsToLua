@@ -25,8 +25,9 @@ public static class LuaBinding
         }
     }
 
+    //注意必须保持基类在其派生类前面声明，否则自动生成的注册顺序是错误的
     static BindType[] binds = new BindType[]
-    {
+    {	
         //object 由于跟 Object 文件重名就不加入了
         new BindType("Type", typeof(Type), false, null),
         //new BindType("IAssetFile", typeof(IAssetFile), false, "object"),        
@@ -86,6 +87,8 @@ public static class LuaBinding
         sb.AppendLine("{");
         sb.AppendLine("\tpublic static void Bind(IntPtr L)");
         sb.AppendLine("\t{");
+        sb.AppendLine("\t\tobjectWrap.Register(L);");
+        sb.AppendLine("\t\tObjectWrap.Register(L);");
 
         for (int i = 0; i < binds.Length; i++)
         {
