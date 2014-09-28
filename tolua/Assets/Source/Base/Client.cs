@@ -42,12 +42,12 @@ public struct TestToLua
 
     public void Test4(int i, object o)
     {
-
+        Debug.Log("test4 obj");
     }
 
     public void Test4(int i, string str)
     {
-
+        Debug.Log("test4 str");
     }
 }
 

@@ -44,3 +44,9 @@ end
 
 local curve = AnimationCurve.New(Keyframe.New(1,2), Keyframe.New(1,2))
 
+local Test = TestToLua.New("hello")
+local Test1 = TestToLua.New("hello", "123")
+Test:Test4(4,"123")
+
+
+

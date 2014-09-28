@@ -544,11 +544,6 @@ public static class ToLua
         sb.AppendLine("\t\tint count = LuaDLL.lua_gettop(L);");
         ParameterInfo[] p0 = list[0].GetParameters();
 
-        if (list.Count == 1 && HasOptionalParam(p0))
-        {
-            sb.AppendFormat("\t\tLuaScriptMgr.CheckArgsCount(L, {0});\r\n", p0.Length);
-        }
-
         sb.AppendLine("\t\tobject obj = null;");
         sb.AppendLine();
 
