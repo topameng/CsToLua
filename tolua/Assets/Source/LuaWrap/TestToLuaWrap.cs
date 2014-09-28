@@ -23,7 +23,6 @@ public class TestToLuaWrap
 	static int Create(IntPtr L)
 	{
 		int count = LuaDLL.lua_gettop(L);
-		LuaScriptMgr.CheckArgsCount(L, 1);
 		object obj = null;
 
 		if (LuaScriptMgr.CheckParamsType(L, typeof(object), 1, count - 0))
