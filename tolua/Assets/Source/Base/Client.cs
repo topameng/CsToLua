@@ -5,6 +5,52 @@ using System;
 using System.Reflection;
 using LuaInterface;
 
+public struct TestToLua
+{
+    public TestToLua(params object[] objs)
+    {
+
+    }
+
+    public int Test(ref int x, ref int y)
+    {
+        int ret = x + y;
+        x = 1;
+        y = 2;
+        return ret;
+    }
+
+    public void Empty(Func<int, int, int, string> s1)
+    {
+
+    }
+
+    public void TestDef(int i = 234, string str = "123")
+    {
+
+    }
+
+    public void Test2(int i, params object[] objs)
+    {
+
+    }
+
+    public void Test3(params GameObject[] objs)
+    {
+
+    }
+
+    public void Test4(int i, object o)
+    {
+
+    }
+
+    public void Test4(int i, string str)
+    {
+
+    }
+}
+
 public class Client : MonoBehaviour 
 {
     LuaScriptMgr luaMgr = null;

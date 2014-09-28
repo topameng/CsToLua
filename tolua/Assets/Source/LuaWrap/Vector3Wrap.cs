@@ -491,7 +491,7 @@ public class Vector3Wrap
 	{
 		LuaScriptMgr.CheckArgsCount(L, 2);
 		Vector3 obj = (Vector3)LuaScriptMgr.GetNetObject(L, 1);
-		object arg0 = (object)LuaScriptMgr.GetNetObject(L, 2);
+		object arg0 = LuaScriptMgr.GetVarObject(L, 2);
 		bool o = obj.Equals(arg0);
 		LuaScriptMgr.PushResult(L, o);
 		return 1;

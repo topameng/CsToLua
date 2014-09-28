@@ -591,6 +591,10 @@ public class LuaScriptMgr
         {
             return luaType == LuaTypes.LUA_TTABLE || luaType == LuaTypes.LUA_TUSERDATA;
         }
+        else if (t == typeof(object))
+        {
+            return true;
+        }
         else if (t.IsInterface || t.IsClass || t.IsValueType)
         {
             if (luaType != LuaTypes.LUA_TUSERDATA)
@@ -627,13 +631,18 @@ public class LuaScriptMgr
 
     public static object[] GetParamsObject(IntPtr L, int stackPos, int count)
     {
+#if MULTI_STATE
+        ObjectTranslator translator = ObjectTranslator.FromState(L);
+#else
+        ObjectTranslator translator = _translator;
+#endif
         List<object> list = new List<object>();    
         object obj = null;    
 
         while (count > 0)
         {
             LuaTypes luatype = LuaDLL.lua_type(L, stackPos);            
-            obj = _translator.getObject(L, stackPos);
+            obj = translator.getObject(L, stackPos);
 
             ++stackPos;
             --count;
@@ -932,5 +941,15 @@ public class LuaScriptMgr
             string str = string.Format("no overload for method '{0}' takes '{1}' arguments", GetErrorFunc(1), c);
             LuaDLL.luaL_error(L, str);
         }
+    }
+
+    public static object GetVarObject(IntPtr L, int stackPos)
+    {
+#if MULTI_STATE
+        ObjectTranslator translator = ObjectTranslator.FromState(L);
+#else
+        ObjectTranslator translator = _translator;
+#endif
+        return translator.getObject(L, stackPos);
     }
 }

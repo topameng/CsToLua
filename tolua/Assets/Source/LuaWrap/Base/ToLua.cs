@@ -674,11 +674,14 @@ public static class ToLua
 
     static int Compare(MethodBase lhs, MethodBase rhs)
     {
-        int c1 = lhs.IsStatic ? 0 : 1;
-        int c2 = rhs.IsStatic ? 0 : 1;
+        int off1 = lhs.IsStatic ? 0 : 1;
+        int off2 = rhs.IsStatic ? 0 : 1;
 
-        c1 += lhs.GetParameters().Length;
-        c2 += rhs.GetParameters().Length;
+        ParameterInfo[] lp = lhs.GetParameters();
+        ParameterInfo[] rp = rhs.GetParameters();
+
+        int c1 = off1 + lp.Length;
+        int c2 = off2 + rp.Length;
 
         if (c1 > c2)
         {
@@ -686,6 +689,30 @@ public static class ToLua
         }
         else if (c1 == c2)
         {
+            List<ParameterInfo> list1 = new List<ParameterInfo>(lp);
+            List<ParameterInfo> list2 = new List<ParameterInfo>(rp);
+
+            if (list1.Count > list2.Count)
+            {
+                list1.RemoveAt(0);
+            }
+            else if (list2.Count > list1.Count)
+            {
+                list2.RemoveAt(0);
+            }
+
+            for (int i = 0; i < list1.Count; i++)
+            {
+                if (list1[i].ParameterType == typeof(object) && list2[i].ParameterType != typeof(object))
+                {
+                    return 1;
+                }
+                else if (list1[i].ParameterType != typeof(object) && list2[i].ParameterType == typeof(object))
+                {
+                    return -1;
+                }
+            }
+
             return 0;
         }
         else
@@ -805,6 +832,10 @@ public static class ToLua
                 {
                     sb.AppendFormat("{5}{0}[] objs{2} = LuaScriptMgr.{4}(L, {1});\r\n", atstr, j + offset, j, j + offset - 1, fname, head);                    
                 }
+            }
+            else if (param.ParameterType == typeof(object))
+            {
+                sb.AppendFormat("{2}object {0} = LuaScriptMgr.GetVarObject(L, {1});\r\n", arg, j + offset, head);
             }
             else //if (param.ParameterType == typeof(object))
             {
@@ -1297,9 +1328,6 @@ public static class ToLua
         }
         else if (str.Contains("`"))
         {
-            //string use = str.Substring(0, str.IndexOf('`'));
-            //use = use.Substring(0, use.LastIndexOf('.'));
-            //usingList.Add(use);
             Regex r = new Regex(@"^(?<s0>.*)\.(?<s1>.*?)`[1-9]\[(?<s2>.*?)\]$", RegexOptions.None);
             Match mc = r.Match(str);
             string s0 = mc.Groups["s0"].Value;            
@@ -1589,9 +1617,9 @@ public static class ToLua
         {            
             sb.AppendFormat("\t\t{0}.{1} = LuaScriptMgr.GetLuaFunction(L, 3);\r\n", o, name);
         }
-        else if (typeof(UnityEngine.Object).IsAssignableFrom(t))
+        else if (t == typeof(object))
         {
-            sb.AppendFormat("\t\t{0}.{1} = ({2})LuaScriptMgr.GetNetObject(L, 3);\r\n", o, name, _C(t.ToString()));
+            sb.AppendFormat("\t\t{0}.{1} = LuaScriptMgr.GetVarObject(L, 3);\r\n", o, name);
         }
         else if (typeof(object).IsAssignableFrom(t))
         {

@@ -17,5 +17,6 @@ public static class LuaBinder
 		ApplicationWrap.Register(L);
 		KeyframeWrap.Register(L);
 		AnimationCurveWrap.Register(L);
+		TestToLuaWrap.Register(L);
 	}
 }

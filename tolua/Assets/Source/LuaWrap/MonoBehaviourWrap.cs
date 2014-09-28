@@ -184,7 +184,7 @@ public class MonoBehaviourWrap
 		{
 			MonoBehaviour obj = (MonoBehaviour)LuaScriptMgr.GetNetObject(L, 1);
 			string arg0 = LuaScriptMgr.GetString(L, 2);
-			object arg1 = (object)LuaScriptMgr.GetNetObject(L, 3);
+			object arg1 = LuaScriptMgr.GetVarObject(L, 3);
 			Coroutine o = obj.StartCoroutine(arg0,arg1);
 			LuaScriptMgr.PushResult(L, o);
 			return 1;
@@ -251,7 +251,7 @@ public class MonoBehaviourWrap
 	static int print(IntPtr L)
 	{
 		LuaScriptMgr.CheckArgsCount(L, 1);
-		object arg0 = (object)LuaScriptMgr.GetNetObject(L, 1);
+		object arg0 = LuaScriptMgr.GetVarObject(L, 1);
 		MonoBehaviour.print(arg0);
 		return 0;
 	}
