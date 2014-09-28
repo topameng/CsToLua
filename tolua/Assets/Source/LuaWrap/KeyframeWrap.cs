@@ -1,0 +1,219 @@
+﻿using UnityEngine;
+using System;
+using LuaInterface;
+
+public class KeyframeWrap
+{
+	public static LuaMethod[] regs = new LuaMethod[]
+	{
+		new LuaMethod("New", Create),
+	};
+
+	static LuaField[] fields = new LuaField[]
+	{
+		new LuaField("time", get_time, set_time),
+		new LuaField("value", get_value, set_value),
+		new LuaField("inTangent", get_inTangent, set_inTangent),
+		new LuaField("outTangent", get_outTangent, set_outTangent),
+		new LuaField("tangentMode", get_tangentMode, set_tangentMode),
+	};
+
+	[MonoPInvokeCallbackAttribute(typeof(LuaCSFunction))]
+	static int Create(IntPtr L)
+	{
+		int count = LuaDLL.lua_gettop(L);
+		object obj = null;
+
+		if (count == 2)
+		{
+			float arg0 = (float)LuaScriptMgr.GetNumber(L, 1);
+			float arg1 = (float)LuaScriptMgr.GetNumber(L, 2);
+			obj = new Keyframe(arg0,arg1);
+			LuaScriptMgr.PushResult(L, obj);
+			return 1;
+		}
+		else if (count == 4)
+		{
+			float arg0 = (float)LuaScriptMgr.GetNumber(L, 1);
+			float arg1 = (float)LuaScriptMgr.GetNumber(L, 2);
+			float arg2 = (float)LuaScriptMgr.GetNumber(L, 3);
+			float arg3 = (float)LuaScriptMgr.GetNumber(L, 4);
+			obj = new Keyframe(arg0,arg1,arg2,arg3);
+			LuaScriptMgr.PushResult(L, obj);
+			return 1;
+		}
+		else if (count == 0)
+		{
+			obj = new Keyframe();
+			LuaScriptMgr.PushResult(L, obj);
+			return 1;
+		}
+		else
+		{
+			LuaDLL.luaL_error(L, "invalid arguments to method: Keyframe.New");
+		}
+
+		return 0;
+	}
+
+	public static void Register(IntPtr L)
+	{
+		LuaScriptMgr.RegisterLib(L, "Keyframe", typeof(Keyframe), regs, fields, "object");
+	}
+
+	[MonoPInvokeCallbackAttribute(typeof(LuaCSFunction))]
+	static int get_time(IntPtr L)
+	{
+		object o = LuaScriptMgr.GetLuaObject(L, 1);
+
+		if (o == null)
+		{
+			LuaDLL.luaL_error(L, "unknown member name time");
+		}
+
+		Keyframe obj = (Keyframe)o;
+		LuaScriptMgr.PushResult(L, obj.time);
+		return 1;
+	}
+
+	[MonoPInvokeCallbackAttribute(typeof(LuaCSFunction))]
+	static int get_value(IntPtr L)
+	{
+		object o = LuaScriptMgr.GetLuaObject(L, 1);
+
+		if (o == null)
+		{
+			LuaDLL.luaL_error(L, "unknown member name value");
+		}
+
+		Keyframe obj = (Keyframe)o;
+		LuaScriptMgr.PushResult(L, obj.value);
+		return 1;
+	}
+
+	[MonoPInvokeCallbackAttribute(typeof(LuaCSFunction))]
+	static int get_inTangent(IntPtr L)
+	{
+		object o = LuaScriptMgr.GetLuaObject(L, 1);
+
+		if (o == null)
+		{
+			LuaDLL.luaL_error(L, "unknown member name inTangent");
+		}
+
+		Keyframe obj = (Keyframe)o;
+		LuaScriptMgr.PushResult(L, obj.inTangent);
+		return 1;
+	}
+
+	[MonoPInvokeCallbackAttribute(typeof(LuaCSFunction))]
+	static int get_outTangent(IntPtr L)
+	{
+		object o = LuaScriptMgr.GetLuaObject(L, 1);
+
+		if (o == null)
+		{
+			LuaDLL.luaL_error(L, "unknown member name outTangent");
+		}
+
+		Keyframe obj = (Keyframe)o;
+		LuaScriptMgr.PushResult(L, obj.outTangent);
+		return 1;
+	}
+
+	[MonoPInvokeCallbackAttribute(typeof(LuaCSFunction))]
+	static int get_tangentMode(IntPtr L)
+	{
+		object o = LuaScriptMgr.GetLuaObject(L, 1);
+
+		if (o == null)
+		{
+			LuaDLL.luaL_error(L, "unknown member name tangentMode");
+		}
+
+		Keyframe obj = (Keyframe)o;
+		LuaScriptMgr.PushResult(L, obj.tangentMode);
+		return 1;
+	}
+
+	[MonoPInvokeCallbackAttribute(typeof(LuaCSFunction))]
+	static int set_time(IntPtr L)
+	{
+		object o = LuaScriptMgr.GetLuaObject(L, 1);
+
+		if (o == null)
+		{
+			LuaDLL.luaL_error(L, "unknown member name time");
+		}
+
+		Keyframe obj = (Keyframe)o;
+		obj.time = (float)LuaScriptMgr.GetNumber(L, 3);
+		LuaScriptMgr.SetValueObject(L, 1, obj);
+		return 0;
+	}
+
+	[MonoPInvokeCallbackAttribute(typeof(LuaCSFunction))]
+	static int set_value(IntPtr L)
+	{
+		object o = LuaScriptMgr.GetLuaObject(L, 1);
+
+		if (o == null)
+		{
+			LuaDLL.luaL_error(L, "unknown member name value");
+		}
+
+		Keyframe obj = (Keyframe)o;
+		obj.value = (float)LuaScriptMgr.GetNumber(L, 3);
+		LuaScriptMgr.SetValueObject(L, 1, obj);
+		return 0;
+	}
+
+	[MonoPInvokeCallbackAttribute(typeof(LuaCSFunction))]
+	static int set_inTangent(IntPtr L)
+	{
+		object o = LuaScriptMgr.GetLuaObject(L, 1);
+
+		if (o == null)
+		{
+			LuaDLL.luaL_error(L, "unknown member name inTangent");
+		}
+
+		Keyframe obj = (Keyframe)o;
+		obj.inTangent = (float)LuaScriptMgr.GetNumber(L, 3);
+		LuaScriptMgr.SetValueObject(L, 1, obj);
+		return 0;
+	}
+
+	[MonoPInvokeCallbackAttribute(typeof(LuaCSFunction))]
+	static int set_outTangent(IntPtr L)
+	{
+		object o = LuaScriptMgr.GetLuaObject(L, 1);
+
+		if (o == null)
+		{
+			LuaDLL.luaL_error(L, "unknown member name outTangent");
+		}
+
+		Keyframe obj = (Keyframe)o;
+		obj.outTangent = (float)LuaScriptMgr.GetNumber(L, 3);
+		LuaScriptMgr.SetValueObject(L, 1, obj);
+		return 0;
+	}
+
+	[MonoPInvokeCallbackAttribute(typeof(LuaCSFunction))]
+	static int set_tangentMode(IntPtr L)
+	{
+		object o = LuaScriptMgr.GetLuaObject(L, 1);
+
+		if (o == null)
+		{
+			LuaDLL.luaL_error(L, "unknown member name tangentMode");
+		}
+
+		Keyframe obj = (Keyframe)o;
+		obj.tangentMode = (int)LuaScriptMgr.GetNumber(L, 3);
+		LuaScriptMgr.SetValueObject(L, 1, obj);
+		return 0;
+	}
+}
+

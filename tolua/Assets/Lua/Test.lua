@@ -42,3 +42,5 @@ function myFunc()
     print('Coroutine ended')
 end
 
+local curve = AnimationCurve.New(Keyframe.New(1,2), Keyframe.New(1,2))
+

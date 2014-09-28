@@ -455,18 +455,30 @@ public class LuaScriptMgr
         return str;
     }
 
-    public static LuaFunction GetLuaFunction(IntPtr L, int stackPos)
+    public static LuaFunction GetFunction(IntPtr L, int stackPos)
     {
         LuaTypes luatype = LuaDLL.lua_type(L, stackPos);
 
         if (luatype != LuaTypes.LUA_TFUNCTION)
-        {
-            LuaDLL.luaL_error(L, string.Format("invalid arguments to method: {0}", GetErrorFunc(1)));
+        {            
             return null;
         }
 
         LuaDLL.lua_pushvalue(L, stackPos);
         return new LuaFunction(LuaDLL.luaL_ref(L, LuaIndexes.LUA_REGISTRYINDEX), L);
+    }
+
+    public static LuaFunction GetLuaFunction(IntPtr L, int stackPos)
+    {
+        LuaFunction func = GetFunction(L, stackPos);
+
+        if (func == null)
+        {
+            LuaDLL.luaL_error(L, string.Format("invalid arguments to method: {0}", GetErrorFunc(1)));
+            return null;
+        }
+        
+        return func;
     }
 
     public static object GetLuaObject(IntPtr L, int stackPos)
@@ -508,10 +520,10 @@ public class LuaScriptMgr
         translator.push(L, o);
     }
 
-    public void Bind()
+    void Bind()
     {
         IntPtr L = lua.L;
-        LuaBinder.Bind(lua.L);
+        LuaBinder.Bind(L);
     }
 
     /*public void SetMetaTable(string name1, string name2)
@@ -543,7 +555,7 @@ public class LuaScriptMgr
     public static bool CheckParamsType(IntPtr L, Type t, int begin, int count)
     {        
         //默认都可以转 string
-        if (t == typeof(string))
+        if (t == typeof(string) || t == typeof(object))
         {
             return true;
         }
@@ -613,14 +625,42 @@ public class LuaScriptMgr
         return false;
     }
 
+    public static object[] GetParamsObject(IntPtr L, int stackPos, int count)
+    {
+        List<object> list = new List<object>();    
+        object obj = null;    
+
+        while (count > 0)
+        {
+            LuaTypes luatype = LuaDLL.lua_type(L, stackPos);            
+            obj = _translator.getObject(L, stackPos);
+
+            ++stackPos;
+            --count;
+
+            if (obj != null)
+            {
+                list.Add(obj);
+            }
+            else
+            {
+                LuaDLL.luaL_error(L, string.Format("invalid arguments to method: {0}", GetErrorFunc(1)));
+                break;
+            }
+        } 
+
+        return list.ToArray();
+    }
+
     public static T[] GetParamsObject<T>(IntPtr L, int stackPos, int count)
     {
-        List<T> list = new List<T>();
-        T obj = default(T);   
+        List<T> list = new List<T>();        
+        T obj = default(T);
 
-        do
-        {            
-            obj = (T)GetLuaObject(L, stackPos);            
+        while (count > 0)
+        {
+            obj = (T)GetLuaObject(L, stackPos);                        
+
             ++stackPos;
             --count;
 
@@ -633,8 +673,7 @@ public class LuaScriptMgr
                 LuaDLL.luaL_error(L, string.Format("invalid arguments to method: {0}", GetErrorFunc(1)));
                 break;
             }
-
-        } while (count > 0);
+        } 
 
         return list.ToArray();
     }
@@ -713,13 +752,8 @@ public class LuaScriptMgr
         LuaTypes luatype = LuaDLL.lua_type(L, stackPos);
         string retVal = null;
 
-        if (luatype == LuaTypes.LUA_TSTRING)
+        if (luatype == LuaTypes.LUA_TSTRING || luatype == LuaTypes.LUA_TTABLE || luatype == LuaTypes.LUA_TFUNCTION)
         {
-            if (!LuaDLL.lua_isstring(L, stackPos))
-            {                
-                return null;
-            }
-
             retVal = LuaDLL.lua_tostring(L, stackPos);
         }
         else if (luatype == LuaTypes.LUA_TUSERDATA)
@@ -754,7 +788,7 @@ public class LuaScriptMgr
         List<string> list = new List<string>();
         string obj = null;
 
-        do
+        while (count > 0)
         {
             obj = GetLuaString(L, stackPos);
             ++stackPos;
@@ -767,8 +801,7 @@ public class LuaScriptMgr
             }
 
             list.Add(obj);
-
-        } while (count > 0);
+        } 
 
         return list.ToArray();
     }

@@ -52,7 +52,9 @@ public static class LuaBinding
         new BindType("Application", typeof(Application), false, "object"),    
         //new BindType("Debugger", typeof(Debugger), true, null),                
         //new BindType("UnGfx", typeof(UnGfx), true, null),      
-        //new BindType("object", typeof(object), false, null), 
+        //new BindType("object", typeof(object), false, null),       
+        new BindType("Keyframe", typeof(Keyframe), false, "object"),
+        new BindType("AnimationCurve", typeof(AnimationCurve), false, "object"),
     };
 
     [MenuItem("Lua/Gen LuaBinding Files", false, 11)]

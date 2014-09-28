@@ -508,7 +508,7 @@ public class ApplicationWrap
 	{
 		int count = LuaDLL.lua_gettop(L);
 		string arg0 = LuaScriptMgr.GetString(L, 1);
-		object[] objs1 = LuaScriptMgr.GetParamsObject<object>(L, 2, count - 1);
+		object[] objs1 = LuaScriptMgr.GetParamsObject(L, 2, count - 1);
 		Application.ExternalCall(arg0,objs1);
 		return 0;
 	}

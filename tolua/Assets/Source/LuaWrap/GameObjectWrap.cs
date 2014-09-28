@@ -60,6 +60,7 @@ public class GameObjectWrap
 		int count = LuaDLL.lua_gettop(L);
 		object obj = null;
 
+		Type[] types2 = {typeof(string)};
 		if (count == 0)
 		{
 			obj = new GameObject();
@@ -73,7 +74,7 @@ public class GameObjectWrap
 			LuaScriptMgr.PushResult(L, obj);
 			return 1;
 		}
-		else if (count == 2)
+		else if (LuaScriptMgr.CheckTypes(L, types2, 1) && LuaScriptMgr.CheckParamsType(L, typeof(Type), 2, count - 1))
 		{
 			string arg0 = LuaScriptMgr.GetString(L, 1);
 			Type[] objs1 = LuaScriptMgr.GetParamsObject<Type>(L, 2, count - 1);
