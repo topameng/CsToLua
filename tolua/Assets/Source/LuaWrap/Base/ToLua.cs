@@ -694,10 +694,20 @@ public static class ToLua
 
             if (list1.Count > list2.Count)
             {
+                if (list1[0].ParameterType == typeof(object))
+                {
+                    return 1;
+                }
+
                 list1.RemoveAt(0);
             }
             else if (list2.Count > list1.Count)
             {
+                if (list2[0].ParameterType == typeof(object))
+                {
+                    return -1;
+                }
+
                 list2.RemoveAt(0);
             }
 
