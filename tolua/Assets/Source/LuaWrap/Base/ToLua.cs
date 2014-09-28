@@ -488,6 +488,16 @@ public static class ToLua
         sb.AppendLine("\t}");
     }
 
+    static string GetCountStr(int count)
+    {
+        if (count != 0)
+        {
+            return string.Format("count - {0}", count);
+        }
+
+        return "count";
+    }
+
     static void GenConstruct()
     {        
         if (isStaticClass || baseClassName == "MonoBehaviour")
@@ -584,11 +594,11 @@ public static class ToLua
 
             if (paramInfos.Length > 1)
             {
-                sb.AppendFormat("\t\tif (LuaScriptMgr.CheckTypes(L, types0, 1) && LuaScriptMgr.CheckParamsType(L, typeof({0}), {1}, count - {2}))\r\n", str, paramInfos.Length, paramInfos.Length - 1);
+                sb.AppendFormat("\t\tif (LuaScriptMgr.CheckTypes(L, types0, 1) && LuaScriptMgr.CheckParamsType(L, typeof({0}), {1}, {2}))\r\n", str, paramInfos.Length, GetCountStr(paramInfos.Length - 1));
             }
             else
             {
-                sb.AppendFormat("\t\tif (LuaScriptMgr.CheckParamsType(L, typeof({0}), {1}, count - {2}))\r\n", str, paramInfos.Length, paramInfos.Length - 1);
+                sb.AppendFormat("\t\tif (LuaScriptMgr.CheckParamsType(L, typeof({0}), {1}, {2}))\r\n", str, paramInfos.Length, GetCountStr(paramInfos.Length - 1));
             }
         }
         else
@@ -633,11 +643,11 @@ public static class ToLua
 
                 if (paramInfos.Length > 1)
                 {
-                    sb.AppendFormat("\t\telse if (LuaScriptMgr.CheckTypes(L, types{2}, 1) && LuaScriptMgr.CheckParamsType(L, typeof({0}), {1}, count - {3}))\r\n", str, paramInfos.Length, i, paramInfos.Length - 1);
+                    sb.AppendFormat("\t\telse if (LuaScriptMgr.CheckTypes(L, types{2}, 1) && LuaScriptMgr.CheckParamsType(L, typeof({0}), {1}, {3}))\r\n", str, paramInfos.Length, i, GetCountStr(paramInfos.Length - 1));
                 }
                 else
                 {
-                    sb.AppendFormat("\t\telse if (LuaScriptMgr.CheckParamsType(L, typeof({0}), {1}, count - {2}))\r\n", str, paramInfos.Length, paramInfos.Length - 1);
+                    sb.AppendFormat("\t\telse if (LuaScriptMgr.CheckParamsType(L, typeof({0}), {1}, {2}))\r\n", str, paramInfos.Length, GetCountStr(paramInfos.Length - 1));
                 }
             }
 
@@ -821,11 +831,11 @@ public static class ToLua
                     {
                         if (!isObject)
                         {
-                            sb.AppendFormat("{5}{0}[] objs{2} = LuaScriptMgr.{4}<{0}>(L, {1}, count - {3});\r\n", atstr, j + offset, j, j + offset - 1, fname, head);
+                            sb.AppendFormat("{5}{0}[] objs{2} = LuaScriptMgr.{4}<{0}>(L, {1}, {3});\r\n", atstr, j + offset, j, GetCountStr(j + offset - 1), fname, head);
                         }
                         else
                         {
-                            sb.AppendFormat("{4}object[] objs{1} = LuaScriptMgr.{3}(L, {0}, count - {2});\r\n", j + offset, j, j + offset - 1, fname, head);
+                            sb.AppendFormat("{4}object[] objs{1} = LuaScriptMgr.{3}(L, {0}, {2});\r\n", j + offset, j, GetCountStr(j + offset - 1), fname, head);
                         }
                     }
                     else
@@ -1167,11 +1177,11 @@ public static class ToLua
 
             if (paramInfos.Length > 1)
             {
-                sb.AppendFormat("\t\tif (LuaScriptMgr.CheckTypes(L, types0, 1) && LuaScriptMgr.CheckParamsType(L, typeof({0}), {1}, count - {2}))\r\n", str, paramInfos.Length + offset, paramInfos.Length + offset - 1);
+                sb.AppendFormat("\t\tif (LuaScriptMgr.CheckTypes(L, types0, 1) && LuaScriptMgr.CheckParamsType(L, typeof({0}), {1}, {2}))\r\n", str, paramInfos.Length + offset, GetCountStr(paramInfos.Length + offset - 1));
             }
             else
             {
-                sb.AppendFormat("\t\tif (LuaScriptMgr.CheckParamsType(L, typeof({0}), {1}, count - {2}))\r\n", str, paramInfos.Length + offset, paramInfos.Length + offset - 1);
+                sb.AppendFormat("\t\tif (LuaScriptMgr.CheckParamsType(L, typeof({0}), {1}, {2}))\r\n", str, paramInfos.Length + offset, GetCountStr(paramInfos.Length + offset - 1));
             }
         }
         else
@@ -1218,11 +1228,11 @@ public static class ToLua
 
                 if (paramInfos.Length > 1)
                 {
-                    sb.AppendFormat("\t\telse if (LuaScriptMgr.CheckTypes(L, types{2}, 1) && LuaScriptMgr.CheckParamsType(L, typeof({0}), {1}, count - {3}))\r\n", str, paramInfos.Length + offset, i, paramInfos.Length + offset - 1);
+                    sb.AppendFormat("\t\telse if (LuaScriptMgr.CheckTypes(L, types{2}, 1) && LuaScriptMgr.CheckParamsType(L, typeof({0}), {1}, {3}))\r\n", str, paramInfos.Length + offset, i, GetCountStr(paramInfos.Length + offset - 1));
                 }
                 else
                 {
-                    sb.AppendFormat("\t\telse if (LuaScriptMgr.CheckParamsType(L, typeof({0}), {1}, count - {2}))\r\n", str, paramInfos.Length + offset, paramInfos.Length + offset - 1);
+                    sb.AppendFormat("\t\telse if (LuaScriptMgr.CheckParamsType(L, typeof({0}), {1}, {2}))\r\n", str, paramInfos.Length + offset, GetCountStr(paramInfos.Length + offset - 1));
                 }
             }
 
@@ -1425,31 +1435,23 @@ public static class ToLua
         {
             sb.AppendFormat("\t\tType[] types{0} = {{typeof({1}), typeof({2}), typeof({3}), typeof({4}), typeof({5}), typeof({6})}};\r\n", pos, _C(a[0].ToString()), _C(a[1].ToString()), _C(a[2].ToString()), _C(a[3].ToString()), _C(a[4].ToString()), _C(a[5].ToString()));
         }
+        else if (a.Count == 7)
+        {
+            sb.AppendFormat("\t\tType[] types{0} = {{typeof({1}), typeof({2}), typeof({3}), typeof({4}), typeof({5}), typeof({6}), typeof({7})}};\r\n", pos, _C(a[0].ToString()), _C(a[1].ToString()), _C(a[2].ToString()), _C(a[3].ToString()), _C(a[4].ToString()), _C(a[5].ToString()), _C(a[6].ToString()));
+        }
+        else if (a.Count == 8)
+        {
+            sb.AppendFormat("\t\tType[] types{0} = {{typeof({1}), typeof({2}), typeof({3}), typeof({4}), typeof({5}), typeof({6}), typeof({7}), typeof({8})}};\r\n", pos, _C(a[0].ToString()), _C(a[1].ToString()), _C(a[2].ToString()), _C(a[3].ToString()), _C(a[4].ToString()), _C(a[5].ToString()), _C(a[6].ToString()), _C(a[7].ToString()));
+        }
+        else if (a.Count == 9)
+        {
+            sb.AppendFormat("\t\tType[] types{0} = {{typeof({1}), typeof({2}), typeof({3}), typeof({4}), typeof({5}), typeof({6}), typeof({7}), typeof({8}), typeof({9})}};\r\n", pos, _C(a[0].ToString()), _C(a[1].ToString()), _C(a[2].ToString()), _C(a[3].ToString()), _C(a[4].ToString()), _C(a[5].ToString()), _C(a[6].ToString()), _C(a[7].ToString()), _C(a[8].ToString()));
+        }
         else
         {
             Debugger.LogError("CreateParamTypes i am not defined it: " + a.Count);
         }
     }
-
-    /*static void SetField(string s1, string s2, Type t)
-    {
-        if (t == typeof(bool))
-        {
-            sb.AppendFormat("\t\t{0}.{1} = (bool)LuaScriptMgr.GetBoolean(l, 3);\r\n", s1, s2);
-        }
-        else if (t == typeof(string))
-        {
-            sb.AppendFormat("\t\t{0}.{1} = (string)LuaScriptMgr.GetString(l, 3);\r\n", s1, s2);
-        }
-        else if (t == typeof(LuaFunction))
-        {
-            sb.AppendFormat("\t\t{0}.{1} = (LuaFunction)LuaScriptMgr.GetLuaFunction(3);\r\n", s1, s2);
-        }
-        else if (t.IsPrimitive)
-        {
-            sb.AppendFormat("\t\t{0}.{1} = ({2})LuaScriptMgr.GetNumber(3);\r\n", s1, s2, _C(t.Name));
-        }
-    }*/
 
     static void GenIndexFunc()
     {
