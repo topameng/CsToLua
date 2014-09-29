@@ -33,10 +33,10 @@ namespace LuaInterface
         public LuaFunction(int reference, IntPtr l)
         {
             _Reference = reference;
-            this.function = null;            
-            L = l;
-            translator = ObjectTranslator.FromState(L);
+            this.function = null;                        
+            translator = ObjectTranslator.FromState(l);
             _Interpreter = translator.interpreter;
+            L = _Interpreter.L;
         }
 
         //~LuaFunction()
