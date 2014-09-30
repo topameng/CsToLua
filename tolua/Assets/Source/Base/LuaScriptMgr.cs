@@ -581,7 +581,7 @@ public class LuaScriptMgr
         }
         else if (t == typeof(string))
         {
-            return luaType == LuaTypes.LUA_TSTRING;
+            return luaType == LuaTypes.LUA_TSTRING || luaType == LuaTypes.LUA_TUSERDATA;
         }
         else if (t.IsPrimitive || t.IsEnum)
         {
