@@ -40,14 +40,14 @@ public struct TestToLua
 
     }
 
-    public void Test4(int i, object o)
-    {
-        Debug.Log("test4 obj");
-    }
+   //public void Test4(int i, object o)
+   //{
+   //     Debug.Log("test4 obj");
+   // }
 
-    public void Test4(int i, string str)
+    public void Test4(int i, string str, int j)
     {
-        Debug.Log("test4 str");
+        Debug.Log("test4 str:" + str + "," + j.ToString());
     }
 }
 

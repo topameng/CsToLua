@@ -17,9 +17,13 @@ end
 function waitSeconds(t)
 	local timeStamp = Time.realtimeSinceStartup
 	timeStamp = timeStamp + t
-		while Time.realtimeSinceStartup < timeStamp do
-			coroutine.yield()
-		end
+	while Time.realtimeSinceStartup < timeStamp do
+		coroutine.yield()
+	end
+end
+
+function waitframe()
+
 end
 
 function fib(n)
@@ -46,7 +50,14 @@ local curve = AnimationCurve.New(Keyframe.New(1,2), Keyframe.New(1,2))
 
 local Test = TestToLua.New("hello")
 local Test1 = TestToLua.New("hello", "123")
-Test:Test4(4,"123")
+Test:Test4(4, myFunc, 123)
+
+--local co = coroutine.create(myFunc)
+--local v, ret = coroutine.resume(co)
+--print(tostring(v)..ret)
+--v, ret = coroutine.resume(co)
+
+
 
 
 

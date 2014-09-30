@@ -36,9 +36,9 @@ public class AnimationCurveWrap
 			LuaScriptMgr.PushResult(L, obj);
 			return 1;
 		}
-		else if (LuaScriptMgr.CheckParamsType(L, typeof(Keyframe), 1, count - 0))
+		else if (LuaScriptMgr.CheckParamsType(L, typeof(Keyframe), 1, count))
 		{
-			Keyframe[] objs0 = LuaScriptMgr.GetParamsObject<Keyframe>(L, 1, count - 0);
+			Keyframe[] objs0 = LuaScriptMgr.GetParamsObject<Keyframe>(L, 1, count);
 			obj = new AnimationCurve(objs0);
 			LuaScriptMgr.PushResult(L, obj);
 			return 1;

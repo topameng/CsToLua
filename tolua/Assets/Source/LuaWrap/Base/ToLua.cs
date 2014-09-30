@@ -460,7 +460,7 @@ public static class ToLua
             }
 
             int rc = m.ReturnType == typeof(void) ? 0 : 1;
-            rc += ProcessParams(m, 2, false);            
+            rc += ProcessParams(m, 2, false, false);            
             sb.AppendFormat("\t\treturn {0};\r\n", rc);
             sb.AppendLine("\t}");
         }
@@ -614,7 +614,7 @@ public static class ToLua
         }
 
         sb.AppendLine("\t\t{");
-        int rc = ProcessParams(md, 3, true);
+        int rc = ProcessParams(md, 3, true, list.Count > 1);
         sb.AppendFormat("\t\t\treturn {0};\r\n", rc);
         sb.AppendLine("\t\t}");
 
@@ -652,7 +652,7 @@ public static class ToLua
             }
 
             sb.AppendLine("\t\t{");            
-            rc = ProcessParams(md, 3, true);
+            rc = ProcessParams(md, 3, true, true);
             sb.AppendFormat("\t\t\treturn {0};\r\n", rc);
             sb.AppendLine("\t\t}");
         }
@@ -749,7 +749,7 @@ public static class ToLua
         return false;
     }
 
-    static int ProcessParams(MethodBase md, int tab, bool beConstruct)
+    static int ProcessParams(MethodBase md, int tab, bool beConstruct, bool beOverride)
     {
         ParameterInfo[] paramInfos = md.GetParameters();
         int count = paramInfos.Length;
@@ -780,7 +780,8 @@ public static class ToLua
             }
             else if (param.ParameterType == typeof(string))
             {
-                sb.AppendFormat("{2}string {0} = LuaScriptMgr.GetString(L, {1});\r\n", arg, j + offset, head);
+                string getStr = beOverride ? "GetString" : "GetLuaString";
+                sb.AppendFormat("{2}string {0} = LuaScriptMgr.{3}(L, {1});\r\n", arg, j + offset, head, getStr);
             }
             else if (param.ParameterType.IsPrimitive)
             {
@@ -1197,7 +1198,7 @@ public static class ToLua
         }
 
         sb.AppendLine("\t\t{");
-        int count = ProcessParams(md, 3, false);
+        int count = ProcessParams(md, 3, false, list.Count > 1);
         sb.AppendFormat("\t\t\treturn {0};\r\n", ret + count);
         sb.AppendLine("\t\t}");
         //int offset = md.IsStatic ? 1 : 2;
@@ -1237,7 +1238,7 @@ public static class ToLua
             }
 
             sb.AppendLine("\t\t{");
-            count = ProcessParams(md, 3, false);
+            count = ProcessParams(md, 3, false, true);
             sb.AppendFormat("\t\t\treturn {0};\r\n", ret + count);
             sb.AppendLine("\t\t}");
         }

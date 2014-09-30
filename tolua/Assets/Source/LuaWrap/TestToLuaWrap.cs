@@ -25,9 +25,9 @@ public class TestToLuaWrap
 		int count = LuaDLL.lua_gettop(L);
 		object obj = null;
 
-		if (LuaScriptMgr.CheckParamsType(L, typeof(object), 1, count - 0))
+		if (LuaScriptMgr.CheckParamsType(L, typeof(object), 1, count))
 		{
-			object[] objs0 = LuaScriptMgr.GetParamsObject(L, 1, count - 0);
+			object[] objs0 = LuaScriptMgr.GetParamsObject(L, 1, count);
 			obj = new TestToLua(objs0);
 			LuaScriptMgr.PushResult(L, obj);
 			return 1;
@@ -82,7 +82,7 @@ public class TestToLuaWrap
 		LuaScriptMgr.CheckArgsCount(L, 3);
 		TestToLua obj = (TestToLua)LuaScriptMgr.GetNetObject(L, 1);
 		int arg0 = (int)LuaScriptMgr.GetNumber(L, 2);
-		string arg1 = LuaScriptMgr.GetString(L, 3);
+		string arg1 = LuaScriptMgr.GetLuaString(L, 3);
 		obj.TestDef(arg0,arg1);
 		LuaScriptMgr.SetValueObject(L, 1, obj);
 		return 0;
@@ -114,34 +114,13 @@ public class TestToLuaWrap
 	[MonoPInvokeCallbackAttribute(typeof(LuaCSFunction))]
 	static int Test4(IntPtr L)
 	{
-		int count = LuaDLL.lua_gettop(L);
-
-		Type[] types0 = {typeof(TestToLua), typeof(int), typeof(string)};
-		Type[] types1 = {typeof(TestToLua), typeof(int), typeof(object)};
-
-		if (count == 3 && LuaScriptMgr.CheckTypes(L, types0, 1))
-		{
-			TestToLua obj = (TestToLua)LuaScriptMgr.GetNetObject(L, 1);
-			int arg0 = (int)LuaScriptMgr.GetNumber(L, 2);
-			string arg1 = LuaScriptMgr.GetString(L, 3);
-			obj.Test4(arg0,arg1);
-			LuaScriptMgr.SetValueObject(L, 1, obj);
-			return 0;
-		}
-		else if (count == 3 && LuaScriptMgr.CheckTypes(L, types1, 1))
-		{
-			TestToLua obj = (TestToLua)LuaScriptMgr.GetNetObject(L, 1);
-			int arg0 = (int)LuaScriptMgr.GetNumber(L, 2);
-			object arg1 = LuaScriptMgr.GetVarObject(L, 3);
-			obj.Test4(arg0,arg1);
-			LuaScriptMgr.SetValueObject(L, 1, obj);
-			return 0;
-		}
-		else
-		{
-			LuaDLL.luaL_error(L, "invalid arguments to method: TestToLua.Test4");
-		}
-
+		LuaScriptMgr.CheckArgsCount(L, 4);
+		TestToLua obj = (TestToLua)LuaScriptMgr.GetNetObject(L, 1);
+		int arg0 = (int)LuaScriptMgr.GetNumber(L, 2);
+		string arg1 = LuaScriptMgr.GetLuaString(L, 3);
+		int arg2 = (int)LuaScriptMgr.GetNumber(L, 4);
+		obj.Test4(arg0,arg1,arg2);
+		LuaScriptMgr.SetValueObject(L, 1, obj);
 		return 0;
 	}
 }

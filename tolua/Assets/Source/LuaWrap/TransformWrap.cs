@@ -871,7 +871,7 @@ public class TransformWrap
 	{
 		LuaScriptMgr.CheckArgsCount(L, 2);
 		Transform obj = (Transform)LuaScriptMgr.GetNetObject(L, 1);
-		string arg0 = LuaScriptMgr.GetString(L, 2);
+		string arg0 = LuaScriptMgr.GetLuaString(L, 2);
 		Transform o = obj.Find(arg0);
 		LuaScriptMgr.PushResult(L, o);
 		return 1;
@@ -893,7 +893,7 @@ public class TransformWrap
 	{
 		LuaScriptMgr.CheckArgsCount(L, 2);
 		Transform obj = (Transform)LuaScriptMgr.GetNetObject(L, 1);
-		string arg0 = LuaScriptMgr.GetString(L, 2);
+		string arg0 = LuaScriptMgr.GetLuaString(L, 2);
 		Transform o = obj.FindChild(arg0);
 		LuaScriptMgr.PushResult(L, o);
 		return 1;

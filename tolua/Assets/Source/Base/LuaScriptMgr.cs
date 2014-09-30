@@ -756,7 +756,7 @@ public class LuaScriptMgr
         return string.Format("{0}.{1}", className, sf.GetMethod().Name);                
     }
 
-    static string GetLuaString(IntPtr L, int stackPos)
+    public static string GetLuaString(IntPtr L, int stackPos)
     {
         LuaTypes luatype = LuaDLL.lua_type(L, stackPos);
         string retVal = null;
@@ -787,6 +787,10 @@ public class LuaScriptMgr
         {
             bool b = LuaDLL.lua_toboolean(L, stackPos);
             retVal = b.ToString();
+        }
+        else if (luatype == LuaTypes.LUA_TNIL)
+        {
+            return retVal;
         }
         else
         {
@@ -834,7 +838,7 @@ public class LuaScriptMgr
             List<string> list = new List<string>();
             LuaDLL.lua_pushvalue(L, stackPos);
 
-            do
+            while(true)
             {                
                 LuaDLL.lua_rawgeti(L, -1, index);
                 luatype = LuaDLL.lua_type(L, -1);
@@ -843,32 +847,15 @@ public class LuaScriptMgr
                 {
                     return list.ToArray();
                 }
-                else if (luatype == LuaTypes.LUA_TUSERDATA)
-                {
-                    object obj = GetLuaObject(L, -1);
-
-                    if (obj != null && obj.GetType() == typeof(string))
-                    {
-                        retVal = (string)obj;
-                    }
-                    else
-                    {
-                        break;
-                    }
-                }
-                else if (luatype == LuaTypes.LUA_TSTRING)
-                {
-                    retVal = LuaDLL.lua_tostring(L, -1);                    
-                }
                 else
                 {
-                    break;
+                    retVal = GetLuaString(L, -1);
                 }
                 
                 list.Add(retVal);
                 LuaDLL.lua_pop(L, 1);
                 ++index;
-            } while (true);            
+            }
         }
         else if (luatype == LuaTypes.LUA_TUSERDATA)
         {

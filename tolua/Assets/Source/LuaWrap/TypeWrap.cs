@@ -2104,7 +2104,7 @@ public class TypeWrap
 	static int ReflectionOnlyGetType(IntPtr L)
 	{
 		LuaScriptMgr.CheckArgsCount(L, 3);
-		string arg0 = LuaScriptMgr.GetString(L, 1);
+		string arg0 = LuaScriptMgr.GetLuaString(L, 1);
 		bool arg1 = LuaScriptMgr.GetBoolean(L, 2);
 		bool arg2 = LuaScriptMgr.GetBoolean(L, 3);
 		Type o = Type.ReflectionOnlyGetType(arg0,arg1,arg2);

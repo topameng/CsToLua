@@ -84,7 +84,7 @@ public class MonoBehaviourWrap
 	{
 		LuaScriptMgr.CheckArgsCount(L, 3);
 		MonoBehaviour obj = (MonoBehaviour)LuaScriptMgr.GetNetObject(L, 1);
-		string arg0 = LuaScriptMgr.GetString(L, 2);
+		string arg0 = LuaScriptMgr.GetLuaString(L, 2);
 		float arg1 = (float)LuaScriptMgr.GetNumber(L, 3);
 		obj.Invoke(arg0,arg1);
 		return 0;
@@ -95,7 +95,7 @@ public class MonoBehaviourWrap
 	{
 		LuaScriptMgr.CheckArgsCount(L, 4);
 		MonoBehaviour obj = (MonoBehaviour)LuaScriptMgr.GetNetObject(L, 1);
-		string arg0 = LuaScriptMgr.GetString(L, 2);
+		string arg0 = LuaScriptMgr.GetLuaString(L, 2);
 		float arg1 = (float)LuaScriptMgr.GetNumber(L, 3);
 		float arg2 = (float)LuaScriptMgr.GetNumber(L, 4);
 		obj.InvokeRepeating(arg0,arg1,arg2);

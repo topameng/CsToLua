@@ -646,7 +646,7 @@ public class GameObjectWrap
 	{
 		LuaScriptMgr.CheckArgsCount(L, 2);
 		GameObject obj = (GameObject)LuaScriptMgr.GetNetObject(L, 1);
-		string arg0 = LuaScriptMgr.GetString(L, 2);
+		string arg0 = LuaScriptMgr.GetLuaString(L, 2);
 		bool o = obj.CompareTag(arg0);
 		LuaScriptMgr.PushResult(L, o);
 		return 1;
@@ -656,7 +656,7 @@ public class GameObjectWrap
 	static int FindGameObjectWithTag(IntPtr L)
 	{
 		LuaScriptMgr.CheckArgsCount(L, 1);
-		string arg0 = LuaScriptMgr.GetString(L, 1);
+		string arg0 = LuaScriptMgr.GetLuaString(L, 1);
 		GameObject o = GameObject.FindGameObjectWithTag(arg0);
 		LuaScriptMgr.PushResult(L, o);
 		return 1;
@@ -666,7 +666,7 @@ public class GameObjectWrap
 	static int FindWithTag(IntPtr L)
 	{
 		LuaScriptMgr.CheckArgsCount(L, 1);
-		string arg0 = LuaScriptMgr.GetString(L, 1);
+		string arg0 = LuaScriptMgr.GetLuaString(L, 1);
 		GameObject o = GameObject.FindWithTag(arg0);
 		LuaScriptMgr.PushResult(L, o);
 		return 1;
@@ -676,7 +676,7 @@ public class GameObjectWrap
 	static int FindGameObjectsWithTag(IntPtr L)
 	{
 		LuaScriptMgr.CheckArgsCount(L, 1);
-		string arg0 = LuaScriptMgr.GetString(L, 1);
+		string arg0 = LuaScriptMgr.GetLuaString(L, 1);
 		GameObject[] o = GameObject.FindGameObjectsWithTag(arg0);
 		LuaScriptMgr.PushResult(L, o);
 		return 1;
@@ -862,7 +862,7 @@ public class GameObjectWrap
 	static int Find(IntPtr L)
 	{
 		LuaScriptMgr.CheckArgsCount(L, 1);
-		string arg0 = LuaScriptMgr.GetString(L, 1);
+		string arg0 = LuaScriptMgr.GetLuaString(L, 1);
 		GameObject o = GameObject.Find(arg0);
 		LuaScriptMgr.PushResult(L, o);
 		return 1;

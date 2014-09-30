@@ -507,7 +507,7 @@ public class ApplicationWrap
 	static int ExternalCall(IntPtr L)
 	{
 		int count = LuaDLL.lua_gettop(L);
-		string arg0 = LuaScriptMgr.GetString(L, 1);
+		string arg0 = LuaScriptMgr.GetLuaString(L, 1);
 		object[] objs1 = LuaScriptMgr.GetParamsObject(L, 2, count - 1);
 		Application.ExternalCall(arg0,objs1);
 		return 0;
@@ -517,7 +517,7 @@ public class ApplicationWrap
 	static int ExternalEval(IntPtr L)
 	{
 		LuaScriptMgr.CheckArgsCount(L, 1);
-		string arg0 = LuaScriptMgr.GetString(L, 1);
+		string arg0 = LuaScriptMgr.GetLuaString(L, 1);
 		Application.ExternalEval(arg0);
 		return 0;
 	}
@@ -526,7 +526,7 @@ public class ApplicationWrap
 	static int OpenURL(IntPtr L)
 	{
 		LuaScriptMgr.CheckArgsCount(L, 1);
-		string arg0 = LuaScriptMgr.GetString(L, 1);
+		string arg0 = LuaScriptMgr.GetLuaString(L, 1);
 		Application.OpenURL(arg0);
 		return 0;
 	}
