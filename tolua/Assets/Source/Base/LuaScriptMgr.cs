@@ -761,7 +761,7 @@ public class LuaScriptMgr
         LuaTypes luatype = LuaDLL.lua_type(L, stackPos);
         string retVal = null;
 
-        if (luatype == LuaTypes.LUA_TSTRING || luatype == LuaTypes.LUA_TTABLE || luatype == LuaTypes.LUA_TFUNCTION)
+        if (luatype == LuaTypes.LUA_TSTRING)
         {
             retVal = LuaDLL.lua_tostring(L, stackPos);
         }
@@ -787,6 +787,14 @@ public class LuaScriptMgr
         {
             bool b = LuaDLL.lua_toboolean(L, stackPos);
             retVal = b.ToString();
+        }
+        else
+        {
+            LuaDLL.lua_getglobal(L, "tostring");
+            LuaDLL.lua_pushvalue(L, stackPos);   
+            LuaDLL.lua_call(L, 1, 1);
+            retVal = LuaDLL.lua_tostring(L, -1);
+            LuaDLL.lua_pop(L, 1);  
         }
 
         return retVal;
