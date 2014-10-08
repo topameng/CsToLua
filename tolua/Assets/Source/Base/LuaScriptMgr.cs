@@ -267,7 +267,8 @@ public class LuaScriptMgr
         TextAsset luaCode = file.Read<TextAsset>(name);
         str = luaCode.bytes;
         Resources.UnloadAsset(luaCode);
-#endif
+#endif        
+
         return str;
     }
 
@@ -550,7 +551,7 @@ public class LuaScriptMgr
     public static void PushResult(IntPtr L, UnityEngine.Object obj)
     {
         object o = (object)obj;
-        PushResult(L, obj);
+        PushResult(L, o);
     }
 
     public static void PushResult(IntPtr L, bool b)
