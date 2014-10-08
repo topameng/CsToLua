@@ -1,4 +1,9 @@
-﻿2014.9.30
+﻿2014.10.8
+加入枚举类型的导出
+优化LuaScriptMgr PushResult函数。通过重载函数消除switch
+重载函数中参数数量唯一的，string转换放宽
+
+2014.9.30
 string类型CheckType加上了userdata
 非重载函数string可以匹配所有类型
 重载函数必须自己用tostring转换为string类型.
