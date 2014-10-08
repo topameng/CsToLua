@@ -56,6 +56,7 @@ public static class LuaBinding
         new BindType("Keyframe", typeof(Keyframe), false, "object"),
         new BindType("AnimationCurve", typeof(AnimationCurve), false, "object"),
         new BindType("TestToLua", typeof(TestToLua), false, "object"),
+        new BindType("TestEnum", typeof(TestEnum), false, null),
     };
 
     [MenuItem("Lua/Gen LuaBinding Files", false, 11)]

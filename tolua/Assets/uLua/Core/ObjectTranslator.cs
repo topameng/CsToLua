@@ -984,6 +984,33 @@ namespace LuaInterface
                 pushObject(luaState, o, "luaNet_metatable");
             }
 		}
+
+        internal void PushResult(IntPtr luaState, object o)
+        {
+            if (o == null)
+            {
+                LuaDLL.lua_pushnil(luaState);
+                return;
+            }
+
+            Type t = o.GetType();
+
+            if (t.IsEnum)
+            {
+                int e = (int)o;
+                LuaDLL.lua_pushnumber(luaState, e);
+            }
+            else if (t.IsValueType)
+            {
+                int index = addObject(o);
+                PushNewValueObject(luaState, o, index, "luaNet_metatable");
+            }
+            else
+            {
+                pushObject(luaState, o, "luaNet_metatable");
+            }
+        }
+
 		/*
          * Checks if the method matches the arguments in the Lua stack, getting
          * the arguments if it does.

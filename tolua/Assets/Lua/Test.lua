@@ -57,6 +57,8 @@ Test:Test4(4, myFunc, 123)
 --print(tostring(v)..ret)
 --v, ret = coroutine.resume(co)
 
+print("The enum class TestEnum.Two is:" .. TestEnum.Two)
+
 
 
 

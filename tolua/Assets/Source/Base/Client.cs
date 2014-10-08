@@ -51,6 +51,13 @@ public struct TestToLua
     }
 }
 
+public enum TestEnum
+{
+    One,
+    Two,
+    Three,
+}
+
 public class Client : MonoBehaviour 
 {
     LuaScriptMgr luaMgr = null;

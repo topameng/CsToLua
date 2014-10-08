@@ -1,4 +1,10 @@
-﻿using UnityEngine;
+﻿/*    
+ * Copyright (c) 2010 , 蒙占志 (Zhanzhi Meng) topameng@gmail.com
+ * All rights reserved.
+ * Use, modification and distribution are subject to the "New BSD License"
+*/
+
+using UnityEngine;
 using System;
 using System.Collections;
 using System.Text;
@@ -32,12 +38,12 @@ public enum ObjAmbig
 
 public static class ToLua 
 {
-    public static string className = "Vector2";
-    public static Type type = typeof(Vector2);
+    public static string className = "TestEnum";
+    public static Type type = typeof(TestEnum);
 
     //设置之后继承基类，不然就导入所有基类信息
-    public static string baseClassName = "object"; //"MonoBehaviour"; //"MonoBehaviour";  //"Component";
-    public static bool isStaticClass = false;    
+    public static string baseClassName = null; //"MonoBehaviour"; //"MonoBehaviour";  //"Component";
+    public static bool isStaticClass = true;    
 
     static HashSet<string> usingList = new HashSet<string>();
     static MetaOp op = MetaOp.None;    
@@ -72,12 +78,22 @@ public static class ToLua
         fields = null;
         props = null;
         propList.Clear();
-    }
+        ambig = ObjAmbig.NetObj;
+    }    
 
     public static void Generate(params string[] param)
     {
-        nameCounter = new Dictionary<string, int>();
         sb = new StringBuilder();
+        _C(type.ToString());
+        usingList.Add("System");
+
+        if (type.IsEnum)
+        {
+            GenEnum();
+            return;
+        }
+
+        nameCounter = new Dictionary<string, int>();        
         List<MethodInfo> list = new List<MethodInfo>();
 
         if (baseClassName != null)
@@ -147,8 +163,7 @@ public static class ToLua
 
         methods = list.ToArray();
 
-        Debugger.Log("Begin Generate lua Wrap for class {0}\r\n", className);
-                
+        Debugger.Log("Begin Generate lua Wrap for class {0}\r\n", className);                
         sb.AppendFormat("public class {0}Wrap\r\n", className);
         sb.AppendLine("{");        
         
@@ -161,15 +176,16 @@ public static class ToLua
         GenFunction();        
 
         sb.AppendLine("}\r\n");
-        //Debugger.Log(sb.ToString());
+        //Debugger.Log(sb.ToString());                
+        SaveFile();     
+    }
 
-        usingList.Add("UnityEngine");
-        usingList.Add("System");
+    static void SaveFile()
+    {
         string file = Application.dataPath + "/Source/LuaWrap/" + className + "Wrap.cs";
 
         using (StreamWriter textWriter = new StreamWriter(file, false, Encoding.UTF8))
-        {
-            //textWriter.Write(usingInfo);
+        {            
             StringBuilder usb = new StringBuilder();
 
             foreach (string str in usingList)
@@ -190,7 +206,7 @@ public static class ToLua
             textWriter.Write(sb.ToString());
             textWriter.Flush();
             textWriter.Close();
-        }        
+        }  
     }
 
     static void AddRegVar()
@@ -304,7 +320,7 @@ public static class ToLua
             }
         }
 
-        if (fields.Length == 0 && props.Length == 0 && isStaticClass)
+        if (fields.Length == 0 && props.Length == 0 && isStaticClass && baseClassName == null)
         {
             return;
         }
@@ -1168,6 +1184,7 @@ public static class ToLua
         int offset = md.IsStatic ? 0 : 1;
         int c1 = md.GetParameters().Length + offset;
         int c2 = list[1].GetParameters().Length + (list[1].IsStatic ? 0 : 1);
+        bool noLuaString = true;
 
         if (HasOptionalParam(md.GetParameters()))
         {
@@ -1190,6 +1207,7 @@ public static class ToLua
             if (c1 != c2)
             {
                 sb.AppendFormat("\t\tif (count == {0})\r\n", md.GetParameters().Length + offset);
+                noLuaString = false;
             }
             else
             {
@@ -1198,13 +1216,14 @@ public static class ToLua
         }
 
         sb.AppendLine("\t\t{");
-        int count = ProcessParams(md, 3, false, list.Count > 1);
+        int count = ProcessParams(md, 3, false, (list.Count > 1) && noLuaString);
         sb.AppendFormat("\t\t\treturn {0};\r\n", ret + count);
         sb.AppendLine("\t\t}");
         //int offset = md.IsStatic ? 1 : 2;
 
         for (int i = 1; i < list.Count; i++)
         {
+            noLuaString = true;
             md = list[i];
             offset = md.IsStatic ? 0 : 1;
             ret = md.ReturnType == typeof(void) ? 0 : 1;
@@ -1218,6 +1237,7 @@ public static class ToLua
                 else
                 {
                     sb.AppendFormat("\t\telse if (count == {0})\r\n", md.GetParameters().Length + offset);
+                    noLuaString = false;
                 }
             }
             else
@@ -1238,7 +1258,7 @@ public static class ToLua
             }
 
             sb.AppendLine("\t\t{");
-            count = ProcessParams(md, 3, false, true);
+            count = ProcessParams(md, 3, false, noLuaString);
             sb.AppendFormat("\t\t\treturn {0};\r\n", ret + count);
             sb.AppendLine("\t\t}");
         }
@@ -1373,7 +1393,7 @@ public static class ToLua
             usingList.Add("UnityEngine");
             str = str.Remove(0, 12);
 
-            if ((ambig & ObjAmbig.U3dObj) == 0 && str == "Object")
+            if (str == "Object")
             {
                 ambig |= ObjAmbig.U3dObj;
             }
@@ -1752,5 +1772,31 @@ public static class ToLua
         }
 
         return name;
+    }
+
+    static void GenEnum()
+    {
+        fields = type.GetFields(BindingFlags.GetField | BindingFlags.Public | BindingFlags.Static);
+        List<FieldInfo> list = new List<FieldInfo>(fields);
+        sb.AppendFormat("public class {0}Wrap\r\n", className);
+        sb.AppendLine("{");    
+        sb.AppendLine("\tstatic LuaEnum[] enums = new LuaEnum[]");
+        sb.AppendLine("\t{");
+
+        for (int i = 0; i < fields.Length; i++)
+        {
+            sb.AppendFormat("\t\tnew LuaEnum(\"{0}\", (int){1}.{0}),\r\n", fields[i].Name, className);
+        }
+
+        sb.AppendLine("\t};");
+
+        sb.AppendLine("\r\n\tpublic static void Register(IntPtr L)");
+        sb.AppendLine("\t{");
+        sb.AppendFormat("\t\tLuaScriptMgr.RegisterLib(L, \"{0}\", enums);\r\n", className);            
+        sb.AppendLine("\t}");
+
+        sb.AppendLine("}");
+
+        SaveFile();
     }
 }

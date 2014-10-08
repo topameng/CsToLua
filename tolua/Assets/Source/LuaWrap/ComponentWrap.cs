@@ -514,7 +514,7 @@ public class ComponentWrap
 		if (count == 2)
 		{
 			Component obj = (Component)LuaScriptMgr.GetNetObject(L, 1);
-			string arg0 = LuaScriptMgr.GetString(L, 2);
+			string arg0 = LuaScriptMgr.GetLuaString(L, 2);
 			obj.SendMessageUpwards(arg0);
 			return 0;
 		}
@@ -537,7 +537,7 @@ public class ComponentWrap
 		else if (count == 4)
 		{
 			Component obj = (Component)LuaScriptMgr.GetNetObject(L, 1);
-			string arg0 = LuaScriptMgr.GetString(L, 2);
+			string arg0 = LuaScriptMgr.GetLuaString(L, 2);
 			object arg1 = LuaScriptMgr.GetVarObject(L, 3);
 			SendMessageOptions arg2 = (SendMessageOptions)LuaScriptMgr.GetNetObject(L, 4);
 			obj.SendMessageUpwards(arg0,arg1,arg2);
@@ -562,7 +562,7 @@ public class ComponentWrap
 		if (count == 2)
 		{
 			Component obj = (Component)LuaScriptMgr.GetNetObject(L, 1);
-			string arg0 = LuaScriptMgr.GetString(L, 2);
+			string arg0 = LuaScriptMgr.GetLuaString(L, 2);
 			obj.SendMessage(arg0);
 			return 0;
 		}
@@ -585,7 +585,7 @@ public class ComponentWrap
 		else if (count == 4)
 		{
 			Component obj = (Component)LuaScriptMgr.GetNetObject(L, 1);
-			string arg0 = LuaScriptMgr.GetString(L, 2);
+			string arg0 = LuaScriptMgr.GetLuaString(L, 2);
 			object arg1 = LuaScriptMgr.GetVarObject(L, 3);
 			SendMessageOptions arg2 = (SendMessageOptions)LuaScriptMgr.GetNetObject(L, 4);
 			obj.SendMessage(arg0,arg1,arg2);
@@ -610,7 +610,7 @@ public class ComponentWrap
 		if (count == 2)
 		{
 			Component obj = (Component)LuaScriptMgr.GetNetObject(L, 1);
-			string arg0 = LuaScriptMgr.GetString(L, 2);
+			string arg0 = LuaScriptMgr.GetLuaString(L, 2);
 			obj.BroadcastMessage(arg0);
 			return 0;
 		}
@@ -633,7 +633,7 @@ public class ComponentWrap
 		else if (count == 4)
 		{
 			Component obj = (Component)LuaScriptMgr.GetNetObject(L, 1);
-			string arg0 = LuaScriptMgr.GetString(L, 2);
+			string arg0 = LuaScriptMgr.GetLuaString(L, 2);
 			object arg1 = LuaScriptMgr.GetVarObject(L, 3);
 			SendMessageOptions arg2 = (SendMessageOptions)LuaScriptMgr.GetNetObject(L, 4);
 			obj.BroadcastMessage(arg0,arg1,arg2);

@@ -533,7 +533,7 @@ public class Vector3Wrap
 		else if (count == 2)
 		{
 			Vector3 obj = (Vector3)LuaScriptMgr.GetNetObject(L, 1);
-			string arg0 = LuaScriptMgr.GetString(L, 2);
+			string arg0 = LuaScriptMgr.GetLuaString(L, 2);
 			string o = obj.ToString(arg0);
 			LuaScriptMgr.PushResult(L, o);
 			return 1;

@@ -104,6 +104,12 @@ public class LuaScriptMgr
         //CmdTable.RegisterCommand("LuaGC", LuaGC);        
     }
 
+    void Bind()
+    {
+        IntPtr L = lua.L;
+        LuaBinder.Bind(L);
+    }
+
     public void ReloadAll()
     {
         dict.Clear();
@@ -276,6 +282,27 @@ public class LuaScriptMgr
         }
 
         return lt;
+    }
+
+    public static void RegisterLib(IntPtr L, string libName, LuaEnum[] enums)
+    {
+        LuaDLL.lua_getglobal(L, libName);
+
+        if (LuaDLL.lua_isnil(L, -1))
+        {
+            LuaDLL.lua_pop(L, 1);
+            LuaDLL.lua_createtable(L, 0, enums.Length);
+        }
+
+        for (int i = 0; i < enums.Length; i++)
+        {
+            LuaDLL.lua_pushstring(L, enums[i].name);
+            LuaDLL.lua_pushnumber(L, enums[i].val);
+            LuaDLL.lua_rawset(L, -3);
+        }
+
+        LuaDLL.lua_setglobal(L, libName);
+        LuaDLL.lua_settop(L, 0);
     }
 
     public static void RegisterLib(IntPtr L, string libName, LuaMethod[] regs)
@@ -517,13 +544,136 @@ public class LuaScriptMgr
 #else
         ObjectTranslator translator = _translator;
 #endif
-        translator.push(L, o);
+        translator.PushResult(L, o);
     }
 
-    void Bind()
+    public static void PushResult(IntPtr L, UnityEngine.Object obj)
     {
-        IntPtr L = lua.L;
-        LuaBinder.Bind(L);
+        object o = (object)obj;
+        PushResult(L, obj);
+    }
+
+    public static void PushResult(IntPtr L, bool b)
+    {
+        LuaDLL.lua_pushboolean(L, b);
+    }
+
+    public static void PushResult(IntPtr L, string str)
+    {
+        LuaDLL.lua_pushstring(L, str);
+    }
+
+    public static void PushResult(IntPtr L, char d)
+    {
+        LuaDLL.lua_pushnumber(L, d);
+    }
+
+    public static void PushResult(IntPtr L, sbyte d)
+    {
+        LuaDLL.lua_pushnumber(L, d);
+    }
+
+    public static void PushResult(IntPtr L, byte d)
+    {
+        LuaDLL.lua_pushnumber(L, d);
+    }
+
+    public static void PushResult(IntPtr L, short d)
+    {
+        LuaDLL.lua_pushnumber(L, d);
+    }
+
+    public static void PushResult(IntPtr L, ushort d)
+    {
+        LuaDLL.lua_pushnumber(L, d);
+    }
+
+    public static void PushResult(IntPtr L, int d)
+    {
+        LuaDLL.lua_pushnumber(L, d);
+    }
+
+    public static void PushResult(IntPtr L, uint d)
+    {
+        LuaDLL.lua_pushnumber(L, d);
+    }
+
+    public static void PushResult(IntPtr L, long d)
+    {
+        LuaDLL.lua_pushnumber(L, d);
+    }
+
+    public static void PushResult(IntPtr L, ulong d)
+    {
+        LuaDLL.lua_pushnumber(L, d);
+    }
+
+    public static void PushResult(IntPtr L, float d)
+    {
+        LuaDLL.lua_pushnumber(L, d);
+    }
+
+    public static void PushResult(IntPtr L, decimal d)
+    {
+        LuaDLL.lua_pushnumber(L, (double)d);
+    }
+
+    public static void PushResult(IntPtr L, double d)
+    {
+        LuaDLL.lua_pushnumber(L, d);
+    }
+
+    public static void PushResult(IntPtr L, ILuaGeneratedType o)
+    {
+        if (o == null)
+        {
+            LuaDLL.lua_pushnil(L);
+        }
+        else
+        {
+            LuaTable table = o.__luaInterface_getLuaTable();
+            table.push(L);
+        }
+    }
+
+    public static void PushResult(IntPtr L, LuaTable lt)
+    {
+        if (lt == null)
+        {
+            LuaDLL.lua_pushnil(L);
+        }
+        else
+        {
+            lt.push(L);
+        }
+    }
+
+    public static void PushResult(IntPtr L, LuaFunction func)
+    {
+        if (func == null)
+        {
+            LuaDLL.lua_pushnil(L);
+        }
+        else
+        {
+            func.push(L);
+        }
+    }
+
+    public static void PushResult(IntPtr L, LuaCSFunction func)
+    {
+        if (func == null)
+        {
+            LuaDLL.lua_pushnil(L);
+            return;
+        }
+
+#if MULTI_STATE
+        ObjectTranslator translator = ObjectTranslator.FromState(L);
+#else
+        ObjectTranslator translator = _translator;
+#endif
+        translator.pushFunction(L, func);
     }
 
     /*public void SetMetaTable(string name1, string name2)

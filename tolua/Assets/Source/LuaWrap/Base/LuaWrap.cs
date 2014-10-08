@@ -28,6 +28,18 @@ public struct LuaField
     }
 };
 
+public struct LuaEnum
+{
+    public string name;
+    public int val;
+
+    public LuaEnum(string str, int v)
+    {
+        name = str;
+        val = v;
+    }
+}
+
 //public interface ILuaWrap 
 //{
 //    void Register();

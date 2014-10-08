@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Reflection;
 using System.Globalization;
-using UnityEngine;
 using LuaInterface;
 
 public class TypeWrap
@@ -1106,7 +1105,7 @@ public class TypeWrap
 		}
 		else if (count == 2)
 		{
-			string arg0 = LuaScriptMgr.GetString(L, 1);
+			string arg0 = LuaScriptMgr.GetLuaString(L, 1);
 			bool arg1 = LuaScriptMgr.GetBoolean(L, 2);
 			Type o = Type.GetType(arg0,arg1);
 			LuaScriptMgr.PushResult(L, o);
@@ -1114,7 +1113,7 @@ public class TypeWrap
 		}
 		else if (count == 3)
 		{
-			string arg0 = LuaScriptMgr.GetString(L, 1);
+			string arg0 = LuaScriptMgr.GetLuaString(L, 1);
 			bool arg1 = LuaScriptMgr.GetBoolean(L, 2);
 			bool arg2 = LuaScriptMgr.GetBoolean(L, 3);
 			Type o = Type.GetType(arg0,arg1,arg2);
@@ -1183,7 +1182,7 @@ public class TypeWrap
 		else if (count == 3)
 		{
 			Guid arg0 = (Guid)LuaScriptMgr.GetNetObject(L, 1);
-			string arg1 = LuaScriptMgr.GetString(L, 2);
+			string arg1 = LuaScriptMgr.GetLuaString(L, 2);
 			bool arg2 = LuaScriptMgr.GetBoolean(L, 3);
 			Type o = Type.GetTypeFromCLSID(arg0,arg1,arg2);
 			LuaScriptMgr.PushResult(L, o);
@@ -1217,7 +1216,7 @@ public class TypeWrap
 
 		if (count == 1)
 		{
-			string arg0 = LuaScriptMgr.GetString(L, 1);
+			string arg0 = LuaScriptMgr.GetLuaString(L, 1);
 			Type o = Type.GetTypeFromProgID(arg0);
 			LuaScriptMgr.PushResult(L, o);
 			return 1;
@@ -1240,8 +1239,8 @@ public class TypeWrap
 		}
 		else if (count == 3)
 		{
-			string arg0 = LuaScriptMgr.GetString(L, 1);
-			string arg1 = LuaScriptMgr.GetString(L, 2);
+			string arg0 = LuaScriptMgr.GetLuaString(L, 1);
+			string arg1 = LuaScriptMgr.GetLuaString(L, 2);
 			bool arg2 = LuaScriptMgr.GetBoolean(L, 3);
 			Type o = Type.GetTypeFromProgID(arg0,arg1,arg2);
 			LuaScriptMgr.PushResult(L, o);
@@ -1296,7 +1295,7 @@ public class TypeWrap
 		if (count == 2)
 		{
 			Type obj = (Type)LuaScriptMgr.GetNetObject(L, 1);
-			string arg0 = LuaScriptMgr.GetString(L, 2);
+			string arg0 = LuaScriptMgr.GetLuaString(L, 2);
 			Type o = obj.GetInterface(arg0);
 			LuaScriptMgr.PushResult(L, o);
 			return 1;
@@ -1304,7 +1303,7 @@ public class TypeWrap
 		else if (count == 3)
 		{
 			Type obj = (Type)LuaScriptMgr.GetNetObject(L, 1);
-			string arg0 = LuaScriptMgr.GetString(L, 2);
+			string arg0 = LuaScriptMgr.GetLuaString(L, 2);
 			bool arg1 = LuaScriptMgr.GetBoolean(L, 3);
 			Type o = obj.GetInterface(arg0,arg1);
 			LuaScriptMgr.PushResult(L, o);
@@ -1389,7 +1388,7 @@ public class TypeWrap
 		if (count == 2)
 		{
 			Type obj = (Type)LuaScriptMgr.GetNetObject(L, 1);
-			string arg0 = LuaScriptMgr.GetString(L, 2);
+			string arg0 = LuaScriptMgr.GetLuaString(L, 2);
 			EventInfo o = obj.GetEvent(arg0);
 			LuaScriptMgr.PushResult(L, o);
 			return 1;
@@ -1397,7 +1396,7 @@ public class TypeWrap
 		else if (count == 3)
 		{
 			Type obj = (Type)LuaScriptMgr.GetNetObject(L, 1);
-			string arg0 = LuaScriptMgr.GetString(L, 2);
+			string arg0 = LuaScriptMgr.GetLuaString(L, 2);
 			BindingFlags arg1 = (BindingFlags)LuaScriptMgr.GetNetObject(L, 3);
 			EventInfo o = obj.GetEvent(arg0,arg1);
 			LuaScriptMgr.PushResult(L, o);
@@ -1447,7 +1446,7 @@ public class TypeWrap
 		if (count == 2)
 		{
 			Type obj = (Type)LuaScriptMgr.GetNetObject(L, 1);
-			string arg0 = LuaScriptMgr.GetString(L, 2);
+			string arg0 = LuaScriptMgr.GetLuaString(L, 2);
 			FieldInfo o = obj.GetField(arg0);
 			LuaScriptMgr.PushResult(L, o);
 			return 1;
@@ -1455,7 +1454,7 @@ public class TypeWrap
 		else if (count == 3)
 		{
 			Type obj = (Type)LuaScriptMgr.GetNetObject(L, 1);
-			string arg0 = LuaScriptMgr.GetString(L, 2);
+			string arg0 = LuaScriptMgr.GetLuaString(L, 2);
 			BindingFlags arg1 = (BindingFlags)LuaScriptMgr.GetNetObject(L, 3);
 			FieldInfo o = obj.GetField(arg0,arg1);
 			LuaScriptMgr.PushResult(L, o);
@@ -1515,7 +1514,7 @@ public class TypeWrap
 		if (count == 2)
 		{
 			Type obj = (Type)LuaScriptMgr.GetNetObject(L, 1);
-			string arg0 = LuaScriptMgr.GetString(L, 2);
+			string arg0 = LuaScriptMgr.GetLuaString(L, 2);
 			MemberInfo[] o = obj.GetMember(arg0);
 			LuaScriptMgr.PushResult(L, o);
 			return 1;
@@ -1523,7 +1522,7 @@ public class TypeWrap
 		else if (count == 3)
 		{
 			Type obj = (Type)LuaScriptMgr.GetNetObject(L, 1);
-			string arg0 = LuaScriptMgr.GetString(L, 2);
+			string arg0 = LuaScriptMgr.GetLuaString(L, 2);
 			BindingFlags arg1 = (BindingFlags)LuaScriptMgr.GetNetObject(L, 3);
 			MemberInfo[] o = obj.GetMember(arg0,arg1);
 			LuaScriptMgr.PushResult(L, o);
@@ -1532,7 +1531,7 @@ public class TypeWrap
 		else if (count == 4)
 		{
 			Type obj = (Type)LuaScriptMgr.GetNetObject(L, 1);
-			string arg0 = LuaScriptMgr.GetString(L, 2);
+			string arg0 = LuaScriptMgr.GetLuaString(L, 2);
 			MemberTypes arg1 = (MemberTypes)LuaScriptMgr.GetNetObject(L, 3);
 			BindingFlags arg2 = (BindingFlags)LuaScriptMgr.GetNetObject(L, 4);
 			MemberInfo[] o = obj.GetMember(arg0,arg1,arg2);
@@ -1586,7 +1585,7 @@ public class TypeWrap
 		if (count == 2)
 		{
 			Type obj = (Type)LuaScriptMgr.GetNetObject(L, 1);
-			string arg0 = LuaScriptMgr.GetString(L, 2);
+			string arg0 = LuaScriptMgr.GetLuaString(L, 2);
 			MethodInfo o = obj.GetMethod(arg0);
 			LuaScriptMgr.PushResult(L, o);
 			return 1;
@@ -1612,7 +1611,7 @@ public class TypeWrap
 		else if (count == 4)
 		{
 			Type obj = (Type)LuaScriptMgr.GetNetObject(L, 1);
-			string arg0 = LuaScriptMgr.GetString(L, 2);
+			string arg0 = LuaScriptMgr.GetLuaString(L, 2);
 			Type[] objs1 = LuaScriptMgr.GetArrayObject<Type>(L, 3);
 			ParameterModifier[] objs2 = LuaScriptMgr.GetArrayObject<ParameterModifier>(L, 4);
 			MethodInfo o = obj.GetMethod(arg0,objs1,objs2);
@@ -1622,7 +1621,7 @@ public class TypeWrap
 		else if (count == 6)
 		{
 			Type obj = (Type)LuaScriptMgr.GetNetObject(L, 1);
-			string arg0 = LuaScriptMgr.GetString(L, 2);
+			string arg0 = LuaScriptMgr.GetLuaString(L, 2);
 			BindingFlags arg1 = (BindingFlags)LuaScriptMgr.GetNetObject(L, 3);
 			Binder arg2 = (Binder)LuaScriptMgr.GetNetObject(L, 4);
 			Type[] objs3 = LuaScriptMgr.GetArrayObject<Type>(L, 5);
@@ -1634,7 +1633,7 @@ public class TypeWrap
 		else if (count == 7)
 		{
 			Type obj = (Type)LuaScriptMgr.GetNetObject(L, 1);
-			string arg0 = LuaScriptMgr.GetString(L, 2);
+			string arg0 = LuaScriptMgr.GetLuaString(L, 2);
 			BindingFlags arg1 = (BindingFlags)LuaScriptMgr.GetNetObject(L, 3);
 			Binder arg2 = (Binder)LuaScriptMgr.GetNetObject(L, 4);
 			CallingConventions arg3 = (CallingConventions)LuaScriptMgr.GetNetObject(L, 5);
@@ -1688,7 +1687,7 @@ public class TypeWrap
 		if (count == 2)
 		{
 			Type obj = (Type)LuaScriptMgr.GetNetObject(L, 1);
-			string arg0 = LuaScriptMgr.GetString(L, 2);
+			string arg0 = LuaScriptMgr.GetLuaString(L, 2);
 			Type o = obj.GetNestedType(arg0);
 			LuaScriptMgr.PushResult(L, o);
 			return 1;
@@ -1696,7 +1695,7 @@ public class TypeWrap
 		else if (count == 3)
 		{
 			Type obj = (Type)LuaScriptMgr.GetNetObject(L, 1);
-			string arg0 = LuaScriptMgr.GetString(L, 2);
+			string arg0 = LuaScriptMgr.GetLuaString(L, 2);
 			BindingFlags arg1 = (BindingFlags)LuaScriptMgr.GetNetObject(L, 3);
 			Type o = obj.GetNestedType(arg0,arg1);
 			LuaScriptMgr.PushResult(L, o);
@@ -1778,7 +1777,7 @@ public class TypeWrap
 		if (count == 2)
 		{
 			Type obj = (Type)LuaScriptMgr.GetNetObject(L, 1);
-			string arg0 = LuaScriptMgr.GetString(L, 2);
+			string arg0 = LuaScriptMgr.GetLuaString(L, 2);
 			PropertyInfo o = obj.GetProperty(arg0);
 			LuaScriptMgr.PushResult(L, o);
 			return 1;
@@ -1813,7 +1812,7 @@ public class TypeWrap
 		else if (count == 4)
 		{
 			Type obj = (Type)LuaScriptMgr.GetNetObject(L, 1);
-			string arg0 = LuaScriptMgr.GetString(L, 2);
+			string arg0 = LuaScriptMgr.GetLuaString(L, 2);
 			Type arg1 = (Type)LuaScriptMgr.GetNetObject(L, 3);
 			Type[] objs2 = LuaScriptMgr.GetArrayObject<Type>(L, 4);
 			PropertyInfo o = obj.GetProperty(arg0,arg1,objs2);
@@ -1823,7 +1822,7 @@ public class TypeWrap
 		else if (count == 5)
 		{
 			Type obj = (Type)LuaScriptMgr.GetNetObject(L, 1);
-			string arg0 = LuaScriptMgr.GetString(L, 2);
+			string arg0 = LuaScriptMgr.GetLuaString(L, 2);
 			Type arg1 = (Type)LuaScriptMgr.GetNetObject(L, 3);
 			Type[] objs2 = LuaScriptMgr.GetArrayObject<Type>(L, 4);
 			ParameterModifier[] objs3 = LuaScriptMgr.GetArrayObject<ParameterModifier>(L, 5);
@@ -1834,7 +1833,7 @@ public class TypeWrap
 		else if (count == 7)
 		{
 			Type obj = (Type)LuaScriptMgr.GetNetObject(L, 1);
-			string arg0 = LuaScriptMgr.GetString(L, 2);
+			string arg0 = LuaScriptMgr.GetLuaString(L, 2);
 			BindingFlags arg1 = (BindingFlags)LuaScriptMgr.GetNetObject(L, 3);
 			Binder arg2 = (Binder)LuaScriptMgr.GetNetObject(L, 4);
 			Type arg3 = (Type)LuaScriptMgr.GetNetObject(L, 5);
@@ -1956,7 +1955,7 @@ public class TypeWrap
 		if (count == 6)
 		{
 			Type obj = (Type)LuaScriptMgr.GetNetObject(L, 1);
-			string arg0 = LuaScriptMgr.GetString(L, 2);
+			string arg0 = LuaScriptMgr.GetLuaString(L, 2);
 			BindingFlags arg1 = (BindingFlags)LuaScriptMgr.GetNetObject(L, 3);
 			Binder arg2 = (Binder)LuaScriptMgr.GetNetObject(L, 4);
 			object arg3 = LuaScriptMgr.GetVarObject(L, 5);
@@ -1968,7 +1967,7 @@ public class TypeWrap
 		else if (count == 7)
 		{
 			Type obj = (Type)LuaScriptMgr.GetNetObject(L, 1);
-			string arg0 = LuaScriptMgr.GetString(L, 2);
+			string arg0 = LuaScriptMgr.GetLuaString(L, 2);
 			BindingFlags arg1 = (BindingFlags)LuaScriptMgr.GetNetObject(L, 3);
 			Binder arg2 = (Binder)LuaScriptMgr.GetNetObject(L, 4);
 			object arg3 = LuaScriptMgr.GetVarObject(L, 5);
@@ -1981,7 +1980,7 @@ public class TypeWrap
 		else if (count == 9)
 		{
 			Type obj = (Type)LuaScriptMgr.GetNetObject(L, 1);
-			string arg0 = LuaScriptMgr.GetString(L, 2);
+			string arg0 = LuaScriptMgr.GetLuaString(L, 2);
 			BindingFlags arg1 = (BindingFlags)LuaScriptMgr.GetNetObject(L, 3);
 			Binder arg2 = (Binder)LuaScriptMgr.GetNetObject(L, 4);
 			object arg3 = LuaScriptMgr.GetVarObject(L, 5);

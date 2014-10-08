@@ -1,6 +1,6 @@
 ﻿using UnityEngine;
-using System.Collections;
 using System;
+using System.Collections;
 using LuaInterface;
 
 public class MonoBehaviourWrap
@@ -116,7 +116,7 @@ public class MonoBehaviourWrap
 		else if (count == 2)
 		{
 			MonoBehaviour obj = (MonoBehaviour)LuaScriptMgr.GetNetObject(L, 1);
-			string arg0 = LuaScriptMgr.GetString(L, 2);
+			string arg0 = LuaScriptMgr.GetLuaString(L, 2);
 			obj.CancelInvoke(arg0);
 			return 0;
 		}
@@ -143,7 +143,7 @@ public class MonoBehaviourWrap
 		else if (count == 2)
 		{
 			MonoBehaviour obj = (MonoBehaviour)LuaScriptMgr.GetNetObject(L, 1);
-			string arg0 = LuaScriptMgr.GetString(L, 2);
+			string arg0 = LuaScriptMgr.GetLuaString(L, 2);
 			bool o = obj.IsInvoking(arg0);
 			LuaScriptMgr.PushResult(L, o);
 			return 1;
@@ -183,7 +183,7 @@ public class MonoBehaviourWrap
 		else if (count == 3)
 		{
 			MonoBehaviour obj = (MonoBehaviour)LuaScriptMgr.GetNetObject(L, 1);
-			string arg0 = LuaScriptMgr.GetString(L, 2);
+			string arg0 = LuaScriptMgr.GetLuaString(L, 2);
 			object arg1 = LuaScriptMgr.GetVarObject(L, 3);
 			Coroutine o = obj.StartCoroutine(arg0,arg1);
 			LuaScriptMgr.PushResult(L, o);
