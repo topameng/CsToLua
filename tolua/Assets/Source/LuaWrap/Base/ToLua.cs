@@ -1364,7 +1364,20 @@ public static class ToLua
         }
         else if (str.Contains("`"))
         {
-            Regex r = new Regex(@"^(?<s0>.*)\.(?<s1>.*?)`[1-9]\[(?<s2>.*?)\]$", RegexOptions.None);
+            string regStr;
+            bool useSpace = true;
+
+            if (str.Contains("."))
+            {
+                regStr = @"^(?<s0>.*)\.(?<s1>.*?)`[1-9]\[(?<s2>.*?)\]$";             
+            }
+            else
+            {
+                useSpace = false;
+                regStr = @"^(?<s1>.*?)`[1-9]\[(?<s2>.*?)\]$";
+            }
+
+            Regex r = new Regex(regStr, RegexOptions.None);
             Match mc = r.Match(str);
             string s0 = mc.Groups["s0"].Value;            
             string s1 = mc.Groups["s1"].Value;
@@ -1383,8 +1396,12 @@ public static class ToLua
                 s2 += ",";
             }
 
-            s2 += ss[ss.Length - 1];
-            usingList.Add(s0);
+            if (useSpace)
+            {
+                usingList.Add(s0);
+            }
+
+            s2 += ss[ss.Length - 1];           
             string s3 = string.Format("{0}<{1}>", s1, s2);
             return s3;
         }
