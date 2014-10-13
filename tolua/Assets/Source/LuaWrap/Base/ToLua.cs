@@ -1364,25 +1364,13 @@ public static class ToLua
         }
         else if (str.Contains("`"))
         {
-            string regStr;
-            bool useSpace = true;
-
-            if (str.Contains("."))
-            {
-                regStr = @"^(?<s0>.*)\.(?<s1>.*?)`[1-9]\[(?<s2>.*?)\]$";             
-            }
-            else
-            {
-                useSpace = false;
-                regStr = @"^(?<s1>.*?)`[1-9]\[(?<s2>.*?)\]$";
-            }
-
+            string regStr = @"^(?<s0>.*?)\.?(?<s1>\w*)`[1-9]\[(?<s2>.*?)\]$";
             Regex r = new Regex(regStr, RegexOptions.None);
             Match mc = r.Match(str);
-            string s0 = mc.Groups["s0"].Value;            
+            string s0 = mc.Groups["s0"].Value;
             string s1 = mc.Groups["s1"].Value;
             string s2 = mc.Groups["s2"].Value;
-            string[] ss = s2.Split(new char[] {','}, System.StringSplitOptions.RemoveEmptyEntries);
+            string[] ss = s2.Split(new char[] { ',' }, System.StringSplitOptions.RemoveEmptyEntries);
             s2 = string.Empty;
 
             for (int i = 0; i < ss.Length; i++)
@@ -1396,12 +1384,13 @@ public static class ToLua
                 s2 += ",";
             }
 
-            if (useSpace)
+            s2 += ss[ss.Length - 1];
+
+            if (s0 != string.Empty)
             {
                 usingList.Add(s0);
             }
 
-            s2 += ss[ss.Length - 1];           
             string s3 = string.Format("{0}<{1}>", s1, s2);
             return s3;
         }
