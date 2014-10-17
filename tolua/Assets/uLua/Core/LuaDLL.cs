@@ -77,6 +77,8 @@ namespace LuaInterface
 #else
         const string LUADLL = "ulua";
 #endif
+        [DllImport(LUADLL, CallingConvention = CallingConvention.Cdecl)]
+        public static extern int luaopen_pb(IntPtr L);
 
         // Thread Funcs
 		[DllImport(LUADLL, CallingConvention = CallingConvention.Cdecl)]

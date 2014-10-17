@@ -83,7 +83,7 @@ public class LuaScriptMgr
         LuaStatic.LoadLua = Loader;
         lua = new LuaState();
         _translator = lua.GetTranslator();        
-        //LuaDLL.luaopen_pb(l.L);
+        LuaDLL.luaopen_pb(lua.L);
         //LuaDLL.luaopen_LuaXML(l.L);
                 
         fileList = new HashSet<string>();

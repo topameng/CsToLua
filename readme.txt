@@ -1,4 +1,6 @@
-﻿2014.10.8
+﻿2014.10.17
+替换dll, 加入lua protobuf库
+2014.10.8
 加入枚举类型的导出
 优化LuaScriptMgr PushResult函数。通过重载函数消除switch
 重载函数中参数数量唯一的，string转换放宽
