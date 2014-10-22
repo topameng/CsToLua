@@ -1,6 +1,8 @@
 ﻿2014.10.22
 更细的切分LuaScriptMgr.Push 函数，主要针对System.object重载函数
 消除此函数潜在的bug
+所有类型加入GetClassType函数，现在可以非常便利的获取类型。
+如：gameObject.GetComponent(UICamera.GetClassType())
 
 2014.10.17
 替换dll, 加入lua protobuf库
