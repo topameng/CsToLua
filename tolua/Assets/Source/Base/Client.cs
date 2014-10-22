@@ -90,14 +90,13 @@ public class Client : MonoBehaviour
         {            
             float time = Time.realtimeSinceStartup;
 
-            for (int i = 0; i < 100000; i++)
+            for (int i = 0; i < 200000; i++)
             {
                 transform.position = Vector3.one;
             }
 
             Debug.Log("c# cost time: " + (Time.realtimeSinceStartup - time));
-            time = Time.realtimeSinceStartup;
-
+            
             luaMgr.CallLuaFunction("Test", transform);            
         }
         else if (GUI.Button(new Rect(10, 80, 120, 50), "Coroutine"))

@@ -3,15 +3,11 @@ function Test(transform)
 	local t = Time.realtimeSinceStartup;
 	local v = Vector3.one
 
-	for i=1,100000 do
+	for i=1,200000 do
 		transform.position = v
 	end
 
 	print("lua cost time: " .. (Time.realtimeSinceStartup - t));
-
-	local v1 = Vector3.New(1,2,3)
-	v1 = v1 + v
-	print(tostring(v1))
 end
 
 function waitSeconds(t)
@@ -56,6 +52,10 @@ Test:Test4(4, myFunc, 123)
 --local v, ret = coroutine.resume(co)
 --print(tostring(v)..ret)
 --v, ret = coroutine.resume(co)
+
+local v1 = Vector3.New(1,2,3)
+v1 = v1 + Vector3.one
+print(v1)
 
 print("The enum class TestEnum.Two is:" .. TestEnum.Two)
 

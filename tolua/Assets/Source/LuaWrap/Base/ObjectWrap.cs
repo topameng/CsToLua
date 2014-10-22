@@ -33,12 +33,12 @@ public class ObjectWrap
 	static int Create(IntPtr L)
 	{
 		int count = LuaDLL.lua_gettop(L);
-		object obj = null;
+		Object obj = null;
 
 		if (count == 0)
 		{
 			obj = new Object();
-			LuaScriptMgr.PushResult(L, obj);
+            LuaScriptMgr.Push(L, obj);
 			return 1;
 		}
 		else
@@ -65,7 +65,7 @@ public class ObjectWrap
 		}
 
 		Object obj = (Object)o;
-		LuaScriptMgr.PushResult(L, obj.name);
+        LuaScriptMgr.Push(L, obj.name);
 		return 1;
 	}
 
@@ -80,7 +80,7 @@ public class ObjectWrap
 		}
 
 		Object obj = (Object)o;
-		LuaScriptMgr.PushResult(L, obj.hideFlags);
+        LuaScriptMgr.Push(L, obj.hideFlags);
 		return 1;
 	}
 
@@ -118,7 +118,7 @@ public class ObjectWrap
 	static int Lua_ToString(IntPtr L)
 	{
 		Object obj = (Object)LuaScriptMgr.GetNetObject(L, 1);
-		LuaScriptMgr.PushResult(L, obj.ToString());
+        LuaScriptMgr.Push(L, obj.ToString());
 		return 1;
 	}
 
@@ -129,7 +129,7 @@ public class ObjectWrap
 		Object obj = (Object)LuaScriptMgr.GetNetObject(L, 1);
 		object arg0 = (object)LuaScriptMgr.GetNetObject(L, 2);
 		bool o = obj.Equals(arg0);
-		LuaScriptMgr.PushResult(L, o);
+        LuaScriptMgr.Push(L, o);
 		return 1;
 	}
 
@@ -139,7 +139,7 @@ public class ObjectWrap
 		LuaScriptMgr.CheckArgsCount(L, 1);
 		Object obj = (Object)LuaScriptMgr.GetNetObject(L, 1);
 		int o = obj.GetHashCode();
-		LuaScriptMgr.PushResult(L, o);
+        LuaScriptMgr.Push(L, o);
 		return 1;
 	}
 
@@ -149,7 +149,7 @@ public class ObjectWrap
 		LuaScriptMgr.CheckArgsCount(L, 1);
 		Object obj = (Object)LuaScriptMgr.GetNetObject(L, 1);
 		int o = obj.GetInstanceID();
-		LuaScriptMgr.PushResult(L, o);
+        LuaScriptMgr.Push(L, o);
 		return 1;
 	}
 
@@ -162,7 +162,7 @@ public class ObjectWrap
 		{
 			Object arg0 = (Object)LuaScriptMgr.GetNetObject(L, 1);
 			Object o = Object.Instantiate(arg0);
-			LuaScriptMgr.PushResult(L, o);
+            LuaScriptMgr.Push(L, o);
 			return 1;
 		}
 		else if (count == 3)
@@ -171,7 +171,7 @@ public class ObjectWrap
 			Vector3 arg1 = (Vector3)LuaScriptMgr.GetNetObject(L, 2);
 			Quaternion arg2 = (Quaternion)LuaScriptMgr.GetNetObject(L, 3);
 			Object o = Object.Instantiate(arg0,arg1,arg2);
-			LuaScriptMgr.PushResult(L, o);
+            LuaScriptMgr.Push(L, o);
 			return 1;
 		}
 		else
@@ -244,7 +244,7 @@ public class ObjectWrap
 		LuaScriptMgr.CheckArgsCount(L, 1);
 		Type arg0 = (Type)LuaScriptMgr.GetNetObject(L, 1);
 		Object[] o = Object.FindObjectsOfType(arg0);
-		LuaScriptMgr.PushResult(L, o);
+        LuaScriptMgr.Push(L, o);
 		return 1;
 	}
 
@@ -254,7 +254,7 @@ public class ObjectWrap
 		LuaScriptMgr.CheckArgsCount(L, 1);
 		Type arg0 = (Type)LuaScriptMgr.GetNetObject(L, 1);
 		Object o = Object.FindObjectOfType(arg0);
-		LuaScriptMgr.PushResult(L, o);
+        LuaScriptMgr.Push(L, o);
 		return 1;
 	}
 
@@ -301,7 +301,7 @@ public class ObjectWrap
 		LuaScriptMgr.CheckArgsCount(L, 1);
 		Object obj = (Object)LuaScriptMgr.GetNetObject(L, 1);
 		string o = obj.ToString();
-		LuaScriptMgr.PushResult(L, o);
+        LuaScriptMgr.Push(L, o);
 		return 1;
 	}
 
@@ -312,7 +312,7 @@ public class ObjectWrap
 		Object arg0 = (Object)LuaScriptMgr.GetNetObject(L, 1);
 		Object arg1 = (Object)LuaScriptMgr.GetNetObject(L, 2);
 		bool o = arg0 == arg1;
-		LuaScriptMgr.PushResult(L, o);
+        LuaScriptMgr.Push(L, o);
 		return 1;
 	}
 }

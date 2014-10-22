@@ -7,6 +7,7 @@ public class KeyframeWrap
 	public static LuaMethod[] regs = new LuaMethod[]
 	{
 		new LuaMethod("New", Create),
+		new LuaMethod("GetClassType", GetClassType),
 	};
 
 	static LuaField[] fields = new LuaField[]
@@ -22,14 +23,13 @@ public class KeyframeWrap
 	static int Create(IntPtr L)
 	{
 		int count = LuaDLL.lua_gettop(L);
-		object obj = null;
 
 		if (count == 2)
 		{
 			float arg0 = (float)LuaScriptMgr.GetNumber(L, 1);
 			float arg1 = (float)LuaScriptMgr.GetNumber(L, 2);
-			obj = new Keyframe(arg0,arg1);
-			LuaScriptMgr.PushResult(L, obj);
+			Keyframe obj = new Keyframe(arg0,arg1);
+			LuaScriptMgr.PushValue(L, obj);
 			return 1;
 		}
 		else if (count == 4)
@@ -38,14 +38,14 @@ public class KeyframeWrap
 			float arg1 = (float)LuaScriptMgr.GetNumber(L, 2);
 			float arg2 = (float)LuaScriptMgr.GetNumber(L, 3);
 			float arg3 = (float)LuaScriptMgr.GetNumber(L, 4);
-			obj = new Keyframe(arg0,arg1,arg2,arg3);
-			LuaScriptMgr.PushResult(L, obj);
+			Keyframe obj = new Keyframe(arg0,arg1,arg2,arg3);
+			LuaScriptMgr.PushValue(L, obj);
 			return 1;
 		}
 		else if (count == 0)
 		{
-			obj = new Keyframe();
-			LuaScriptMgr.PushResult(L, obj);
+			Keyframe obj = new Keyframe();
+			LuaScriptMgr.PushValue(L, obj);
 			return 1;
 		}
 		else
@@ -54,6 +54,13 @@ public class KeyframeWrap
 		}
 
 		return 0;
+	}
+
+	[MonoPInvokeCallbackAttribute(typeof(LuaCSFunction))]
+	static int GetClassType(IntPtr L)
+	{
+		LuaScriptMgr.Push(L, typeof(Keyframe));
+		return 1;
 	}
 
 	public static void Register(IntPtr L)
@@ -72,7 +79,7 @@ public class KeyframeWrap
 		}
 
 		Keyframe obj = (Keyframe)o;
-		LuaScriptMgr.PushResult(L, obj.time);
+		LuaScriptMgr.Push(L, obj.time);
 		return 1;
 	}
 
@@ -87,7 +94,7 @@ public class KeyframeWrap
 		}
 
 		Keyframe obj = (Keyframe)o;
-		LuaScriptMgr.PushResult(L, obj.value);
+		LuaScriptMgr.Push(L, obj.value);
 		return 1;
 	}
 
@@ -102,7 +109,7 @@ public class KeyframeWrap
 		}
 
 		Keyframe obj = (Keyframe)o;
-		LuaScriptMgr.PushResult(L, obj.inTangent);
+		LuaScriptMgr.Push(L, obj.inTangent);
 		return 1;
 	}
 
@@ -117,7 +124,7 @@ public class KeyframeWrap
 		}
 
 		Keyframe obj = (Keyframe)o;
-		LuaScriptMgr.PushResult(L, obj.outTangent);
+		LuaScriptMgr.Push(L, obj.outTangent);
 		return 1;
 	}
 
@@ -132,7 +139,7 @@ public class KeyframeWrap
 		}
 
 		Keyframe obj = (Keyframe)o;
-		LuaScriptMgr.PushResult(L, obj.tangentMode);
+		LuaScriptMgr.Push(L, obj.tangentMode);
 		return 1;
 	}
 

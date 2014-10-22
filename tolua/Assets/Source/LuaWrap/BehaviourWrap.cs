@@ -7,6 +7,7 @@ public class BehaviourWrap
 	public static LuaMethod[] regs = new LuaMethod[]
 	{
 		new LuaMethod("New", Create),
+		new LuaMethod("GetClassType", GetClassType),
 	};
 
 	static LuaField[] fields = new LuaField[]
@@ -18,12 +19,11 @@ public class BehaviourWrap
 	static int Create(IntPtr L)
 	{
 		int count = LuaDLL.lua_gettop(L);
-		object obj = null;
 
 		if (count == 0)
 		{
-			obj = new Behaviour();
-			LuaScriptMgr.PushResult(L, obj);
+			Behaviour obj = new Behaviour();
+			LuaScriptMgr.Push(L, obj);
 			return 1;
 		}
 		else
@@ -32,6 +32,13 @@ public class BehaviourWrap
 		}
 
 		return 0;
+	}
+
+	[MonoPInvokeCallbackAttribute(typeof(LuaCSFunction))]
+	static int GetClassType(IntPtr L)
+	{
+		LuaScriptMgr.Push(L, typeof(Behaviour));
+		return 1;
 	}
 
 	public static void Register(IntPtr L)
@@ -50,7 +57,7 @@ public class BehaviourWrap
 		}
 
 		Behaviour obj = (Behaviour)o;
-		LuaScriptMgr.PushResult(L, obj.enabled);
+		LuaScriptMgr.Push(L, obj.enabled);
 		return 1;
 	}
 

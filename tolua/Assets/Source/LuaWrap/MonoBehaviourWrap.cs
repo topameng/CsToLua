@@ -17,6 +17,7 @@ public class MonoBehaviourWrap
 		new LuaMethod("StopAllCoroutines", StopAllCoroutines),
 		new LuaMethod("print", print),
 		new LuaMethod("New", Create),
+		new LuaMethod("GetClassType", GetClassType),
 	};
 
 	static LuaField[] fields = new LuaField[]
@@ -28,12 +29,11 @@ public class MonoBehaviourWrap
 	static int Create(IntPtr L)
 	{
 		int count = LuaDLL.lua_gettop(L);
-		object obj = null;
 
 		if (count == 0)
 		{
-			obj = new MonoBehaviour();
-			LuaScriptMgr.PushResult(L, obj);
+			MonoBehaviour obj = new MonoBehaviour();
+			LuaScriptMgr.Push(L, obj);
 			return 1;
 		}
 		else
@@ -42,6 +42,13 @@ public class MonoBehaviourWrap
 		}
 
 		return 0;
+	}
+
+	[MonoPInvokeCallbackAttribute(typeof(LuaCSFunction))]
+	static int GetClassType(IntPtr L)
+	{
+		LuaScriptMgr.Push(L, typeof(MonoBehaviour));
+		return 1;
 	}
 
 	public static void Register(IntPtr L)
@@ -60,7 +67,7 @@ public class MonoBehaviourWrap
 		}
 
 		MonoBehaviour obj = (MonoBehaviour)o;
-		LuaScriptMgr.PushResult(L, obj.useGUILayout);
+		LuaScriptMgr.Push(L, obj.useGUILayout);
 		return 1;
 	}
 
@@ -137,7 +144,7 @@ public class MonoBehaviourWrap
 		{
 			MonoBehaviour obj = (MonoBehaviour)LuaScriptMgr.GetNetObject(L, 1);
 			bool o = obj.IsInvoking();
-			LuaScriptMgr.PushResult(L, o);
+			LuaScriptMgr.Push(L, o);
 			return 1;
 		}
 		else if (count == 2)
@@ -145,7 +152,7 @@ public class MonoBehaviourWrap
 			MonoBehaviour obj = (MonoBehaviour)LuaScriptMgr.GetNetObject(L, 1);
 			string arg0 = LuaScriptMgr.GetLuaString(L, 2);
 			bool o = obj.IsInvoking(arg0);
-			LuaScriptMgr.PushResult(L, o);
+			LuaScriptMgr.Push(L, o);
 			return 1;
 		}
 		else
@@ -169,7 +176,7 @@ public class MonoBehaviourWrap
 			MonoBehaviour obj = (MonoBehaviour)LuaScriptMgr.GetNetObject(L, 1);
 			string arg0 = LuaScriptMgr.GetString(L, 2);
 			Coroutine o = obj.StartCoroutine(arg0);
-			LuaScriptMgr.PushResult(L, o);
+			LuaScriptMgr.PushObject(L, o);
 			return 1;
 		}
 		else if (count == 2 && LuaScriptMgr.CheckTypes(L, types1, 1))
@@ -177,7 +184,7 @@ public class MonoBehaviourWrap
 			MonoBehaviour obj = (MonoBehaviour)LuaScriptMgr.GetNetObject(L, 1);
 			IEnumerator arg0 = (IEnumerator)LuaScriptMgr.GetNetObject(L, 2);
 			Coroutine o = obj.StartCoroutine(arg0);
-			LuaScriptMgr.PushResult(L, o);
+			LuaScriptMgr.PushObject(L, o);
 			return 1;
 		}
 		else if (count == 3)
@@ -186,7 +193,7 @@ public class MonoBehaviourWrap
 			string arg0 = LuaScriptMgr.GetLuaString(L, 2);
 			object arg1 = LuaScriptMgr.GetVarObject(L, 3);
 			Coroutine o = obj.StartCoroutine(arg0,arg1);
-			LuaScriptMgr.PushResult(L, o);
+			LuaScriptMgr.PushObject(L, o);
 			return 1;
 		}
 		else
@@ -204,7 +211,7 @@ public class MonoBehaviourWrap
 		MonoBehaviour obj = (MonoBehaviour)LuaScriptMgr.GetNetObject(L, 1);
 		IEnumerator arg0 = (IEnumerator)LuaScriptMgr.GetNetObject(L, 2);
 		Coroutine o = obj.StartCoroutine_Auto(arg0);
-		LuaScriptMgr.PushResult(L, o);
+		LuaScriptMgr.PushObject(L, o);
 		return 1;
 	}
 

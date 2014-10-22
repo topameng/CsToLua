@@ -83,7 +83,7 @@ public class LuaScriptMgr
         LuaStatic.LoadLua = Loader;
         lua = new LuaState();
         _translator = lua.GetTranslator();        
-        LuaDLL.luaopen_pb(lua.L);
+        LuaDLL.luaopen_pb(lua.L);                        
         //LuaDLL.luaopen_LuaXML(l.L);
                 
         fileList = new HashSet<string>();
@@ -538,93 +538,123 @@ public class LuaScriptMgr
         return obj;        
     }
 
-    public static void PushResult(IntPtr L, object o)
+    public static void Push(IntPtr L, object o)
     {
 #if MULTI_STATE
         ObjectTranslator translator = ObjectTranslator.FromState(L);
 #else
         ObjectTranslator translator = _translator;
 #endif
-        translator.PushResult(L, o);
+        translator.push(L, o);
     }
 
-    public static void PushResult(IntPtr L, UnityEngine.Object obj)
+    public static void Push(IntPtr L, Type t)
     {
-        object o = (object)obj;
-        PushResult(L, o);
+        PushObject(L, t);
     }
 
-    public static void PushResult(IntPtr L, bool b)
+    public static void Push(IntPtr L, UnityEngine.Object obj)
+    {
+        PushObject(L, obj);
+    }
+
+    public static void PushObject(IntPtr L, object o)
+    {
+#if MULTI_STATE
+        ObjectTranslator translator = ObjectTranslator.FromState(L);
+#else
+        ObjectTranslator translator = _translator;
+#endif
+        translator.pushObject(L, o, "luaNet_metatable");
+    }
+
+    public static void PushValue(IntPtr L, object obj)
+    {
+#if MULTI_STATE
+        ObjectTranslator translator = ObjectTranslator.FromState(L);
+#else
+        ObjectTranslator translator = _translator;
+#endif
+        translator.PushValueResult(L, obj);
+    }
+
+    public static void PushEnum(IntPtr L, object o)
+    {
+        int num = (int)o;
+        LuaDLL.lua_pushnumber(L, num);
+    }
+
+    public static void Push(IntPtr L, bool b)
     {
         LuaDLL.lua_pushboolean(L, b);
     }
 
-    public static void PushResult(IntPtr L, string str)
+    public static void Push(IntPtr L, string str)
     {
         LuaDLL.lua_pushstring(L, str);
     }
 
-    public static void PushResult(IntPtr L, char d)
+    public static void Push(IntPtr L, char d)
     {
         LuaDLL.lua_pushnumber(L, d);
     }
 
-    public static void PushResult(IntPtr L, sbyte d)
+    public static void Push(IntPtr L, sbyte d)
     {
         LuaDLL.lua_pushnumber(L, d);
     }
 
-    public static void PushResult(IntPtr L, byte d)
+    public static void Push(IntPtr L, byte d)
     {
         LuaDLL.lua_pushnumber(L, d);
     }
 
-    public static void PushResult(IntPtr L, short d)
+    public static void Push(IntPtr L, short d)
     {
         LuaDLL.lua_pushnumber(L, d);
     }
 
-    public static void PushResult(IntPtr L, ushort d)
+    public static void Push(IntPtr L, ushort d)
     {
         LuaDLL.lua_pushnumber(L, d);
     }
 
-    public static void PushResult(IntPtr L, int d)
+    public static void Push(IntPtr L, int d)
     {
         LuaDLL.lua_pushnumber(L, d);
     }
 
-    public static void PushResult(IntPtr L, uint d)
+    public static void Push(IntPtr L, uint d)
     {
         LuaDLL.lua_pushnumber(L, d);
     }
 
-    public static void PushResult(IntPtr L, long d)
+    public static void Push(IntPtr L, long d)
     {
         LuaDLL.lua_pushnumber(L, d);
     }
 
-    public static void PushResult(IntPtr L, ulong d)
+    public static void Push(IntPtr L, ulong d)
     {
         LuaDLL.lua_pushnumber(L, d);
     }
 
-    public static void PushResult(IntPtr L, float d)
+    public static void Push(IntPtr L, float d)
     {
         LuaDLL.lua_pushnumber(L, d);
     }
 
-    public static void PushResult(IntPtr L, decimal d)
+    public static void Push(IntPtr L, decimal d)
     {
         LuaDLL.lua_pushnumber(L, (double)d);
     }
 
-    public static void PushResult(IntPtr L, double d)
+    public static void Push(IntPtr L, double d)
     {
         LuaDLL.lua_pushnumber(L, d);
     }
 
-    public static void PushResult(IntPtr L, ILuaGeneratedType o)
+    public static void Push(IntPtr L, ILuaGeneratedType o)
     {
         if (o == null)
         {
@@ -637,7 +667,7 @@ public class LuaScriptMgr
         }
     }
 
-    public static void PushResult(IntPtr L, LuaTable lt)
+    public static void Push(IntPtr L, LuaTable lt)
     {
         if (lt == null)
         {
@@ -649,7 +679,7 @@ public class LuaScriptMgr
         }
     }
 
-    public static void PushResult(IntPtr L, LuaFunction func)
+    public static void Push(IntPtr L, LuaFunction func)
     {
         if (func == null)
         {
@@ -661,7 +691,7 @@ public class LuaScriptMgr
         }
     }
 
-    public static void PushResult(IntPtr L, LuaCSFunction func)
+    public static void Push(IntPtr L, LuaCSFunction func)
     {
         if (func == null)
         {

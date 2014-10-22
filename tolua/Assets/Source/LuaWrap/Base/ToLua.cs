@@ -59,6 +59,7 @@ public static class ToLua
     //static MethodInfo setItem = null;
     //static MethodInfo getItem = null;
     static ObjAmbig ambig = ObjAmbig.NetObj;
+    static Assembly assembly = null;
 
     static ToLua()
     {
@@ -86,6 +87,7 @@ public static class ToLua
         sb = new StringBuilder();
         _C(type.ToString());
         usingList.Add("System");
+        assembly = Assembly.GetExecutingAssembly();
 
         if (type.IsEnum)
         {
@@ -169,6 +171,7 @@ public static class ToLua
         
         AddRegVar();
         GenConstruct();
+        GenGetType();
         GenRegFunc();
         GenIndexFunc();
         GenNewIndexFunc();
@@ -241,6 +244,7 @@ public static class ToLua
         }        
 
         sb.AppendLine("\t\tnew LuaMethod(\"New\", Create),");
+        sb.AppendLine("\t\tnew LuaMethod(\"GetClassType\", GetClassType),");
 
         int index = Array.FindIndex<MethodInfo>(methods, (p) => { return p.Name == "ToString"; });
 
@@ -492,14 +496,38 @@ public static class ToLua
         sb.AppendLine("\t}");
     }
 
+    static string GetPushFunction(Type t)
+    {
+        if (t.IsEnum)
+        {
+            return "PushEnum";
+        }
+        else if (t == typeof(bool) || t.IsPrimitive || t == typeof(string) || t == typeof(LuaTable) || t == typeof(LuaCSFunction) || t == typeof(LuaFunction) || 
+            typeof(UnityEngine.Object).IsAssignableFrom(t) || t == typeof(object))
+        {
+            return "Push";
+        }
+        else if (t.IsValueType)
+        {
+            return "PushValue";
+        }
+        else if (t == typeof(object))
+        {
+            return "Push";
+        }
+
+        return "PushObject";
+    }
+
     static void DefaultConstruct()
     {
         sb.AppendLine("\r\n\t[MonoPInvokeCallbackAttribute(typeof(LuaCSFunction))]");
         sb.AppendFormat("\tstatic int {0}(IntPtr L)\r\n", "Create");
         sb.AppendLine("\t{");
         sb.AppendLine("\t\tLuaScriptMgr.CheckArgsCount(L, 0);");
-        sb.AppendFormat("\t\tobject obj = new {0}();\r\n", className);
-        sb.AppendLine("\t\tLuaScriptMgr.PushResult(L, obj);");
+        sb.AppendFormat("\t\t{0} obj = new {0}();\r\n", className);
+        string str = GetPushFunction(type);
+        sb.AppendFormat("\t\tLuaScriptMgr.{0}(L, obj);\r\n", str);
         sb.AppendLine("\t\treturn 1;");
         sb.AppendLine("\t}");
     }
@@ -512,6 +540,16 @@ public static class ToLua
         }
 
         return "count";
+    }
+
+    static void GenGetType()
+    {
+        sb.AppendLine("\r\n\t[MonoPInvokeCallbackAttribute(typeof(LuaCSFunction))]");
+        sb.AppendFormat("\tstatic int {0}(IntPtr L)\r\n", "GetClassType");
+        sb.AppendLine("\t{");
+        sb.AppendFormat("\t\tLuaScriptMgr.Push(L, typeof({0}));\r\n", className);
+        sb.AppendLine("\t\treturn 1;");
+        sb.AppendLine("\t}");
     }
 
     static void GenConstruct()
@@ -570,7 +608,7 @@ public static class ToLua
         sb.AppendLine("\t\tint count = LuaDLL.lua_gettop(L);");
         ParameterInfo[] p0 = list[0].GetParameters();
 
-        sb.AppendLine("\t\tobject obj = null;");
+        //sb.AppendFormat("\t\t{0} obj = null;\r\n", className);
         sb.AppendLine();
 
         List<ConstructorInfo> countList = new List<ConstructorInfo>();
@@ -677,8 +715,8 @@ public static class ToLua
         {
             sb.AppendLine("\t\telse if (count == 0)");
             sb.AppendLine("\t\t{");
-            sb.AppendFormat("\t\t\tobj = new {0}();\r\n", className);
-            sb.AppendLine("\t\t\tLuaScriptMgr.PushResult(L, obj);");
+            sb.AppendFormat("\t\t\t{0} obj = new {0}();\r\n", className);
+            sb.AppendLine("\t\t\tLuaScriptMgr.PushValue(L, obj);");
             sb.AppendLine("\t\t\treturn 1;");
             sb.AppendLine("\t\t}");
         }
@@ -763,6 +801,20 @@ public static class ToLua
         }
 
         return false;
+    }
+
+    static Type GetRefBaseType(string str)
+    {
+        int index = str.IndexOf("&");
+        string ss = str.Remove(index);
+        Type t = Type.GetType(ss);
+
+        if (t == null)
+        {
+            t = Type.GetType(ss + ", UnityEngine");
+        }
+
+        return t;
     }
 
     static int ProcessParams(MethodBase md, int tab, bool beConstruct, bool beOverride)
@@ -877,6 +929,7 @@ public static class ToLua
 
         StringBuilder sbArgs = new StringBuilder();
         List<string> refList = new List<string>();
+        List<Type> refType = new List<Type>();
 
         for (int j = 0; j < count - 1; j++)
         {
@@ -900,6 +953,7 @@ public static class ToLua
                     }
 
                     refList.Add("arg" + j);
+                    refType.Add(GetRefBaseType(param.ParameterType.ToString()));
                 }
             }
             else
@@ -933,6 +987,7 @@ public static class ToLua
                     }
 
                     refList.Add("arg" + (count - 1));
+                    refType.Add(GetRefBaseType(param.ParameterType.ToString()));
                 }
             }
             else
@@ -945,12 +1000,14 @@ public static class ToLua
 
         if (beConstruct)
         {
-            sb.AppendFormat("{2}obj = new {0}({1});\r\n", className, sbArgs.ToString(), head);
-            sb.AppendFormat("{0}LuaScriptMgr.PushResult(L, obj);\r\n", head);
+            sb.AppendFormat("{2}{0} obj = new {0}({1});\r\n", className, sbArgs.ToString(), head);
+            string str = GetPushFunction(type);
+            sb.AppendFormat("{0}LuaScriptMgr.{1}(L, obj);\r\n", head, str);
 
             for (int i = 0; i < refList.Count; i++)
             {
-                sb.AppendFormat("{1}LuaScriptMgr.PushResult(L, {0});\r\n", refList[i], head);
+                str = GetPushFunction(refType[i]);
+                sb.AppendFormat("{1}LuaScriptMgr.{2}(L, {0});\r\n", refList[i], head, str);
             }
             
             return refList.Count + 1;
@@ -992,12 +1049,14 @@ public static class ToLua
                 sb.AppendFormat("{4}{3} o = {0}.{1}({2});\r\n", obj, md.Name, sbArgs.ToString(), ret, head);
             }
 
-            sb.AppendFormat("{0}LuaScriptMgr.PushResult(L, o);\r\n", head);
+            string str = GetPushFunction(m.ReturnType);
+            sb.AppendFormat("{0}LuaScriptMgr.{1}(L, o);\r\n", head, str);
         }
 
         for (int i = 0; i < refList.Count; i++)
         {
-            sb.AppendFormat("{1}LuaScriptMgr.PushResult(L, {0});\r\n", refList[i], head);
+            string str = GetPushFunction(refType[i]);
+            sb.AppendFormat("{1}LuaScriptMgr.{2}(L, {0});\r\n", refList[i], head, str);
         }
 
         return refList.Count;
@@ -1364,13 +1423,13 @@ public static class ToLua
         }
         else if (str.Contains("`"))
         {
-            string regStr = @"^(?<s0>.*?)\.?(?<s1>\w*)`[1-9]\[(?<s2>.*?)\]$";
+            string regStr = @"^(?<s0>.*?)\.?(?<s1>\w*)`[1-9]\[(?<s2>.*?)\]$";            
             Regex r = new Regex(regStr, RegexOptions.None);
             Match mc = r.Match(str);
-            string s0 = mc.Groups["s0"].Value;
+            string s0 = mc.Groups["s0"].Value;            
             string s1 = mc.Groups["s1"].Value;
             string s2 = mc.Groups["s2"].Value;
-            string[] ss = s2.Split(new char[] { ',' }, System.StringSplitOptions.RemoveEmptyEntries);
+            string[] ss = s2.Split(new char[] {','}, System.StringSplitOptions.RemoveEmptyEntries);
             s2 = string.Empty;
 
             for (int i = 0; i < ss.Length; i++)
@@ -1388,9 +1447,9 @@ public static class ToLua
 
             if (s0 != string.Empty)
             {
-                usingList.Add(s0);
+                usingList.Add(s0);                              
             }
-
+                       
             string s3 = string.Format("{0}<{1}>", s1, s2);
             return s3;
         }
@@ -1488,9 +1547,11 @@ public static class ToLua
             sb.AppendFormat("\tstatic int get_{0}(IntPtr L)\r\n", fields[i].Name);
             sb.AppendLine("\t{");
 
+            string str = GetPushFunction(fields[i].FieldType);
+
             if (fields[i].IsStatic)
             {
-                sb.AppendFormat("\t\tLuaScriptMgr.PushResult(L, {0}.{1});\r\n", className, fields[i].Name);
+                sb.AppendFormat("\t\tLuaScriptMgr.{2}(L, {0}.{1});\r\n", className, fields[i].Name, str);
             }
             else
             {
@@ -1502,7 +1563,7 @@ public static class ToLua
                 sb.AppendLine("\t\t}");
                 sb.AppendLine();
                 sb.AppendFormat("\t\t{0} obj = ({0})o;\r\n", className);
-                sb.AppendFormat("\t\tLuaScriptMgr.PushResult(L, {0}.{1});\r\n", "obj", fields[i].Name);
+                sb.AppendFormat("\t\tLuaScriptMgr.{1}(L, obj.{0});\r\n", fields[i].Name, str);
             }
 
             sb.AppendLine("\t\treturn 1;");
@@ -1528,9 +1589,11 @@ public static class ToLua
             sb.AppendFormat("\tstatic int get_{0}(IntPtr L)\r\n", props[i].Name);
             sb.AppendLine("\t{");
 
+            string str = GetPushFunction(props[i].PropertyType);
+
             if (isStatic)
             {
-                sb.AppendFormat("\t\tLuaScriptMgr.PushResult(L, {0}.{1});\r\n", className, props[i].Name);
+                sb.AppendFormat("\t\tLuaScriptMgr.{2}(L, {0}.{1});\r\n", className, props[i].Name, str);
             }
             else
             {
@@ -1542,7 +1605,7 @@ public static class ToLua
                 sb.AppendLine("\t\t}");
                 sb.AppendLine();
                 sb.AppendFormat("\t\t{0} obj = ({0})o;\r\n", className);
-                sb.AppendFormat("\t\tLuaScriptMgr.PushResult(L, obj.{0});\r\n", props[i].Name);
+                sb.AppendFormat("\t\tLuaScriptMgr.{1}(L, obj.{0});\r\n", props[i].Name, str);
 
             }
 
@@ -1674,7 +1737,7 @@ public static class ToLua
         sb.AppendLine("\tstatic int Lua_ToString(IntPtr L)");
         sb.AppendLine("\t{");
         sb.AppendFormat("\t\t{0} obj = ({0})LuaScriptMgr.GetNetObject(L, 1);\r\n", className);
-        sb.AppendFormat("\t\tLuaScriptMgr.PushResult(L, obj.ToString());\r\n");        
+        sb.AppendFormat("\t\tLuaScriptMgr.Push(L, obj.ToString());\r\n");        
 
         sb.AppendLine("\t\treturn 1;");
         sb.AppendLine("\t}");

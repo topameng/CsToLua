@@ -946,7 +946,7 @@ namespace LuaInterface
 				bool b=(bool)o;
 				LuaDLL.lua_pushboolean(luaState,b);
 			}
-			else if(t.IsPrimitive)
+			else if(t.IsPrimitive || t.IsEnum)
 			{
 				double d=Convert.ToDouble(o);
 				LuaDLL.lua_pushnumber(luaState,d);
@@ -985,31 +985,37 @@ namespace LuaInterface
             }
 		}
 
-        internal void PushResult(IntPtr luaState, object o)
+        //internal void PushResult(IntPtr luaState, object o)
+        //{
+        //    if (o == null)
+        //    {
+        //        LuaDLL.lua_pushnil(luaState);
+        //        return;
+        //    }
+
+        //    Type t = o.GetType();
+
+        //    if (t.IsEnum)
+        //    {
+        //        int e = (int)o;
+        //        LuaDLL.lua_pushnumber(luaState, e);
+        //    }
+        //    else if (t.IsValueType)
+        //    {
+        //        int index = addObject(o);
+        //        PushNewValueObject(luaState, o, index, "luaNet_metatable");
+        //    }
+        //    else
+        //    {
+        //        pushObject(luaState, o, "luaNet_metatable");
+        //    }
+        //}
+
+        internal void PushValueResult(IntPtr lua, object o)
         {
-            if (o == null)
-            {
-                LuaDLL.lua_pushnil(luaState);
-                return;
-            }
-
-            Type t = o.GetType();
-
-            if (t.IsEnum)
-            {
-                int e = (int)o;
-                LuaDLL.lua_pushnumber(luaState, e);
-            }
-            else if (t.IsValueType)
-            {
-                int index = addObject(o);
-                PushNewValueObject(luaState, o, index, "luaNet_metatable");
-            }
-            else
-            {
-                pushObject(luaState, o, "luaNet_metatable");
-            }
-        }
+            int index = addObject(o);
+            PushNewValueObject(lua, o, index, "luaNet_metatable");
+        }   
 
 		/*
          * Checks if the method matches the arguments in the Lua stack, getting

@@ -13,6 +13,7 @@ public class TestToLuaWrap
 		new LuaMethod("Test3", Test3),
 		new LuaMethod("Test4", Test4),
 		new LuaMethod("New", Create),
+		new LuaMethod("GetClassType", GetClassType),
 	};
 
 	static LuaField[] fields = new LuaField[]
@@ -23,19 +24,18 @@ public class TestToLuaWrap
 	static int Create(IntPtr L)
 	{
 		int count = LuaDLL.lua_gettop(L);
-		object obj = null;
 
 		if (LuaScriptMgr.CheckParamsType(L, typeof(object), 1, count))
 		{
 			object[] objs0 = LuaScriptMgr.GetParamsObject(L, 1, count);
-			obj = new TestToLua(objs0);
-			LuaScriptMgr.PushResult(L, obj);
+			TestToLua obj = new TestToLua(objs0);
+			LuaScriptMgr.PushValue(L, obj);
 			return 1;
 		}
 		else if (count == 0)
 		{
-			obj = new TestToLua();
-			LuaScriptMgr.PushResult(L, obj);
+			TestToLua obj = new TestToLua();
+			LuaScriptMgr.PushValue(L, obj);
 			return 1;
 		}
 		else
@@ -44,6 +44,13 @@ public class TestToLuaWrap
 		}
 
 		return 0;
+	}
+
+	[MonoPInvokeCallbackAttribute(typeof(LuaCSFunction))]
+	static int GetClassType(IntPtr L)
+	{
+		LuaScriptMgr.Push(L, typeof(TestToLua));
+		return 1;
 	}
 
 	public static void Register(IntPtr L)
@@ -59,9 +66,9 @@ public class TestToLuaWrap
 		int arg0 = (int)LuaScriptMgr.GetNetObject(L, 2);
 		int arg1 = (int)LuaScriptMgr.GetNetObject(L, 3);
 		int o = obj.Test(ref arg0,ref arg1);
-		LuaScriptMgr.PushResult(L, o);
-		LuaScriptMgr.PushResult(L, arg0);
-		LuaScriptMgr.PushResult(L, arg1);
+		LuaScriptMgr.Push(L, o);
+		LuaScriptMgr.Push(L, arg0);
+		LuaScriptMgr.Push(L, arg1);
 		return 3;
 	}
 

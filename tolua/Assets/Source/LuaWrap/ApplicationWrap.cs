@@ -24,6 +24,7 @@ public class ApplicationWrap
 		new LuaMethod("RequestUserAuthorization", RequestUserAuthorization),
 		new LuaMethod("HasUserAuthorization", HasUserAuthorization),
 		new LuaMethod("New", Create),
+		new LuaMethod("GetClassType", GetClassType),
 	};
 
 	static LuaField[] fields = new LuaField[]
@@ -59,12 +60,11 @@ public class ApplicationWrap
 	static int Create(IntPtr L)
 	{
 		int count = LuaDLL.lua_gettop(L);
-		object obj = null;
 
 		if (count == 0)
 		{
-			obj = new Application();
-			LuaScriptMgr.PushResult(L, obj);
+			Application obj = new Application();
+			LuaScriptMgr.PushObject(L, obj);
 			return 1;
 		}
 		else
@@ -75,6 +75,13 @@ public class ApplicationWrap
 		return 0;
 	}
 
+	[MonoPInvokeCallbackAttribute(typeof(LuaCSFunction))]
+	static int GetClassType(IntPtr L)
+	{
+		LuaScriptMgr.Push(L, typeof(Application));
+		return 1;
+	}
+
 	public static void Register(IntPtr L)
 	{
 		LuaScriptMgr.RegisterLib(L, "Application", typeof(Application), regs, fields, "object");
@@ -83,175 +90,175 @@ public class ApplicationWrap
 	[MonoPInvokeCallbackAttribute(typeof(LuaCSFunction))]
 	static int get_loadedLevel(IntPtr L)
 	{
-		LuaScriptMgr.PushResult(L, Application.loadedLevel);
+		LuaScriptMgr.Push(L, Application.loadedLevel);
 		return 1;
 	}
 
 	[MonoPInvokeCallbackAttribute(typeof(LuaCSFunction))]
 	static int get_loadedLevelName(IntPtr L)
 	{
-		LuaScriptMgr.PushResult(L, Application.loadedLevelName);
+		LuaScriptMgr.Push(L, Application.loadedLevelName);
 		return 1;
 	}
 
 	[MonoPInvokeCallbackAttribute(typeof(LuaCSFunction))]
 	static int get_isLoadingLevel(IntPtr L)
 	{
-		LuaScriptMgr.PushResult(L, Application.isLoadingLevel);
+		LuaScriptMgr.Push(L, Application.isLoadingLevel);
 		return 1;
 	}
 
 	[MonoPInvokeCallbackAttribute(typeof(LuaCSFunction))]
 	static int get_levelCount(IntPtr L)
 	{
-		LuaScriptMgr.PushResult(L, Application.levelCount);
+		LuaScriptMgr.Push(L, Application.levelCount);
 		return 1;
 	}
 
 	[MonoPInvokeCallbackAttribute(typeof(LuaCSFunction))]
 	static int get_streamedBytes(IntPtr L)
 	{
-		LuaScriptMgr.PushResult(L, Application.streamedBytes);
+		LuaScriptMgr.Push(L, Application.streamedBytes);
 		return 1;
 	}
 
 	[MonoPInvokeCallbackAttribute(typeof(LuaCSFunction))]
 	static int get_isPlaying(IntPtr L)
 	{
-		LuaScriptMgr.PushResult(L, Application.isPlaying);
+		LuaScriptMgr.Push(L, Application.isPlaying);
 		return 1;
 	}
 
 	[MonoPInvokeCallbackAttribute(typeof(LuaCSFunction))]
 	static int get_isEditor(IntPtr L)
 	{
-		LuaScriptMgr.PushResult(L, Application.isEditor);
+		LuaScriptMgr.Push(L, Application.isEditor);
 		return 1;
 	}
 
 	[MonoPInvokeCallbackAttribute(typeof(LuaCSFunction))]
 	static int get_isWebPlayer(IntPtr L)
 	{
-		LuaScriptMgr.PushResult(L, Application.isWebPlayer);
+		LuaScriptMgr.Push(L, Application.isWebPlayer);
 		return 1;
 	}
 
 	[MonoPInvokeCallbackAttribute(typeof(LuaCSFunction))]
 	static int get_platform(IntPtr L)
 	{
-		LuaScriptMgr.PushResult(L, Application.platform);
+		LuaScriptMgr.PushEnum(L, Application.platform);
 		return 1;
 	}
 
 	[MonoPInvokeCallbackAttribute(typeof(LuaCSFunction))]
 	static int get_runInBackground(IntPtr L)
 	{
-		LuaScriptMgr.PushResult(L, Application.runInBackground);
+		LuaScriptMgr.Push(L, Application.runInBackground);
 		return 1;
 	}
 
 	[MonoPInvokeCallbackAttribute(typeof(LuaCSFunction))]
 	static int get_dataPath(IntPtr L)
 	{
-		LuaScriptMgr.PushResult(L, Application.dataPath);
+		LuaScriptMgr.Push(L, Application.dataPath);
 		return 1;
 	}
 
 	[MonoPInvokeCallbackAttribute(typeof(LuaCSFunction))]
 	static int get_streamingAssetsPath(IntPtr L)
 	{
-		LuaScriptMgr.PushResult(L, Application.streamingAssetsPath);
+		LuaScriptMgr.Push(L, Application.streamingAssetsPath);
 		return 1;
 	}
 
 	[MonoPInvokeCallbackAttribute(typeof(LuaCSFunction))]
 	static int get_persistentDataPath(IntPtr L)
 	{
-		LuaScriptMgr.PushResult(L, Application.persistentDataPath);
+		LuaScriptMgr.Push(L, Application.persistentDataPath);
 		return 1;
 	}
 
 	[MonoPInvokeCallbackAttribute(typeof(LuaCSFunction))]
 	static int get_temporaryCachePath(IntPtr L)
 	{
-		LuaScriptMgr.PushResult(L, Application.temporaryCachePath);
+		LuaScriptMgr.Push(L, Application.temporaryCachePath);
 		return 1;
 	}
 
 	[MonoPInvokeCallbackAttribute(typeof(LuaCSFunction))]
 	static int get_srcValue(IntPtr L)
 	{
-		LuaScriptMgr.PushResult(L, Application.srcValue);
+		LuaScriptMgr.Push(L, Application.srcValue);
 		return 1;
 	}
 
 	[MonoPInvokeCallbackAttribute(typeof(LuaCSFunction))]
 	static int get_absoluteURL(IntPtr L)
 	{
-		LuaScriptMgr.PushResult(L, Application.absoluteURL);
+		LuaScriptMgr.Push(L, Application.absoluteURL);
 		return 1;
 	}
 
 	[MonoPInvokeCallbackAttribute(typeof(LuaCSFunction))]
 	static int get_unityVersion(IntPtr L)
 	{
-		LuaScriptMgr.PushResult(L, Application.unityVersion);
+		LuaScriptMgr.Push(L, Application.unityVersion);
 		return 1;
 	}
 
 	[MonoPInvokeCallbackAttribute(typeof(LuaCSFunction))]
 	static int get_webSecurityEnabled(IntPtr L)
 	{
-		LuaScriptMgr.PushResult(L, Application.webSecurityEnabled);
+		LuaScriptMgr.Push(L, Application.webSecurityEnabled);
 		return 1;
 	}
 
 	[MonoPInvokeCallbackAttribute(typeof(LuaCSFunction))]
 	static int get_webSecurityHostUrl(IntPtr L)
 	{
-		LuaScriptMgr.PushResult(L, Application.webSecurityHostUrl);
+		LuaScriptMgr.Push(L, Application.webSecurityHostUrl);
 		return 1;
 	}
 
 	[MonoPInvokeCallbackAttribute(typeof(LuaCSFunction))]
 	static int get_targetFrameRate(IntPtr L)
 	{
-		LuaScriptMgr.PushResult(L, Application.targetFrameRate);
+		LuaScriptMgr.Push(L, Application.targetFrameRate);
 		return 1;
 	}
 
 	[MonoPInvokeCallbackAttribute(typeof(LuaCSFunction))]
 	static int get_systemLanguage(IntPtr L)
 	{
-		LuaScriptMgr.PushResult(L, Application.systemLanguage);
+		LuaScriptMgr.PushEnum(L, Application.systemLanguage);
 		return 1;
 	}
 
 	[MonoPInvokeCallbackAttribute(typeof(LuaCSFunction))]
 	static int get_backgroundLoadingPriority(IntPtr L)
 	{
-		LuaScriptMgr.PushResult(L, Application.backgroundLoadingPriority);
+		LuaScriptMgr.PushEnum(L, Application.backgroundLoadingPriority);
 		return 1;
 	}
 
 	[MonoPInvokeCallbackAttribute(typeof(LuaCSFunction))]
 	static int get_internetReachability(IntPtr L)
 	{
-		LuaScriptMgr.PushResult(L, Application.internetReachability);
+		LuaScriptMgr.PushEnum(L, Application.internetReachability);
 		return 1;
 	}
 
 	[MonoPInvokeCallbackAttribute(typeof(LuaCSFunction))]
 	static int get_genuine(IntPtr L)
 	{
-		LuaScriptMgr.PushResult(L, Application.genuine);
+		LuaScriptMgr.Push(L, Application.genuine);
 		return 1;
 	}
 
 	[MonoPInvokeCallbackAttribute(typeof(LuaCSFunction))]
 	static int get_genuineCheckAvailable(IntPtr L)
 	{
-		LuaScriptMgr.PushResult(L, Application.genuineCheckAvailable);
+		LuaScriptMgr.Push(L, Application.genuineCheckAvailable);
 		return 1;
 	}
 
@@ -332,14 +339,14 @@ public class ApplicationWrap
 		{
 			string arg0 = LuaScriptMgr.GetString(L, 1);
 			AsyncOperation o = Application.LoadLevelAsync(arg0);
-			LuaScriptMgr.PushResult(L, o);
+			LuaScriptMgr.PushObject(L, o);
 			return 1;
 		}
 		else if (count == 1 && LuaScriptMgr.CheckTypes(L, types1, 1))
 		{
 			int arg0 = (int)LuaScriptMgr.GetNumber(L, 1);
 			AsyncOperation o = Application.LoadLevelAsync(arg0);
-			LuaScriptMgr.PushResult(L, o);
+			LuaScriptMgr.PushObject(L, o);
 			return 1;
 		}
 		else
@@ -362,14 +369,14 @@ public class ApplicationWrap
 		{
 			string arg0 = LuaScriptMgr.GetString(L, 1);
 			AsyncOperation o = Application.LoadLevelAdditiveAsync(arg0);
-			LuaScriptMgr.PushResult(L, o);
+			LuaScriptMgr.PushObject(L, o);
 			return 1;
 		}
 		else if (count == 1 && LuaScriptMgr.CheckTypes(L, types1, 1))
 		{
 			int arg0 = (int)LuaScriptMgr.GetNumber(L, 1);
 			AsyncOperation o = Application.LoadLevelAdditiveAsync(arg0);
-			LuaScriptMgr.PushResult(L, o);
+			LuaScriptMgr.PushObject(L, o);
 			return 1;
 		}
 		else
@@ -420,14 +427,14 @@ public class ApplicationWrap
 		{
 			string arg0 = LuaScriptMgr.GetString(L, 1);
 			float o = Application.GetStreamProgressForLevel(arg0);
-			LuaScriptMgr.PushResult(L, o);
+			LuaScriptMgr.Push(L, o);
 			return 1;
 		}
 		else if (count == 1 && LuaScriptMgr.CheckTypes(L, types1, 1))
 		{
 			int arg0 = (int)LuaScriptMgr.GetNumber(L, 1);
 			float o = Application.GetStreamProgressForLevel(arg0);
-			LuaScriptMgr.PushResult(L, o);
+			LuaScriptMgr.Push(L, o);
 			return 1;
 		}
 		else
@@ -450,14 +457,14 @@ public class ApplicationWrap
 		{
 			string arg0 = LuaScriptMgr.GetString(L, 1);
 			bool o = Application.CanStreamedLevelBeLoaded(arg0);
-			LuaScriptMgr.PushResult(L, o);
+			LuaScriptMgr.Push(L, o);
 			return 1;
 		}
 		else if (count == 1 && LuaScriptMgr.CheckTypes(L, types1, 1))
 		{
 			int arg0 = (int)LuaScriptMgr.GetNumber(L, 1);
 			bool o = Application.CanStreamedLevelBeLoaded(arg0);
-			LuaScriptMgr.PushResult(L, o);
+			LuaScriptMgr.Push(L, o);
 			return 1;
 		}
 		else
@@ -499,7 +506,7 @@ public class ApplicationWrap
 	{
 		LuaScriptMgr.CheckArgsCount(L, 0);
 		bool o = Application.HasProLicense();
-		LuaScriptMgr.PushResult(L, o);
+		LuaScriptMgr.Push(L, o);
 		return 1;
 	}
 
@@ -555,7 +562,7 @@ public class ApplicationWrap
 		LuaScriptMgr.CheckArgsCount(L, 1);
 		UserAuthorization arg0 = (UserAuthorization)LuaScriptMgr.GetNetObject(L, 1);
 		AsyncOperation o = Application.RequestUserAuthorization(arg0);
-		LuaScriptMgr.PushResult(L, o);
+		LuaScriptMgr.PushObject(L, o);
 		return 1;
 	}
 
@@ -565,7 +572,7 @@ public class ApplicationWrap
 		LuaScriptMgr.CheckArgsCount(L, 1);
 		UserAuthorization arg0 = (UserAuthorization)LuaScriptMgr.GetNetObject(L, 1);
 		bool o = Application.HasUserAuthorization(arg0);
-		LuaScriptMgr.PushResult(L, o);
+		LuaScriptMgr.Push(L, o);
 		return 1;
 	}
 }

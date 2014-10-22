@@ -14,6 +14,7 @@ public class AnimationCurveWrap
 		new LuaMethod("Linear", Linear),
 		new LuaMethod("EaseInOut", EaseInOut),
 		new LuaMethod("New", Create),
+		new LuaMethod("GetClassType", GetClassType),
 	};
 
 	static LuaField[] fields = new LuaField[]
@@ -28,19 +29,18 @@ public class AnimationCurveWrap
 	static int Create(IntPtr L)
 	{
 		int count = LuaDLL.lua_gettop(L);
-		object obj = null;
 
 		if (count == 0)
 		{
-			obj = new AnimationCurve();
-			LuaScriptMgr.PushResult(L, obj);
+			AnimationCurve obj = new AnimationCurve();
+			LuaScriptMgr.PushObject(L, obj);
 			return 1;
 		}
 		else if (LuaScriptMgr.CheckParamsType(L, typeof(Keyframe), 1, count))
 		{
 			Keyframe[] objs0 = LuaScriptMgr.GetParamsObject<Keyframe>(L, 1, count);
-			obj = new AnimationCurve(objs0);
-			LuaScriptMgr.PushResult(L, obj);
+			AnimationCurve obj = new AnimationCurve(objs0);
+			LuaScriptMgr.PushObject(L, obj);
 			return 1;
 		}
 		else
@@ -49,6 +49,13 @@ public class AnimationCurveWrap
 		}
 
 		return 0;
+	}
+
+	[MonoPInvokeCallbackAttribute(typeof(LuaCSFunction))]
+	static int GetClassType(IntPtr L)
+	{
+		LuaScriptMgr.Push(L, typeof(AnimationCurve));
+		return 1;
 	}
 
 	public static void Register(IntPtr L)
@@ -67,7 +74,7 @@ public class AnimationCurveWrap
 		}
 
 		AnimationCurve obj = (AnimationCurve)o;
-		LuaScriptMgr.PushResult(L, obj.keys);
+		LuaScriptMgr.PushObject(L, obj.keys);
 		return 1;
 	}
 
@@ -82,7 +89,7 @@ public class AnimationCurveWrap
 		}
 
 		AnimationCurve obj = (AnimationCurve)o;
-		LuaScriptMgr.PushResult(L, obj.length);
+		LuaScriptMgr.Push(L, obj.length);
 		return 1;
 	}
 
@@ -97,7 +104,7 @@ public class AnimationCurveWrap
 		}
 
 		AnimationCurve obj = (AnimationCurve)o;
-		LuaScriptMgr.PushResult(L, obj.preWrapMode);
+		LuaScriptMgr.PushEnum(L, obj.preWrapMode);
 		return 1;
 	}
 
@@ -112,7 +119,7 @@ public class AnimationCurveWrap
 		}
 
 		AnimationCurve obj = (AnimationCurve)o;
-		LuaScriptMgr.PushResult(L, obj.postWrapMode);
+		LuaScriptMgr.PushEnum(L, obj.postWrapMode);
 		return 1;
 	}
 
@@ -168,7 +175,7 @@ public class AnimationCurveWrap
 		AnimationCurve obj = (AnimationCurve)LuaScriptMgr.GetNetObject(L, 1);
 		float arg0 = (float)LuaScriptMgr.GetNumber(L, 2);
 		float o = obj.Evaluate(arg0);
-		LuaScriptMgr.PushResult(L, o);
+		LuaScriptMgr.Push(L, o);
 		return 1;
 	}
 
@@ -182,7 +189,7 @@ public class AnimationCurveWrap
 			AnimationCurve obj = (AnimationCurve)LuaScriptMgr.GetNetObject(L, 1);
 			Keyframe arg0 = (Keyframe)LuaScriptMgr.GetNetObject(L, 2);
 			int o = obj.AddKey(arg0);
-			LuaScriptMgr.PushResult(L, o);
+			LuaScriptMgr.Push(L, o);
 			return 1;
 		}
 		else if (count == 3)
@@ -191,7 +198,7 @@ public class AnimationCurveWrap
 			float arg0 = (float)LuaScriptMgr.GetNumber(L, 2);
 			float arg1 = (float)LuaScriptMgr.GetNumber(L, 3);
 			int o = obj.AddKey(arg0,arg1);
-			LuaScriptMgr.PushResult(L, o);
+			LuaScriptMgr.Push(L, o);
 			return 1;
 		}
 		else
@@ -210,7 +217,7 @@ public class AnimationCurveWrap
 		int arg0 = (int)LuaScriptMgr.GetNumber(L, 2);
 		Keyframe arg1 = (Keyframe)LuaScriptMgr.GetNetObject(L, 3);
 		int o = obj.MoveKey(arg0,arg1);
-		LuaScriptMgr.PushResult(L, o);
+		LuaScriptMgr.Push(L, o);
 		return 1;
 	}
 
@@ -244,7 +251,7 @@ public class AnimationCurveWrap
 		float arg2 = (float)LuaScriptMgr.GetNumber(L, 3);
 		float arg3 = (float)LuaScriptMgr.GetNumber(L, 4);
 		AnimationCurve o = AnimationCurve.Linear(arg0,arg1,arg2,arg3);
-		LuaScriptMgr.PushResult(L, o);
+		LuaScriptMgr.PushObject(L, o);
 		return 1;
 	}
 
@@ -257,7 +264,7 @@ public class AnimationCurveWrap
 		float arg2 = (float)LuaScriptMgr.GetNumber(L, 3);
 		float arg3 = (float)LuaScriptMgr.GetNumber(L, 4);
 		AnimationCurve o = AnimationCurve.EaseInOut(arg0,arg1,arg2,arg3);
-		LuaScriptMgr.PushResult(L, o);
+		LuaScriptMgr.PushObject(L, o);
 		return 1;
 	}
 }

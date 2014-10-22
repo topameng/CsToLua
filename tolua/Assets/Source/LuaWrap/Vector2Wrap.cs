@@ -22,6 +22,7 @@ public class Vector2Wrap
 		new LuaMethod("Min", Min),
 		new LuaMethod("Max", Max),
 		new LuaMethod("New", Create),
+		new LuaMethod("GetClassType", GetClassType),
 		new LuaMethod("__tostring", Lua_ToString),
 		new LuaMethod("__add", Lua_Add),
 		new LuaMethod("__sub", Lua_Sub),
@@ -49,20 +50,19 @@ public class Vector2Wrap
 	static int Create(IntPtr L)
 	{
 		int count = LuaDLL.lua_gettop(L);
-		object obj = null;
 
 		if (count == 2)
 		{
 			float arg0 = (float)LuaScriptMgr.GetNumber(L, 1);
 			float arg1 = (float)LuaScriptMgr.GetNumber(L, 2);
-			obj = new Vector2(arg0,arg1);
-			LuaScriptMgr.PushResult(L, obj);
+			Vector2 obj = new Vector2(arg0,arg1);
+			LuaScriptMgr.PushValue(L, obj);
 			return 1;
 		}
 		else if (count == 0)
 		{
-			obj = new Vector2();
-			LuaScriptMgr.PushResult(L, obj);
+			Vector2 obj = new Vector2();
+			LuaScriptMgr.PushValue(L, obj);
 			return 1;
 		}
 		else
@@ -73,6 +73,13 @@ public class Vector2Wrap
 		return 0;
 	}
 
+	[MonoPInvokeCallbackAttribute(typeof(LuaCSFunction))]
+	static int GetClassType(IntPtr L)
+	{
+		LuaScriptMgr.Push(L, typeof(Vector2));
+		return 1;
+	}
+
 	public static void Register(IntPtr L)
 	{
 		LuaScriptMgr.RegisterLib(L, "Vector2", typeof(Vector2), regs, fields, "object");
@@ -81,7 +88,7 @@ public class Vector2Wrap
 	[MonoPInvokeCallbackAttribute(typeof(LuaCSFunction))]
 	static int get_kEpsilon(IntPtr L)
 	{
-		LuaScriptMgr.PushResult(L, Vector2.kEpsilon);
+		LuaScriptMgr.Push(L, Vector2.kEpsilon);
 		return 1;
 	}
 
@@ -96,7 +103,7 @@ public class Vector2Wrap
 		}
 
 		Vector2 obj = (Vector2)o;
-		LuaScriptMgr.PushResult(L, obj.x);
+		LuaScriptMgr.Push(L, obj.x);
 		return 1;
 	}
 
@@ -111,7 +118,7 @@ public class Vector2Wrap
 		}
 
 		Vector2 obj = (Vector2)o;
-		LuaScriptMgr.PushResult(L, obj.y);
+		LuaScriptMgr.Push(L, obj.y);
 		return 1;
 	}
 
@@ -126,7 +133,7 @@ public class Vector2Wrap
 		}
 
 		Vector2 obj = (Vector2)o;
-		LuaScriptMgr.PushResult(L, obj.normalized);
+		LuaScriptMgr.PushValue(L, obj.normalized);
 		return 1;
 	}
 
@@ -141,7 +148,7 @@ public class Vector2Wrap
 		}
 
 		Vector2 obj = (Vector2)o;
-		LuaScriptMgr.PushResult(L, obj.magnitude);
+		LuaScriptMgr.Push(L, obj.magnitude);
 		return 1;
 	}
 
@@ -156,35 +163,35 @@ public class Vector2Wrap
 		}
 
 		Vector2 obj = (Vector2)o;
-		LuaScriptMgr.PushResult(L, obj.sqrMagnitude);
+		LuaScriptMgr.Push(L, obj.sqrMagnitude);
 		return 1;
 	}
 
 	[MonoPInvokeCallbackAttribute(typeof(LuaCSFunction))]
 	static int get_zero(IntPtr L)
 	{
-		LuaScriptMgr.PushResult(L, Vector2.zero);
+		LuaScriptMgr.PushValue(L, Vector2.zero);
 		return 1;
 	}
 
 	[MonoPInvokeCallbackAttribute(typeof(LuaCSFunction))]
 	static int get_one(IntPtr L)
 	{
-		LuaScriptMgr.PushResult(L, Vector2.one);
+		LuaScriptMgr.PushValue(L, Vector2.one);
 		return 1;
 	}
 
 	[MonoPInvokeCallbackAttribute(typeof(LuaCSFunction))]
 	static int get_up(IntPtr L)
 	{
-		LuaScriptMgr.PushResult(L, Vector2.up);
+		LuaScriptMgr.PushValue(L, Vector2.up);
 		return 1;
 	}
 
 	[MonoPInvokeCallbackAttribute(typeof(LuaCSFunction))]
 	static int get_right(IntPtr L)
 	{
-		LuaScriptMgr.PushResult(L, Vector2.right);
+		LuaScriptMgr.PushValue(L, Vector2.right);
 		return 1;
 	}
 
@@ -224,7 +231,7 @@ public class Vector2Wrap
 	static int Lua_ToString(IntPtr L)
 	{
 		Vector2 obj = (Vector2)LuaScriptMgr.GetNetObject(L, 1);
-		LuaScriptMgr.PushResult(L, obj.ToString());
+		LuaScriptMgr.Push(L, obj.ToString());
 		return 1;
 	}
 
@@ -248,7 +255,7 @@ public class Vector2Wrap
 		Vector2 arg1 = (Vector2)LuaScriptMgr.GetNetObject(L, 2);
 		float arg2 = (float)LuaScriptMgr.GetNumber(L, 3);
 		Vector2 o = Vector2.Lerp(arg0,arg1,arg2);
-		LuaScriptMgr.PushResult(L, o);
+		LuaScriptMgr.PushValue(L, o);
 		return 1;
 	}
 
@@ -260,7 +267,7 @@ public class Vector2Wrap
 		Vector2 arg1 = (Vector2)LuaScriptMgr.GetNetObject(L, 2);
 		float arg2 = (float)LuaScriptMgr.GetNumber(L, 3);
 		Vector2 o = Vector2.MoveTowards(arg0,arg1,arg2);
-		LuaScriptMgr.PushResult(L, o);
+		LuaScriptMgr.PushValue(L, o);
 		return 1;
 	}
 
@@ -294,7 +301,7 @@ public class Vector2Wrap
 		{
 			Vector2 obj = (Vector2)LuaScriptMgr.GetNetObject(L, 1);
 			string o = obj.ToString();
-			LuaScriptMgr.PushResult(L, o);
+			LuaScriptMgr.Push(L, o);
 			return 1;
 		}
 		else if (count == 2)
@@ -302,7 +309,7 @@ public class Vector2Wrap
 			Vector2 obj = (Vector2)LuaScriptMgr.GetNetObject(L, 1);
 			string arg0 = LuaScriptMgr.GetLuaString(L, 2);
 			string o = obj.ToString(arg0);
-			LuaScriptMgr.PushResult(L, o);
+			LuaScriptMgr.Push(L, o);
 			return 1;
 		}
 		else
@@ -319,7 +326,7 @@ public class Vector2Wrap
 		LuaScriptMgr.CheckArgsCount(L, 1);
 		Vector2 obj = (Vector2)LuaScriptMgr.GetNetObject(L, 1);
 		int o = obj.GetHashCode();
-		LuaScriptMgr.PushResult(L, o);
+		LuaScriptMgr.Push(L, o);
 		return 1;
 	}
 
@@ -330,7 +337,7 @@ public class Vector2Wrap
 		Vector2 obj = (Vector2)LuaScriptMgr.GetNetObject(L, 1);
 		object arg0 = LuaScriptMgr.GetVarObject(L, 2);
 		bool o = obj.Equals(arg0);
-		LuaScriptMgr.PushResult(L, o);
+		LuaScriptMgr.Push(L, o);
 		return 1;
 	}
 
@@ -341,7 +348,7 @@ public class Vector2Wrap
 		Vector2 arg0 = (Vector2)LuaScriptMgr.GetNetObject(L, 1);
 		Vector2 arg1 = (Vector2)LuaScriptMgr.GetNetObject(L, 2);
 		float o = Vector2.Dot(arg0,arg1);
-		LuaScriptMgr.PushResult(L, o);
+		LuaScriptMgr.Push(L, o);
 		return 1;
 	}
 
@@ -352,7 +359,7 @@ public class Vector2Wrap
 		Vector2 arg0 = (Vector2)LuaScriptMgr.GetNetObject(L, 1);
 		Vector2 arg1 = (Vector2)LuaScriptMgr.GetNetObject(L, 2);
 		float o = Vector2.Angle(arg0,arg1);
-		LuaScriptMgr.PushResult(L, o);
+		LuaScriptMgr.Push(L, o);
 		return 1;
 	}
 
@@ -363,7 +370,7 @@ public class Vector2Wrap
 		Vector2 arg0 = (Vector2)LuaScriptMgr.GetNetObject(L, 1);
 		Vector2 arg1 = (Vector2)LuaScriptMgr.GetNetObject(L, 2);
 		float o = Vector2.Distance(arg0,arg1);
-		LuaScriptMgr.PushResult(L, o);
+		LuaScriptMgr.Push(L, o);
 		return 1;
 	}
 
@@ -374,7 +381,7 @@ public class Vector2Wrap
 		Vector2 arg0 = (Vector2)LuaScriptMgr.GetNetObject(L, 1);
 		float arg1 = (float)LuaScriptMgr.GetNumber(L, 2);
 		Vector2 o = Vector2.ClampMagnitude(arg0,arg1);
-		LuaScriptMgr.PushResult(L, o);
+		LuaScriptMgr.PushValue(L, o);
 		return 1;
 	}
 
@@ -384,7 +391,7 @@ public class Vector2Wrap
 		LuaScriptMgr.CheckArgsCount(L, 1);
 		Vector2 obj = (Vector2)LuaScriptMgr.GetNetObject(L, 1);
 		float o = obj.SqrMagnitude();
-		LuaScriptMgr.PushResult(L, o);
+		LuaScriptMgr.Push(L, o);
 		return 1;
 	}
 
@@ -395,7 +402,7 @@ public class Vector2Wrap
 		Vector2 arg0 = (Vector2)LuaScriptMgr.GetNetObject(L, 1);
 		Vector2 arg1 = (Vector2)LuaScriptMgr.GetNetObject(L, 2);
 		Vector2 o = Vector2.Min(arg0,arg1);
-		LuaScriptMgr.PushResult(L, o);
+		LuaScriptMgr.PushValue(L, o);
 		return 1;
 	}
 
@@ -406,7 +413,7 @@ public class Vector2Wrap
 		Vector2 arg0 = (Vector2)LuaScriptMgr.GetNetObject(L, 1);
 		Vector2 arg1 = (Vector2)LuaScriptMgr.GetNetObject(L, 2);
 		Vector2 o = Vector2.Max(arg0,arg1);
-		LuaScriptMgr.PushResult(L, o);
+		LuaScriptMgr.PushValue(L, o);
 		return 1;
 	}
 
@@ -417,7 +424,7 @@ public class Vector2Wrap
 		Vector2 arg0 = (Vector2)LuaScriptMgr.GetNetObject(L, 1);
 		Vector2 arg1 = (Vector2)LuaScriptMgr.GetNetObject(L, 2);
 		Vector2 o = arg0 + arg1;
-		LuaScriptMgr.PushResult(L, o);
+		LuaScriptMgr.PushValue(L, o);
 		return 1;
 	}
 
@@ -428,7 +435,7 @@ public class Vector2Wrap
 		Vector2 arg0 = (Vector2)LuaScriptMgr.GetNetObject(L, 1);
 		Vector2 arg1 = (Vector2)LuaScriptMgr.GetNetObject(L, 2);
 		Vector2 o = arg0 - arg1;
-		LuaScriptMgr.PushResult(L, o);
+		LuaScriptMgr.PushValue(L, o);
 		return 1;
 	}
 
@@ -438,7 +445,7 @@ public class Vector2Wrap
 		LuaScriptMgr.CheckArgsCount(L, 1);
 		Vector2 arg0 = (Vector2)LuaScriptMgr.GetNetObject(L, 1);
 		Vector2 o = -arg0;
-		LuaScriptMgr.PushResult(L, o);
+		LuaScriptMgr.PushValue(L, o);
 		return 1;
 	}
 
@@ -455,7 +462,7 @@ public class Vector2Wrap
 			float arg0 = (float)LuaScriptMgr.GetNumber(L, 1);
 			Vector2 arg1 = (Vector2)LuaScriptMgr.GetNetObject(L, 2);
 			Vector2 o = arg0 * arg1;
-			LuaScriptMgr.PushResult(L, o);
+			LuaScriptMgr.PushValue(L, o);
 			return 1;
 		}
 		else if (count == 2 && LuaScriptMgr.CheckTypes(L, types1, 1))
@@ -463,7 +470,7 @@ public class Vector2Wrap
 			Vector2 arg0 = (Vector2)LuaScriptMgr.GetNetObject(L, 1);
 			float arg1 = (float)LuaScriptMgr.GetNumber(L, 2);
 			Vector2 o = arg0 * arg1;
-			LuaScriptMgr.PushResult(L, o);
+			LuaScriptMgr.PushValue(L, o);
 			return 1;
 		}
 		else
@@ -481,7 +488,7 @@ public class Vector2Wrap
 		Vector2 arg0 = (Vector2)LuaScriptMgr.GetNetObject(L, 1);
 		float arg1 = (float)LuaScriptMgr.GetNumber(L, 2);
 		Vector2 o = arg0 / arg1;
-		LuaScriptMgr.PushResult(L, o);
+		LuaScriptMgr.PushValue(L, o);
 		return 1;
 	}
 
@@ -492,7 +499,7 @@ public class Vector2Wrap
 		Vector2 arg0 = (Vector2)LuaScriptMgr.GetNetObject(L, 1);
 		Vector2 arg1 = (Vector2)LuaScriptMgr.GetNetObject(L, 2);
 		bool o = arg0 == arg1;
-		LuaScriptMgr.PushResult(L, o);
+		LuaScriptMgr.Push(L, o);
 		return 1;
 	}
 }

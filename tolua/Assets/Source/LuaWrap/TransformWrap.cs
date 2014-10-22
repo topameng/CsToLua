@@ -26,6 +26,7 @@ public class TransformWrap
 		new LuaMethod("GetEnumerator", GetEnumerator),
 		new LuaMethod("GetChild", GetChild),
 		new LuaMethod("New", Create),
+		new LuaMethod("GetClassType", GetClassType),
 	};
 
 	static LuaField[] fields = new LuaField[]
@@ -56,6 +57,13 @@ public class TransformWrap
 		return 0;
 	}
 
+	[MonoPInvokeCallbackAttribute(typeof(LuaCSFunction))]
+	static int GetClassType(IntPtr L)
+	{
+		LuaScriptMgr.Push(L, typeof(Transform));
+		return 1;
+	}
+
 	public static void Register(IntPtr L)
 	{
 		LuaScriptMgr.RegisterLib(L, "Transform", typeof(Transform), regs, fields, "Component");
@@ -72,7 +80,7 @@ public class TransformWrap
 		}
 
 		Transform obj = (Transform)o;
-		LuaScriptMgr.PushResult(L, obj.position);
+		LuaScriptMgr.PushValue(L, obj.position);
 		return 1;
 	}
 
@@ -87,7 +95,7 @@ public class TransformWrap
 		}
 
 		Transform obj = (Transform)o;
-		LuaScriptMgr.PushResult(L, obj.localPosition);
+		LuaScriptMgr.PushValue(L, obj.localPosition);
 		return 1;
 	}
 
@@ -102,7 +110,7 @@ public class TransformWrap
 		}
 
 		Transform obj = (Transform)o;
-		LuaScriptMgr.PushResult(L, obj.eulerAngles);
+		LuaScriptMgr.PushValue(L, obj.eulerAngles);
 		return 1;
 	}
 
@@ -117,7 +125,7 @@ public class TransformWrap
 		}
 
 		Transform obj = (Transform)o;
-		LuaScriptMgr.PushResult(L, obj.localEulerAngles);
+		LuaScriptMgr.PushValue(L, obj.localEulerAngles);
 		return 1;
 	}
 
@@ -132,7 +140,7 @@ public class TransformWrap
 		}
 
 		Transform obj = (Transform)o;
-		LuaScriptMgr.PushResult(L, obj.right);
+		LuaScriptMgr.PushValue(L, obj.right);
 		return 1;
 	}
 
@@ -147,7 +155,7 @@ public class TransformWrap
 		}
 
 		Transform obj = (Transform)o;
-		LuaScriptMgr.PushResult(L, obj.up);
+		LuaScriptMgr.PushValue(L, obj.up);
 		return 1;
 	}
 
@@ -162,7 +170,7 @@ public class TransformWrap
 		}
 
 		Transform obj = (Transform)o;
-		LuaScriptMgr.PushResult(L, obj.forward);
+		LuaScriptMgr.PushValue(L, obj.forward);
 		return 1;
 	}
 
@@ -177,7 +185,7 @@ public class TransformWrap
 		}
 
 		Transform obj = (Transform)o;
-		LuaScriptMgr.PushResult(L, obj.rotation);
+		LuaScriptMgr.PushValue(L, obj.rotation);
 		return 1;
 	}
 
@@ -192,7 +200,7 @@ public class TransformWrap
 		}
 
 		Transform obj = (Transform)o;
-		LuaScriptMgr.PushResult(L, obj.localRotation);
+		LuaScriptMgr.PushValue(L, obj.localRotation);
 		return 1;
 	}
 
@@ -207,7 +215,7 @@ public class TransformWrap
 		}
 
 		Transform obj = (Transform)o;
-		LuaScriptMgr.PushResult(L, obj.localScale);
+		LuaScriptMgr.PushValue(L, obj.localScale);
 		return 1;
 	}
 
@@ -222,7 +230,7 @@ public class TransformWrap
 		}
 
 		Transform obj = (Transform)o;
-		LuaScriptMgr.PushResult(L, obj.parent);
+		LuaScriptMgr.Push(L, obj.parent);
 		return 1;
 	}
 
@@ -237,7 +245,7 @@ public class TransformWrap
 		}
 
 		Transform obj = (Transform)o;
-		LuaScriptMgr.PushResult(L, obj.worldToLocalMatrix);
+		LuaScriptMgr.PushValue(L, obj.worldToLocalMatrix);
 		return 1;
 	}
 
@@ -252,7 +260,7 @@ public class TransformWrap
 		}
 
 		Transform obj = (Transform)o;
-		LuaScriptMgr.PushResult(L, obj.localToWorldMatrix);
+		LuaScriptMgr.PushValue(L, obj.localToWorldMatrix);
 		return 1;
 	}
 
@@ -267,7 +275,7 @@ public class TransformWrap
 		}
 
 		Transform obj = (Transform)o;
-		LuaScriptMgr.PushResult(L, obj.root);
+		LuaScriptMgr.Push(L, obj.root);
 		return 1;
 	}
 
@@ -282,7 +290,7 @@ public class TransformWrap
 		}
 
 		Transform obj = (Transform)o;
-		LuaScriptMgr.PushResult(L, obj.childCount);
+		LuaScriptMgr.Push(L, obj.childCount);
 		return 1;
 	}
 
@@ -297,7 +305,7 @@ public class TransformWrap
 		}
 
 		Transform obj = (Transform)o;
-		LuaScriptMgr.PushResult(L, obj.lossyScale);
+		LuaScriptMgr.PushValue(L, obj.lossyScale);
 		return 1;
 	}
 
@@ -312,7 +320,7 @@ public class TransformWrap
 		}
 
 		Transform obj = (Transform)o;
-		LuaScriptMgr.PushResult(L, obj.hasChanged);
+		LuaScriptMgr.Push(L, obj.hasChanged);
 		return 1;
 	}
 
@@ -705,7 +713,7 @@ public class TransformWrap
 			Transform obj = (Transform)LuaScriptMgr.GetNetObject(L, 1);
 			Vector3 arg0 = (Vector3)LuaScriptMgr.GetNetObject(L, 2);
 			Vector3 o = obj.TransformDirection(arg0);
-			LuaScriptMgr.PushResult(L, o);
+			LuaScriptMgr.PushValue(L, o);
 			return 1;
 		}
 		else if (count == 4)
@@ -715,7 +723,7 @@ public class TransformWrap
 			float arg1 = (float)LuaScriptMgr.GetNumber(L, 3);
 			float arg2 = (float)LuaScriptMgr.GetNumber(L, 4);
 			Vector3 o = obj.TransformDirection(arg0,arg1,arg2);
-			LuaScriptMgr.PushResult(L, o);
+			LuaScriptMgr.PushValue(L, o);
 			return 1;
 		}
 		else
@@ -736,7 +744,7 @@ public class TransformWrap
 			Transform obj = (Transform)LuaScriptMgr.GetNetObject(L, 1);
 			Vector3 arg0 = (Vector3)LuaScriptMgr.GetNetObject(L, 2);
 			Vector3 o = obj.InverseTransformDirection(arg0);
-			LuaScriptMgr.PushResult(L, o);
+			LuaScriptMgr.PushValue(L, o);
 			return 1;
 		}
 		else if (count == 4)
@@ -746,7 +754,7 @@ public class TransformWrap
 			float arg1 = (float)LuaScriptMgr.GetNumber(L, 3);
 			float arg2 = (float)LuaScriptMgr.GetNumber(L, 4);
 			Vector3 o = obj.InverseTransformDirection(arg0,arg1,arg2);
-			LuaScriptMgr.PushResult(L, o);
+			LuaScriptMgr.PushValue(L, o);
 			return 1;
 		}
 		else
@@ -767,7 +775,7 @@ public class TransformWrap
 			Transform obj = (Transform)LuaScriptMgr.GetNetObject(L, 1);
 			Vector3 arg0 = (Vector3)LuaScriptMgr.GetNetObject(L, 2);
 			Vector3 o = obj.TransformPoint(arg0);
-			LuaScriptMgr.PushResult(L, o);
+			LuaScriptMgr.PushValue(L, o);
 			return 1;
 		}
 		else if (count == 4)
@@ -777,7 +785,7 @@ public class TransformWrap
 			float arg1 = (float)LuaScriptMgr.GetNumber(L, 3);
 			float arg2 = (float)LuaScriptMgr.GetNumber(L, 4);
 			Vector3 o = obj.TransformPoint(arg0,arg1,arg2);
-			LuaScriptMgr.PushResult(L, o);
+			LuaScriptMgr.PushValue(L, o);
 			return 1;
 		}
 		else
@@ -798,7 +806,7 @@ public class TransformWrap
 			Transform obj = (Transform)LuaScriptMgr.GetNetObject(L, 1);
 			Vector3 arg0 = (Vector3)LuaScriptMgr.GetNetObject(L, 2);
 			Vector3 o = obj.InverseTransformPoint(arg0);
-			LuaScriptMgr.PushResult(L, o);
+			LuaScriptMgr.PushValue(L, o);
 			return 1;
 		}
 		else if (count == 4)
@@ -808,7 +816,7 @@ public class TransformWrap
 			float arg1 = (float)LuaScriptMgr.GetNumber(L, 3);
 			float arg2 = (float)LuaScriptMgr.GetNumber(L, 4);
 			Vector3 o = obj.InverseTransformPoint(arg0,arg1,arg2);
-			LuaScriptMgr.PushResult(L, o);
+			LuaScriptMgr.PushValue(L, o);
 			return 1;
 		}
 		else
@@ -862,7 +870,7 @@ public class TransformWrap
 		LuaScriptMgr.CheckArgsCount(L, 1);
 		Transform obj = (Transform)LuaScriptMgr.GetNetObject(L, 1);
 		int o = obj.GetSiblingIndex();
-		LuaScriptMgr.PushResult(L, o);
+		LuaScriptMgr.Push(L, o);
 		return 1;
 	}
 
@@ -873,7 +881,7 @@ public class TransformWrap
 		Transform obj = (Transform)LuaScriptMgr.GetNetObject(L, 1);
 		string arg0 = LuaScriptMgr.GetLuaString(L, 2);
 		Transform o = obj.Find(arg0);
-		LuaScriptMgr.PushResult(L, o);
+		LuaScriptMgr.Push(L, o);
 		return 1;
 	}
 
@@ -884,7 +892,7 @@ public class TransformWrap
 		Transform obj = (Transform)LuaScriptMgr.GetNetObject(L, 1);
 		Transform arg0 = (Transform)LuaScriptMgr.GetNetObject(L, 2);
 		bool o = obj.IsChildOf(arg0);
-		LuaScriptMgr.PushResult(L, o);
+		LuaScriptMgr.Push(L, o);
 		return 1;
 	}
 
@@ -895,7 +903,7 @@ public class TransformWrap
 		Transform obj = (Transform)LuaScriptMgr.GetNetObject(L, 1);
 		string arg0 = LuaScriptMgr.GetLuaString(L, 2);
 		Transform o = obj.FindChild(arg0);
-		LuaScriptMgr.PushResult(L, o);
+		LuaScriptMgr.Push(L, o);
 		return 1;
 	}
 
@@ -905,7 +913,7 @@ public class TransformWrap
 		LuaScriptMgr.CheckArgsCount(L, 1);
 		Transform obj = (Transform)LuaScriptMgr.GetNetObject(L, 1);
 		IEnumerator o = obj.GetEnumerator();
-		LuaScriptMgr.PushResult(L, o);
+		LuaScriptMgr.PushObject(L, o);
 		return 1;
 	}
 
@@ -916,7 +924,7 @@ public class TransformWrap
 		Transform obj = (Transform)LuaScriptMgr.GetNetObject(L, 1);
 		int arg0 = (int)LuaScriptMgr.GetNumber(L, 2);
 		Transform o = obj.GetChild(arg0);
-		LuaScriptMgr.PushResult(L, o);
+		LuaScriptMgr.Push(L, o);
 		return 1;
 	}
 }

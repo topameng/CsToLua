@@ -17,6 +17,7 @@ public class ComponentWrap
 		new LuaMethod("SendMessage", SendMessage),
 		new LuaMethod("BroadcastMessage", BroadcastMessage),
 		new LuaMethod("New", Create),
+		new LuaMethod("GetClassType", GetClassType),
 	};
 
 	static LuaField[] fields = new LuaField[]
@@ -46,12 +47,11 @@ public class ComponentWrap
 	static int Create(IntPtr L)
 	{
 		int count = LuaDLL.lua_gettop(L);
-		object obj = null;
 
 		if (count == 0)
 		{
-			obj = new Component();
-			LuaScriptMgr.PushResult(L, obj);
+			Component obj = new Component();
+			LuaScriptMgr.Push(L, obj);
 			return 1;
 		}
 		else
@@ -60,6 +60,13 @@ public class ComponentWrap
 		}
 
 		return 0;
+	}
+
+	[MonoPInvokeCallbackAttribute(typeof(LuaCSFunction))]
+	static int GetClassType(IntPtr L)
+	{
+		LuaScriptMgr.Push(L, typeof(Component));
+		return 1;
 	}
 
 	public static void Register(IntPtr L)
@@ -78,7 +85,7 @@ public class ComponentWrap
 		}
 
 		Component obj = (Component)o;
-		LuaScriptMgr.PushResult(L, obj.transform);
+		LuaScriptMgr.Push(L, obj.transform);
 		return 1;
 	}
 
@@ -93,7 +100,7 @@ public class ComponentWrap
 		}
 
 		Component obj = (Component)o;
-		LuaScriptMgr.PushResult(L, obj.rigidbody);
+		LuaScriptMgr.Push(L, obj.rigidbody);
 		return 1;
 	}
 
@@ -108,7 +115,7 @@ public class ComponentWrap
 		}
 
 		Component obj = (Component)o;
-		LuaScriptMgr.PushResult(L, obj.rigidbody2D);
+		LuaScriptMgr.Push(L, obj.rigidbody2D);
 		return 1;
 	}
 
@@ -123,7 +130,7 @@ public class ComponentWrap
 		}
 
 		Component obj = (Component)o;
-		LuaScriptMgr.PushResult(L, obj.camera);
+		LuaScriptMgr.Push(L, obj.camera);
 		return 1;
 	}
 
@@ -138,7 +145,7 @@ public class ComponentWrap
 		}
 
 		Component obj = (Component)o;
-		LuaScriptMgr.PushResult(L, obj.light);
+		LuaScriptMgr.Push(L, obj.light);
 		return 1;
 	}
 
@@ -153,7 +160,7 @@ public class ComponentWrap
 		}
 
 		Component obj = (Component)o;
-		LuaScriptMgr.PushResult(L, obj.animation);
+		LuaScriptMgr.Push(L, obj.animation);
 		return 1;
 	}
 
@@ -168,7 +175,7 @@ public class ComponentWrap
 		}
 
 		Component obj = (Component)o;
-		LuaScriptMgr.PushResult(L, obj.constantForce);
+		LuaScriptMgr.Push(L, obj.constantForce);
 		return 1;
 	}
 
@@ -183,7 +190,7 @@ public class ComponentWrap
 		}
 
 		Component obj = (Component)o;
-		LuaScriptMgr.PushResult(L, obj.renderer);
+		LuaScriptMgr.Push(L, obj.renderer);
 		return 1;
 	}
 
@@ -198,7 +205,7 @@ public class ComponentWrap
 		}
 
 		Component obj = (Component)o;
-		LuaScriptMgr.PushResult(L, obj.audio);
+		LuaScriptMgr.Push(L, obj.audio);
 		return 1;
 	}
 
@@ -213,7 +220,7 @@ public class ComponentWrap
 		}
 
 		Component obj = (Component)o;
-		LuaScriptMgr.PushResult(L, obj.guiText);
+		LuaScriptMgr.Push(L, obj.guiText);
 		return 1;
 	}
 
@@ -228,7 +235,7 @@ public class ComponentWrap
 		}
 
 		Component obj = (Component)o;
-		LuaScriptMgr.PushResult(L, obj.networkView);
+		LuaScriptMgr.Push(L, obj.networkView);
 		return 1;
 	}
 
@@ -243,7 +250,7 @@ public class ComponentWrap
 		}
 
 		Component obj = (Component)o;
-		LuaScriptMgr.PushResult(L, obj.guiTexture);
+		LuaScriptMgr.Push(L, obj.guiTexture);
 		return 1;
 	}
 
@@ -258,7 +265,7 @@ public class ComponentWrap
 		}
 
 		Component obj = (Component)o;
-		LuaScriptMgr.PushResult(L, obj.collider);
+		LuaScriptMgr.Push(L, obj.collider);
 		return 1;
 	}
 
@@ -273,7 +280,7 @@ public class ComponentWrap
 		}
 
 		Component obj = (Component)o;
-		LuaScriptMgr.PushResult(L, obj.collider2D);
+		LuaScriptMgr.Push(L, obj.collider2D);
 		return 1;
 	}
 
@@ -288,7 +295,7 @@ public class ComponentWrap
 		}
 
 		Component obj = (Component)o;
-		LuaScriptMgr.PushResult(L, obj.hingeJoint);
+		LuaScriptMgr.Push(L, obj.hingeJoint);
 		return 1;
 	}
 
@@ -303,7 +310,7 @@ public class ComponentWrap
 		}
 
 		Component obj = (Component)o;
-		LuaScriptMgr.PushResult(L, obj.particleEmitter);
+		LuaScriptMgr.Push(L, obj.particleEmitter);
 		return 1;
 	}
 
@@ -318,7 +325,7 @@ public class ComponentWrap
 		}
 
 		Component obj = (Component)o;
-		LuaScriptMgr.PushResult(L, obj.particleSystem);
+		LuaScriptMgr.Push(L, obj.particleSystem);
 		return 1;
 	}
 
@@ -333,7 +340,7 @@ public class ComponentWrap
 		}
 
 		Component obj = (Component)o;
-		LuaScriptMgr.PushResult(L, obj.gameObject);
+		LuaScriptMgr.Push(L, obj.gameObject);
 		return 1;
 	}
 
@@ -348,7 +355,7 @@ public class ComponentWrap
 		}
 
 		Component obj = (Component)o;
-		LuaScriptMgr.PushResult(L, obj.tag);
+		LuaScriptMgr.Push(L, obj.tag);
 		return 1;
 	}
 
@@ -380,7 +387,7 @@ public class ComponentWrap
 			Component obj = (Component)LuaScriptMgr.GetNetObject(L, 1);
 			string arg0 = LuaScriptMgr.GetString(L, 2);
 			Component o = obj.GetComponent(arg0);
-			LuaScriptMgr.PushResult(L, o);
+			LuaScriptMgr.Push(L, o);
 			return 1;
 		}
 		else if (count == 2 && LuaScriptMgr.CheckTypes(L, types1, 1))
@@ -388,7 +395,7 @@ public class ComponentWrap
 			Component obj = (Component)LuaScriptMgr.GetNetObject(L, 1);
 			Type arg0 = (Type)LuaScriptMgr.GetNetObject(L, 2);
 			Component o = obj.GetComponent(arg0);
-			LuaScriptMgr.PushResult(L, o);
+			LuaScriptMgr.Push(L, o);
 			return 1;
 		}
 		else
@@ -406,7 +413,7 @@ public class ComponentWrap
 		Component obj = (Component)LuaScriptMgr.GetNetObject(L, 1);
 		Type arg0 = (Type)LuaScriptMgr.GetNetObject(L, 2);
 		Component o = obj.GetComponentInChildren(arg0);
-		LuaScriptMgr.PushResult(L, o);
+		LuaScriptMgr.Push(L, o);
 		return 1;
 	}
 
@@ -420,7 +427,7 @@ public class ComponentWrap
 			Component obj = (Component)LuaScriptMgr.GetNetObject(L, 1);
 			Type arg0 = (Type)LuaScriptMgr.GetNetObject(L, 2);
 			Component[] o = obj.GetComponentsInChildren(arg0);
-			LuaScriptMgr.PushResult(L, o);
+			LuaScriptMgr.PushObject(L, o);
 			return 1;
 		}
 		else if (count == 3)
@@ -429,7 +436,7 @@ public class ComponentWrap
 			Type arg0 = (Type)LuaScriptMgr.GetNetObject(L, 2);
 			bool arg1 = LuaScriptMgr.GetBoolean(L, 3);
 			Component[] o = obj.GetComponentsInChildren(arg0,arg1);
-			LuaScriptMgr.PushResult(L, o);
+			LuaScriptMgr.PushObject(L, o);
 			return 1;
 		}
 		else
@@ -447,7 +454,7 @@ public class ComponentWrap
 		Component obj = (Component)LuaScriptMgr.GetNetObject(L, 1);
 		Type arg0 = (Type)LuaScriptMgr.GetNetObject(L, 2);
 		Component o = obj.GetComponentInParent(arg0);
-		LuaScriptMgr.PushResult(L, o);
+		LuaScriptMgr.Push(L, o);
 		return 1;
 	}
 
@@ -461,7 +468,7 @@ public class ComponentWrap
 			Component obj = (Component)LuaScriptMgr.GetNetObject(L, 1);
 			Type arg0 = (Type)LuaScriptMgr.GetNetObject(L, 2);
 			Component[] o = obj.GetComponentsInParent(arg0);
-			LuaScriptMgr.PushResult(L, o);
+			LuaScriptMgr.PushObject(L, o);
 			return 1;
 		}
 		else if (count == 3)
@@ -470,7 +477,7 @@ public class ComponentWrap
 			Type arg0 = (Type)LuaScriptMgr.GetNetObject(L, 2);
 			bool arg1 = LuaScriptMgr.GetBoolean(L, 3);
 			Component[] o = obj.GetComponentsInParent(arg0,arg1);
-			LuaScriptMgr.PushResult(L, o);
+			LuaScriptMgr.PushObject(L, o);
 			return 1;
 		}
 		else
@@ -488,7 +495,7 @@ public class ComponentWrap
 		Component obj = (Component)LuaScriptMgr.GetNetObject(L, 1);
 		Type arg0 = (Type)LuaScriptMgr.GetNetObject(L, 2);
 		Component[] o = obj.GetComponents(arg0);
-		LuaScriptMgr.PushResult(L, o);
+		LuaScriptMgr.PushObject(L, o);
 		return 1;
 	}
 
@@ -499,7 +506,7 @@ public class ComponentWrap
 		Component obj = (Component)LuaScriptMgr.GetNetObject(L, 1);
 		string arg0 = LuaScriptMgr.GetLuaString(L, 2);
 		bool o = obj.CompareTag(arg0);
-		LuaScriptMgr.PushResult(L, o);
+		LuaScriptMgr.Push(L, o);
 		return 1;
 	}
 
