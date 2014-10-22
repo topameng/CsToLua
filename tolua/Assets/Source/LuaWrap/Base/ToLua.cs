@@ -503,7 +503,7 @@ public static class ToLua
             return "PushEnum";
         }
         else if (t == typeof(bool) || t.IsPrimitive || t == typeof(string) || t == typeof(LuaTable) || t == typeof(LuaCSFunction) || t == typeof(LuaFunction) || 
-            typeof(UnityEngine.Object).IsAssignableFrom(t) || t == typeof(object))
+            typeof(UnityEngine.Object).IsAssignableFrom(t) || t == typeof(object) || t == typeof(Type))
         {
             return "Push";
         }
