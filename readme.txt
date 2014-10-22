@@ -1,5 +1,10 @@
-﻿2014.10.17
+﻿2014.10.22
+更细的切分LuaScriptMgr.Push 函数，主要针对System.object重载函数
+消除此函数潜在的bug
+
+2014.10.17
 替换dll, 加入lua protobuf库
+
 2014.10.8
 加入枚举类型的导出
 优化LuaScriptMgr PushResult函数。通过重载函数消除switch
