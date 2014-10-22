@@ -511,10 +511,6 @@ public static class ToLua
         {
             return "PushValue";
         }
-        else if (t == typeof(object))
-        {
-            return "Push";
-        }
 
         return "PushObject";
     }
