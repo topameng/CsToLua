@@ -60,11 +60,11 @@ public enum TestEnum
 
 public class Client : MonoBehaviour 
 {
+    public Timer timer = null;
     LuaScriptMgr luaMgr = null;
-    LuaThread thread = null;
 
     void Awake()
-    {
+    {        
         luaMgr = new LuaScriptMgr();
         luaMgr.Start();
 
@@ -78,9 +78,14 @@ public class Client : MonoBehaviour
 
     void Update()
     {
-        if (thread != null && !thread.IsDead())
+        //if (thread != null && !thread.IsDead())
+        //{
+        //    thread.Resume();
+        //}
+
+        if (timer != null)
         {
-            thread.Resume();
+            timer.OnUpdate(Time.deltaTime);
         }
     }
 		
@@ -101,9 +106,9 @@ public class Client : MonoBehaviour
         }
         else if (GUI.Button(new Rect(10, 80, 120, 50), "Coroutine"))
         {
-            LuaFunction func = luaMgr.GetLuaFunction("myFunc");
-            thread = new LuaThread(luaMgr.lua, func);
-            thread.Start();
+            //LuaFunction func = luaMgr.GetLuaFunction("myFunc");
+            //thread = new LuaThread(luaMgr.lua, func);
+            //thread.Start();
         }
 	}
 }

@@ -10,37 +10,6 @@ function Test(transform)
 	print("lua cost time: " .. (Time.realtimeSinceStartup - t));
 end
 
-function waitSeconds(t)
-	local timeStamp = Time.realtimeSinceStartup
-	timeStamp = timeStamp + t
-	while Time.realtimeSinceStartup < timeStamp do
-		coroutine.yield()
-	end
-end
-
-function waitframe()
-
-end
-
-function fib(n)
-	local a, b = 0, 1
-	while n > 0 do
-		a, b = b, a + b
-		n = n - 1
-	end
-
-	return a
-end
-
-function myFunc()
-	print('Coroutine started')
-	local i = 0
-		for i = 1, 5, 1 do
-			print(fib(i))
-			waitSeconds(1)
-		end
-    print('Coroutine ended')
-end
 
 local curve = AnimationCurve.New(Keyframe.New(1,2), Keyframe.New(1,2))
 
@@ -53,6 +22,7 @@ Test:Test4(4, myFunc, 123)
 --print(tostring(v)..ret)
 --v, ret = coroutine.resume(co)
 
+print("Test Vector3 operator func")
 local v1 = Vector3.New(1,2,3)
 v1 = v1 + Vector3.one
 print(v1)
@@ -61,5 +31,19 @@ print("The enum class TestEnum.Two is:" .. TestEnum.Two)
 
 
 
+function TestCo()
+	print("current time:"..Time.time)
+	coroutine.waitforseconds(1)
+	print("sleep time:"..Time.time)
+	print("current frame:"..Time.frameCount)
+	coroutine.yieldone()
+	print("yield frame:"..Time.frameCount)
+	print("end frame:"..Time.frameCount)
+	coroutine.waitforendofframe()
+	print("end frame:"..Time.frameCount)
+	print("coroutine over")
+end
 
 
+local co = coroutine.create(TestCo)
+coroutine.resume(co)
