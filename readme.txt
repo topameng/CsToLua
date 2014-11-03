@@ -1,4 +1,9 @@
-﻿2014.10.22
+﻿2012.11.3
+细分Push函数，对于数组提供一种通用的数组metatable，
+减少ulua对于数组metatable个数泛滥问题
+加入类c#协同支持，例子见Test.lua
+
+2014.10.22
 更细的切分LuaScriptMgr.Push 函数，主要针对System.object重载函数
 消除此函数潜在的bug
 所有类型加入GetClassType函数，现在可以非常便利的获取类型。
