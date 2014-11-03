@@ -427,7 +427,7 @@ public class ComponentWrap
 			Component obj = (Component)LuaScriptMgr.GetNetObject(L, 1);
 			Type arg0 = (Type)LuaScriptMgr.GetNetObject(L, 2);
 			Component[] o = obj.GetComponentsInChildren(arg0);
-			LuaScriptMgr.PushObject(L, o);
+			LuaScriptMgr.PushArray(L, o);
 			return 1;
 		}
 		else if (count == 3)
@@ -436,7 +436,7 @@ public class ComponentWrap
 			Type arg0 = (Type)LuaScriptMgr.GetNetObject(L, 2);
 			bool arg1 = LuaScriptMgr.GetBoolean(L, 3);
 			Component[] o = obj.GetComponentsInChildren(arg0,arg1);
-			LuaScriptMgr.PushObject(L, o);
+			LuaScriptMgr.PushArray(L, o);
 			return 1;
 		}
 		else
@@ -468,7 +468,7 @@ public class ComponentWrap
 			Component obj = (Component)LuaScriptMgr.GetNetObject(L, 1);
 			Type arg0 = (Type)LuaScriptMgr.GetNetObject(L, 2);
 			Component[] o = obj.GetComponentsInParent(arg0);
-			LuaScriptMgr.PushObject(L, o);
+			LuaScriptMgr.PushArray(L, o);
 			return 1;
 		}
 		else if (count == 3)
@@ -477,7 +477,7 @@ public class ComponentWrap
 			Type arg0 = (Type)LuaScriptMgr.GetNetObject(L, 2);
 			bool arg1 = LuaScriptMgr.GetBoolean(L, 3);
 			Component[] o = obj.GetComponentsInParent(arg0,arg1);
-			LuaScriptMgr.PushObject(L, o);
+			LuaScriptMgr.PushArray(L, o);
 			return 1;
 		}
 		else
@@ -495,7 +495,7 @@ public class ComponentWrap
 		Component obj = (Component)LuaScriptMgr.GetNetObject(L, 1);
 		Type arg0 = (Type)LuaScriptMgr.GetNetObject(L, 2);
 		Component[] o = obj.GetComponents(arg0);
-		LuaScriptMgr.PushObject(L, o);
+		LuaScriptMgr.PushArray(L, o);
 		return 1;
 	}
 

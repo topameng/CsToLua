@@ -574,7 +574,7 @@ public class GameObjectWrap
 		GameObject obj = (GameObject)LuaScriptMgr.GetNetObject(L, 1);
 		Type arg0 = (Type)LuaScriptMgr.GetNetObject(L, 2);
 		Component[] o = obj.GetComponents(arg0);
-		LuaScriptMgr.PushObject(L, o);
+		LuaScriptMgr.PushArray(L, o);
 		return 1;
 	}
 
@@ -588,7 +588,7 @@ public class GameObjectWrap
 			GameObject obj = (GameObject)LuaScriptMgr.GetNetObject(L, 1);
 			Type arg0 = (Type)LuaScriptMgr.GetNetObject(L, 2);
 			Component[] o = obj.GetComponentsInChildren(arg0);
-			LuaScriptMgr.PushObject(L, o);
+			LuaScriptMgr.PushArray(L, o);
 			return 1;
 		}
 		else if (count == 3)
@@ -597,7 +597,7 @@ public class GameObjectWrap
 			Type arg0 = (Type)LuaScriptMgr.GetNetObject(L, 2);
 			bool arg1 = LuaScriptMgr.GetBoolean(L, 3);
 			Component[] o = obj.GetComponentsInChildren(arg0,arg1);
-			LuaScriptMgr.PushObject(L, o);
+			LuaScriptMgr.PushArray(L, o);
 			return 1;
 		}
 		else
@@ -618,7 +618,7 @@ public class GameObjectWrap
 			GameObject obj = (GameObject)LuaScriptMgr.GetNetObject(L, 1);
 			Type arg0 = (Type)LuaScriptMgr.GetNetObject(L, 2);
 			Component[] o = obj.GetComponentsInParent(arg0);
-			LuaScriptMgr.PushObject(L, o);
+			LuaScriptMgr.PushArray(L, o);
 			return 1;
 		}
 		else if (count == 3)
@@ -627,7 +627,7 @@ public class GameObjectWrap
 			Type arg0 = (Type)LuaScriptMgr.GetNetObject(L, 2);
 			bool arg1 = LuaScriptMgr.GetBoolean(L, 3);
 			Component[] o = obj.GetComponentsInParent(arg0,arg1);
-			LuaScriptMgr.PushObject(L, o);
+			LuaScriptMgr.PushArray(L, o);
 			return 1;
 		}
 		else
@@ -685,7 +685,7 @@ public class GameObjectWrap
 		LuaScriptMgr.CheckArgsCount(L, 1);
 		string arg0 = LuaScriptMgr.GetLuaString(L, 1);
 		GameObject[] o = GameObject.FindGameObjectsWithTag(arg0);
-		LuaScriptMgr.PushObject(L, o);
+		LuaScriptMgr.PushArray(L, o);
 		return 1;
 	}
 

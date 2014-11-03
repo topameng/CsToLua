@@ -1,0 +1,3 @@
+如果想使用luajit编译脚本需要在系统环境变量path中设置luajit的路径
+unity中降枚举lua目录下所有.lua文件(不包含子目录)。编译输出到out目录
+之后打包out目录中所有.lua文件到lua.unity3d中

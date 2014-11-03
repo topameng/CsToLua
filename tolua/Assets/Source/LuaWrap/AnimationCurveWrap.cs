@@ -74,7 +74,7 @@ public class AnimationCurveWrap
 		}
 
 		AnimationCurve obj = (AnimationCurve)o;
-		LuaScriptMgr.PushObject(L, obj.keys);
+		LuaScriptMgr.PushArray(L, obj.keys);
 		return 1;
 	}
 

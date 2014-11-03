@@ -5,8 +5,8 @@ public static class LuaBinder
 	{
 		objectWrap.Register(L);
 		ObjectWrap.Register(L);
+		coroutineWrap.Register(L);
 		TypeWrap.Register(L);
-        coroutineWrap.Register(L);
 		TimeWrap.Register(L);
 		Vector2Wrap.Register(L);
 		Vector3Wrap.Register(L);

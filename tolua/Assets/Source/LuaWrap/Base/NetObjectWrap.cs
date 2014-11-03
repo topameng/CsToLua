@@ -31,7 +31,7 @@ public class objectWrap
 		if (count == 0)
 		{
 			obj = new object();
-			LuaScriptMgr.Push(L, obj);
+			LuaScriptMgr.PushVarObject(L, obj);
 			return 1;
 		}
 		else

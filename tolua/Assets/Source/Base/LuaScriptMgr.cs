@@ -538,7 +538,7 @@ public class LuaScriptMgr
         return obj;        
     }
 
-    public static void Push(IntPtr L, object o)
+    public static void PushVarObject(IntPtr L, object o)
     {
 #if MULTI_STATE
         ObjectTranslator translator = ObjectTranslator.FromState(L);
@@ -1127,5 +1127,105 @@ public class LuaScriptMgr
         ObjectTranslator translator = _translator;
 #endif
         return translator.getObject(L, stackPos);
+    }
+
+    [MonoPInvokeCallbackAttribute(typeof(LuaCSFunction))]
+    public static int IndexArray(IntPtr L)
+    {
+#if MULTI_STATE
+        ObjectTranslator translator = ObjectTranslator.FromState(L);
+#else
+        ObjectTranslator translator = _translator;
+#endif
+        object obj = GetLuaObject(L, 1);
+
+        if (obj == null)
+        {
+            LuaDLL.luaL_error(L, "trying to index an invalid object reference");
+            LuaDLL.lua_pushnil(L);
+            return 1;
+        }
+
+        int index = (int)GetNumber(L, 2);
+        Array aa = obj as Array;
+
+        if (index >= aa.Length)
+        {
+            LuaDLL.luaL_error(L, "array index out of bounds: " + index + " " + aa.Length);
+            return 0;
+        }
+
+        object val = aa.GetValue(index);
+        translator.push(L, val);
+
+        return 1;
+    }
+
+    [MonoPInvokeCallbackAttribute(typeof(LuaCSFunction))]
+    public static int NewIndexArray(IntPtr L)
+    {
+#if MULTI_STATE
+        ObjectTranslator translator = ObjectTranslator.FromState(L);
+#else
+        ObjectTranslator translator = _translator;
+#endif
+        Array obj = GetLuaObject(L, 1) as Array;
+
+        if (obj == null)
+        {
+            LuaDLL.luaL_error(L, "trying to index and invalid object reference");
+            return 0;
+        }
+
+        int index = (int)GetNumber(L, 2);
+        object val = GetVarObject(L, 3);
+        Type type = obj.GetType().GetElementType();
+        LuaTypes luaType = LuaDLL.lua_type(L, 3);
+
+        if (!CheckType(L, luaType, type, 3))
+        {
+            LuaDLL.luaL_error(L, "trying to set object type is not correct");
+            return 0;
+        }
+
+        val = Convert.ChangeType(val, type);
+        obj.SetValue(val, index);
+
+        return 0;
+    }
+
+    public static void PushArray(IntPtr L, object o)
+    {
+#if MULTI_STATE
+        ObjectTranslator translator = ObjectTranslator.FromState(L);
+#else
+        ObjectTranslator translator = _translator;
+#endif
+        int index = translator.addObject(o);
+        LuaDLL.luaL_getmetatable(L, "luaNet_array");
+
+        if (LuaDLL.lua_isnil(L, -1))
+        {
+            LuaDLL.lua_pop(L, 1);
+            LuaDLL.luaL_newmetatable(L, "luaNet_array");
+            LuaDLL.lua_pushstring(L, "__index");
+            LuaDLL.lua_pushstdcallcfunction(L, IndexArray);
+            LuaDLL.lua_rawset(L, -3);
+            LuaDLL.lua_pushstring(L, "__gc");
+            LuaDLL.lua_pushstdcallcfunction(L, __gc);
+            LuaDLL.lua_rawset(L, -3);
+            LuaDLL.lua_pushstring(L, "__newindex");
+            LuaDLL.lua_pushstdcallcfunction(L, NewIndexArray);
+            LuaDLL.lua_rawset(L, -3);
+        }
+
+        LuaDLL.luaL_getmetatable(L, "luaNet_objects");
+        LuaDLL.luanet_newudata(L, index);
+        LuaDLL.lua_pushvalue(L, -3);
+        LuaDLL.lua_remove(L, -4);
+        LuaDLL.lua_setmetatable(L, -2);
+        LuaDLL.lua_pushvalue(L, -1);
+        LuaDLL.lua_rawseti(L, -3, index);
+        LuaDLL.lua_remove(L, -2);
     }
 }

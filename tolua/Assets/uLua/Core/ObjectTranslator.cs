@@ -698,7 +698,7 @@ namespace LuaInterface
 		/// </summary>
 		int nextObj = 0;
 		
-		private int addObject(object obj)
+		public int addObject(object obj)
 		{
 			// New object: inserts it in the list
 			int index = nextObj++;

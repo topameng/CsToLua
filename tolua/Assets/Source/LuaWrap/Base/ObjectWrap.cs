@@ -80,7 +80,7 @@ public class ObjectWrap
 		}
 
 		Object obj = (Object)o;
-        LuaScriptMgr.Push(L, obj.hideFlags);
+        LuaScriptMgr.PushVarObject(L, obj.hideFlags);
 		return 1;
 	}
 
@@ -244,7 +244,7 @@ public class ObjectWrap
 		LuaScriptMgr.CheckArgsCount(L, 1);
 		Type arg0 = (Type)LuaScriptMgr.GetNetObject(L, 1);
 		Object[] o = Object.FindObjectsOfType(arg0);
-        LuaScriptMgr.Push(L, o);
+        LuaScriptMgr.PushVarObject(L, o);
 		return 1;
 	}
 

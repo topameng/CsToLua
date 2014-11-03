@@ -6,6 +6,8 @@ using System.Text;
 using System.IO;
 
 using Object = UnityEngine.Object;
+using System.Diagnostics;
+using System.Collections.Generic;
 
 public static class LuaBinding
 {
@@ -51,8 +53,7 @@ public static class LuaBinding
         //new BindType("AssetFileMgr", typeof(AssetFileMgr), false, "MonoBehaviour"),
         new BindType("Application", typeof(Application), false, "object"),    
         //new BindType("Debugger", typeof(Debugger), true, null),                
-        //new BindType("UnGfx", typeof(UnGfx), true, null),      
-        //new BindType("object", typeof(object), false, null),       
+        //new BindType("UnGfx", typeof(UnGfx), true, null),              
         new BindType("Keyframe", typeof(Keyframe), false, "object"),
         new BindType("AnimationCurve", typeof(AnimationCurve), false, "object"),
         new BindType("TestToLua", typeof(TestToLua), false, "object"),
@@ -79,7 +80,7 @@ public static class LuaBinding
 
         EditorApplication.isPlaying = false;
         GenRegFile();
-        Debug.Log("Generate lua binding files over");
+        UnityEngine.Debug.Log("Generate lua binding files over");
         AssetDatabase.Refresh();
     }
 
@@ -93,6 +94,7 @@ public static class LuaBinding
         sb.AppendLine("\t{");
         sb.AppendLine("\t\tobjectWrap.Register(L);");
         sb.AppendLine("\t\tObjectWrap.Register(L);");
+        sb.AppendLine("\t\tcoroutineWrap.Register(L);");
 
         for (int i = 0; i < binds.Length; i++)
         {
@@ -110,5 +112,92 @@ public static class LuaBinding
             textWriter.Flush();
             textWriter.Close();
         }
+    }
+
+    static string GetOS()
+    {
+#if UNITY_STANDALONE
+        return "Win";
+#elif UNITY_ANDROID
+        return "Android";
+#elif UNITY_IPHONE
+        return "IOS";
+#endif
+    }
+
+    [MenuItem("Lua/Build Lua with luajit", false, 1)]
+    public static void BuildLua()
+    {
+        BuildAssetBundleOptions options = BuildAssetBundleOptions.CollectDependencies | BuildAssetBundleOptions.CompleteAssets | BuildAssetBundleOptions.DeterministicAssetBundle;
+
+        Process proc = Process.Start(Application.dataPath + "/Lua/Build.bat");
+        proc.WaitForExit();
+        AssetDatabase.Refresh();
+        string[] files = Directory.GetFiles("Assets/Lua/Out", "*.lua.bytes");
+        List<Object> list = new List<Object>();
+
+        for (int i = 0; i < files.Length; i++)
+        {
+            Object obj = AssetDatabase.LoadMainAssetAtPath(files[i]);
+            list.Add(obj);
+        }
+
+        if (files.Length > 0)
+        {
+            string output = string.Format("{0}/Bundle/Lua.unity3d", Application.dataPath);
+            BuildPipeline.BuildAssetBundle(null, list.ToArray(), output, options, EditorUserBuildSettings.activeBuildTarget);
+            string output1 = string.Format("{0}/{1}/Lua.unity3d", Application.persistentDataPath, GetOS());
+            FileUtil.DeleteFileOrDirectory(output1);
+            Directory.CreateDirectory(Path.GetDirectoryName(output1));
+            FileUtil.CopyFileOrDirectory(output, output1);
+            AssetDatabase.Refresh();
+        }
+
+        UnityEngine.Debug.Log("编译lua文件结束");
+    }
+
+    [MenuItem("Lua/Build Lua without jit", false, 2)]
+    public static void BuildLuaNoJit()
+    {
+        BuildAssetBundleOptions options = BuildAssetBundleOptions.CollectDependencies | BuildAssetBundleOptions.CompleteAssets | BuildAssetBundleOptions.DeterministicAssetBundle;
+
+        string[] files = Directory.GetFiles("Assets/Lua/Out", "*.lua.bytes");
+
+        for (int i = 0; i < files.Length; i++)
+        {            
+            FileUtil.DeleteFileOrDirectory(files[i]);
+        }
+
+        files = Directory.GetFiles(Application.dataPath + "/Lua/", "*.lua", SearchOption.TopDirectoryOnly);
+
+        for (int i = 0; i < files.Length; i++)
+        {
+            string fname = Path.GetFileName(files[i]);
+            FileUtil.CopyFileOrDirectory(files[i], Application.dataPath + "/Lua/Out/" + fname + ".bytes");
+        }
+
+        AssetDatabase.Refresh();
+
+        files = Directory.GetFiles("Assets/Lua/Out", "*.lua.bytes");
+        List<Object> list = new List<Object>();
+
+        for (int i = 0; i < files.Length; i++)
+        {
+            Object obj = AssetDatabase.LoadMainAssetAtPath(files[i]);
+            list.Add(obj);
+        }
+
+        if (files.Length > 0)
+        {
+            string output = string.Format("{0}/Bundle/Lua.unity3d", Application.dataPath);
+            BuildPipeline.BuildAssetBundle(null, list.ToArray(), output, options, EditorUserBuildSettings.activeBuildTarget);
+            string output1 = string.Format("{0}/{1}/Lua.unity3d", Application.persistentDataPath, GetOS());
+            FileUtil.DeleteFileOrDirectory(output1);
+            Directory.CreateDirectory(Path.GetDirectoryName(output1));
+            FileUtil.CopyFileOrDirectory(output, output1);
+            AssetDatabase.Refresh();
+        }
+
+        UnityEngine.Debug.Log("编译lua文件结束");
     }
 }

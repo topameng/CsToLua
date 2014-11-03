@@ -68,7 +68,7 @@ public class Client : MonoBehaviour
         luaMgr = new LuaScriptMgr();
         luaMgr.Start();
 
-        luaMgr.DoFile("Test.Lua");
+        luaMgr.DoFile("Test.Lua");        
     }
 
 	void Start () 
