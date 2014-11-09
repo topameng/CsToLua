@@ -560,7 +560,7 @@ public class ApplicationWrap
 	static int RequestUserAuthorization(IntPtr L)
 	{
 		LuaScriptMgr.CheckArgsCount(L, 1);
-		UserAuthorization arg0 = (UserAuthorization)LuaScriptMgr.GetNetObject(L, 1);
+		UserAuthorization arg0 = (UserAuthorization)LuaScriptMgr.GetNumber(L, 1);
 		AsyncOperation o = Application.RequestUserAuthorization(arg0);
 		LuaScriptMgr.PushObject(L, o);
 		return 1;
@@ -570,7 +570,7 @@ public class ApplicationWrap
 	static int HasUserAuthorization(IntPtr L)
 	{
 		LuaScriptMgr.CheckArgsCount(L, 1);
-		UserAuthorization arg0 = (UserAuthorization)LuaScriptMgr.GetNetObject(L, 1);
+		UserAuthorization arg0 = (UserAuthorization)LuaScriptMgr.GetNumber(L, 1);
 		bool o = Application.HasUserAuthorization(arg0);
 		LuaScriptMgr.Push(L, o);
 		return 1;

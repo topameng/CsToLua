@@ -529,7 +529,7 @@ public class ComponentWrap
 		{
 			Component obj = (Component)LuaScriptMgr.GetNetObject(L, 1);
 			string arg0 = LuaScriptMgr.GetString(L, 2);
-			SendMessageOptions arg1 = (SendMessageOptions)LuaScriptMgr.GetNetObject(L, 3);
+			SendMessageOptions arg1 = (SendMessageOptions)LuaScriptMgr.GetNumber(L, 3);
 			obj.SendMessageUpwards(arg0,arg1);
 			return 0;
 		}
@@ -546,7 +546,7 @@ public class ComponentWrap
 			Component obj = (Component)LuaScriptMgr.GetNetObject(L, 1);
 			string arg0 = LuaScriptMgr.GetLuaString(L, 2);
 			object arg1 = LuaScriptMgr.GetVarObject(L, 3);
-			SendMessageOptions arg2 = (SendMessageOptions)LuaScriptMgr.GetNetObject(L, 4);
+			SendMessageOptions arg2 = (SendMessageOptions)LuaScriptMgr.GetNumber(L, 4);
 			obj.SendMessageUpwards(arg0,arg1,arg2);
 			return 0;
 		}
@@ -577,7 +577,7 @@ public class ComponentWrap
 		{
 			Component obj = (Component)LuaScriptMgr.GetNetObject(L, 1);
 			string arg0 = LuaScriptMgr.GetString(L, 2);
-			SendMessageOptions arg1 = (SendMessageOptions)LuaScriptMgr.GetNetObject(L, 3);
+			SendMessageOptions arg1 = (SendMessageOptions)LuaScriptMgr.GetNumber(L, 3);
 			obj.SendMessage(arg0,arg1);
 			return 0;
 		}
@@ -594,7 +594,7 @@ public class ComponentWrap
 			Component obj = (Component)LuaScriptMgr.GetNetObject(L, 1);
 			string arg0 = LuaScriptMgr.GetLuaString(L, 2);
 			object arg1 = LuaScriptMgr.GetVarObject(L, 3);
-			SendMessageOptions arg2 = (SendMessageOptions)LuaScriptMgr.GetNetObject(L, 4);
+			SendMessageOptions arg2 = (SendMessageOptions)LuaScriptMgr.GetNumber(L, 4);
 			obj.SendMessage(arg0,arg1,arg2);
 			return 0;
 		}
@@ -625,7 +625,7 @@ public class ComponentWrap
 		{
 			Component obj = (Component)LuaScriptMgr.GetNetObject(L, 1);
 			string arg0 = LuaScriptMgr.GetString(L, 2);
-			SendMessageOptions arg1 = (SendMessageOptions)LuaScriptMgr.GetNetObject(L, 3);
+			SendMessageOptions arg1 = (SendMessageOptions)LuaScriptMgr.GetNumber(L, 3);
 			obj.BroadcastMessage(arg0,arg1);
 			return 0;
 		}
@@ -642,7 +642,7 @@ public class ComponentWrap
 			Component obj = (Component)LuaScriptMgr.GetNetObject(L, 1);
 			string arg0 = LuaScriptMgr.GetLuaString(L, 2);
 			object arg1 = LuaScriptMgr.GetVarObject(L, 3);
-			SendMessageOptions arg2 = (SendMessageOptions)LuaScriptMgr.GetNetObject(L, 4);
+			SendMessageOptions arg2 = (SendMessageOptions)LuaScriptMgr.GetNumber(L, 4);
 			obj.BroadcastMessage(arg0,arg1,arg2);
 			return 0;
 		}

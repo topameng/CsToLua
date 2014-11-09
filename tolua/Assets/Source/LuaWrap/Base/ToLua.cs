@@ -855,7 +855,7 @@ public static class ToLua
                 string getStr = beOverride ? "GetString" : "GetLuaString";
                 sb.AppendFormat("{2}string {0} = LuaScriptMgr.{3}(L, {1});\r\n", arg, j + offset, head, getStr);
             }
-            else if (param.ParameterType.IsPrimitive)
+            else if (param.ParameterType.IsPrimitive || param.ParameterType.IsEnum)
             {
                 sb.AppendFormat("{3}{0} {1} = ({0})LuaScriptMgr.GetNumber(L, {2});\r\n", str, arg, j + offset, head);
             }
@@ -876,7 +876,7 @@ public static class ToLua
                 {
                     fname = "GetArrayBool";
                 }
-                else if (et.IsPrimitive)
+                else if (et.IsPrimitive || et.IsEnum)
                 {
                     flag = true;
                     fname = "GetArrayNumber";

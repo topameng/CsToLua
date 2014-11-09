@@ -533,7 +533,7 @@ public class TransformWrap
 		{
 			Transform obj = (Transform)LuaScriptMgr.GetNetObject(L, 1);
 			Vector3 arg0 = (Vector3)LuaScriptMgr.GetNetObject(L, 2);
-			Space arg1 = (Space)LuaScriptMgr.GetNetObject(L, 3);
+			Space arg1 = (Space)LuaScriptMgr.GetNumber(L, 3);
 			obj.Translate(arg0,arg1);
 			return 0;
 		}
@@ -562,7 +562,7 @@ public class TransformWrap
 			float arg0 = (float)LuaScriptMgr.GetNumber(L, 2);
 			float arg1 = (float)LuaScriptMgr.GetNumber(L, 3);
 			float arg2 = (float)LuaScriptMgr.GetNumber(L, 4);
-			Space arg3 = (Space)LuaScriptMgr.GetNetObject(L, 5);
+			Space arg3 = (Space)LuaScriptMgr.GetNumber(L, 5);
 			obj.Translate(arg0,arg1,arg2,arg3);
 			return 0;
 		}
@@ -603,7 +603,7 @@ public class TransformWrap
 		{
 			Transform obj = (Transform)LuaScriptMgr.GetNetObject(L, 1);
 			Vector3 arg0 = (Vector3)LuaScriptMgr.GetNetObject(L, 2);
-			Space arg1 = (Space)LuaScriptMgr.GetNetObject(L, 3);
+			Space arg1 = (Space)LuaScriptMgr.GetNumber(L, 3);
 			obj.Rotate(arg0,arg1);
 			return 0;
 		}
@@ -612,7 +612,7 @@ public class TransformWrap
 			Transform obj = (Transform)LuaScriptMgr.GetNetObject(L, 1);
 			Vector3 arg0 = (Vector3)LuaScriptMgr.GetNetObject(L, 2);
 			float arg1 = (float)LuaScriptMgr.GetNumber(L, 3);
-			Space arg2 = (Space)LuaScriptMgr.GetNetObject(L, 4);
+			Space arg2 = (Space)LuaScriptMgr.GetNumber(L, 4);
 			obj.Rotate(arg0,arg1,arg2);
 			return 0;
 		}
@@ -631,7 +631,7 @@ public class TransformWrap
 			float arg0 = (float)LuaScriptMgr.GetNumber(L, 2);
 			float arg1 = (float)LuaScriptMgr.GetNumber(L, 3);
 			float arg2 = (float)LuaScriptMgr.GetNumber(L, 4);
-			Space arg3 = (Space)LuaScriptMgr.GetNetObject(L, 5);
+			Space arg3 = (Space)LuaScriptMgr.GetNumber(L, 5);
 			obj.Rotate(arg0,arg1,arg2,arg3);
 			return 0;
 		}
