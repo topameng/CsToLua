@@ -66,14 +66,12 @@ public class Client : MonoBehaviour
     void Awake()
     {        
         luaMgr = new LuaScriptMgr();
-        luaMgr.Start();
-
-        luaMgr.DoFile("Test.Lua");        
+        luaMgr.Start();            
     }
 
 	void Start () 
     {
-
+        luaMgr.DoFile("Test.Lua");    
 	}
 
     void Update()
