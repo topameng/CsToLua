@@ -249,7 +249,7 @@ public class ObjectWrap
 	static int FindObjectsOfType(IntPtr L)
 	{
 		LuaScriptMgr.CheckArgsCount(L, 1);
-		Type arg0 = LuaScriptMgr.GetNetObject<Type>(L, 1);
+		Type arg0 = LuaScriptMgr.GetTypeObject(L, 1);
 		Object[] o = Object.FindObjectsOfType(arg0);
 		LuaScriptMgr.PushArray(L, o);
 		return 1;
@@ -259,7 +259,7 @@ public class ObjectWrap
 	static int FindObjectOfType(IntPtr L)
 	{
 		LuaScriptMgr.CheckArgsCount(L, 1);
-		Type arg0 = LuaScriptMgr.GetNetObject<Type>(L, 1);
+        Type arg0 = LuaScriptMgr.GetTypeObject(L, 1);
 		Object o = Object.FindObjectOfType(arg0);
 		LuaScriptMgr.Push(L, o);
 		return 1;
