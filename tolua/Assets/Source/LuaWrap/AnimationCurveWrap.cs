@@ -134,7 +134,7 @@ public class AnimationCurveWrap
 		}
 
 		AnimationCurve obj = (AnimationCurve)o;
-		obj.keys = (Keyframe[])LuaScriptMgr.GetNetObject(L, 3);
+		obj.keys = LuaScriptMgr.GetNetObject<Keyframe[]>(L, 3);
 		return 0;
 	}
 
@@ -149,7 +149,7 @@ public class AnimationCurveWrap
 		}
 
 		AnimationCurve obj = (AnimationCurve)o;
-		obj.preWrapMode = (WrapMode)LuaScriptMgr.GetNumber(L, 3);
+		obj.preWrapMode = LuaScriptMgr.GetNetObject<WrapMode>(L, 3);
 		return 0;
 	}
 
@@ -164,7 +164,7 @@ public class AnimationCurveWrap
 		}
 
 		AnimationCurve obj = (AnimationCurve)o;
-		obj.postWrapMode = (WrapMode)LuaScriptMgr.GetNumber(L, 3);
+		obj.postWrapMode = LuaScriptMgr.GetNetObject<WrapMode>(L, 3);
 		return 0;
 	}
 
@@ -172,7 +172,7 @@ public class AnimationCurveWrap
 	static int Evaluate(IntPtr L)
 	{
 		LuaScriptMgr.CheckArgsCount(L, 2);
-		AnimationCurve obj = (AnimationCurve)LuaScriptMgr.GetNetObject(L, 1);
+		AnimationCurve obj = LuaScriptMgr.GetNetObject<AnimationCurve>(L, 1);
 		float arg0 = (float)LuaScriptMgr.GetNumber(L, 2);
 		float o = obj.Evaluate(arg0);
 		LuaScriptMgr.Push(L, o);
@@ -186,15 +186,15 @@ public class AnimationCurveWrap
 
 		if (count == 2)
 		{
-			AnimationCurve obj = (AnimationCurve)LuaScriptMgr.GetNetObject(L, 1);
-			Keyframe arg0 = (Keyframe)LuaScriptMgr.GetNetObject(L, 2);
+			AnimationCurve obj = LuaScriptMgr.GetNetObject<AnimationCurve>(L, 1);
+			Keyframe arg0 = LuaScriptMgr.GetNetObject<Keyframe>(L, 2);
 			int o = obj.AddKey(arg0);
 			LuaScriptMgr.Push(L, o);
 			return 1;
 		}
 		else if (count == 3)
 		{
-			AnimationCurve obj = (AnimationCurve)LuaScriptMgr.GetNetObject(L, 1);
+			AnimationCurve obj = LuaScriptMgr.GetNetObject<AnimationCurve>(L, 1);
 			float arg0 = (float)LuaScriptMgr.GetNumber(L, 2);
 			float arg1 = (float)LuaScriptMgr.GetNumber(L, 3);
 			int o = obj.AddKey(arg0,arg1);
@@ -213,9 +213,9 @@ public class AnimationCurveWrap
 	static int MoveKey(IntPtr L)
 	{
 		LuaScriptMgr.CheckArgsCount(L, 3);
-		AnimationCurve obj = (AnimationCurve)LuaScriptMgr.GetNetObject(L, 1);
+		AnimationCurve obj = LuaScriptMgr.GetNetObject<AnimationCurve>(L, 1);
 		int arg0 = (int)LuaScriptMgr.GetNumber(L, 2);
-		Keyframe arg1 = (Keyframe)LuaScriptMgr.GetNetObject(L, 3);
+		Keyframe arg1 = LuaScriptMgr.GetNetObject<Keyframe>(L, 3);
 		int o = obj.MoveKey(arg0,arg1);
 		LuaScriptMgr.Push(L, o);
 		return 1;
@@ -225,7 +225,7 @@ public class AnimationCurveWrap
 	static int RemoveKey(IntPtr L)
 	{
 		LuaScriptMgr.CheckArgsCount(L, 2);
-		AnimationCurve obj = (AnimationCurve)LuaScriptMgr.GetNetObject(L, 1);
+		AnimationCurve obj = LuaScriptMgr.GetNetObject<AnimationCurve>(L, 1);
 		int arg0 = (int)LuaScriptMgr.GetNumber(L, 2);
 		obj.RemoveKey(arg0);
 		return 0;
@@ -235,7 +235,7 @@ public class AnimationCurveWrap
 	static int SmoothTangents(IntPtr L)
 	{
 		LuaScriptMgr.CheckArgsCount(L, 3);
-		AnimationCurve obj = (AnimationCurve)LuaScriptMgr.GetNetObject(L, 1);
+		AnimationCurve obj = LuaScriptMgr.GetNetObject<AnimationCurve>(L, 1);
 		int arg0 = (int)LuaScriptMgr.GetNumber(L, 2);
 		float arg1 = (float)LuaScriptMgr.GetNumber(L, 3);
 		obj.SmoothTangents(arg0,arg1);

@@ -50,7 +50,7 @@ public class objectWrap
 	[MonoPInvokeCallbackAttribute(typeof(LuaCSFunction))]
 	static int Lua_ToString(IntPtr L)
 	{
-		object obj = (object)LuaScriptMgr.GetNetObject(L, 1);
+		object obj = (object)LuaScriptMgr.GetVarObject(L, 1);
         LuaScriptMgr.Push(L, obj.ToString());
 		return 1;
 	}
@@ -59,8 +59,8 @@ public class objectWrap
 	static int Equals(IntPtr L)
 	{
 		LuaScriptMgr.CheckArgsCount(L, 2);
-		object obj = (object)LuaScriptMgr.GetNetObject(L, 1);
-		object arg0 = (object)LuaScriptMgr.GetNetObject(L, 2);
+        object obj = (object)LuaScriptMgr.GetVarObject(L, 1);
+        object arg0 = (object)LuaScriptMgr.GetVarObject(L, 2);
 		bool o = obj.Equals(arg0);
         LuaScriptMgr.Push(L, o);
 		return 1;
@@ -70,7 +70,7 @@ public class objectWrap
 	static int GetHashCode(IntPtr L)
 	{
 		LuaScriptMgr.CheckArgsCount(L, 1);
-		object obj = (object)LuaScriptMgr.GetNetObject(L, 1);
+        object obj = (object)LuaScriptMgr.GetVarObject(L, 1);
 		int o = obj.GetHashCode();
         LuaScriptMgr.Push(L, o);
 		return 1;
@@ -80,7 +80,7 @@ public class objectWrap
 	static int GetType(IntPtr L)
 	{
 		LuaScriptMgr.CheckArgsCount(L, 1);
-		object obj = (object)LuaScriptMgr.GetNetObject(L, 1);
+        object obj = (object)LuaScriptMgr.GetVarObject(L, 1);
 		Type o = obj.GetType();
         LuaScriptMgr.Push(L, o);
 		return 1;
@@ -90,7 +90,7 @@ public class objectWrap
 	static int ToString(IntPtr L)
 	{
 		LuaScriptMgr.CheckArgsCount(L, 1);
-		object obj = (object)LuaScriptMgr.GetNetObject(L, 1);
+        object obj = (object)LuaScriptMgr.GetVarObject(L, 1);
 		string o = obj.ToString();
         LuaScriptMgr.Push(L, o);
 		return 1;
@@ -100,8 +100,8 @@ public class objectWrap
 	static int ReferenceEquals(IntPtr L)
 	{
 		LuaScriptMgr.CheckArgsCount(L, 2);
-		object arg0 = (object)LuaScriptMgr.GetNetObject(L, 1);
-		object arg1 = (object)LuaScriptMgr.GetNetObject(L, 2);
+        object arg0 = (object)LuaScriptMgr.GetVarObject(L, 1);
+        object arg1 = (object)LuaScriptMgr.GetVarObject(L, 2);
 		bool o = object.ReferenceEquals(arg0,arg1);
         LuaScriptMgr.Push(L, o);
 		return 1;

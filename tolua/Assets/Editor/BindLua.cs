@@ -17,6 +17,7 @@ public static class LuaBinding
         public Type type;
         public bool IsStatic;
         public string baseName = null;
+        public string wrapName = "";
 
         public BindType(string s, Type t, bool beStatic, string bn)
         {
@@ -24,6 +25,16 @@ public static class LuaBinding
             type = t;
             IsStatic = beStatic;
             baseName = bn;
+            wrapName = name;
+        }
+
+        public BindType(string wrap, string s, Type t, bool beStatic, string bn)
+        {
+            name = s;
+            type = t;
+            IsStatic = beStatic;
+            baseName = bn;
+            wrapName = wrap;
         }
     }
 
@@ -58,6 +69,10 @@ public static class LuaBinding
         new BindType("AnimationCurve", typeof(AnimationCurve), false, "object"),
         new BindType("TestToLua", typeof(TestToLua), false, "object"),
         new BindType("TestEnum", typeof(TestEnum), false, null),
+        new BindType("Space", typeof(Space), false, null),
+        new BindType("DictInt2Str", "Dictionary<int,string>", typeof(Dictionary<int,string>), false, "object"),
+        new BindType("Light", typeof(Light), false, "Behaviour"),
+        new BindType("LightType", typeof(LightType), false, null),
     };
 
     [MenuItem("Lua/Gen LuaBinding Files", false, 11)]
@@ -75,6 +90,7 @@ public static class LuaBinding
             ToLua.type = binds[i].type;
             ToLua.isStaticClass = binds[i].IsStatic;
             ToLua.baseClassName = binds[i].baseName;
+            ToLua.wrapClassName = binds[i].wrapName;
             ToLua.Generate(null);
         }
 
@@ -98,7 +114,7 @@ public static class LuaBinding
 
         for (int i = 0; i < binds.Length; i++)
         {
-            sb.AppendFormat("\t\t{0}Wrap.Register(L);\r\n", binds[i].name);
+            sb.AppendFormat("\t\t{0}Wrap.Register(L);\r\n", binds[i].wrapName);
         }
 
         sb.AppendLine("\t}");

@@ -335,7 +335,7 @@ public class TransformWrap
 		}
 
 		Transform obj = (Transform)o;
-		obj.position = (Vector3)LuaScriptMgr.GetNetObject(L, 3);
+		obj.position = LuaScriptMgr.GetNetObject<Vector3>(L, 3);
 		return 0;
 	}
 
@@ -350,7 +350,7 @@ public class TransformWrap
 		}
 
 		Transform obj = (Transform)o;
-		obj.localPosition = (Vector3)LuaScriptMgr.GetNetObject(L, 3);
+		obj.localPosition = LuaScriptMgr.GetNetObject<Vector3>(L, 3);
 		return 0;
 	}
 
@@ -365,7 +365,7 @@ public class TransformWrap
 		}
 
 		Transform obj = (Transform)o;
-		obj.eulerAngles = (Vector3)LuaScriptMgr.GetNetObject(L, 3);
+		obj.eulerAngles = LuaScriptMgr.GetNetObject<Vector3>(L, 3);
 		return 0;
 	}
 
@@ -380,7 +380,7 @@ public class TransformWrap
 		}
 
 		Transform obj = (Transform)o;
-		obj.localEulerAngles = (Vector3)LuaScriptMgr.GetNetObject(L, 3);
+		obj.localEulerAngles = LuaScriptMgr.GetNetObject<Vector3>(L, 3);
 		return 0;
 	}
 
@@ -395,7 +395,7 @@ public class TransformWrap
 		}
 
 		Transform obj = (Transform)o;
-		obj.right = (Vector3)LuaScriptMgr.GetNetObject(L, 3);
+		obj.right = LuaScriptMgr.GetNetObject<Vector3>(L, 3);
 		return 0;
 	}
 
@@ -410,7 +410,7 @@ public class TransformWrap
 		}
 
 		Transform obj = (Transform)o;
-		obj.up = (Vector3)LuaScriptMgr.GetNetObject(L, 3);
+		obj.up = LuaScriptMgr.GetNetObject<Vector3>(L, 3);
 		return 0;
 	}
 
@@ -425,7 +425,7 @@ public class TransformWrap
 		}
 
 		Transform obj = (Transform)o;
-		obj.forward = (Vector3)LuaScriptMgr.GetNetObject(L, 3);
+		obj.forward = LuaScriptMgr.GetNetObject<Vector3>(L, 3);
 		return 0;
 	}
 
@@ -440,7 +440,7 @@ public class TransformWrap
 		}
 
 		Transform obj = (Transform)o;
-		obj.rotation = (Quaternion)LuaScriptMgr.GetNetObject(L, 3);
+		obj.rotation = LuaScriptMgr.GetNetObject<Quaternion>(L, 3);
 		return 0;
 	}
 
@@ -455,7 +455,7 @@ public class TransformWrap
 		}
 
 		Transform obj = (Transform)o;
-		obj.localRotation = (Quaternion)LuaScriptMgr.GetNetObject(L, 3);
+		obj.localRotation = LuaScriptMgr.GetNetObject<Quaternion>(L, 3);
 		return 0;
 	}
 
@@ -470,7 +470,7 @@ public class TransformWrap
 		}
 
 		Transform obj = (Transform)o;
-		obj.localScale = (Vector3)LuaScriptMgr.GetNetObject(L, 3);
+		obj.localScale = LuaScriptMgr.GetNetObject<Vector3>(L, 3);
 		return 0;
 	}
 
@@ -485,7 +485,7 @@ public class TransformWrap
 		}
 
 		Transform obj = (Transform)o;
-		obj.parent = (Transform)LuaScriptMgr.GetNetObject(L, 3);
+		obj.parent = LuaScriptMgr.GetNetObject<Transform>(L, 3);
 		return 0;
 	}
 
@@ -516,30 +516,30 @@ public class TransformWrap
 
 		if (count == 2)
 		{
-			Transform obj = (Transform)LuaScriptMgr.GetNetObject(L, 1);
-			Vector3 arg0 = (Vector3)LuaScriptMgr.GetNetObject(L, 2);
+			Transform obj = LuaScriptMgr.GetNetObject<Transform>(L, 1);
+			Vector3 arg0 = LuaScriptMgr.GetNetObject<Vector3>(L, 2);
 			obj.Translate(arg0);
 			return 0;
 		}
 		else if (count == 3 && LuaScriptMgr.CheckTypes(L, types1, 1))
 		{
-			Transform obj = (Transform)LuaScriptMgr.GetNetObject(L, 1);
-			Vector3 arg0 = (Vector3)LuaScriptMgr.GetNetObject(L, 2);
-			Transform arg1 = (Transform)LuaScriptMgr.GetNetObject(L, 3);
+			Transform obj = LuaScriptMgr.GetNetObject<Transform>(L, 1);
+			Vector3 arg0 = LuaScriptMgr.GetNetObject<Vector3>(L, 2);
+			Transform arg1 = LuaScriptMgr.GetNetObject<Transform>(L, 3);
 			obj.Translate(arg0,arg1);
 			return 0;
 		}
 		else if (count == 3 && LuaScriptMgr.CheckTypes(L, types2, 1))
 		{
-			Transform obj = (Transform)LuaScriptMgr.GetNetObject(L, 1);
-			Vector3 arg0 = (Vector3)LuaScriptMgr.GetNetObject(L, 2);
-			Space arg1 = (Space)LuaScriptMgr.GetNumber(L, 3);
+			Transform obj = LuaScriptMgr.GetNetObject<Transform>(L, 1);
+			Vector3 arg0 = LuaScriptMgr.GetNetObject<Vector3>(L, 2);
+			Space arg1 = LuaScriptMgr.GetNetObject<Space>(L, 3);
 			obj.Translate(arg0,arg1);
 			return 0;
 		}
 		else if (count == 4)
 		{
-			Transform obj = (Transform)LuaScriptMgr.GetNetObject(L, 1);
+			Transform obj = LuaScriptMgr.GetNetObject<Transform>(L, 1);
 			float arg0 = (float)LuaScriptMgr.GetNumber(L, 2);
 			float arg1 = (float)LuaScriptMgr.GetNumber(L, 3);
 			float arg2 = (float)LuaScriptMgr.GetNumber(L, 4);
@@ -548,21 +548,21 @@ public class TransformWrap
 		}
 		else if (count == 5 && LuaScriptMgr.CheckTypes(L, types4, 1))
 		{
-			Transform obj = (Transform)LuaScriptMgr.GetNetObject(L, 1);
+			Transform obj = LuaScriptMgr.GetNetObject<Transform>(L, 1);
 			float arg0 = (float)LuaScriptMgr.GetNumber(L, 2);
 			float arg1 = (float)LuaScriptMgr.GetNumber(L, 3);
 			float arg2 = (float)LuaScriptMgr.GetNumber(L, 4);
-			Transform arg3 = (Transform)LuaScriptMgr.GetNetObject(L, 5);
+			Transform arg3 = LuaScriptMgr.GetNetObject<Transform>(L, 5);
 			obj.Translate(arg0,arg1,arg2,arg3);
 			return 0;
 		}
 		else if (count == 5 && LuaScriptMgr.CheckTypes(L, types5, 1))
 		{
-			Transform obj = (Transform)LuaScriptMgr.GetNetObject(L, 1);
+			Transform obj = LuaScriptMgr.GetNetObject<Transform>(L, 1);
 			float arg0 = (float)LuaScriptMgr.GetNumber(L, 2);
 			float arg1 = (float)LuaScriptMgr.GetNumber(L, 3);
 			float arg2 = (float)LuaScriptMgr.GetNumber(L, 4);
-			Space arg3 = (Space)LuaScriptMgr.GetNumber(L, 5);
+			Space arg3 = LuaScriptMgr.GetNetObject<Space>(L, 5);
 			obj.Translate(arg0,arg1,arg2,arg3);
 			return 0;
 		}
@@ -586,39 +586,39 @@ public class TransformWrap
 
 		if (count == 2)
 		{
-			Transform obj = (Transform)LuaScriptMgr.GetNetObject(L, 1);
-			Vector3 arg0 = (Vector3)LuaScriptMgr.GetNetObject(L, 2);
+			Transform obj = LuaScriptMgr.GetNetObject<Transform>(L, 1);
+			Vector3 arg0 = LuaScriptMgr.GetNetObject<Vector3>(L, 2);
 			obj.Rotate(arg0);
 			return 0;
 		}
 		else if (count == 3 && LuaScriptMgr.CheckTypes(L, types1, 1))
 		{
-			Transform obj = (Transform)LuaScriptMgr.GetNetObject(L, 1);
-			Vector3 arg0 = (Vector3)LuaScriptMgr.GetNetObject(L, 2);
+			Transform obj = LuaScriptMgr.GetNetObject<Transform>(L, 1);
+			Vector3 arg0 = LuaScriptMgr.GetNetObject<Vector3>(L, 2);
 			float arg1 = (float)LuaScriptMgr.GetNumber(L, 3);
 			obj.Rotate(arg0,arg1);
 			return 0;
 		}
 		else if (count == 3 && LuaScriptMgr.CheckTypes(L, types2, 1))
 		{
-			Transform obj = (Transform)LuaScriptMgr.GetNetObject(L, 1);
-			Vector3 arg0 = (Vector3)LuaScriptMgr.GetNetObject(L, 2);
-			Space arg1 = (Space)LuaScriptMgr.GetNumber(L, 3);
+			Transform obj = LuaScriptMgr.GetNetObject<Transform>(L, 1);
+			Vector3 arg0 = LuaScriptMgr.GetNetObject<Vector3>(L, 2);
+			Space arg1 = LuaScriptMgr.GetNetObject<Space>(L, 3);
 			obj.Rotate(arg0,arg1);
 			return 0;
 		}
 		else if (count == 4 && LuaScriptMgr.CheckTypes(L, types3, 1))
 		{
-			Transform obj = (Transform)LuaScriptMgr.GetNetObject(L, 1);
-			Vector3 arg0 = (Vector3)LuaScriptMgr.GetNetObject(L, 2);
+			Transform obj = LuaScriptMgr.GetNetObject<Transform>(L, 1);
+			Vector3 arg0 = LuaScriptMgr.GetNetObject<Vector3>(L, 2);
 			float arg1 = (float)LuaScriptMgr.GetNumber(L, 3);
-			Space arg2 = (Space)LuaScriptMgr.GetNumber(L, 4);
+			Space arg2 = LuaScriptMgr.GetNetObject<Space>(L, 4);
 			obj.Rotate(arg0,arg1,arg2);
 			return 0;
 		}
 		else if (count == 4 && LuaScriptMgr.CheckTypes(L, types4, 1))
 		{
-			Transform obj = (Transform)LuaScriptMgr.GetNetObject(L, 1);
+			Transform obj = LuaScriptMgr.GetNetObject<Transform>(L, 1);
 			float arg0 = (float)LuaScriptMgr.GetNumber(L, 2);
 			float arg1 = (float)LuaScriptMgr.GetNumber(L, 3);
 			float arg2 = (float)LuaScriptMgr.GetNumber(L, 4);
@@ -627,11 +627,11 @@ public class TransformWrap
 		}
 		else if (count == 5)
 		{
-			Transform obj = (Transform)LuaScriptMgr.GetNetObject(L, 1);
+			Transform obj = LuaScriptMgr.GetNetObject<Transform>(L, 1);
 			float arg0 = (float)LuaScriptMgr.GetNumber(L, 2);
 			float arg1 = (float)LuaScriptMgr.GetNumber(L, 3);
 			float arg2 = (float)LuaScriptMgr.GetNumber(L, 4);
-			Space arg3 = (Space)LuaScriptMgr.GetNumber(L, 5);
+			Space arg3 = LuaScriptMgr.GetNetObject<Space>(L, 5);
 			obj.Rotate(arg0,arg1,arg2,arg3);
 			return 0;
 		}
@@ -647,9 +647,9 @@ public class TransformWrap
 	static int RotateAround(IntPtr L)
 	{
 		LuaScriptMgr.CheckArgsCount(L, 4);
-		Transform obj = (Transform)LuaScriptMgr.GetNetObject(L, 1);
-		Vector3 arg0 = (Vector3)LuaScriptMgr.GetNetObject(L, 2);
-		Vector3 arg1 = (Vector3)LuaScriptMgr.GetNetObject(L, 3);
+		Transform obj = LuaScriptMgr.GetNetObject<Transform>(L, 1);
+		Vector3 arg0 = LuaScriptMgr.GetNetObject<Vector3>(L, 2);
+		Vector3 arg1 = LuaScriptMgr.GetNetObject<Vector3>(L, 3);
 		float arg2 = (float)LuaScriptMgr.GetNumber(L, 4);
 		obj.RotateAround(arg0,arg1,arg2);
 		return 0;
@@ -667,31 +667,31 @@ public class TransformWrap
 
 		if (count == 2 && LuaScriptMgr.CheckTypes(L, types0, 1))
 		{
-			Transform obj = (Transform)LuaScriptMgr.GetNetObject(L, 1);
-			Vector3 arg0 = (Vector3)LuaScriptMgr.GetNetObject(L, 2);
+			Transform obj = LuaScriptMgr.GetNetObject<Transform>(L, 1);
+			Vector3 arg0 = LuaScriptMgr.GetNetObject<Vector3>(L, 2);
 			obj.LookAt(arg0);
 			return 0;
 		}
 		else if (count == 2 && LuaScriptMgr.CheckTypes(L, types1, 1))
 		{
-			Transform obj = (Transform)LuaScriptMgr.GetNetObject(L, 1);
-			Transform arg0 = (Transform)LuaScriptMgr.GetNetObject(L, 2);
+			Transform obj = LuaScriptMgr.GetNetObject<Transform>(L, 1);
+			Transform arg0 = LuaScriptMgr.GetNetObject<Transform>(L, 2);
 			obj.LookAt(arg0);
 			return 0;
 		}
 		else if (count == 3 && LuaScriptMgr.CheckTypes(L, types2, 1))
 		{
-			Transform obj = (Transform)LuaScriptMgr.GetNetObject(L, 1);
-			Vector3 arg0 = (Vector3)LuaScriptMgr.GetNetObject(L, 2);
-			Vector3 arg1 = (Vector3)LuaScriptMgr.GetNetObject(L, 3);
+			Transform obj = LuaScriptMgr.GetNetObject<Transform>(L, 1);
+			Vector3 arg0 = LuaScriptMgr.GetNetObject<Vector3>(L, 2);
+			Vector3 arg1 = LuaScriptMgr.GetNetObject<Vector3>(L, 3);
 			obj.LookAt(arg0,arg1);
 			return 0;
 		}
 		else if (count == 3 && LuaScriptMgr.CheckTypes(L, types3, 1))
 		{
-			Transform obj = (Transform)LuaScriptMgr.GetNetObject(L, 1);
-			Transform arg0 = (Transform)LuaScriptMgr.GetNetObject(L, 2);
-			Vector3 arg1 = (Vector3)LuaScriptMgr.GetNetObject(L, 3);
+			Transform obj = LuaScriptMgr.GetNetObject<Transform>(L, 1);
+			Transform arg0 = LuaScriptMgr.GetNetObject<Transform>(L, 2);
+			Vector3 arg1 = LuaScriptMgr.GetNetObject<Vector3>(L, 3);
 			obj.LookAt(arg0,arg1);
 			return 0;
 		}
@@ -710,15 +710,15 @@ public class TransformWrap
 
 		if (count == 2)
 		{
-			Transform obj = (Transform)LuaScriptMgr.GetNetObject(L, 1);
-			Vector3 arg0 = (Vector3)LuaScriptMgr.GetNetObject(L, 2);
+			Transform obj = LuaScriptMgr.GetNetObject<Transform>(L, 1);
+			Vector3 arg0 = LuaScriptMgr.GetNetObject<Vector3>(L, 2);
 			Vector3 o = obj.TransformDirection(arg0);
 			LuaScriptMgr.PushValue(L, o);
 			return 1;
 		}
 		else if (count == 4)
 		{
-			Transform obj = (Transform)LuaScriptMgr.GetNetObject(L, 1);
+			Transform obj = LuaScriptMgr.GetNetObject<Transform>(L, 1);
 			float arg0 = (float)LuaScriptMgr.GetNumber(L, 2);
 			float arg1 = (float)LuaScriptMgr.GetNumber(L, 3);
 			float arg2 = (float)LuaScriptMgr.GetNumber(L, 4);
@@ -741,15 +741,15 @@ public class TransformWrap
 
 		if (count == 2)
 		{
-			Transform obj = (Transform)LuaScriptMgr.GetNetObject(L, 1);
-			Vector3 arg0 = (Vector3)LuaScriptMgr.GetNetObject(L, 2);
+			Transform obj = LuaScriptMgr.GetNetObject<Transform>(L, 1);
+			Vector3 arg0 = LuaScriptMgr.GetNetObject<Vector3>(L, 2);
 			Vector3 o = obj.InverseTransformDirection(arg0);
 			LuaScriptMgr.PushValue(L, o);
 			return 1;
 		}
 		else if (count == 4)
 		{
-			Transform obj = (Transform)LuaScriptMgr.GetNetObject(L, 1);
+			Transform obj = LuaScriptMgr.GetNetObject<Transform>(L, 1);
 			float arg0 = (float)LuaScriptMgr.GetNumber(L, 2);
 			float arg1 = (float)LuaScriptMgr.GetNumber(L, 3);
 			float arg2 = (float)LuaScriptMgr.GetNumber(L, 4);
@@ -772,15 +772,15 @@ public class TransformWrap
 
 		if (count == 2)
 		{
-			Transform obj = (Transform)LuaScriptMgr.GetNetObject(L, 1);
-			Vector3 arg0 = (Vector3)LuaScriptMgr.GetNetObject(L, 2);
+			Transform obj = LuaScriptMgr.GetNetObject<Transform>(L, 1);
+			Vector3 arg0 = LuaScriptMgr.GetNetObject<Vector3>(L, 2);
 			Vector3 o = obj.TransformPoint(arg0);
 			LuaScriptMgr.PushValue(L, o);
 			return 1;
 		}
 		else if (count == 4)
 		{
-			Transform obj = (Transform)LuaScriptMgr.GetNetObject(L, 1);
+			Transform obj = LuaScriptMgr.GetNetObject<Transform>(L, 1);
 			float arg0 = (float)LuaScriptMgr.GetNumber(L, 2);
 			float arg1 = (float)LuaScriptMgr.GetNumber(L, 3);
 			float arg2 = (float)LuaScriptMgr.GetNumber(L, 4);
@@ -803,15 +803,15 @@ public class TransformWrap
 
 		if (count == 2)
 		{
-			Transform obj = (Transform)LuaScriptMgr.GetNetObject(L, 1);
-			Vector3 arg0 = (Vector3)LuaScriptMgr.GetNetObject(L, 2);
+			Transform obj = LuaScriptMgr.GetNetObject<Transform>(L, 1);
+			Vector3 arg0 = LuaScriptMgr.GetNetObject<Vector3>(L, 2);
 			Vector3 o = obj.InverseTransformPoint(arg0);
 			LuaScriptMgr.PushValue(L, o);
 			return 1;
 		}
 		else if (count == 4)
 		{
-			Transform obj = (Transform)LuaScriptMgr.GetNetObject(L, 1);
+			Transform obj = LuaScriptMgr.GetNetObject<Transform>(L, 1);
 			float arg0 = (float)LuaScriptMgr.GetNumber(L, 2);
 			float arg1 = (float)LuaScriptMgr.GetNumber(L, 3);
 			float arg2 = (float)LuaScriptMgr.GetNumber(L, 4);
@@ -831,7 +831,7 @@ public class TransformWrap
 	static int DetachChildren(IntPtr L)
 	{
 		LuaScriptMgr.CheckArgsCount(L, 1);
-		Transform obj = (Transform)LuaScriptMgr.GetNetObject(L, 1);
+		Transform obj = LuaScriptMgr.GetNetObject<Transform>(L, 1);
 		obj.DetachChildren();
 		return 0;
 	}
@@ -840,7 +840,7 @@ public class TransformWrap
 	static int SetAsFirstSibling(IntPtr L)
 	{
 		LuaScriptMgr.CheckArgsCount(L, 1);
-		Transform obj = (Transform)LuaScriptMgr.GetNetObject(L, 1);
+		Transform obj = LuaScriptMgr.GetNetObject<Transform>(L, 1);
 		obj.SetAsFirstSibling();
 		return 0;
 	}
@@ -849,7 +849,7 @@ public class TransformWrap
 	static int SetAsLastSibling(IntPtr L)
 	{
 		LuaScriptMgr.CheckArgsCount(L, 1);
-		Transform obj = (Transform)LuaScriptMgr.GetNetObject(L, 1);
+		Transform obj = LuaScriptMgr.GetNetObject<Transform>(L, 1);
 		obj.SetAsLastSibling();
 		return 0;
 	}
@@ -858,7 +858,7 @@ public class TransformWrap
 	static int SetSiblingIndex(IntPtr L)
 	{
 		LuaScriptMgr.CheckArgsCount(L, 2);
-		Transform obj = (Transform)LuaScriptMgr.GetNetObject(L, 1);
+		Transform obj = LuaScriptMgr.GetNetObject<Transform>(L, 1);
 		int arg0 = (int)LuaScriptMgr.GetNumber(L, 2);
 		obj.SetSiblingIndex(arg0);
 		return 0;
@@ -868,7 +868,7 @@ public class TransformWrap
 	static int GetSiblingIndex(IntPtr L)
 	{
 		LuaScriptMgr.CheckArgsCount(L, 1);
-		Transform obj = (Transform)LuaScriptMgr.GetNetObject(L, 1);
+		Transform obj = LuaScriptMgr.GetNetObject<Transform>(L, 1);
 		int o = obj.GetSiblingIndex();
 		LuaScriptMgr.Push(L, o);
 		return 1;
@@ -878,7 +878,7 @@ public class TransformWrap
 	static int Find(IntPtr L)
 	{
 		LuaScriptMgr.CheckArgsCount(L, 2);
-		Transform obj = (Transform)LuaScriptMgr.GetNetObject(L, 1);
+		Transform obj = LuaScriptMgr.GetNetObject<Transform>(L, 1);
 		string arg0 = LuaScriptMgr.GetLuaString(L, 2);
 		Transform o = obj.Find(arg0);
 		LuaScriptMgr.Push(L, o);
@@ -889,8 +889,8 @@ public class TransformWrap
 	static int IsChildOf(IntPtr L)
 	{
 		LuaScriptMgr.CheckArgsCount(L, 2);
-		Transform obj = (Transform)LuaScriptMgr.GetNetObject(L, 1);
-		Transform arg0 = (Transform)LuaScriptMgr.GetNetObject(L, 2);
+		Transform obj = LuaScriptMgr.GetNetObject<Transform>(L, 1);
+		Transform arg0 = LuaScriptMgr.GetNetObject<Transform>(L, 2);
 		bool o = obj.IsChildOf(arg0);
 		LuaScriptMgr.Push(L, o);
 		return 1;
@@ -900,7 +900,7 @@ public class TransformWrap
 	static int FindChild(IntPtr L)
 	{
 		LuaScriptMgr.CheckArgsCount(L, 2);
-		Transform obj = (Transform)LuaScriptMgr.GetNetObject(L, 1);
+		Transform obj = LuaScriptMgr.GetNetObject<Transform>(L, 1);
 		string arg0 = LuaScriptMgr.GetLuaString(L, 2);
 		Transform o = obj.FindChild(arg0);
 		LuaScriptMgr.Push(L, o);
@@ -911,7 +911,7 @@ public class TransformWrap
 	static int GetEnumerator(IntPtr L)
 	{
 		LuaScriptMgr.CheckArgsCount(L, 1);
-		Transform obj = (Transform)LuaScriptMgr.GetNetObject(L, 1);
+		Transform obj = LuaScriptMgr.GetNetObject<Transform>(L, 1);
 		IEnumerator o = obj.GetEnumerator();
 		LuaScriptMgr.PushObject(L, o);
 		return 1;
@@ -921,7 +921,7 @@ public class TransformWrap
 	static int GetChild(IntPtr L)
 	{
 		LuaScriptMgr.CheckArgsCount(L, 2);
-		Transform obj = (Transform)LuaScriptMgr.GetNetObject(L, 1);
+		Transform obj = LuaScriptMgr.GetNetObject<Transform>(L, 1);
 		int arg0 = (int)LuaScriptMgr.GetNumber(L, 2);
 		Transform o = obj.GetChild(arg0);
 		LuaScriptMgr.Push(L, o);

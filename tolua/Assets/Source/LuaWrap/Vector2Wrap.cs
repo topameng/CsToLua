@@ -230,7 +230,7 @@ public class Vector2Wrap
 	[MonoPInvokeCallbackAttribute(typeof(LuaCSFunction))]
 	static int Lua_ToString(IntPtr L)
 	{
-		Vector2 obj = (Vector2)LuaScriptMgr.GetNetObject(L, 1);
+		Vector2 obj = LuaScriptMgr.GetNetObject<Vector2>(L, 1);
 		LuaScriptMgr.Push(L, obj.ToString());
 		return 1;
 	}
@@ -239,7 +239,7 @@ public class Vector2Wrap
 	static int Set(IntPtr L)
 	{
 		LuaScriptMgr.CheckArgsCount(L, 3);
-		Vector2 obj = (Vector2)LuaScriptMgr.GetNetObject(L, 1);
+		Vector2 obj = LuaScriptMgr.GetNetObject<Vector2>(L, 1);
 		float arg0 = (float)LuaScriptMgr.GetNumber(L, 2);
 		float arg1 = (float)LuaScriptMgr.GetNumber(L, 3);
 		obj.Set(arg0,arg1);
@@ -251,8 +251,8 @@ public class Vector2Wrap
 	static int Lerp(IntPtr L)
 	{
 		LuaScriptMgr.CheckArgsCount(L, 3);
-		Vector2 arg0 = (Vector2)LuaScriptMgr.GetNetObject(L, 1);
-		Vector2 arg1 = (Vector2)LuaScriptMgr.GetNetObject(L, 2);
+		Vector2 arg0 = LuaScriptMgr.GetNetObject<Vector2>(L, 1);
+		Vector2 arg1 = LuaScriptMgr.GetNetObject<Vector2>(L, 2);
 		float arg2 = (float)LuaScriptMgr.GetNumber(L, 3);
 		Vector2 o = Vector2.Lerp(arg0,arg1,arg2);
 		LuaScriptMgr.PushValue(L, o);
@@ -263,8 +263,8 @@ public class Vector2Wrap
 	static int MoveTowards(IntPtr L)
 	{
 		LuaScriptMgr.CheckArgsCount(L, 3);
-		Vector2 arg0 = (Vector2)LuaScriptMgr.GetNetObject(L, 1);
-		Vector2 arg1 = (Vector2)LuaScriptMgr.GetNetObject(L, 2);
+		Vector2 arg0 = LuaScriptMgr.GetNetObject<Vector2>(L, 1);
+		Vector2 arg1 = LuaScriptMgr.GetNetObject<Vector2>(L, 2);
 		float arg2 = (float)LuaScriptMgr.GetNumber(L, 3);
 		Vector2 o = Vector2.MoveTowards(arg0,arg1,arg2);
 		LuaScriptMgr.PushValue(L, o);
@@ -275,8 +275,8 @@ public class Vector2Wrap
 	static int Scale(IntPtr L)
 	{
 		LuaScriptMgr.CheckArgsCount(L, 2);
-		Vector2 obj = (Vector2)LuaScriptMgr.GetNetObject(L, 1);
-		Vector2 arg0 = (Vector2)LuaScriptMgr.GetNetObject(L, 2);
+		Vector2 obj = LuaScriptMgr.GetNetObject<Vector2>(L, 1);
+		Vector2 arg0 = LuaScriptMgr.GetNetObject<Vector2>(L, 2);
 		obj.Scale(arg0);
 		LuaScriptMgr.SetValueObject(L, 1, obj);
 		return 0;
@@ -286,7 +286,7 @@ public class Vector2Wrap
 	static int Normalize(IntPtr L)
 	{
 		LuaScriptMgr.CheckArgsCount(L, 1);
-		Vector2 obj = (Vector2)LuaScriptMgr.GetNetObject(L, 1);
+		Vector2 obj = LuaScriptMgr.GetNetObject<Vector2>(L, 1);
 		obj.Normalize();
 		LuaScriptMgr.SetValueObject(L, 1, obj);
 		return 0;
@@ -299,14 +299,14 @@ public class Vector2Wrap
 
 		if (count == 1)
 		{
-			Vector2 obj = (Vector2)LuaScriptMgr.GetNetObject(L, 1);
+			Vector2 obj = LuaScriptMgr.GetNetObject<Vector2>(L, 1);
 			string o = obj.ToString();
 			LuaScriptMgr.Push(L, o);
 			return 1;
 		}
 		else if (count == 2)
 		{
-			Vector2 obj = (Vector2)LuaScriptMgr.GetNetObject(L, 1);
+			Vector2 obj = LuaScriptMgr.GetNetObject<Vector2>(L, 1);
 			string arg0 = LuaScriptMgr.GetLuaString(L, 2);
 			string o = obj.ToString(arg0);
 			LuaScriptMgr.Push(L, o);
@@ -324,7 +324,7 @@ public class Vector2Wrap
 	static int GetHashCode(IntPtr L)
 	{
 		LuaScriptMgr.CheckArgsCount(L, 1);
-		Vector2 obj = (Vector2)LuaScriptMgr.GetNetObject(L, 1);
+		Vector2 obj = LuaScriptMgr.GetNetObject<Vector2>(L, 1);
 		int o = obj.GetHashCode();
 		LuaScriptMgr.Push(L, o);
 		return 1;
@@ -334,7 +334,7 @@ public class Vector2Wrap
 	static int Equals(IntPtr L)
 	{
 		LuaScriptMgr.CheckArgsCount(L, 2);
-		Vector2 obj = (Vector2)LuaScriptMgr.GetNetObject(L, 1);
+		Vector2 obj = LuaScriptMgr.GetNetObject<Vector2>(L, 1);
 		object arg0 = LuaScriptMgr.GetVarObject(L, 2);
 		bool o = obj.Equals(arg0);
 		LuaScriptMgr.Push(L, o);
@@ -345,8 +345,8 @@ public class Vector2Wrap
 	static int Dot(IntPtr L)
 	{
 		LuaScriptMgr.CheckArgsCount(L, 2);
-		Vector2 arg0 = (Vector2)LuaScriptMgr.GetNetObject(L, 1);
-		Vector2 arg1 = (Vector2)LuaScriptMgr.GetNetObject(L, 2);
+		Vector2 arg0 = LuaScriptMgr.GetNetObject<Vector2>(L, 1);
+		Vector2 arg1 = LuaScriptMgr.GetNetObject<Vector2>(L, 2);
 		float o = Vector2.Dot(arg0,arg1);
 		LuaScriptMgr.Push(L, o);
 		return 1;
@@ -356,8 +356,8 @@ public class Vector2Wrap
 	static int Angle(IntPtr L)
 	{
 		LuaScriptMgr.CheckArgsCount(L, 2);
-		Vector2 arg0 = (Vector2)LuaScriptMgr.GetNetObject(L, 1);
-		Vector2 arg1 = (Vector2)LuaScriptMgr.GetNetObject(L, 2);
+		Vector2 arg0 = LuaScriptMgr.GetNetObject<Vector2>(L, 1);
+		Vector2 arg1 = LuaScriptMgr.GetNetObject<Vector2>(L, 2);
 		float o = Vector2.Angle(arg0,arg1);
 		LuaScriptMgr.Push(L, o);
 		return 1;
@@ -367,8 +367,8 @@ public class Vector2Wrap
 	static int Distance(IntPtr L)
 	{
 		LuaScriptMgr.CheckArgsCount(L, 2);
-		Vector2 arg0 = (Vector2)LuaScriptMgr.GetNetObject(L, 1);
-		Vector2 arg1 = (Vector2)LuaScriptMgr.GetNetObject(L, 2);
+		Vector2 arg0 = LuaScriptMgr.GetNetObject<Vector2>(L, 1);
+		Vector2 arg1 = LuaScriptMgr.GetNetObject<Vector2>(L, 2);
 		float o = Vector2.Distance(arg0,arg1);
 		LuaScriptMgr.Push(L, o);
 		return 1;
@@ -378,7 +378,7 @@ public class Vector2Wrap
 	static int ClampMagnitude(IntPtr L)
 	{
 		LuaScriptMgr.CheckArgsCount(L, 2);
-		Vector2 arg0 = (Vector2)LuaScriptMgr.GetNetObject(L, 1);
+		Vector2 arg0 = LuaScriptMgr.GetNetObject<Vector2>(L, 1);
 		float arg1 = (float)LuaScriptMgr.GetNumber(L, 2);
 		Vector2 o = Vector2.ClampMagnitude(arg0,arg1);
 		LuaScriptMgr.PushValue(L, o);
@@ -389,7 +389,7 @@ public class Vector2Wrap
 	static int SqrMagnitude(IntPtr L)
 	{
 		LuaScriptMgr.CheckArgsCount(L, 1);
-		Vector2 obj = (Vector2)LuaScriptMgr.GetNetObject(L, 1);
+		Vector2 obj = LuaScriptMgr.GetNetObject<Vector2>(L, 1);
 		float o = obj.SqrMagnitude();
 		LuaScriptMgr.Push(L, o);
 		return 1;
@@ -399,8 +399,8 @@ public class Vector2Wrap
 	static int Min(IntPtr L)
 	{
 		LuaScriptMgr.CheckArgsCount(L, 2);
-		Vector2 arg0 = (Vector2)LuaScriptMgr.GetNetObject(L, 1);
-		Vector2 arg1 = (Vector2)LuaScriptMgr.GetNetObject(L, 2);
+		Vector2 arg0 = LuaScriptMgr.GetNetObject<Vector2>(L, 1);
+		Vector2 arg1 = LuaScriptMgr.GetNetObject<Vector2>(L, 2);
 		Vector2 o = Vector2.Min(arg0,arg1);
 		LuaScriptMgr.PushValue(L, o);
 		return 1;
@@ -410,8 +410,8 @@ public class Vector2Wrap
 	static int Max(IntPtr L)
 	{
 		LuaScriptMgr.CheckArgsCount(L, 2);
-		Vector2 arg0 = (Vector2)LuaScriptMgr.GetNetObject(L, 1);
-		Vector2 arg1 = (Vector2)LuaScriptMgr.GetNetObject(L, 2);
+		Vector2 arg0 = LuaScriptMgr.GetNetObject<Vector2>(L, 1);
+		Vector2 arg1 = LuaScriptMgr.GetNetObject<Vector2>(L, 2);
 		Vector2 o = Vector2.Max(arg0,arg1);
 		LuaScriptMgr.PushValue(L, o);
 		return 1;
@@ -421,8 +421,8 @@ public class Vector2Wrap
 	static int Lua_Add(IntPtr L)
 	{
 		LuaScriptMgr.CheckArgsCount(L, 2);
-		Vector2 arg0 = (Vector2)LuaScriptMgr.GetNetObject(L, 1);
-		Vector2 arg1 = (Vector2)LuaScriptMgr.GetNetObject(L, 2);
+		Vector2 arg0 = LuaScriptMgr.GetNetObject<Vector2>(L, 1);
+		Vector2 arg1 = LuaScriptMgr.GetNetObject<Vector2>(L, 2);
 		Vector2 o = arg0 + arg1;
 		LuaScriptMgr.PushValue(L, o);
 		return 1;
@@ -432,8 +432,8 @@ public class Vector2Wrap
 	static int Lua_Sub(IntPtr L)
 	{
 		LuaScriptMgr.CheckArgsCount(L, 2);
-		Vector2 arg0 = (Vector2)LuaScriptMgr.GetNetObject(L, 1);
-		Vector2 arg1 = (Vector2)LuaScriptMgr.GetNetObject(L, 2);
+		Vector2 arg0 = LuaScriptMgr.GetNetObject<Vector2>(L, 1);
+		Vector2 arg1 = LuaScriptMgr.GetNetObject<Vector2>(L, 2);
 		Vector2 o = arg0 - arg1;
 		LuaScriptMgr.PushValue(L, o);
 		return 1;
@@ -443,7 +443,7 @@ public class Vector2Wrap
 	static int Lua_Neg(IntPtr L)
 	{
 		LuaScriptMgr.CheckArgsCount(L, 1);
-		Vector2 arg0 = (Vector2)LuaScriptMgr.GetNetObject(L, 1);
+		Vector2 arg0 = LuaScriptMgr.GetNetObject<Vector2>(L, 1);
 		Vector2 o = -arg0;
 		LuaScriptMgr.PushValue(L, o);
 		return 1;
@@ -460,14 +460,14 @@ public class Vector2Wrap
 		if (count == 2 && LuaScriptMgr.CheckTypes(L, types0, 1))
 		{
 			float arg0 = (float)LuaScriptMgr.GetNumber(L, 1);
-			Vector2 arg1 = (Vector2)LuaScriptMgr.GetNetObject(L, 2);
+			Vector2 arg1 = LuaScriptMgr.GetNetObject<Vector2>(L, 2);
 			Vector2 o = arg0 * arg1;
 			LuaScriptMgr.PushValue(L, o);
 			return 1;
 		}
 		else if (count == 2 && LuaScriptMgr.CheckTypes(L, types1, 1))
 		{
-			Vector2 arg0 = (Vector2)LuaScriptMgr.GetNetObject(L, 1);
+			Vector2 arg0 = LuaScriptMgr.GetNetObject<Vector2>(L, 1);
 			float arg1 = (float)LuaScriptMgr.GetNumber(L, 2);
 			Vector2 o = arg0 * arg1;
 			LuaScriptMgr.PushValue(L, o);
@@ -485,7 +485,7 @@ public class Vector2Wrap
 	static int Lua_Div(IntPtr L)
 	{
 		LuaScriptMgr.CheckArgsCount(L, 2);
-		Vector2 arg0 = (Vector2)LuaScriptMgr.GetNetObject(L, 1);
+		Vector2 arg0 = LuaScriptMgr.GetNetObject<Vector2>(L, 1);
 		float arg1 = (float)LuaScriptMgr.GetNumber(L, 2);
 		Vector2 o = arg0 / arg1;
 		LuaScriptMgr.PushValue(L, o);
@@ -496,8 +496,8 @@ public class Vector2Wrap
 	static int Lua_Eq(IntPtr L)
 	{
 		LuaScriptMgr.CheckArgsCount(L, 2);
-		Vector2 arg0 = (Vector2)LuaScriptMgr.GetNetObject(L, 1);
-		Vector2 arg1 = (Vector2)LuaScriptMgr.GetNetObject(L, 2);
+		Vector2 arg0 = LuaScriptMgr.GetNetObject<Vector2>(L, 1);
+		Vector2 arg1 = LuaScriptMgr.GetNetObject<Vector2>(L, 2);
 		bool o = arg0 == arg1;
 		LuaScriptMgr.Push(L, o);
 		return 1;

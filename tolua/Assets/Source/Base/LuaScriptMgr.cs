@@ -298,7 +298,7 @@ public class LuaScriptMgr
         for (int i = 0; i < enums.Length; i++)
         {
             LuaDLL.lua_pushstring(L, enums[i].name);
-            LuaDLL.lua_pushnumber(L, enums[i].val);
+            PushEnum(L, enums[i].val);
             LuaDLL.lua_rawset(L, -3);
         }
 
@@ -325,6 +325,15 @@ public class LuaScriptMgr
 
         LuaDLL.lua_setglobal(L, libName);        
         LuaDLL.lua_settop(L, 0);        
+    }
+
+    public static void RegisterFunc(IntPtr L, string libName, LuaCSFunction func, string name)
+    {
+        LuaDLL.lua_getglobal(L, libName);
+        LuaDLL.lua_pushstring(L, name);
+        LuaDLL.lua_pushstdcallcfunction(L, func);
+        LuaDLL.lua_rawset(L, -3);                
+        LuaDLL.lua_settop(L, 0);
     }
 
     public static int CreateMetaTable(IntPtr L, string name, LuaMethod[] regs, Type t)
@@ -526,16 +535,40 @@ public class LuaScriptMgr
         return null;        
     }
 
-    public static object GetNetObject(IntPtr L, int stackPos)
+    //public static object GetNetObject(IntPtr L, int stackPos)
+    //{
+    //    object obj = GetLuaObject(L, stackPos);
+
+    //    if (obj == null)
+    //    {
+    //        LuaDLL.luaL_error(L, string.Format("invalid arguments to method: {0}", GetErrorFunc(1)));
+    //    }
+
+    //    return obj;        
+    //}
+
+    public static T GetNetObject<T>(IntPtr L, int stackPos)
     {
         object obj = GetLuaObject(L, stackPos);
 
-        if (obj == null)
+        if (obj == null || (obj.GetType() != typeof(T) && !typeof(T).IsAssignableFrom(obj.GetType())))
         {
             LuaDLL.luaL_error(L, string.Format("invalid arguments to method: {0}", GetErrorFunc(1)));
         }
 
-        return obj;        
+        return (T)obj;      
+    }
+
+    public static Type GetTypeObject(IntPtr L, int stackPos)
+    {
+        object obj = GetLuaObject(L, stackPos);
+
+        if (!obj.GetType().Name.Contains("MonoType"))
+        {
+            LuaDLL.luaL_error(L, string.Format("invalid arguments to method: {0}", GetErrorFunc(1)));
+        }
+
+        return (Type)obj;
     }
 
     public static void PushVarObject(IntPtr L, object o)
@@ -579,9 +612,54 @@ public class LuaScriptMgr
     }
 
     public static void PushEnum(IntPtr L, object o)
-    {
-        int num = (int)o;
-        LuaDLL.lua_pushnumber(L, num);
+    {        
+#if MULTI_STATE
+        ObjectTranslator translator = ObjectTranslator.FromState(L);
+#else
+        ObjectTranslator translator = _translator;
+#endif
+        int index = -1;
+        bool found = translator.objectsBackMap.TryGetValue(o, out index);
+
+        if (found)
+        {
+            LuaDLL.luaL_getmetatable(L, "luaNet_objects");
+            LuaDLL.lua_rawgeti(L, -1, index);
+            LuaTypes type = LuaDLL.lua_type(L, -1);
+
+            if (type != LuaTypes.LUA_TNIL)
+            {
+                LuaDLL.lua_remove(L, -2);
+                return;
+            }
+
+            LuaDLL.lua_remove(L, -1);
+            LuaDLL.lua_remove(L, -1);
+
+            translator.collectObject(index);
+        }
+
+        index = translator.addObject(o);
+
+        LuaDLL.luaL_getmetatable(L, "luaNet_enum");
+
+        if (LuaDLL.lua_isnil(L, -1))
+        {
+            LuaDLL.lua_pop(L, 1);
+            LuaDLL.luaL_newmetatable(L, "luaNet_enum");         
+            LuaDLL.lua_pushstring(L, "__gc");
+            LuaDLL.lua_pushstdcallcfunction(L, __gc);
+            LuaDLL.lua_rawset(L, -3);
+        }
+
+        LuaDLL.luaL_getmetatable(L, "luaNet_objects");
+        LuaDLL.luanet_newudata(L, index);
+        LuaDLL.lua_pushvalue(L, -3);
+        LuaDLL.lua_remove(L, -4);
+        LuaDLL.lua_setmetatable(L, -2);
+        LuaDLL.lua_pushvalue(L, -1);
+        LuaDLL.lua_rawseti(L, -3, index);
+        LuaDLL.lua_remove(L, -2);
     }
 
     public static void Push(IntPtr L, bool b)
@@ -764,7 +842,19 @@ public class LuaScriptMgr
         {
             return luaType == LuaTypes.LUA_TSTRING || luaType == LuaTypes.LUA_TUSERDATA;
         }
-        else if (t.IsPrimitive || t.IsEnum)
+        else if (t.IsEnum)
+        {
+            if (luaType != LuaTypes.LUA_TUSERDATA)
+            {
+                return false;
+            }
+            else
+            {
+                object obj = GetLuaObject(L, pos);
+                return obj.GetType() == t;
+            }
+        }
+        else if (t.IsPrimitive)
         {
             return luaType == LuaTypes.LUA_TNUMBER;
         }
@@ -906,9 +996,9 @@ public class LuaScriptMgr
         }
         else if (luatype == LuaTypes.LUA_TUSERDATA)
         {
-            object ret = GetNetObject(L, stackPos);
+            T[] ret = GetNetObject<T[]>(L, stackPos);
 
-            if (ret.GetType() == typeof(T[]))
+            if (ret != null)
             {
                 return (T[])ret;
             }            
@@ -1040,9 +1130,9 @@ public class LuaScriptMgr
         }
         else if (luatype == LuaTypes.LUA_TUSERDATA)
         {
-            object ret = GetNetObject(L, stackPos);
+            string[] ret = GetNetObject<string[]>(L, stackPos);
 
-            if (ret.GetType() == typeof(string[]))
+            if (ret != null)
             {
                 return (string[])ret;
             }
@@ -1085,9 +1175,9 @@ public class LuaScriptMgr
         }
         else if (luatype == LuaTypes.LUA_TUSERDATA)
         {
-            object ret = GetNetObject(L, stackPos);
+            T[] ret = GetNetObject<T[]>(L, stackPos);
 
-            if (ret.GetType() == typeof(T[]))
+            if (ret != null)
             {
                 return (T[])ret;
             }            
@@ -1201,7 +1291,28 @@ public class LuaScriptMgr
 #else
         ObjectTranslator translator = _translator;
 #endif
-        int index = translator.addObject(o);
+        int index = -1;
+        bool found = translator.objectsBackMap.TryGetValue(o, out index);
+
+        if (found)
+        {
+            LuaDLL.luaL_getmetatable(L, "luaNet_objects");
+            LuaDLL.lua_rawgeti(L, -1, index);
+            LuaTypes type = LuaDLL.lua_type(L, -1);
+
+            if (type != LuaTypes.LUA_TNIL)
+            {
+                LuaDLL.lua_remove(L, -2);     
+                return;
+            }
+            
+            LuaDLL.lua_remove(L, -1);  
+            LuaDLL.lua_remove(L, -1);  
+
+            translator.collectObject(index);   
+        }
+
+        index = translator.addObject(o);
         LuaDLL.luaL_getmetatable(L, "luaNet_array");
 
         if (LuaDLL.lua_isnil(L, -1))

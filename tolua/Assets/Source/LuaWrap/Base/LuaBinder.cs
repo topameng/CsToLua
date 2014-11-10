@@ -20,5 +20,9 @@ public static class LuaBinder
 		AnimationCurveWrap.Register(L);
 		TestToLuaWrap.Register(L);
 		TestEnumWrap.Register(L);
+		SpaceWrap.Register(L);
+		DictInt2StrWrap.Register(L);
+		LightWrap.Register(L);
+		LightTypeWrap.Register(L);
 	}
 }

@@ -62,9 +62,9 @@ public class TestToLuaWrap
 	static int Test(IntPtr L)
 	{
 		LuaScriptMgr.CheckArgsCount(L, 3);
-		TestToLua obj = (TestToLua)LuaScriptMgr.GetNetObject(L, 1);
-		int arg0 = (int)LuaScriptMgr.GetNetObject(L, 2);
-		int arg1 = (int)LuaScriptMgr.GetNetObject(L, 3);
+		TestToLua obj = LuaScriptMgr.GetNetObject<TestToLua>(L, 1);
+		int arg0 = LuaScriptMgr.GetNetObject<int>(L, 2);
+		int arg1 = LuaScriptMgr.GetNetObject<int>(L, 3);
 		int o = obj.Test(ref arg0,ref arg1);
 		LuaScriptMgr.Push(L, o);
 		LuaScriptMgr.Push(L, arg0);
@@ -76,8 +76,8 @@ public class TestToLuaWrap
 	static int Empty(IntPtr L)
 	{
 		LuaScriptMgr.CheckArgsCount(L, 2);
-		TestToLua obj = (TestToLua)LuaScriptMgr.GetNetObject(L, 1);
-		Func<int,int,int,string> arg0 = (Func<int,int,int,string>)LuaScriptMgr.GetNetObject(L, 2);
+		TestToLua obj = LuaScriptMgr.GetNetObject<TestToLua>(L, 1);
+		Func<int,int,int,string> arg0 = LuaScriptMgr.GetNetObject<Func<int,int,int,string>>(L, 2);
 		obj.Empty(arg0);
 		LuaScriptMgr.SetValueObject(L, 1, obj);
 		return 0;
@@ -87,7 +87,7 @@ public class TestToLuaWrap
 	static int TestDef(IntPtr L)
 	{
 		LuaScriptMgr.CheckArgsCount(L, 3);
-		TestToLua obj = (TestToLua)LuaScriptMgr.GetNetObject(L, 1);
+		TestToLua obj = LuaScriptMgr.GetNetObject<TestToLua>(L, 1);
 		int arg0 = (int)LuaScriptMgr.GetNumber(L, 2);
 		string arg1 = LuaScriptMgr.GetLuaString(L, 3);
 		obj.TestDef(arg0,arg1);
@@ -99,7 +99,7 @@ public class TestToLuaWrap
 	static int Test2(IntPtr L)
 	{
 		int count = LuaDLL.lua_gettop(L);
-		TestToLua obj = (TestToLua)LuaScriptMgr.GetNetObject(L, 1);
+		TestToLua obj = LuaScriptMgr.GetNetObject<TestToLua>(L, 1);
 		int arg0 = (int)LuaScriptMgr.GetNumber(L, 2);
 		object[] objs1 = LuaScriptMgr.GetParamsObject(L, 3, count - 2);
 		obj.Test2(arg0,objs1);
@@ -111,7 +111,7 @@ public class TestToLuaWrap
 	static int Test3(IntPtr L)
 	{
 		int count = LuaDLL.lua_gettop(L);
-		TestToLua obj = (TestToLua)LuaScriptMgr.GetNetObject(L, 1);
+		TestToLua obj = LuaScriptMgr.GetNetObject<TestToLua>(L, 1);
 		GameObject[] objs0 = LuaScriptMgr.GetParamsObject<GameObject>(L, 2, count - 1);
 		obj.Test3(objs0);
 		LuaScriptMgr.SetValueObject(L, 1, obj);
@@ -122,7 +122,7 @@ public class TestToLuaWrap
 	static int Test4(IntPtr L)
 	{
 		LuaScriptMgr.CheckArgsCount(L, 4);
-		TestToLua obj = (TestToLua)LuaScriptMgr.GetNetObject(L, 1);
+		TestToLua obj = LuaScriptMgr.GetNetObject<TestToLua>(L, 1);
 		int arg0 = (int)LuaScriptMgr.GetNumber(L, 2);
 		string arg1 = LuaScriptMgr.GetLuaString(L, 3);
 		int arg2 = (int)LuaScriptMgr.GetNumber(L, 4);

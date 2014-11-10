@@ -279,7 +279,7 @@ public class ApplicationWrap
 	[MonoPInvokeCallbackAttribute(typeof(LuaCSFunction))]
 	static int set_backgroundLoadingPriority(IntPtr L)
 	{
-		Application.backgroundLoadingPriority = (ThreadPriority)LuaScriptMgr.GetNumber(L, 3);
+		Application.backgroundLoadingPriority = LuaScriptMgr.GetNetObject<ThreadPriority>(L, 3);
 		return 0;
 	}
 
@@ -542,7 +542,7 @@ public class ApplicationWrap
 	static int RegisterLogCallback(IntPtr L)
 	{
 		LuaScriptMgr.CheckArgsCount(L, 1);
-		UnityEngine.Application.LogCallback arg0 = (UnityEngine.Application.LogCallback)LuaScriptMgr.GetNetObject(L, 1);
+		Application.LogCallback arg0 = LuaScriptMgr.GetNetObject<Application.LogCallback>(L, 1);
 		Application.RegisterLogCallback(arg0);
 		return 0;
 	}
@@ -551,7 +551,7 @@ public class ApplicationWrap
 	static int RegisterLogCallbackThreaded(IntPtr L)
 	{
 		LuaScriptMgr.CheckArgsCount(L, 1);
-		UnityEngine.Application.LogCallback arg0 = (UnityEngine.Application.LogCallback)LuaScriptMgr.GetNetObject(L, 1);
+		Application.LogCallback arg0 = LuaScriptMgr.GetNetObject<Application.LogCallback>(L, 1);
 		Application.RegisterLogCallbackThreaded(arg0);
 		return 0;
 	}
@@ -560,7 +560,7 @@ public class ApplicationWrap
 	static int RequestUserAuthorization(IntPtr L)
 	{
 		LuaScriptMgr.CheckArgsCount(L, 1);
-		UserAuthorization arg0 = (UserAuthorization)LuaScriptMgr.GetNumber(L, 1);
+		UserAuthorization arg0 = LuaScriptMgr.GetNetObject<UserAuthorization>(L, 1);
 		AsyncOperation o = Application.RequestUserAuthorization(arg0);
 		LuaScriptMgr.PushObject(L, o);
 		return 1;
@@ -570,7 +570,7 @@ public class ApplicationWrap
 	static int HasUserAuthorization(IntPtr L)
 	{
 		LuaScriptMgr.CheckArgsCount(L, 1);
-		UserAuthorization arg0 = (UserAuthorization)LuaScriptMgr.GetNumber(L, 1);
+		UserAuthorization arg0 = LuaScriptMgr.GetNetObject<UserAuthorization>(L, 1);
 		bool o = Application.HasUserAuthorization(arg0);
 		LuaScriptMgr.Push(L, o);
 		return 1;

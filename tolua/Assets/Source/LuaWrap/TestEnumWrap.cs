@@ -5,13 +5,24 @@ public class TestEnumWrap
 {
 	static LuaEnum[] enums = new LuaEnum[]
 	{
-		new LuaEnum("One", (int)TestEnum.One),
-		new LuaEnum("Two", (int)TestEnum.Two),
-		new LuaEnum("Three", (int)TestEnum.Three),
+		new LuaEnum("One", TestEnum.One),
+		new LuaEnum("Two", TestEnum.Two),
+		new LuaEnum("Three", TestEnum.Three),
 	};
 
 	public static void Register(IntPtr L)
 	{
 		LuaScriptMgr.RegisterLib(L, "TestEnum", enums);
+		LuaScriptMgr.RegisterFunc(L, "TestEnum", IntToEnum, "IntToEnum");
+	}
+
+	[MonoPInvokeCallbackAttribute(typeof(LuaCSFunction))]
+	static int IntToEnum(IntPtr L)
+	{
+		int arg0 = (int)LuaDLL.lua_tonumber(L, 1);
+		TestEnum o = (TestEnum)arg0;
+		LuaScriptMgr.PushEnum(L, o);
+		return 1;
 	}
 }
+

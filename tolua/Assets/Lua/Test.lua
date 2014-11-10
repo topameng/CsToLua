@@ -16,7 +16,13 @@ local v1 = Vector3.New(1,2,3)
 v1 = v1 + Vector3.one
 print(v1)
 
-print("The enum class TestEnum.Two is:" .. TestEnum.Two)
+
+local go = GameObject.New("Testenum")
+go.transform:Rotate(Vector3.one, Space.Self)
+
+local go = GameObject.New("123")
+local lt = go:AddComponent(Light.GetClassType())
+lt.type = LightType.IntToEnum(1)
 
 
 --≤‚ ‘–≠Õ¨

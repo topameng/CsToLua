@@ -31,9 +31,9 @@ public struct LuaField
 public struct LuaEnum
 {
     public string name;
-    public int val;
+    public object val;
 
-    public LuaEnum(string str, int v)
+    public LuaEnum(string str, object v)
     {
         name = str;
         val = v;
