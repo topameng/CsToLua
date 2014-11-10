@@ -1,4 +1,13 @@
-﻿2012.11.3
+﻿2012.11.10
+向lua压入数组参数潜在的内存泄漏问题
+GetNetObject 对读取的lua参数进行类型匹配检测
+加入GetTypeObject读取Type类型
+把压入到lua的枚举变量转变为userdata,现在重载函数完美区分double和enum类型
+枚举类型加入 IntToEnum 函数，把一个int值转换为当前类型枚举
+加入模版类型导出支持，如导出Dictionary<int,string>类型
+
+
+2012.11.3
 细分Push函数，对于数组提供一种通用的数组metatable，
 减少ulua对于数组metatable个数泛滥问题
 加入类c#协同支持，例子见Test.lua
