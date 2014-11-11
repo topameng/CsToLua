@@ -272,28 +272,102 @@ public class LuaScriptMgr
         return str;
     }
 
+    static bool PushLuaTable(IntPtr L, string fullPath)
+    {
+        string[] path = fullPath.Split(new char[] { '.' });
+        LuaDLL.lua_getglobal(L, path[0]);
+
+        LuaTypes type = LuaDLL.lua_type(L, -1);
+
+        if (type != LuaTypes.LUA_TTABLE)
+        {
+            return false;
+        }
+
+        for (int i = 1; i < path.Length; i++)
+        {
+            LuaDLL.lua_pushstring(L, path[i]);
+            LuaDLL.lua_gettable(L, -2);
+            type = LuaDLL.lua_type(L, -1);
+
+            if (type != LuaTypes.LUA_TTABLE)
+            {
+                return false;
+            }
+        }
+
+        return true;
+    }
+
     public LuaTable GetLuaTable(string tableName)
     {
         LuaTable lt = null;
 
         if (!luaTables.TryGetValue(tableName, out lt))
         {
-            lt = lua.GetTable(tableName);
-            luaTables.Add(tableName, lt);            
+            IntPtr L = lua.L;
+            int oldTop = LuaDLL.lua_gettop(L);
+
+            if (PushLuaTable(L, tableName))
+            {
+                int reference = LuaDLL.luaL_ref(L, LuaIndexes.LUA_REGISTRYINDEX);
+                lt = new LuaTable(reference, lua);
+            }
+
+            LuaDLL.lua_settop(L, oldTop);
+            luaTables.Add(tableName, lt);
         }
 
         return lt;
     }
 
+    static void CreateTable(IntPtr L, string libName)
+    {
+        int index = libName.LastIndexOf('.');
+
+        if (index > 0)
+        {
+            string lib = libName.Substring(0, index);
+
+            if (PushLuaTable(L, lib))
+            {
+                string table = libName.Substring(index + 1);
+                LuaDLL.lua_pushstring(L, table);
+                LuaDLL.lua_rawget(L, -2);
+                LuaTypes type = LuaDLL.lua_type(L, -1);
+
+                if (type == LuaTypes.LUA_TNIL)
+                {
+                    LuaDLL.lua_pop(L, 1);
+                    LuaDLL.lua_createtable(L, 0, 0);
+                    LuaDLL.lua_pushstring(L, table);
+                    LuaDLL.lua_pushvalue(L, -2);
+                    LuaDLL.lua_rawset(L, -4);
+                }
+            }
+            else
+            {
+                Debugger.LogError("Table lib {0} must create first", lib);
+            }
+        }
+        else
+        {
+            LuaDLL.lua_getglobal(L, libName);
+            LuaTypes type = LuaDLL.lua_type(L, -1);
+
+            if (type == LuaTypes.LUA_TNIL)
+            {
+                LuaDLL.lua_pop(L, 1);
+                LuaDLL.lua_createtable(L, 0, 0);
+                LuaDLL.lua_pushvalue(L, -1);
+                LuaDLL.lua_setglobal(L, libName);
+            }
+        }
+    }
+
     public static void RegisterLib(IntPtr L, string libName, LuaEnum[] enums)
     {
-        LuaDLL.lua_getglobal(L, libName);
-
-        if (LuaDLL.lua_isnil(L, -1))
-        {
-            LuaDLL.lua_pop(L, 1);
-            LuaDLL.lua_createtable(L, 0, enums.Length);
-        }
+        CreateTable(L, libName);
 
         for (int i = 0; i < enums.Length; i++)
         {
@@ -301,8 +375,7 @@ public class LuaScriptMgr
             PushEnum(L, enums[i].val);
             LuaDLL.lua_rawset(L, -3);
         }
-
-        LuaDLL.lua_setglobal(L, libName);
+        
         LuaDLL.lua_settop(L, 0);
     }
 
@@ -329,7 +402,7 @@ public class LuaScriptMgr
 
     public static void RegisterFunc(IntPtr L, string libName, LuaCSFunction func, string name)
     {
-        LuaDLL.lua_getglobal(L, libName);
+        CreateTable(L, libName);     
         LuaDLL.lua_pushstring(L, name);
         LuaDLL.lua_pushstdcallcfunction(L, func);
         LuaDLL.lua_rawset(L, -3);                

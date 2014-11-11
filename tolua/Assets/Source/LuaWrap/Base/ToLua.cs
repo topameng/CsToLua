@@ -1913,7 +1913,7 @@ public static class ToLua
     {
         fields = type.GetFields(BindingFlags.GetField | BindingFlags.Public | BindingFlags.Static);
         List<FieldInfo> list = new List<FieldInfo>(fields);
-        sb.AppendFormat("public class {0}Wrap\r\n", className);
+        sb.AppendFormat("public class {0}Wrap\r\n", wrapClassName);
         sb.AppendLine("{");    
         sb.AppendLine("\tstatic LuaEnum[] enums = new LuaEnum[]");
         sb.AppendLine("\t{");

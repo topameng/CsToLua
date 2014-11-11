@@ -70,7 +70,7 @@ public static class LuaBinding
         new BindType("TestToLua", typeof(TestToLua), false, "object"),
         new BindType("TestEnum", typeof(TestEnum), false, null),
         new BindType("Space", typeof(Space), false, null),
-        new BindType("DictInt2Str", "Dictionary<int,string>", typeof(Dictionary<int,string>), false, "object"),
+        //new BindType("DictInt2Str", "Dictionary<int,string>", typeof(Dictionary<int,string>), false, "object"),
         new BindType("Light", typeof(Light), false, "Behaviour"),
         new BindType("LightType", typeof(LightType), false, null),
     };
