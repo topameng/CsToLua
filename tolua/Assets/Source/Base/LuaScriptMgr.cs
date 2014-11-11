@@ -813,8 +813,8 @@ public class LuaScriptMgr
 
     public static bool CheckParamsType(IntPtr L, Type t, int begin, int count)
     {        
-        //默认都可以转 string
-        if (t == typeof(string) || t == typeof(object))
+        //默认都可以转 object
+        if (t == typeof(object))
         {
             return true;
         }
@@ -840,7 +840,17 @@ public class LuaScriptMgr
         }
         else if (t == typeof(string))
         {
-            return luaType == LuaTypes.LUA_TSTRING || luaType == LuaTypes.LUA_TUSERDATA;
+            if (luaType == LuaTypes.LUA_TSTRING)
+            {
+                return true;
+            }
+            else if (luaType == LuaTypes.LUA_TUSERDATA)
+            {
+                object obj = GetLuaObject(L, pos);
+                return obj.GetType() == t;
+            }
+
+            return false;
         }
         else if (t.IsEnum)
         {
