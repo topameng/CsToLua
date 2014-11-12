@@ -542,7 +542,7 @@ public class ApplicationWrap
 	static int RegisterLogCallback(IntPtr L)
 	{
 		LuaScriptMgr.CheckArgsCount(L, 1);
-		Application.LogCallback arg0 = LuaScriptMgr.GetNetObject<Application.LogCallback>(L, 1);
+		UnityEngine.Application.LogCallback arg0 = LuaScriptMgr.GetNetObject<UnityEngine.Application.LogCallback>(L, 1);
 		Application.RegisterLogCallback(arg0);
 		return 0;
 	}
@@ -551,7 +551,7 @@ public class ApplicationWrap
 	static int RegisterLogCallbackThreaded(IntPtr L)
 	{
 		LuaScriptMgr.CheckArgsCount(L, 1);
-		Application.LogCallback arg0 = LuaScriptMgr.GetNetObject<Application.LogCallback>(L, 1);
+		UnityEngine.Application.LogCallback arg0 = LuaScriptMgr.GetNetObject<UnityEngine.Application.LogCallback>(L, 1);
 		Application.RegisterLogCallbackThreaded(arg0);
 		return 0;
 	}

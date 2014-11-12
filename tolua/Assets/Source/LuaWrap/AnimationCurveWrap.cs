@@ -10,6 +10,7 @@ public class AnimationCurveWrap
 		new LuaMethod("AddKey", AddKey),
 		new LuaMethod("MoveKey", MoveKey),
 		new LuaMethod("RemoveKey", RemoveKey),
+		new LuaMethod("get_Item", get_Item),
 		new LuaMethod("SmoothTangents", SmoothTangents),
 		new LuaMethod("Linear", Linear),
 		new LuaMethod("EaseInOut", EaseInOut),
@@ -229,6 +230,17 @@ public class AnimationCurveWrap
 		int arg0 = (int)LuaScriptMgr.GetNumber(L, 2);
 		obj.RemoveKey(arg0);
 		return 0;
+	}
+
+	[MonoPInvokeCallbackAttribute(typeof(LuaCSFunction))]
+	static int get_Item(IntPtr L)
+	{
+		LuaScriptMgr.CheckArgsCount(L, 2);
+		AnimationCurve obj = LuaScriptMgr.GetNetObject<AnimationCurve>(L, 1);
+		int arg0 = (int)LuaScriptMgr.GetNumber(L, 2);
+		Keyframe o = obj[arg0];
+		LuaScriptMgr.PushValue(L, o);
+		return 1;
 	}
 
 	[MonoPInvokeCallbackAttribute(typeof(LuaCSFunction))]

@@ -12,6 +12,8 @@ public class Vector3Wrap
 		new LuaMethod("MoveTowards", MoveTowards),
 		new LuaMethod("RotateTowards", RotateTowards),
 		new LuaMethod("SmoothDamp", SmoothDamp),
+		new LuaMethod("get_Item", get_Item),
+		new LuaMethod("set_Item", set_Item),
 		new LuaMethod("Set", Set),
 		new LuaMethod("Scale", Scale),
 		new LuaMethod("Cross", Cross),
@@ -445,6 +447,29 @@ public class Vector3Wrap
 			LuaDLL.luaL_error(L, "invalid arguments to method: Vector3.SmoothDamp");
 		}
 
+		return 0;
+	}
+
+	[MonoPInvokeCallbackAttribute(typeof(LuaCSFunction))]
+	static int get_Item(IntPtr L)
+	{
+		LuaScriptMgr.CheckArgsCount(L, 2);
+		Vector3 obj = LuaScriptMgr.GetNetObject<Vector3>(L, 1);
+		int arg0 = (int)LuaScriptMgr.GetNumber(L, 2);
+		float o = obj[arg0];
+		LuaScriptMgr.Push(L, o);
+		return 1;
+	}
+
+	[MonoPInvokeCallbackAttribute(typeof(LuaCSFunction))]
+	static int set_Item(IntPtr L)
+	{
+		LuaScriptMgr.CheckArgsCount(L, 3);
+		Vector3 obj = LuaScriptMgr.GetNetObject<Vector3>(L, 1);
+		int arg0 = (int)LuaScriptMgr.GetNumber(L, 2);
+		float arg1 = (float)LuaScriptMgr.GetNumber(L, 3);
+		obj[arg0] = arg1;
+		LuaScriptMgr.SetValueObject(L, 1, obj);
 		return 0;
 	}
 

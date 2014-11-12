@@ -60,6 +60,7 @@ public static class ToLua
     //static MethodInfo getItem = null;
     static ObjAmbig ambig = ObjAmbig.NetObj;
     public static string wrapClassName = "";
+    public static string libClassName = "";
 
     static ToLua()
     {
@@ -81,6 +82,7 @@ public static class ToLua
         propList.Clear();
         ambig = ObjAmbig.NetObj;
         wrapClassName = "";
+        libClassName = "";
     }    
 
     public static void Generate(params string[] param)
@@ -94,11 +96,16 @@ public static class ToLua
             wrapClassName = className;
         }
 
+        if (libClassName == "")
+        {
+            libClassName = className;
+        }
+
         if (type.IsEnum)
         {
             GenEnum();
             GenEnumTranslator();
-			sb.AppendLine("}\r\n");
+            sb.AppendLine("}\r\n");
             SaveFile();
             return;
         }
@@ -150,20 +157,20 @@ public static class ToLua
             }
         }        
 
-        PropertyInfo[] ps = type.GetProperties();                     
+        PropertyInfo[] ps = type.GetProperties();
 
         for (int i = 0; i < ps.Length; i++)
         {
             int index = list.FindIndex((m) => { return m.Name == "get_" + ps[i].Name; });
 
-            if (index >= 0)
-            {              
+            if (index >= 0 && list[index].Name != "get_Item")
+            {
                 list.RemoveAt(index);
             }
 
             index = list.FindIndex((m) => { return m.Name == "set_" + ps[i].Name; });
 
-            if (index >= 0)
+            if (index >= 0 && list[index].Name != "set_Item")
             {
                 list.RemoveAt(index);
             }
@@ -171,7 +178,7 @@ public static class ToLua
 
         methods = list.ToArray();
 
-        Debugger.Log("Begin Generate lua Wrap for class {0}\r\n", className);                
+        Debugger.Log("Begin Generate lua Wrap for class {0}\r\n", className);
         sb.AppendFormat("public class {0}Wrap\r\n", wrapClassName);
         sb.AppendLine("{");        
         
@@ -411,16 +418,16 @@ public static class ToLua
         {
             if (isStaticClass && fields.Length == 0 && props.Length == 0)
             {
-                sb.AppendFormat("\t\tLuaScriptMgr.RegisterLib(L, \"{0}\", regs);\r\n", wrapClassName);
+                sb.AppendFormat("\t\tLuaScriptMgr.RegisterLib(L, \"{0}\", regs);\r\n", libClassName);
             }
             else
             {
-                sb.AppendFormat("\t\tLuaScriptMgr.RegisterLib(L, \"{0}\", typeof({1}), regs, fields, null);\r\n", wrapClassName, className);
+                sb.AppendFormat("\t\tLuaScriptMgr.RegisterLib(L, \"{0}\", typeof({1}), regs, fields, null);\r\n", libClassName, className);
             }
         }
         else
         {
-            sb.AppendFormat("\t\tLuaScriptMgr.RegisterLib(L, \"{0}\", typeof({2}), regs, fields, \"{1}\");\r\n", wrapClassName, baseClassName, className);
+            sb.AppendFormat("\t\tLuaScriptMgr.RegisterLib(L, \"{0}\", typeof({2}), regs, fields, \"{1}\");\r\n", libClassName, baseClassName, className);
         }
 
         sb.AppendLine("\t}");
@@ -503,18 +510,18 @@ public static class ToLua
     }
 
     static string GetPushFunction(Type t)
-    {
+    {        
         if (t.IsEnum)
         {
             return "PushEnum";
         }
         else if (t == typeof(bool) || t.IsPrimitive || t == typeof(string) || t == typeof(LuaTable) || t == typeof(LuaCSFunction) || t == typeof(LuaFunction) || 
-            typeof(UnityEngine.Object).IsAssignableFrom(t) || t == typeof(IntPtr) || t == typeof(Type))
+            typeof(UnityEngine.Object).IsAssignableFrom(t) || t == typeof(Type) || t == typeof(IntPtr))
         {
             return "Push";
         }
         else if (t == typeof(object))
-        {
+        {            
             return "PushVarObject";
         }
         else if (t.IsValueType)
@@ -872,6 +879,10 @@ public static class ToLua
             {
                 sb.AppendFormat("{3}{0} {1} = ({0})LuaScriptMgr.GetNumber(L, {2});\r\n", str, arg, j + offset, head);
             }
+            else if (param.ParameterType == typeof(IntPtr))
+            {
+                sb.AppendFormat("{3}{0} {1} = ({0})LuaScriptMgr.GetIntPtr(L, {2});\r\n", str, arg, j + offset, head);
+            }
             else if (param.ParameterType == typeof(LuaFunction))
             {
                 sb.AppendFormat("{2}LuaFunction {0} = LuaScriptMgr.GetLuaFunction(L, {1});\r\n", arg, j + offset, head);
@@ -1167,9 +1178,16 @@ public static class ToLua
 
             for (int i = 0; i < ll.Count; i++)
             {
-                if (ll[i] == typeof(IntPtr) || lr[i] == typeof(IntPtr))
+                if (!typeSize.ContainsKey(ll[i]) || !typeSize.ContainsKey(lr[i]))
                 {
-                    continue;
+                    if (ll[i] == lr[i])
+                    {
+                        continue;
+                    }
+                    else
+                    {
+                        return -1;
+                    }
                 }
                 else if (ll[i].IsPrimitive && lr[i].IsPrimitive && s == 0)
                 {
@@ -1452,10 +1470,10 @@ public static class ToLua
             usingList.Add("System");
             ambig |= ObjAmbig.NetObj;
             return "object";
-        }
+        }    
         else if (str.Contains("`"))
         {
-            string regStr = @"^(?<s0>.*?)\.?(?<s1>\w*)`[1-9]\[(?<s2>.*?)\]$";
+            string regStr = @"^(?<s0>.*?)\.?(?<s1>\w*)`[1-9]\[(?<s2>.*?)\]$";            
             Regex r = new Regex(regStr, RegexOptions.None);
             Match mc = r.Match(str);
             bool beMember = false;
@@ -1468,10 +1486,10 @@ public static class ToLua
                 beMember = true;
             }
 
-            string s0 = mc.Groups["s0"].Value;
+            string s0 = mc.Groups["s0"].Value;            
             string s1 = mc.Groups["s1"].Value;
             string s2 = mc.Groups["s2"].Value;
-            string[] ss = s2.Split(new char[] { ',' }, System.StringSplitOptions.RemoveEmptyEntries);
+            string[] ss = s2.Split(new char[] {','}, System.StringSplitOptions.RemoveEmptyEntries);
             s2 = string.Empty;
 
             for (int i = 0; i < ss.Length; i++)
@@ -1489,9 +1507,9 @@ public static class ToLua
 
             if (s0 != string.Empty)
             {
-                usingList.Add(s0);
+                usingList.Add(s0);                              
             }
-
+                       
             string s4 = string.Format("{0}<{1}>", s1, s2);
 
             if (beMember)
@@ -1504,9 +1522,8 @@ public static class ToLua
         }
         else if (str.Contains("+"))
         {
-            str = str.Replace('+', '.');
-            return _C(str);
-        }
+            return str.Replace('+', '.');
+        }    
         else if (str.Length > 12 && str.Substring(0, 12) == "UnityEngine.")
         {
             usingList.Add("UnityEngine");
@@ -1805,6 +1822,7 @@ public static class ToLua
         }
 
         sb.AppendFormat("\t\tLuaScriptMgr.Push(L, obj.ToString());\r\n");        
+
         sb.AppendLine("\t\treturn 1;");
         sb.AppendLine("\t}");
     }
@@ -1929,7 +1947,7 @@ public static class ToLua
         sb.AppendLine("\t{");
         sb.AppendFormat("\t\tLuaScriptMgr.RegisterLib(L, \"{0}\", enums);\r\n", className);
         sb.AppendFormat("\t\tLuaScriptMgr.RegisterFunc(L, \"{0}\", IntToEnum, \"IntToEnum\");\r\n", className);
-        sb.AppendLine("\t}");            
+        sb.AppendLine("\t}");                   
     }
 
     static void GenEnumTranslator()
@@ -1939,7 +1957,7 @@ public static class ToLua
             return;
         }
 
-        sb.AppendLine("\r\n\t[MonoPInvokeCallbackAttribute(typeof(LuaCSFunction))]");            
+        sb.AppendLine("\r\n\t[MonoPInvokeCallbackAttribute(typeof(LuaCSFunction))]");
         sb.AppendLine("\tstatic int IntToEnum(IntPtr L)");
         sb.AppendLine("\t{");
         sb.AppendLine("\t\tint arg0 = (int)LuaDLL.lua_tonumber(L, 1);");

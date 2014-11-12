@@ -10,6 +10,7 @@ function Test(transform)
 	print("lua cost time: " .. (Time.realtimeSinceStartup - t));
 end
 
+
 --²âÊÔ²Ù×÷·ûº¯Êý
 print("Test Vector3 operator func")
 local v1 = Vector3.New(1,2,3)
@@ -17,12 +18,12 @@ v1 = v1 + Vector3.one
 print(v1)
 
 
-local go = GameObject.New("Testenum")
-go.transform:Rotate(Vector3.one, Space.Self)
+--local go = GameObject.New("Testenum")
+--go.transform:Rotate(Vector3.one, Space.Self)
 
-local go = GameObject.New("123")
-local lt = go:AddComponent(Light.GetClassType())
-lt.type = LightType.IntToEnum(1)
+--local go = GameObject.New("123")
+--local lt = go:AddComponent(Light.GetClassType())
+--lt.type = LightType.IntToEnum(1)
 
 
 --²âÊÔÐ­Í¬

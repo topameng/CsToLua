@@ -1,5 +1,6 @@
 ﻿using System;
 using LuaInterface;
+using System.Runtime.InteropServices;
 
 
 public struct LuaMethod
@@ -38,6 +39,17 @@ public struct LuaEnum
         name = str;
         val = v;
     }
+}
+
+public class LuaStringBuffer
+{
+    public LuaStringBuffer(IntPtr source, int len)
+    {
+        buffer = new byte[len];
+        Marshal.Copy(source, buffer, 0, len);
+    }
+
+    public byte[] buffer = null;  
 }
 
 //public interface ILuaWrap 

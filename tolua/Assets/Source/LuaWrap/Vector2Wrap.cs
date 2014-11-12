@@ -6,6 +6,8 @@ public class Vector2Wrap
 {
 	public static LuaMethod[] regs = new LuaMethod[]
 	{
+		new LuaMethod("get_Item", get_Item),
+		new LuaMethod("set_Item", set_Item),
 		new LuaMethod("Set", Set),
 		new LuaMethod("Lerp", Lerp),
 		new LuaMethod("MoveTowards", MoveTowards),
@@ -233,6 +235,29 @@ public class Vector2Wrap
 		Vector2 obj = LuaScriptMgr.GetNetObject<Vector2>(L, 1);
 		LuaScriptMgr.Push(L, obj.ToString());
 		return 1;
+	}
+
+	[MonoPInvokeCallbackAttribute(typeof(LuaCSFunction))]
+	static int get_Item(IntPtr L)
+	{
+		LuaScriptMgr.CheckArgsCount(L, 2);
+		Vector2 obj = LuaScriptMgr.GetNetObject<Vector2>(L, 1);
+		int arg0 = (int)LuaScriptMgr.GetNumber(L, 2);
+		float o = obj[arg0];
+		LuaScriptMgr.Push(L, o);
+		return 1;
+	}
+
+	[MonoPInvokeCallbackAttribute(typeof(LuaCSFunction))]
+	static int set_Item(IntPtr L)
+	{
+		LuaScriptMgr.CheckArgsCount(L, 3);
+		Vector2 obj = LuaScriptMgr.GetNetObject<Vector2>(L, 1);
+		int arg0 = (int)LuaScriptMgr.GetNumber(L, 2);
+		float arg1 = (float)LuaScriptMgr.GetNumber(L, 3);
+		obj[arg0] = arg1;
+		LuaScriptMgr.SetValueObject(L, 1, obj);
+		return 0;
 	}
 
 	[MonoPInvokeCallbackAttribute(typeof(LuaCSFunction))]

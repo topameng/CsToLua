@@ -28,14 +28,14 @@ public static class LuaBinding
             wrapName = name;
         }
 
-        public BindType(string wrap, string s, Type t, bool beStatic, string bn)
-        {
-            name = s;
-            type = t;
-            IsStatic = beStatic;
-            baseName = bn;
-            wrapName = wrap;
-        }
+        //public BindType(string wrap, string s, Type t, bool beStatic, string bn)
+        //{
+        //    name = s;
+        //    type = t;
+        //    IsStatic = beStatic;
+        //    baseName = bn;
+        //    wrapName = wrap;
+        //}
     }
 
     //注意必须保持基类在其派生类前面声明，否则自动生成的注册顺序是错误的
@@ -73,6 +73,8 @@ public static class LuaBinding
         //new BindType("DictInt2Str", "Dictionary<int,string>", typeof(Dictionary<int,string>), false, "object"),
         new BindType("Light", typeof(Light), false, "Behaviour"),
         new BindType("LightType", typeof(LightType), false, null),
+        new BindType("Motion", typeof(Motion), false, null),
+        new BindType("AnimationClip", typeof(AnimationClip), false, "Motion"),
     };
 
     [MenuItem("Lua/Gen LuaBinding Files", false, 11)]
@@ -91,6 +93,7 @@ public static class LuaBinding
             ToLua.isStaticClass = binds[i].IsStatic;
             ToLua.baseClassName = binds[i].baseName;
             ToLua.wrapClassName = binds[i].wrapName;
+            ToLua.libClassName = binds[i].name;
             ToLua.Generate(null);
         }
 
