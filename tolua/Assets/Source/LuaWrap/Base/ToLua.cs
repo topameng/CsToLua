@@ -59,6 +59,7 @@ public static class ToLua
     //static MethodInfo setItem = null;
     //static MethodInfo getItem = null;
     static ObjAmbig ambig = ObjAmbig.NetObj;
+    //wrapClassName + wrap = 导出文件名 = wrap类名字
     public static string wrapClassName = "";
     public static string libClassName = "";
 
