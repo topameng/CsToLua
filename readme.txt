@@ -1,4 +1,4 @@
-﻿2012.11.10
+﻿2014.11.10
 向lua压入数组参数潜在的内存泄漏问题
 GetNetObject 对读取的lua参数进行类型匹配检测
 加入GetTypeObject读取Type类型
@@ -7,7 +7,7 @@ GetNetObject 对读取的lua参数进行类型匹配检测
 加入模版类型导出支持，如导出Dictionary<int,string>类型
 
 
-2012.11.3
+2014.11.3
 细分Push函数，对于数组提供一种通用的数组metatable，
 减少ulua对于数组metatable个数泛滥问题
 加入类c#协同支持，例子见Test.lua
