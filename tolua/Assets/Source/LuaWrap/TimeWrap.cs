@@ -6,7 +6,7 @@ public class TimeWrap
 {
 	public static LuaMethod[] regs = new LuaMethod[]
 	{
-		new LuaMethod("New", Create),
+		new LuaMethod("New", _CreateTime),
 		new LuaMethod("GetClassType", GetClassType),
 	};
 
@@ -29,7 +29,7 @@ public class TimeWrap
 	};
 
 	[MonoPInvokeCallbackAttribute(typeof(LuaCSFunction))]
-	static int Create(IntPtr L)
+	static int _CreateTime(IntPtr L)
 	{
 		int count = LuaDLL.lua_gettop(L);
 
@@ -56,7 +56,7 @@ public class TimeWrap
 
 	public static void Register(IntPtr L)
 	{
-		LuaScriptMgr.RegisterLib(L, "Time", typeof(Time), regs, fields, "object");
+		LuaScriptMgr.RegisterLib(L, "UnityEngine.Time", typeof(Time), regs, fields, "System.Object");
 	}
 
 	[MonoPInvokeCallbackAttribute(typeof(LuaCSFunction))]

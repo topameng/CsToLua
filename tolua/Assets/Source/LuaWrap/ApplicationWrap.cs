@@ -23,7 +23,7 @@ public class ApplicationWrap
 		new LuaMethod("RegisterLogCallbackThreaded", RegisterLogCallbackThreaded),
 		new LuaMethod("RequestUserAuthorization", RequestUserAuthorization),
 		new LuaMethod("HasUserAuthorization", HasUserAuthorization),
-		new LuaMethod("New", Create),
+		new LuaMethod("New", _CreateApplication),
 		new LuaMethod("GetClassType", GetClassType),
 	};
 
@@ -57,7 +57,7 @@ public class ApplicationWrap
 	};
 
 	[MonoPInvokeCallbackAttribute(typeof(LuaCSFunction))]
-	static int Create(IntPtr L)
+	static int _CreateApplication(IntPtr L)
 	{
 		int count = LuaDLL.lua_gettop(L);
 
@@ -84,7 +84,7 @@ public class ApplicationWrap
 
 	public static void Register(IntPtr L)
 	{
-		LuaScriptMgr.RegisterLib(L, "Application", typeof(Application), regs, fields, "object");
+		LuaScriptMgr.RegisterLib(L, "UnityEngine.Application", typeof(Application), regs, fields, "System.Object");
 	}
 
 	[MonoPInvokeCallbackAttribute(typeof(LuaCSFunction))]

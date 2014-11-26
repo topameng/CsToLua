@@ -1,3 +1,13 @@
+object			= System.Object
+Type			= System.Type
+Time 			= UnityEngine.Time
+GameObject 		= UnityEngine.GameObject
+Light 			= UnityEngine.Light
+LightType 		= UnityEngine.LightType
+Transform 		= UnityEngine.Transform
+Vector3			= UnityEngine.Vector3
+MonoBehaviour 	= UnityEngine.MonoBehaviour
+
 --测试极端条件性能
 function Test(transform)
 	local t = Time.realtimeSinceStartup;
@@ -18,8 +28,9 @@ v1 = v1 + Vector3.one
 print(v1)
 
 
---local go = GameObject.New("Testenum")
---go.transform:Rotate(Vector3.one, Space.Self)
+local go = GameObject("Testenum")
+GameObject.Destroy(go)
+go.transform:Rotate(Vector3.one, Space.Self)
 
 --local go = GameObject.New("123")
 --local lt = go:AddComponent(Light.GetClassType())
@@ -41,5 +52,5 @@ function TestCo()
 end
 
 
-local co = coroutine.create(TestCo)
-coroutine.resume(co)
+--local co = coroutine.create(TestCo)
+--coroutine.resume(co)

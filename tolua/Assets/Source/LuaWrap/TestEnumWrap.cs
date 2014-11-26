@@ -7,7 +7,6 @@ public class TestEnumWrap
 	{
 		new LuaEnum("One", TestEnum.One),
 		new LuaEnum("Two", TestEnum.Two),
-		new LuaEnum("Three", TestEnum.Three),
 	};
 
 	public static void Register(IntPtr L)

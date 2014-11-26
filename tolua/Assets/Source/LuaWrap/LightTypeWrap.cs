@@ -14,8 +14,8 @@ public class LightTypeWrap
 
 	public static void Register(IntPtr L)
 	{
-		LuaScriptMgr.RegisterLib(L, "LightType", enums);
-		LuaScriptMgr.RegisterFunc(L, "LightType", IntToEnum, "IntToEnum");
+		LuaScriptMgr.RegisterLib(L, "UnityEngine.LightType", enums);
+		LuaScriptMgr.RegisterFunc(L, "UnityEngine.LightType", IntToEnum, "IntToEnum");
 	}
 
 	[MonoPInvokeCallbackAttribute(typeof(LuaCSFunction))]

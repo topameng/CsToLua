@@ -7,7 +7,7 @@ public class LightWrap
 	public static LuaMethod[] regs = new LuaMethod[]
 	{
 		new LuaMethod("GetLights", GetLights),
-		new LuaMethod("New", Create),
+		new LuaMethod("New", _CreateLight),
 		new LuaMethod("GetClassType", GetClassType),
 	};
 
@@ -29,11 +29,10 @@ public class LightWrap
 		new LuaField("renderMode", get_renderMode, set_renderMode),
 		new LuaField("alreadyLightmapped", get_alreadyLightmapped, set_alreadyLightmapped),
 		new LuaField("cullingMask", get_cullingMask, set_cullingMask),
-		new LuaField("areaSize", get_areaSize, set_areaSize),
 	};
 
 	[MonoPInvokeCallbackAttribute(typeof(LuaCSFunction))]
-	static int Create(IntPtr L)
+	static int _CreateLight(IntPtr L)
 	{
 		int count = LuaDLL.lua_gettop(L);
 
@@ -60,7 +59,7 @@ public class LightWrap
 
 	public static void Register(IntPtr L)
 	{
-		LuaScriptMgr.RegisterLib(L, "Light", typeof(Light), regs, fields, "Behaviour");
+		LuaScriptMgr.RegisterLib(L, "UnityEngine.Light", typeof(Light), regs, fields, "UnityEngine.Behaviour");
 	}
 
 	[MonoPInvokeCallbackAttribute(typeof(LuaCSFunction))]
@@ -70,7 +69,16 @@ public class LightWrap
 
 		if (o == null)
 		{
-			LuaDLL.luaL_error(L, "unknown member name type");
+			LuaTypes types = LuaDLL.lua_type(L, 1);
+
+			if (types == LuaTypes.LUA_TTABLE)
+			{
+				LuaDLL.luaL_error(L, "unknown member name type");
+			}
+			else
+			{
+				LuaDLL.luaL_error(L, "attempt to index type on a nil value");
+			}
 		}
 
 		Light obj = (Light)o;
@@ -85,7 +93,16 @@ public class LightWrap
 
 		if (o == null)
 		{
-			LuaDLL.luaL_error(L, "unknown member name color");
+			LuaTypes types = LuaDLL.lua_type(L, 1);
+
+			if (types == LuaTypes.LUA_TTABLE)
+			{
+				LuaDLL.luaL_error(L, "unknown member name color");
+			}
+			else
+			{
+				LuaDLL.luaL_error(L, "attempt to index color on a nil value");
+			}
 		}
 
 		Light obj = (Light)o;
@@ -100,7 +117,16 @@ public class LightWrap
 
 		if (o == null)
 		{
-			LuaDLL.luaL_error(L, "unknown member name intensity");
+			LuaTypes types = LuaDLL.lua_type(L, 1);
+
+			if (types == LuaTypes.LUA_TTABLE)
+			{
+				LuaDLL.luaL_error(L, "unknown member name intensity");
+			}
+			else
+			{
+				LuaDLL.luaL_error(L, "attempt to index intensity on a nil value");
+			}
 		}
 
 		Light obj = (Light)o;
@@ -115,7 +141,16 @@ public class LightWrap
 
 		if (o == null)
 		{
-			LuaDLL.luaL_error(L, "unknown member name shadows");
+			LuaTypes types = LuaDLL.lua_type(L, 1);
+
+			if (types == LuaTypes.LUA_TTABLE)
+			{
+				LuaDLL.luaL_error(L, "unknown member name shadows");
+			}
+			else
+			{
+				LuaDLL.luaL_error(L, "attempt to index shadows on a nil value");
+			}
 		}
 
 		Light obj = (Light)o;
@@ -130,7 +165,16 @@ public class LightWrap
 
 		if (o == null)
 		{
-			LuaDLL.luaL_error(L, "unknown member name shadowStrength");
+			LuaTypes types = LuaDLL.lua_type(L, 1);
+
+			if (types == LuaTypes.LUA_TTABLE)
+			{
+				LuaDLL.luaL_error(L, "unknown member name shadowStrength");
+			}
+			else
+			{
+				LuaDLL.luaL_error(L, "attempt to index shadowStrength on a nil value");
+			}
 		}
 
 		Light obj = (Light)o;
@@ -145,7 +189,16 @@ public class LightWrap
 
 		if (o == null)
 		{
-			LuaDLL.luaL_error(L, "unknown member name shadowBias");
+			LuaTypes types = LuaDLL.lua_type(L, 1);
+
+			if (types == LuaTypes.LUA_TTABLE)
+			{
+				LuaDLL.luaL_error(L, "unknown member name shadowBias");
+			}
+			else
+			{
+				LuaDLL.luaL_error(L, "attempt to index shadowBias on a nil value");
+			}
 		}
 
 		Light obj = (Light)o;
@@ -160,7 +213,16 @@ public class LightWrap
 
 		if (o == null)
 		{
-			LuaDLL.luaL_error(L, "unknown member name shadowSoftness");
+			LuaTypes types = LuaDLL.lua_type(L, 1);
+
+			if (types == LuaTypes.LUA_TTABLE)
+			{
+				LuaDLL.luaL_error(L, "unknown member name shadowSoftness");
+			}
+			else
+			{
+				LuaDLL.luaL_error(L, "attempt to index shadowSoftness on a nil value");
+			}
 		}
 
 		Light obj = (Light)o;
@@ -175,7 +237,16 @@ public class LightWrap
 
 		if (o == null)
 		{
-			LuaDLL.luaL_error(L, "unknown member name shadowSoftnessFade");
+			LuaTypes types = LuaDLL.lua_type(L, 1);
+
+			if (types == LuaTypes.LUA_TTABLE)
+			{
+				LuaDLL.luaL_error(L, "unknown member name shadowSoftnessFade");
+			}
+			else
+			{
+				LuaDLL.luaL_error(L, "attempt to index shadowSoftnessFade on a nil value");
+			}
 		}
 
 		Light obj = (Light)o;
@@ -190,7 +261,16 @@ public class LightWrap
 
 		if (o == null)
 		{
-			LuaDLL.luaL_error(L, "unknown member name range");
+			LuaTypes types = LuaDLL.lua_type(L, 1);
+
+			if (types == LuaTypes.LUA_TTABLE)
+			{
+				LuaDLL.luaL_error(L, "unknown member name range");
+			}
+			else
+			{
+				LuaDLL.luaL_error(L, "attempt to index range on a nil value");
+			}
 		}
 
 		Light obj = (Light)o;
@@ -205,7 +285,16 @@ public class LightWrap
 
 		if (o == null)
 		{
-			LuaDLL.luaL_error(L, "unknown member name spotAngle");
+			LuaTypes types = LuaDLL.lua_type(L, 1);
+
+			if (types == LuaTypes.LUA_TTABLE)
+			{
+				LuaDLL.luaL_error(L, "unknown member name spotAngle");
+			}
+			else
+			{
+				LuaDLL.luaL_error(L, "attempt to index spotAngle on a nil value");
+			}
 		}
 
 		Light obj = (Light)o;
@@ -220,7 +309,16 @@ public class LightWrap
 
 		if (o == null)
 		{
-			LuaDLL.luaL_error(L, "unknown member name cookieSize");
+			LuaTypes types = LuaDLL.lua_type(L, 1);
+
+			if (types == LuaTypes.LUA_TTABLE)
+			{
+				LuaDLL.luaL_error(L, "unknown member name cookieSize");
+			}
+			else
+			{
+				LuaDLL.luaL_error(L, "attempt to index cookieSize on a nil value");
+			}
 		}
 
 		Light obj = (Light)o;
@@ -235,7 +333,16 @@ public class LightWrap
 
 		if (o == null)
 		{
-			LuaDLL.luaL_error(L, "unknown member name cookie");
+			LuaTypes types = LuaDLL.lua_type(L, 1);
+
+			if (types == LuaTypes.LUA_TTABLE)
+			{
+				LuaDLL.luaL_error(L, "unknown member name cookie");
+			}
+			else
+			{
+				LuaDLL.luaL_error(L, "attempt to index cookie on a nil value");
+			}
 		}
 
 		Light obj = (Light)o;
@@ -250,7 +357,16 @@ public class LightWrap
 
 		if (o == null)
 		{
-			LuaDLL.luaL_error(L, "unknown member name flare");
+			LuaTypes types = LuaDLL.lua_type(L, 1);
+
+			if (types == LuaTypes.LUA_TTABLE)
+			{
+				LuaDLL.luaL_error(L, "unknown member name flare");
+			}
+			else
+			{
+				LuaDLL.luaL_error(L, "attempt to index flare on a nil value");
+			}
 		}
 
 		Light obj = (Light)o;
@@ -265,7 +381,16 @@ public class LightWrap
 
 		if (o == null)
 		{
-			LuaDLL.luaL_error(L, "unknown member name renderMode");
+			LuaTypes types = LuaDLL.lua_type(L, 1);
+
+			if (types == LuaTypes.LUA_TTABLE)
+			{
+				LuaDLL.luaL_error(L, "unknown member name renderMode");
+			}
+			else
+			{
+				LuaDLL.luaL_error(L, "attempt to index renderMode on a nil value");
+			}
 		}
 
 		Light obj = (Light)o;
@@ -280,7 +405,16 @@ public class LightWrap
 
 		if (o == null)
 		{
-			LuaDLL.luaL_error(L, "unknown member name alreadyLightmapped");
+			LuaTypes types = LuaDLL.lua_type(L, 1);
+
+			if (types == LuaTypes.LUA_TTABLE)
+			{
+				LuaDLL.luaL_error(L, "unknown member name alreadyLightmapped");
+			}
+			else
+			{
+				LuaDLL.luaL_error(L, "attempt to index alreadyLightmapped on a nil value");
+			}
 		}
 
 		Light obj = (Light)o;
@@ -295,26 +429,20 @@ public class LightWrap
 
 		if (o == null)
 		{
-			LuaDLL.luaL_error(L, "unknown member name cullingMask");
+			LuaTypes types = LuaDLL.lua_type(L, 1);
+
+			if (types == LuaTypes.LUA_TTABLE)
+			{
+				LuaDLL.luaL_error(L, "unknown member name cullingMask");
+			}
+			else
+			{
+				LuaDLL.luaL_error(L, "attempt to index cullingMask on a nil value");
+			}
 		}
 
 		Light obj = (Light)o;
 		LuaScriptMgr.Push(L, obj.cullingMask);
-		return 1;
-	}
-
-	[MonoPInvokeCallbackAttribute(typeof(LuaCSFunction))]
-	static int get_areaSize(IntPtr L)
-	{
-		object o = LuaScriptMgr.GetLuaObject(L, 1);
-
-		if (o == null)
-		{
-			LuaDLL.luaL_error(L, "unknown member name areaSize");
-		}
-
-		Light obj = (Light)o;
-		LuaScriptMgr.PushValue(L, obj.areaSize);
 		return 1;
 	}
 
@@ -325,7 +453,16 @@ public class LightWrap
 
 		if (o == null)
 		{
-			LuaDLL.luaL_error(L, "unknown member name type");
+			LuaTypes types = LuaDLL.lua_type(L, 1);
+
+			if (types == LuaTypes.LUA_TTABLE)
+			{
+				LuaDLL.luaL_error(L, "unknown member name type");
+			}
+			else
+			{
+				LuaDLL.luaL_error(L, "attempt to index type on a nil value");
+			}
 		}
 
 		Light obj = (Light)o;
@@ -340,7 +477,16 @@ public class LightWrap
 
 		if (o == null)
 		{
-			LuaDLL.luaL_error(L, "unknown member name color");
+			LuaTypes types = LuaDLL.lua_type(L, 1);
+
+			if (types == LuaTypes.LUA_TTABLE)
+			{
+				LuaDLL.luaL_error(L, "unknown member name color");
+			}
+			else
+			{
+				LuaDLL.luaL_error(L, "attempt to index color on a nil value");
+			}
 		}
 
 		Light obj = (Light)o;
@@ -355,7 +501,16 @@ public class LightWrap
 
 		if (o == null)
 		{
-			LuaDLL.luaL_error(L, "unknown member name intensity");
+			LuaTypes types = LuaDLL.lua_type(L, 1);
+
+			if (types == LuaTypes.LUA_TTABLE)
+			{
+				LuaDLL.luaL_error(L, "unknown member name intensity");
+			}
+			else
+			{
+				LuaDLL.luaL_error(L, "attempt to index intensity on a nil value");
+			}
 		}
 
 		Light obj = (Light)o;
@@ -370,7 +525,16 @@ public class LightWrap
 
 		if (o == null)
 		{
-			LuaDLL.luaL_error(L, "unknown member name shadows");
+			LuaTypes types = LuaDLL.lua_type(L, 1);
+
+			if (types == LuaTypes.LUA_TTABLE)
+			{
+				LuaDLL.luaL_error(L, "unknown member name shadows");
+			}
+			else
+			{
+				LuaDLL.luaL_error(L, "attempt to index shadows on a nil value");
+			}
 		}
 
 		Light obj = (Light)o;
@@ -385,7 +549,16 @@ public class LightWrap
 
 		if (o == null)
 		{
-			LuaDLL.luaL_error(L, "unknown member name shadowStrength");
+			LuaTypes types = LuaDLL.lua_type(L, 1);
+
+			if (types == LuaTypes.LUA_TTABLE)
+			{
+				LuaDLL.luaL_error(L, "unknown member name shadowStrength");
+			}
+			else
+			{
+				LuaDLL.luaL_error(L, "attempt to index shadowStrength on a nil value");
+			}
 		}
 
 		Light obj = (Light)o;
@@ -400,7 +573,16 @@ public class LightWrap
 
 		if (o == null)
 		{
-			LuaDLL.luaL_error(L, "unknown member name shadowBias");
+			LuaTypes types = LuaDLL.lua_type(L, 1);
+
+			if (types == LuaTypes.LUA_TTABLE)
+			{
+				LuaDLL.luaL_error(L, "unknown member name shadowBias");
+			}
+			else
+			{
+				LuaDLL.luaL_error(L, "attempt to index shadowBias on a nil value");
+			}
 		}
 
 		Light obj = (Light)o;
@@ -415,7 +597,16 @@ public class LightWrap
 
 		if (o == null)
 		{
-			LuaDLL.luaL_error(L, "unknown member name shadowSoftness");
+			LuaTypes types = LuaDLL.lua_type(L, 1);
+
+			if (types == LuaTypes.LUA_TTABLE)
+			{
+				LuaDLL.luaL_error(L, "unknown member name shadowSoftness");
+			}
+			else
+			{
+				LuaDLL.luaL_error(L, "attempt to index shadowSoftness on a nil value");
+			}
 		}
 
 		Light obj = (Light)o;
@@ -430,7 +621,16 @@ public class LightWrap
 
 		if (o == null)
 		{
-			LuaDLL.luaL_error(L, "unknown member name shadowSoftnessFade");
+			LuaTypes types = LuaDLL.lua_type(L, 1);
+
+			if (types == LuaTypes.LUA_TTABLE)
+			{
+				LuaDLL.luaL_error(L, "unknown member name shadowSoftnessFade");
+			}
+			else
+			{
+				LuaDLL.luaL_error(L, "attempt to index shadowSoftnessFade on a nil value");
+			}
 		}
 
 		Light obj = (Light)o;
@@ -445,7 +645,16 @@ public class LightWrap
 
 		if (o == null)
 		{
-			LuaDLL.luaL_error(L, "unknown member name range");
+			LuaTypes types = LuaDLL.lua_type(L, 1);
+
+			if (types == LuaTypes.LUA_TTABLE)
+			{
+				LuaDLL.luaL_error(L, "unknown member name range");
+			}
+			else
+			{
+				LuaDLL.luaL_error(L, "attempt to index range on a nil value");
+			}
 		}
 
 		Light obj = (Light)o;
@@ -460,7 +669,16 @@ public class LightWrap
 
 		if (o == null)
 		{
-			LuaDLL.luaL_error(L, "unknown member name spotAngle");
+			LuaTypes types = LuaDLL.lua_type(L, 1);
+
+			if (types == LuaTypes.LUA_TTABLE)
+			{
+				LuaDLL.luaL_error(L, "unknown member name spotAngle");
+			}
+			else
+			{
+				LuaDLL.luaL_error(L, "attempt to index spotAngle on a nil value");
+			}
 		}
 
 		Light obj = (Light)o;
@@ -475,7 +693,16 @@ public class LightWrap
 
 		if (o == null)
 		{
-			LuaDLL.luaL_error(L, "unknown member name cookieSize");
+			LuaTypes types = LuaDLL.lua_type(L, 1);
+
+			if (types == LuaTypes.LUA_TTABLE)
+			{
+				LuaDLL.luaL_error(L, "unknown member name cookieSize");
+			}
+			else
+			{
+				LuaDLL.luaL_error(L, "attempt to index cookieSize on a nil value");
+			}
 		}
 
 		Light obj = (Light)o;
@@ -490,7 +717,16 @@ public class LightWrap
 
 		if (o == null)
 		{
-			LuaDLL.luaL_error(L, "unknown member name cookie");
+			LuaTypes types = LuaDLL.lua_type(L, 1);
+
+			if (types == LuaTypes.LUA_TTABLE)
+			{
+				LuaDLL.luaL_error(L, "unknown member name cookie");
+			}
+			else
+			{
+				LuaDLL.luaL_error(L, "attempt to index cookie on a nil value");
+			}
 		}
 
 		Light obj = (Light)o;
@@ -505,7 +741,16 @@ public class LightWrap
 
 		if (o == null)
 		{
-			LuaDLL.luaL_error(L, "unknown member name flare");
+			LuaTypes types = LuaDLL.lua_type(L, 1);
+
+			if (types == LuaTypes.LUA_TTABLE)
+			{
+				LuaDLL.luaL_error(L, "unknown member name flare");
+			}
+			else
+			{
+				LuaDLL.luaL_error(L, "attempt to index flare on a nil value");
+			}
 		}
 
 		Light obj = (Light)o;
@@ -520,7 +765,16 @@ public class LightWrap
 
 		if (o == null)
 		{
-			LuaDLL.luaL_error(L, "unknown member name renderMode");
+			LuaTypes types = LuaDLL.lua_type(L, 1);
+
+			if (types == LuaTypes.LUA_TTABLE)
+			{
+				LuaDLL.luaL_error(L, "unknown member name renderMode");
+			}
+			else
+			{
+				LuaDLL.luaL_error(L, "attempt to index renderMode on a nil value");
+			}
 		}
 
 		Light obj = (Light)o;
@@ -535,7 +789,16 @@ public class LightWrap
 
 		if (o == null)
 		{
-			LuaDLL.luaL_error(L, "unknown member name alreadyLightmapped");
+			LuaTypes types = LuaDLL.lua_type(L, 1);
+
+			if (types == LuaTypes.LUA_TTABLE)
+			{
+				LuaDLL.luaL_error(L, "unknown member name alreadyLightmapped");
+			}
+			else
+			{
+				LuaDLL.luaL_error(L, "attempt to index alreadyLightmapped on a nil value");
+			}
 		}
 
 		Light obj = (Light)o;
@@ -550,26 +813,20 @@ public class LightWrap
 
 		if (o == null)
 		{
-			LuaDLL.luaL_error(L, "unknown member name cullingMask");
+			LuaTypes types = LuaDLL.lua_type(L, 1);
+
+			if (types == LuaTypes.LUA_TTABLE)
+			{
+				LuaDLL.luaL_error(L, "unknown member name cullingMask");
+			}
+			else
+			{
+				LuaDLL.luaL_error(L, "attempt to index cullingMask on a nil value");
+			}
 		}
 
 		Light obj = (Light)o;
 		obj.cullingMask = (int)LuaScriptMgr.GetNumber(L, 3);
-		return 0;
-	}
-
-	[MonoPInvokeCallbackAttribute(typeof(LuaCSFunction))]
-	static int set_areaSize(IntPtr L)
-	{
-		object o = LuaScriptMgr.GetLuaObject(L, 1);
-
-		if (o == null)
-		{
-			LuaDLL.luaL_error(L, "unknown member name areaSize");
-		}
-
-		Light obj = (Light)o;
-		obj.areaSize = LuaScriptMgr.GetNetObject<Vector2>(L, 3);
 		return 0;
 	}
 

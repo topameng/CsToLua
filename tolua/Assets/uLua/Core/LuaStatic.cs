@@ -9,19 +9,29 @@ namespace LuaInterface
 	using System.Threading;
     using System.Text;
 	using UnityEngine;
-	
-    public delegate byte[] LoadLuaFile(string name);
 
+    public delegate byte[] ReadLuaFile(string name);
+	
 	public static class LuaStatic
 	{
-        public static LoadLuaFile LoadLua = null;
+        public static ReadLuaFile Load = null;
+        //private static int trace = 0;
 
         static LuaStatic()
         {
-            LoadLua = LoadLuaDefault;
+            Load = DefaultLoader;
         }
 
-        public static byte[] LoadLuaDefault(string name)
+        //public static void InitTraceback(IntPtr L)
+        //{
+        //    int oldTop = LuaDLL.lua_gettop(L);
+        //    LuaDLL.lua_getglobal(L, "debug");
+        //    LuaDLL.lua_getfield(L, -1, "traceback");
+        //    trace = LuaDLL.luaL_ref(L, LuaIndexes.LUA_REGISTRYINDEX);
+        //    LuaDLL.lua_settop(L, oldTop);
+        //}
+
+        static byte[] DefaultLoader(string name)
         {
             byte[] str = null;
             string path = Application.dataPath + "/Lua/" + name;
@@ -35,25 +45,25 @@ namespace LuaInterface
 
             return str;
         }
-            
+
 		[MonoPInvokeCallbackAttribute(typeof(LuaCSFunction))]
 		public static int panic(IntPtr L)
 		{
 			string reason = String.Format("unprotected error in call to Lua API ({0})", LuaDLL.lua_tostring(L, -1));
 			throw new LuaException(reason);
 		}
-		
-		[MonoPInvokeCallbackAttribute(typeof(LuaCSFunction))]
-		public static int traceback(IntPtr L)
-		{
-			LuaDLL.lua_getglobal(L,"debug");
-			LuaDLL.lua_getfield(L,-1,"traceback");
-			LuaDLL.lua_pushvalue(L,1);
-			LuaDLL.lua_pushnumber(L,2);
-			LuaDLL.lua_call (L,2,1);
-			return 1;
-		}
-		
+
+        [MonoPInvokeCallbackAttribute(typeof(LuaCSFunction))]
+        public static int traceback(IntPtr L)
+        {            
+            LuaDLL.lua_getglobal(L, "debug");
+            LuaDLL.lua_getfield(L, -1, "traceback");            
+            LuaDLL.lua_pushvalue(L, 1);
+            LuaDLL.lua_pushnumber(L, 2);
+            LuaDLL.lua_call(L, 2, 1);                        
+            return 1;
+        }
+
 		[MonoPInvokeCallbackAttribute(typeof(LuaCSFunction))]
 		public static int print(IntPtr L)
 		{
@@ -78,6 +88,8 @@ namespace LuaInterface
 				LuaDLL.lua_pop(L, 1);  /* pop result */
 				
 				Debug.Log("LUA: " + s);
+
+                //LuaDLL.PrintCmd(s);
 			}
 			return 0;
 		}
@@ -92,7 +104,7 @@ namespace LuaInterface
 			fileName += ".lua";
 			
 			// Load with Unity3D resources			
-            byte[] text = LoadLua(fileName);
+            byte[] text = Load(fileName);
 
 			if( text == null )
 			{
@@ -116,7 +128,7 @@ namespace LuaInterface
 			int n = LuaDLL.lua_gettop(L);
 			
 			// Load with Unity3D resources			
-            byte[] text = LoadLua(fileName);
+            byte[] text = Load(fileName);
 
 			if( text == null )
 			{
@@ -136,10 +148,11 @@ namespace LuaInterface
 		{
 			return loader(L);
 		}
-		
-		public static string init_luanet =
-			@"local metatable = {}
+
+        public static string init_luanet =
+            @"local metatable = {}
             local rawget = rawget
+            local debug = debug
             local import_type = luanet.import_type
             local load_assembly = luanet.load_assembly
             luanet.error, luanet.type = error, type
@@ -176,6 +189,10 @@ namespace LuaInterface
             setmetatable(luanet, metatable)
 
             -- Preload the mscorlib assembly
-            luanet.load_assembly('mscorlib')";
+            luanet.load_assembly('mscorlib')
+
+            function traceback(msg)                
+                return debug.traceback(msg, 1)                
+            end";
 	}
 }

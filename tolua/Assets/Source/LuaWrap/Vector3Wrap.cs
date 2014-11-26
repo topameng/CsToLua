@@ -32,7 +32,7 @@ public class Vector3Wrap
 		new LuaMethod("SqrMagnitude", SqrMagnitude),
 		new LuaMethod("Min", Min),
 		new LuaMethod("Max", Max),
-		new LuaMethod("New", Create),
+		new LuaMethod("New", _CreateVector3),
 		new LuaMethod("GetClassType", GetClassType),
 		new LuaMethod("__tostring", Lua_ToString),
 		new LuaMethod("__add", Lua_Add),
@@ -63,7 +63,7 @@ public class Vector3Wrap
 	};
 
 	[MonoPInvokeCallbackAttribute(typeof(LuaCSFunction))]
-	static int Create(IntPtr L)
+	static int _CreateVector3(IntPtr L)
 	{
 		int count = LuaDLL.lua_gettop(L);
 
@@ -107,7 +107,7 @@ public class Vector3Wrap
 
 	public static void Register(IntPtr L)
 	{
-		LuaScriptMgr.RegisterLib(L, "Vector3", typeof(Vector3), regs, fields, "object");
+		LuaScriptMgr.RegisterLib(L, "UnityEngine.Vector3", typeof(Vector3), regs, fields, null);
 	}
 
 	[MonoPInvokeCallbackAttribute(typeof(LuaCSFunction))]
@@ -124,7 +124,16 @@ public class Vector3Wrap
 
 		if (o == null)
 		{
-			LuaDLL.luaL_error(L, "unknown member name x");
+			LuaTypes types = LuaDLL.lua_type(L, 1);
+
+			if (types == LuaTypes.LUA_TTABLE)
+			{
+				LuaDLL.luaL_error(L, "unknown member name x");
+			}
+			else
+			{
+				LuaDLL.luaL_error(L, "attempt to index x on a nil value");
+			}
 		}
 
 		Vector3 obj = (Vector3)o;
@@ -139,7 +148,16 @@ public class Vector3Wrap
 
 		if (o == null)
 		{
-			LuaDLL.luaL_error(L, "unknown member name y");
+			LuaTypes types = LuaDLL.lua_type(L, 1);
+
+			if (types == LuaTypes.LUA_TTABLE)
+			{
+				LuaDLL.luaL_error(L, "unknown member name y");
+			}
+			else
+			{
+				LuaDLL.luaL_error(L, "attempt to index y on a nil value");
+			}
 		}
 
 		Vector3 obj = (Vector3)o;
@@ -154,7 +172,16 @@ public class Vector3Wrap
 
 		if (o == null)
 		{
-			LuaDLL.luaL_error(L, "unknown member name z");
+			LuaTypes types = LuaDLL.lua_type(L, 1);
+
+			if (types == LuaTypes.LUA_TTABLE)
+			{
+				LuaDLL.luaL_error(L, "unknown member name z");
+			}
+			else
+			{
+				LuaDLL.luaL_error(L, "attempt to index z on a nil value");
+			}
 		}
 
 		Vector3 obj = (Vector3)o;
@@ -169,7 +196,16 @@ public class Vector3Wrap
 
 		if (o == null)
 		{
-			LuaDLL.luaL_error(L, "unknown member name normalized");
+			LuaTypes types = LuaDLL.lua_type(L, 1);
+
+			if (types == LuaTypes.LUA_TTABLE)
+			{
+				LuaDLL.luaL_error(L, "unknown member name normalized");
+			}
+			else
+			{
+				LuaDLL.luaL_error(L, "attempt to index normalized on a nil value");
+			}
 		}
 
 		Vector3 obj = (Vector3)o;
@@ -184,7 +220,16 @@ public class Vector3Wrap
 
 		if (o == null)
 		{
-			LuaDLL.luaL_error(L, "unknown member name magnitude");
+			LuaTypes types = LuaDLL.lua_type(L, 1);
+
+			if (types == LuaTypes.LUA_TTABLE)
+			{
+				LuaDLL.luaL_error(L, "unknown member name magnitude");
+			}
+			else
+			{
+				LuaDLL.luaL_error(L, "attempt to index magnitude on a nil value");
+			}
 		}
 
 		Vector3 obj = (Vector3)o;
@@ -199,7 +244,16 @@ public class Vector3Wrap
 
 		if (o == null)
 		{
-			LuaDLL.luaL_error(L, "unknown member name sqrMagnitude");
+			LuaTypes types = LuaDLL.lua_type(L, 1);
+
+			if (types == LuaTypes.LUA_TTABLE)
+			{
+				LuaDLL.luaL_error(L, "unknown member name sqrMagnitude");
+			}
+			else
+			{
+				LuaDLL.luaL_error(L, "attempt to index sqrMagnitude on a nil value");
+			}
 		}
 
 		Vector3 obj = (Vector3)o;
@@ -270,7 +324,16 @@ public class Vector3Wrap
 
 		if (o == null)
 		{
-			LuaDLL.luaL_error(L, "unknown member name x");
+			LuaTypes types = LuaDLL.lua_type(L, 1);
+
+			if (types == LuaTypes.LUA_TTABLE)
+			{
+				LuaDLL.luaL_error(L, "unknown member name x");
+			}
+			else
+			{
+				LuaDLL.luaL_error(L, "attempt to index x on a nil value");
+			}
 		}
 
 		Vector3 obj = (Vector3)o;
@@ -286,7 +349,16 @@ public class Vector3Wrap
 
 		if (o == null)
 		{
-			LuaDLL.luaL_error(L, "unknown member name y");
+			LuaTypes types = LuaDLL.lua_type(L, 1);
+
+			if (types == LuaTypes.LUA_TTABLE)
+			{
+				LuaDLL.luaL_error(L, "unknown member name y");
+			}
+			else
+			{
+				LuaDLL.luaL_error(L, "attempt to index y on a nil value");
+			}
 		}
 
 		Vector3 obj = (Vector3)o;
@@ -302,7 +374,16 @@ public class Vector3Wrap
 
 		if (o == null)
 		{
-			LuaDLL.luaL_error(L, "unknown member name z");
+			LuaTypes types = LuaDLL.lua_type(L, 1);
+
+			if (types == LuaTypes.LUA_TTABLE)
+			{
+				LuaDLL.luaL_error(L, "unknown member name z");
+			}
+			else
+			{
+				LuaDLL.luaL_error(L, "attempt to index z on a nil value");
+			}
 		}
 
 		Vector3 obj = (Vector3)o;
@@ -314,8 +395,16 @@ public class Vector3Wrap
 	[MonoPInvokeCallbackAttribute(typeof(LuaCSFunction))]
 	static int Lua_ToString(IntPtr L)
 	{
-		Vector3 obj = LuaScriptMgr.GetNetObject<Vector3>(L, 1);
-		LuaScriptMgr.Push(L, obj.ToString());
+		object obj = LuaScriptMgr.GetLuaObject(L, 1);
+		if (obj != null)
+		{
+			LuaScriptMgr.Push(L, obj.ToString());
+		}
+		else
+		{
+			LuaScriptMgr.Push(L, "Table: UnityEngine.Vector3");
+		}
+
 		return 1;
 	}
 

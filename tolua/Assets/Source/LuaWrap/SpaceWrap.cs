@@ -12,8 +12,8 @@ public class SpaceWrap
 
 	public static void Register(IntPtr L)
 	{
-		LuaScriptMgr.RegisterLib(L, "Space", enums);
-		LuaScriptMgr.RegisterFunc(L, "Space", IntToEnum, "IntToEnum");
+		LuaScriptMgr.RegisterLib(L, "UnityEngine.Space", enums);
+		LuaScriptMgr.RegisterFunc(L, "UnityEngine.Space", IntToEnum, "IntToEnum");
 	}
 
 	[MonoPInvokeCallbackAttribute(typeof(LuaCSFunction))]

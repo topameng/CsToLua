@@ -16,7 +16,7 @@ public class ComponentWrap
 		new LuaMethod("SendMessageUpwards", SendMessageUpwards),
 		new LuaMethod("SendMessage", SendMessage),
 		new LuaMethod("BroadcastMessage", BroadcastMessage),
-		new LuaMethod("New", Create),
+		new LuaMethod("New", _CreateComponent),
 		new LuaMethod("GetClassType", GetClassType),
 	};
 
@@ -44,7 +44,7 @@ public class ComponentWrap
 	};
 
 	[MonoPInvokeCallbackAttribute(typeof(LuaCSFunction))]
-	static int Create(IntPtr L)
+	static int _CreateComponent(IntPtr L)
 	{
 		int count = LuaDLL.lua_gettop(L);
 
@@ -71,7 +71,7 @@ public class ComponentWrap
 
 	public static void Register(IntPtr L)
 	{
-		LuaScriptMgr.RegisterLib(L, "Component", typeof(Component), regs, fields, "Object");
+		LuaScriptMgr.RegisterLib(L, "UnityEngine.Component", typeof(Component), regs, fields, "UnityEngine.Object");
 	}
 
 	[MonoPInvokeCallbackAttribute(typeof(LuaCSFunction))]
@@ -81,7 +81,16 @@ public class ComponentWrap
 
 		if (o == null)
 		{
-			LuaDLL.luaL_error(L, "unknown member name transform");
+			LuaTypes types = LuaDLL.lua_type(L, 1);
+
+			if (types == LuaTypes.LUA_TTABLE)
+			{
+				LuaDLL.luaL_error(L, "unknown member name transform");
+			}
+			else
+			{
+				LuaDLL.luaL_error(L, "attempt to index transform on a nil value");
+			}
 		}
 
 		Component obj = (Component)o;
@@ -96,7 +105,16 @@ public class ComponentWrap
 
 		if (o == null)
 		{
-			LuaDLL.luaL_error(L, "unknown member name rigidbody");
+			LuaTypes types = LuaDLL.lua_type(L, 1);
+
+			if (types == LuaTypes.LUA_TTABLE)
+			{
+				LuaDLL.luaL_error(L, "unknown member name rigidbody");
+			}
+			else
+			{
+				LuaDLL.luaL_error(L, "attempt to index rigidbody on a nil value");
+			}
 		}
 
 		Component obj = (Component)o;
@@ -111,7 +129,16 @@ public class ComponentWrap
 
 		if (o == null)
 		{
-			LuaDLL.luaL_error(L, "unknown member name rigidbody2D");
+			LuaTypes types = LuaDLL.lua_type(L, 1);
+
+			if (types == LuaTypes.LUA_TTABLE)
+			{
+				LuaDLL.luaL_error(L, "unknown member name rigidbody2D");
+			}
+			else
+			{
+				LuaDLL.luaL_error(L, "attempt to index rigidbody2D on a nil value");
+			}
 		}
 
 		Component obj = (Component)o;
@@ -126,7 +153,16 @@ public class ComponentWrap
 
 		if (o == null)
 		{
-			LuaDLL.luaL_error(L, "unknown member name camera");
+			LuaTypes types = LuaDLL.lua_type(L, 1);
+
+			if (types == LuaTypes.LUA_TTABLE)
+			{
+				LuaDLL.luaL_error(L, "unknown member name camera");
+			}
+			else
+			{
+				LuaDLL.luaL_error(L, "attempt to index camera on a nil value");
+			}
 		}
 
 		Component obj = (Component)o;
@@ -141,7 +177,16 @@ public class ComponentWrap
 
 		if (o == null)
 		{
-			LuaDLL.luaL_error(L, "unknown member name light");
+			LuaTypes types = LuaDLL.lua_type(L, 1);
+
+			if (types == LuaTypes.LUA_TTABLE)
+			{
+				LuaDLL.luaL_error(L, "unknown member name light");
+			}
+			else
+			{
+				LuaDLL.luaL_error(L, "attempt to index light on a nil value");
+			}
 		}
 
 		Component obj = (Component)o;
@@ -156,7 +201,16 @@ public class ComponentWrap
 
 		if (o == null)
 		{
-			LuaDLL.luaL_error(L, "unknown member name animation");
+			LuaTypes types = LuaDLL.lua_type(L, 1);
+
+			if (types == LuaTypes.LUA_TTABLE)
+			{
+				LuaDLL.luaL_error(L, "unknown member name animation");
+			}
+			else
+			{
+				LuaDLL.luaL_error(L, "attempt to index animation on a nil value");
+			}
 		}
 
 		Component obj = (Component)o;
@@ -171,7 +225,16 @@ public class ComponentWrap
 
 		if (o == null)
 		{
-			LuaDLL.luaL_error(L, "unknown member name constantForce");
+			LuaTypes types = LuaDLL.lua_type(L, 1);
+
+			if (types == LuaTypes.LUA_TTABLE)
+			{
+				LuaDLL.luaL_error(L, "unknown member name constantForce");
+			}
+			else
+			{
+				LuaDLL.luaL_error(L, "attempt to index constantForce on a nil value");
+			}
 		}
 
 		Component obj = (Component)o;
@@ -186,7 +249,16 @@ public class ComponentWrap
 
 		if (o == null)
 		{
-			LuaDLL.luaL_error(L, "unknown member name renderer");
+			LuaTypes types = LuaDLL.lua_type(L, 1);
+
+			if (types == LuaTypes.LUA_TTABLE)
+			{
+				LuaDLL.luaL_error(L, "unknown member name renderer");
+			}
+			else
+			{
+				LuaDLL.luaL_error(L, "attempt to index renderer on a nil value");
+			}
 		}
 
 		Component obj = (Component)o;
@@ -201,7 +273,16 @@ public class ComponentWrap
 
 		if (o == null)
 		{
-			LuaDLL.luaL_error(L, "unknown member name audio");
+			LuaTypes types = LuaDLL.lua_type(L, 1);
+
+			if (types == LuaTypes.LUA_TTABLE)
+			{
+				LuaDLL.luaL_error(L, "unknown member name audio");
+			}
+			else
+			{
+				LuaDLL.luaL_error(L, "attempt to index audio on a nil value");
+			}
 		}
 
 		Component obj = (Component)o;
@@ -216,7 +297,16 @@ public class ComponentWrap
 
 		if (o == null)
 		{
-			LuaDLL.luaL_error(L, "unknown member name guiText");
+			LuaTypes types = LuaDLL.lua_type(L, 1);
+
+			if (types == LuaTypes.LUA_TTABLE)
+			{
+				LuaDLL.luaL_error(L, "unknown member name guiText");
+			}
+			else
+			{
+				LuaDLL.luaL_error(L, "attempt to index guiText on a nil value");
+			}
 		}
 
 		Component obj = (Component)o;
@@ -231,7 +321,16 @@ public class ComponentWrap
 
 		if (o == null)
 		{
-			LuaDLL.luaL_error(L, "unknown member name networkView");
+			LuaTypes types = LuaDLL.lua_type(L, 1);
+
+			if (types == LuaTypes.LUA_TTABLE)
+			{
+				LuaDLL.luaL_error(L, "unknown member name networkView");
+			}
+			else
+			{
+				LuaDLL.luaL_error(L, "attempt to index networkView on a nil value");
+			}
 		}
 
 		Component obj = (Component)o;
@@ -246,7 +345,16 @@ public class ComponentWrap
 
 		if (o == null)
 		{
-			LuaDLL.luaL_error(L, "unknown member name guiTexture");
+			LuaTypes types = LuaDLL.lua_type(L, 1);
+
+			if (types == LuaTypes.LUA_TTABLE)
+			{
+				LuaDLL.luaL_error(L, "unknown member name guiTexture");
+			}
+			else
+			{
+				LuaDLL.luaL_error(L, "attempt to index guiTexture on a nil value");
+			}
 		}
 
 		Component obj = (Component)o;
@@ -261,7 +369,16 @@ public class ComponentWrap
 
 		if (o == null)
 		{
-			LuaDLL.luaL_error(L, "unknown member name collider");
+			LuaTypes types = LuaDLL.lua_type(L, 1);
+
+			if (types == LuaTypes.LUA_TTABLE)
+			{
+				LuaDLL.luaL_error(L, "unknown member name collider");
+			}
+			else
+			{
+				LuaDLL.luaL_error(L, "attempt to index collider on a nil value");
+			}
 		}
 
 		Component obj = (Component)o;
@@ -276,7 +393,16 @@ public class ComponentWrap
 
 		if (o == null)
 		{
-			LuaDLL.luaL_error(L, "unknown member name collider2D");
+			LuaTypes types = LuaDLL.lua_type(L, 1);
+
+			if (types == LuaTypes.LUA_TTABLE)
+			{
+				LuaDLL.luaL_error(L, "unknown member name collider2D");
+			}
+			else
+			{
+				LuaDLL.luaL_error(L, "attempt to index collider2D on a nil value");
+			}
 		}
 
 		Component obj = (Component)o;
@@ -291,7 +417,16 @@ public class ComponentWrap
 
 		if (o == null)
 		{
-			LuaDLL.luaL_error(L, "unknown member name hingeJoint");
+			LuaTypes types = LuaDLL.lua_type(L, 1);
+
+			if (types == LuaTypes.LUA_TTABLE)
+			{
+				LuaDLL.luaL_error(L, "unknown member name hingeJoint");
+			}
+			else
+			{
+				LuaDLL.luaL_error(L, "attempt to index hingeJoint on a nil value");
+			}
 		}
 
 		Component obj = (Component)o;
@@ -306,7 +441,16 @@ public class ComponentWrap
 
 		if (o == null)
 		{
-			LuaDLL.luaL_error(L, "unknown member name particleEmitter");
+			LuaTypes types = LuaDLL.lua_type(L, 1);
+
+			if (types == LuaTypes.LUA_TTABLE)
+			{
+				LuaDLL.luaL_error(L, "unknown member name particleEmitter");
+			}
+			else
+			{
+				LuaDLL.luaL_error(L, "attempt to index particleEmitter on a nil value");
+			}
 		}
 
 		Component obj = (Component)o;
@@ -321,7 +465,16 @@ public class ComponentWrap
 
 		if (o == null)
 		{
-			LuaDLL.luaL_error(L, "unknown member name particleSystem");
+			LuaTypes types = LuaDLL.lua_type(L, 1);
+
+			if (types == LuaTypes.LUA_TTABLE)
+			{
+				LuaDLL.luaL_error(L, "unknown member name particleSystem");
+			}
+			else
+			{
+				LuaDLL.luaL_error(L, "attempt to index particleSystem on a nil value");
+			}
 		}
 
 		Component obj = (Component)o;
@@ -336,7 +489,16 @@ public class ComponentWrap
 
 		if (o == null)
 		{
-			LuaDLL.luaL_error(L, "unknown member name gameObject");
+			LuaTypes types = LuaDLL.lua_type(L, 1);
+
+			if (types == LuaTypes.LUA_TTABLE)
+			{
+				LuaDLL.luaL_error(L, "unknown member name gameObject");
+			}
+			else
+			{
+				LuaDLL.luaL_error(L, "attempt to index gameObject on a nil value");
+			}
 		}
 
 		Component obj = (Component)o;
@@ -351,7 +513,16 @@ public class ComponentWrap
 
 		if (o == null)
 		{
-			LuaDLL.luaL_error(L, "unknown member name tag");
+			LuaTypes types = LuaDLL.lua_type(L, 1);
+
+			if (types == LuaTypes.LUA_TTABLE)
+			{
+				LuaDLL.luaL_error(L, "unknown member name tag");
+			}
+			else
+			{
+				LuaDLL.luaL_error(L, "attempt to index tag on a nil value");
+			}
 		}
 
 		Component obj = (Component)o;
@@ -366,7 +537,16 @@ public class ComponentWrap
 
 		if (o == null)
 		{
-			LuaDLL.luaL_error(L, "unknown member name tag");
+			LuaTypes types = LuaDLL.lua_type(L, 1);
+
+			if (types == LuaTypes.LUA_TTABLE)
+			{
+				LuaDLL.luaL_error(L, "unknown member name tag");
+			}
+			else
+			{
+				LuaDLL.luaL_error(L, "attempt to index tag on a nil value");
+			}
 		}
 
 		Component obj = (Component)o;

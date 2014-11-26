@@ -22,7 +22,7 @@ namespace LuaInterface
          */
 		internal static string luaIndexFunction =
 			@"
-        local function index(obj,name)
+        local function index(obj,name)        
         local meta=getmetatable(obj)
         local cached=meta.cache[name]        
         if cached then

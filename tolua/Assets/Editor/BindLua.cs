@@ -2,12 +2,15 @@
 using UnityEditor;
 using System;
 using System.Collections;
-using System.Text;
-using System.IO;
 
 using Object = UnityEngine.Object;
-using System.Diagnostics;
 using System.Collections.Generic;
+using System.Text;
+using System.IO;
+using System.Runtime.InteropServices;
+using System.Text.RegularExpressions;
+using System.Reflection;
+
 
 public static class LuaBinding
 {
@@ -18,63 +21,189 @@ public static class LuaBinding
         public bool IsStatic;
         public string baseName = null;
         public string wrapName = "";
+        public string libName = "";
 
-        public BindType(string s, Type t, bool beStatic, string bn)
+        string GetTypeStr(string str)
         {
-            name = s;
-            type = t;
-            IsStatic = beStatic;
-            baseName = bn;
-            wrapName = name;
+            if (str.Contains("`"))
+            {
+                string regStr = @"^(?<s0>.*?)\.?(?<s1>\w*)`[1-9]\[(?<s2>.*?)\]$";
+                Regex r = new Regex(regStr, RegexOptions.None);
+                Match mc = r.Match(str);
+                bool beMember = false;
+
+                if (!mc.Success)
+                {
+                    regStr = @"^(?<s0>.*?)\.?(?<s1>\w*)`[1-9]\+(?<s3>.*?)\[(?<s2>.*?)\]$";
+                    r = new Regex(regStr, RegexOptions.None);
+                    mc = r.Match(str);
+                    beMember = true;
+                }
+
+                string s0 = mc.Groups["s0"].Value;
+                string s1 = mc.Groups["s1"].Value;
+                string s2 = mc.Groups["s2"].Value;
+                string[] ss = s2.Split(new char[] { ',' }, System.StringSplitOptions.RemoveEmptyEntries);
+                s2 = string.Empty;
+
+                for (int i = 0; i < ss.Length; i++)
+                {
+                    ss[i] = ToLua._TC(ss[i]);
+                }
+
+                for (int i = 0; i < ss.Length - 1; i++)
+                {
+                    s2 += ss[i];
+                    s2 += ",";
+                }
+
+                s2 += ss[ss.Length - 1];
+
+                string s4 = string.Format("{0}<{1}>", s1, s2);
+
+                if (beMember)
+                {
+                    s4 += ".";
+                    s4 += mc.Groups["s3"].Value;
+                }
+
+                str = s0 + "." + s4;
+            }
+            else if (str.Contains("+"))
+            {
+                str = str.Replace('+', '.');
+            }
+
+            return str;
         }
 
-        //public BindType(string wrap, string s, Type t, bool beStatic, string bn)
-        //{
-        //    name = s;
-        //    type = t;
-        //    IsStatic = beStatic;
-        //    baseName = bn;
-        //    wrapName = wrap;
-        //}
+        public BindType(Type t)
+        {
+            string str = t.ToString();
+            libName = GetTypeStr(str);
+            type = t;
+
+            if (t.BaseType != null)
+            {
+                baseName = t.BaseType.ToString();
+
+                if (baseName == "System.ValueType")
+                {
+                    baseName = null;
+                }
+            }
+
+            if (t.GetConstructor(Type.EmptyTypes) == null && t.IsAbstract && t.IsSealed)
+            {
+                baseName = null;
+                IsStatic = true;
+            }
+
+            int index = str.LastIndexOf('.');
+
+            if (index > 0)
+            {
+                name = str.Substring(index + 1);
+                name = name.Replace('+', '.');
+                wrapName = name.Replace(".", "");
+            }
+            else
+            {
+                name = str.Replace('+', '.');
+                wrapName = name.Replace(".", "");
+            }
+        }
+
+        public BindType SetBaseName(string str)
+        {
+            baseName = str;
+            return this;
+        }
+
+        public BindType SetClassName(string str)
+        {
+            name = str;
+            wrapName = GetWrapName();
+            return this;
+        }
+
+        public BindType SetWrapName(string str)
+        {
+            wrapName = str;
+            return this;
+        }
+
+        public BindType SetLibName(string str)
+        {
+            libName = str;
+            return this;
+        }
+
+        string GetWrapName()
+        {
+            string[] ss = name.Split(new char[] { '.' });
+            StringBuilder sb = new StringBuilder();
+
+            for (int i = 0; i < ss.Length; i++)
+            {
+                sb.Append(ss[i]);
+            }
+
+            return sb.ToString();
+        }
+    }
+
+    static BindType _GT(Type t)
+    {
+        return new BindType(t);
     }
 
     //注意必须保持基类在其派生类前面声明，否则自动生成的注册顺序是错误的
     static BindType[] binds = new BindType[]
     {	
         //object 由于跟 Object 文件重名就不加入了
-        new BindType("Type", typeof(Type), false, null),
-        //new BindType("IAssetFile", typeof(IAssetFile), false, "object"),        
-        new BindType("Time", typeof(Time), false, "object"),
-        new BindType("Vector2", typeof(Vector2), false, "object"),
-        new BindType("Vector3", typeof(Vector3), false, "object"),
-        //new BindType("LuaHelper", typeof(LuaHelper), false, "object"),
-
-        //new BindType("Object", typeof(Object), false, "object"),              //Destroy 函数做了特殊处理, 加入了gc
-        new BindType("GameObject", typeof(GameObject), false, "Object"),
-        new BindType("Component", typeof(Component), false, "Object"),        
+        //_GT(typeof(Type)),
         
-        new BindType("Behaviour", typeof(Behaviour), false, "Component"),
-        new BindType("Transform", typeof(Transform), false, "Component"),
+        ////u3d
+        _GT(typeof(Time)),
+        _GT(typeof(Vector2)),
+        _GT(typeof(Vector3)),        
+        _GT(typeof(GameObject)),
+        _GT(typeof(Component)),        
+        
+        _GT(typeof(Behaviour)),
+        _GT(typeof(Transform)),
+        _GT(typeof(Resources)),
+        _GT(typeof(TextAsset)),    
+        _GT(typeof(Keyframe)),       
+        _GT(typeof(AnimationCurve)),
+        _GT(typeof(Motion)),
+        _GT(typeof(AnimationClip)),
 
-        new BindType("MonoBehaviour", typeof(MonoBehaviour), false, "Behaviour"),
-        //new BindType("UIBase", typeof(UIBase), false, "MonoBehaviour"),
-        //new BindType("UIEventListener", typeof(UIEventListener), false, "MonoBehaviour"),
+        _GT(typeof(MonoBehaviour)),
 
-        //new BindType("TableMgr", typeof(TableMgr), false, "MonoBehaviour"),
-        //new BindType("AssetFileMgr", typeof(AssetFileMgr), false, "MonoBehaviour"),
-        new BindType("Application", typeof(Application), false, "object"),    
-        //new BindType("Debugger", typeof(Debugger), true, null),                
-        //new BindType("UnGfx", typeof(UnGfx), true, null),              
-        new BindType("Keyframe", typeof(Keyframe), false, "object"),
-        new BindType("AnimationCurve", typeof(AnimationCurve), false, "object"),
-        new BindType("TestToLua", typeof(TestToLua), false, "object"),
-        new BindType("TestEnum", typeof(TestEnum), false, null),
-        new BindType("Space", typeof(Space), false, null),
-        //new BindType("DictInt2Str", "Dictionary<int,string>", typeof(Dictionary<int,string>), false, "object"),
-        new BindType("Light", typeof(Light), false, "Behaviour"),
-        new BindType("LightType", typeof(LightType), false, null),
-        new BindType("Motion", typeof(Motion), false, null),
-        new BindType("AnimationClip", typeof(AnimationClip), false, "Motion"),
+       ////内部
+        //_GT(typeof(IAssetFile)),        
+        //_GT(typeof(UIBase)),
+        //_GT(typeof(UIEventListener)),
+        //_GT(typeof(LuaHelper)),        
+        //_GT(typeof(AssetFileMgr)),
+        //_GT(typeof(Application)),            
+        //_GT(typeof(UnGfx)),                               
+        //_GT(typeof(TestToLua)),        
+        //_GT(typeof(TestEnum)),        
+        ////_GT(typeof(Dictionary<int,string>)).SetWrapName("DictInt2Str").SetLibName("DictInt2Str"),
+        //_GT(typeof(Light)),
+        //_GT(typeof(LightType)),
+
+        ////ngui
+        //_GT(typeof(UIRect)),
+        //_GT(typeof(UIWidget)),
+        //_GT(typeof(UILabel)),                 
+        //_GT(typeof(UIEventListener)),                
+        //_GT(typeof(UILabel.Effect)),       
+        //_GT(typeof(Localization)),   
+        //_GT(typeof(UICamera)),
     };
 
     [MenuItem("Lua/Gen LuaBinding Files", false, 11)]
@@ -82,7 +211,7 @@ public static class LuaBinding
     {
         if (!Application.isPlaying)
         {
-            EditorApplication.isPlaying = true;            
+            EditorApplication.isPlaying = true;
         }
 
         for (int i = 0; i < binds.Length; i++)
@@ -93,17 +222,196 @@ public static class LuaBinding
             ToLua.isStaticClass = binds[i].IsStatic;
             ToLua.baseClassName = binds[i].baseName;
             ToLua.wrapClassName = binds[i].wrapName;
-            ToLua.libClassName = binds[i].name;
+            ToLua.libClassName = binds[i].libName;
             ToLua.Generate(null);
         }
 
+        StringBuilder sb = new StringBuilder();
+
+        for (int i = 0; i < binds.Length; i++)
+        {
+            sb.AppendFormat("\t\t{0}Wrap.Register();\r\n", binds[i].wrapName);
+        }
+
         EditorApplication.isPlaying = false;
-        GenRegFile();
-        UnityEngine.Debug.Log("Generate lua binding files over");
+        //GenRegFile(binds);
+        StringBuilder sb1 = new StringBuilder();
+
+        for (int i = 0; i < binds.Length; i++)
+        {
+            sb1.AppendFormat("\t\t{0}Wrap.Register(L);\r\n", binds[i].wrapName);
+        }
+
+        Debug.Log("Generate lua binding files over");
+        Debug.Log(sb1.ToString());
         AssetDatabase.Refresh();
     }
 
-    static void GenRegFile()
+    [MenuItem("Thinky/Clear LuaBinder File", false, 13)]
+    static void ClearLuaBinder()
+    {
+        StringBuilder sb = new StringBuilder();
+        sb.AppendLine("using System;");
+        sb.AppendLine();
+        sb.AppendLine("public static class LuaBinder");
+        sb.AppendLine("{");
+        sb.AppendLine("\tpublic static void Bind(IntPtr L)");
+        sb.AppendLine("\t{");
+        sb.AppendLine("\t}");
+        sb.AppendLine("}");
+
+        string file = Application.dataPath + "/Source/LuaWrap/Base/LuaBinder.cs";
+
+        using (StreamWriter textWriter = new StreamWriter(file, false, Encoding.UTF8))
+        {
+            textWriter.Write(sb.ToString());
+            textWriter.Flush();
+            textWriter.Close();
+        }
+
+        AssetDatabase.Refresh();
+    }
+
+    [MenuItem("Thinky/Gen u3d Wrap Files", false, 11)]
+    public static void U3dBinding()
+    {
+        List<string> dropList = new List<string>
+        {      
+            //特殊修改
+            "UnityEngine.Object",
+
+            //编辑器相关
+            "HideInInspector",
+            "ExecuteInEditMode",
+            "AddComponentMenu",
+            "ContextMenu",
+            "RequireComponent",
+            "DisallowMultipleComponent",
+            "SerializeField",
+            "AssemblyIsEditorAssembly",
+            "Attribute",  //一些列文件，都是编辑器相关的       
+            "Types",
+            "UnitySurrogateSelector",
+            "TrackedReference",
+            "TypeInferenceRules",
+
+            //
+            "FFTWindow",
+
+            //RPC网络,一般不用
+            "RPC",
+            "Network",
+            "MasterServer",
+            "BitStream",
+            "HostData",
+            "ConnectionTesterStatus",
+
+            //unity 自带GUI
+            "GUI",
+            "EventType",
+            "EventModifiers",
+            //"Event",
+            "FontStyle",
+            "TextAlignment",
+            "TextEditor",
+            "TextEditorDblClickSnapping",
+            "TextGenerator",
+            "TextClipping",
+            "Gizmos",
+
+            //地形相关
+            "Terrain",                            
+            "Tree",
+            "SplatPrototype",
+            "DetailPrototype",
+            "DetailRenderMode",
+
+            //其他
+            "MeshSubsetCombineUtility",
+            "AOT",
+            "Random",
+            "Mathf",
+            "Social",
+            "Enumerator",       
+            "SendMouseEvents",               
+            "Cursor",
+            "Flash",
+            "ActionScript",
+            
+    
+            //非通用的类
+            "ADBannerView",
+            "ADInterstitialAd",            
+            "Android",
+            "jvalue",
+            "iPhone",
+            "iOS",
+            "CalendarIdentifier",
+            "CalendarUnit",
+            "CalendarUnit",
+            "FullScreenMovieControlMode",
+            "FullScreenMovieScalingMode",
+            "Handheld",
+            "LocalNotification",
+            "Motion",   //空类
+            "NotificationServices",
+            "RemoteNotificationType",      
+            "RemoteNotification",
+            "SamsungTV",
+            "TextureCompressionQuality",
+            "TouchScreenKeyboardType",
+            "TouchScreenKeyboard",
+            "MovieTexture",
+        };
+
+        List<BindType> list = new List<BindType>();
+        Assembly assembly = Assembly.Load("UnityEngine");
+        Type[] types = assembly.GetExportedTypes();
+
+        for (int i = 0; i < types.Length; i++)
+        {
+            //不导出： 模版类，event委托, c#协同相关, obsolete 类
+            if (!types[i].IsGenericType && types[i].BaseType != typeof(System.MulticastDelegate) &&
+                !typeof(YieldInstruction).IsAssignableFrom(types[i]) && !ToLua.IsObsolete(types[i]))
+            {
+                list.Add(_GT(types[i]));
+            }
+            else
+            {
+                Debug.Log("drop generic type " + types[i].ToString());
+            }
+        }
+
+        for (int i = 0; i < dropList.Count; i++)
+        {
+            list.RemoveAll((p) => { return p.type.ToString().Contains(dropList[i]); });
+        }
+
+        for (int i = 0; i < list.Count; i++)
+        {
+            try
+            {
+                ToLua.Clear();
+                ToLua.className = list[i].name;
+                ToLua.type = list[i].type;
+                ToLua.isStaticClass = list[i].IsStatic;
+                ToLua.baseClassName = list[i].baseName;
+                ToLua.wrapClassName = list[i].wrapName;
+                ToLua.libClassName = list[i].libName;
+                ToLua.Generate(null);
+            }
+            catch (Exception e)
+            {
+                Debug.LogWarning("Generate wrap file error: " + e.ToString());
+            }
+        }
+
+        GenRegFile(list.ToArray());
+        Debug.Log("Generate lua binding files over， Generate " + list.Count + " files");
+        AssetDatabase.Refresh();
+    }
+
+    static void GenRegFile(BindType[] bts)
     {
         StringBuilder sb = new StringBuilder();
         sb.AppendLine("using System;");
@@ -113,11 +421,13 @@ public static class LuaBinding
         sb.AppendLine("\t{");
         sb.AppendLine("\t\tobjectWrap.Register(L);");
         sb.AppendLine("\t\tObjectWrap.Register(L);");
-        sb.AppendLine("\t\tcoroutineWrap.Register(L);");
+        sb.AppendLine("\t\tDebuggerWrap.Register(L);");
+        sb.AppendLine("\t\tTableMgrWrap.Register(L);");
 
-        for (int i = 0; i < binds.Length; i++)
+
+        for (int i = 0; i < bts.Length; i++)
         {
-            sb.AppendFormat("\t\t{0}Wrap.Register(L);\r\n", binds[i].wrapName);
+            sb.AppendFormat("\t\t{0}Wrap.Register(L);\r\n", bts[i].wrapName);
         }
 
         sb.AppendLine("\t}");
@@ -149,7 +459,7 @@ public static class LuaBinding
     {
         BuildAssetBundleOptions options = BuildAssetBundleOptions.CollectDependencies | BuildAssetBundleOptions.CompleteAssets | BuildAssetBundleOptions.DeterministicAssetBundle;
 
-        Process proc = Process.Start(Application.dataPath + "/Lua/Build.bat");
+        System.Diagnostics.Process proc = System.Diagnostics.Process.Start(Application.dataPath + "/Lua/Build.bat");
         proc.WaitForExit();
         AssetDatabase.Refresh();
         string[] files = Directory.GetFiles("Assets/Lua/Out", "*.lua.bytes");

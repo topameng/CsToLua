@@ -5,20 +5,18 @@ using System.Text;
 namespace LuaInterface
 {
     public class LuaFunction : LuaBase
-    {
-        //private Lua interpreter;
-        internal LuaCSFunction function;
-        //internal int reference;
+    {        
+        internal LuaCSFunction function;        
         ObjectTranslator translator = null;
-        IntPtr L;
-
+        IntPtr L;        
+       
         public LuaFunction(int reference, LuaState interpreter)
         {
             _Reference = reference;
             this.function = null;
             _Interpreter = interpreter;
             L = _Interpreter.L;
-            translator = _Interpreter.translator;
+            translator = _Interpreter.translator;            
         }
 
         public LuaFunction(LuaCSFunction function, LuaState interpreter)
@@ -27,88 +25,61 @@ namespace LuaInterface
             this.function = function;
             _Interpreter = interpreter;
             L = _Interpreter.L;
-            translator = _Interpreter.translator;
+            translator = _Interpreter.translator;            
         }
 
         public LuaFunction(int reference, IntPtr l)
         {
             _Reference = reference;
-            this.function = null;                        
-            translator = ObjectTranslator.FromState(l);
-            _Interpreter = translator.interpreter;
-            L = _Interpreter.L;
+            this.function = null;             
+            L = l;
+            translator = ObjectTranslator.FromState(L);
+            _Interpreter = translator.interpreter;            
         }
-
-        //~LuaFunction()
-        //{
-        //    if (reference != 0)
-        //        interpreter.dispose(reference);
-        //}
-
-        //bool disposed = false;
-        //~LuaFunction()
-        //{
-        //    Dispose(false);
-        //}
-
-        //public void Dispose()
-        //{
-        //    Dispose(true);
-        //    GC.SuppressFinalize(this);
-        //}
-
-        //public virtual void Dispose(bool disposeManagedResources)
-        //{
-        //    if (!this.disposed)
-        //    {
-        //        if (disposeManagedResources)
-        //        {
-        //            if (_Reference != 0)
-        //                _Interpreter.dispose(_Reference);
-        //        }
-
-        //        disposed = true;
-        //    }
-        //}
-
 
         /*
          * Calls the function casting return values to the types
          * in returnTypes
          */
         internal object[] call(object[] args, Type[] returnTypes)
-        {
-            //return _Interpreter.callFunction(this, args, returnTypes);
+        {            
             int nArgs = 0;
+            LuaDLL.lua_getglobal(L, "traceback");            
             int oldTop = LuaDLL.lua_gettop(L);
+
             if (!LuaDLL.lua_checkstack(L, args.Length + 6))
+            {
+                LuaDLL.lua_pop(L, 1);
                 throw new LuaException("Lua stack overflow");
-            translator.push(L, this);
+            }
+               
+            push(L);
+
             if (args != null)
             {
                 nArgs = args.Length;
+
                 for (int i = 0; i < args.Length; i++)
-                {
-                    translator.push(L, args[i]);
+                {                    
+                    PushArgs(L, args[i]);
                 }
             }
-            int error = LuaDLL.lua_pcall(L, nArgs, -1, 0);
+
+            int error = LuaDLL.lua_pcall(L, nArgs, -1, -nArgs-2);            
+
             if (error != 0)
-                ThrowExceptionFromError(oldTop);
+            {
+                string err = LuaDLL.lua_tostring(L, -1);
+                LuaDLL.lua_settop(L, oldTop);                
+                LuaDLL.lua_pop(L, 1);
+                if (err == null) err = "Unknown Lua Error";
+                throw new LuaScriptException(err.ToString(), "");                              
+            }
 
-            if (returnTypes != null)
-                return translator.popValues(L, oldTop, returnTypes);
-            else
-                return translator.popValues(L, oldTop);
-        }
-
-        internal void ThrowExceptionFromError(int oldTop)
-        {
-            object err = translator.getObject(L, -1);
-            LuaDLL.lua_settop(L, oldTop);
-            if (err == null) err = "Unknown Lua Error";
-            throw new LuaScriptException(err.ToString(), "");
-        }
+            object[] ret = returnTypes != null ? translator.popValues(L, oldTop, returnTypes) : translator.popValues(L, oldTop);
+            LuaDLL.lua_pop(L, 1);            
+            return ret;
+        }       
 
         /*
          * Calls the function and returns its return values inside
@@ -118,20 +89,166 @@ namespace LuaInterface
         {
             return call(args, null);
         }
+
+        //int BeginPCall()
+        //{            
+        //    LuaDLL.lua_getglobal(L, "traceback");
+        //    int oldTop = LuaDLL.lua_gettop(L);
+        //    push(L);
+        //    return oldTop;
+        //}
+
+        //bool PCall(int oldTop, int args)
+        //{           
+        //    if (LuaDLL.lua_pcall(L, args, -1, -args - 2) != 0)
+        //    {
+        //        string err = LuaDLL.lua_tostring(L, -1);
+        //        LuaDLL.lua_settop(L, oldTop);
+        //        LuaDLL.lua_pop(L, 1);
+        //        if (err == null) err = "Unknown Lua Error";
+        //        throw new LuaScriptException(err.ToString(), "");                
+        //    }
+
+        //    return true;
+        //}
+
+        //object[] EndPCall(int oldTop)
+        //{
+        //    object[] ret = translator.popValues(L, oldTop);
+        //    LuaDLL.lua_pop(L, 1);
+        //    return ret;
+        //}
+
+        //public object[] Call()
+        //{
+        //    int oldTop = BeginPCall();
+
+        //    if (PCall(oldTop, 0))
+        //    {
+        //        return EndPCall(oldTop);
+        //    }
+
+        //    return null;
+        //}
+
+        //public object[] Call<T1>(T1 t1)
+        //{
+        //    int oldTop = BeginPCall();
+
+        //    PushArgs(L, t1);
+
+        //    if (PCall(oldTop, 1))
+        //    {
+        //        return EndPCall(oldTop);
+        //    }
+
+        //    return null;
+        //}
+
+        //public object[] Call<T1, T2>(T1 t1, T2 t2)
+        //{
+        //    int oldTop = BeginPCall();
+
+        //    PushArgs(L, t1);
+        //    PushArgs(L, t2);
+
+        //    if (PCall(oldTop, 2))
+        //    {
+        //        return EndPCall(oldTop);
+        //    }
+
+        //    return null;
+        //}
+
+        //public object[] Call<T1, T2, T3>(T1 t1, T2 t2, T3 t3)
+        //{
+        //    int oldTop = BeginPCall();
+
+        //    PushArgs(L, t1);
+        //    PushArgs(L, t2);
+        //    PushArgs(L, t3);
+
+        //    if (PCall(oldTop, 3))
+        //    {
+        //        return EndPCall(oldTop);
+        //    }
+
+        //    return null;
+        //}
+
+        //public object[] Call<T1, T2, T3, T4>(T1 t1, T2 t2, T3 t3, T4 t4)
+        //{
+        //    int oldTop = BeginPCall();
+
+        //    PushArgs(L, t1);
+        //    PushArgs(L, t2);
+        //    PushArgs(L, t3);
+        //    PushArgs(L, t4);
+
+        //    if (PCall(oldTop, 4))
+        //    {
+        //        return EndPCall(oldTop);
+        //    }
+
+        //    return null;
+        //}
+
+        //public object[] Call<T1, T2, T3, T4, T5>(T1 t1, T2 t2, T3 t3, T4 t4, T5 t5)
+        //{
+        //    int oldTop = BeginPCall();
+
+        //    PushArgs(L, t1);
+        //    PushArgs(L, t2);
+        //    PushArgs(L, t3);
+        //    PushArgs(L, t4);
+        //    PushArgs(L, t5);
+
+        //    if (PCall(oldTop, 5))
+        //    {
+        //        return EndPCall(oldTop);
+        //    }
+
+        //    return null;
+        //}
+
+        void PushArgs(IntPtr L, object o)
+        {
+            Type type = o.GetType();
+
+            if (type.IsArray)
+            {
+                LuaScriptMgr.PushArray(L, o);
+            }
+            else if (type.IsEnum)
+            {
+                LuaScriptMgr.PushEnum(L, o);
+            }
+            else
+            {
+                translator.push(L, o);
+            }
+        }
+
         /*
          * Pushes the function into the Lua stack
          */
         internal void push(IntPtr luaState)
         {
             if (_Reference != 0)
+            {
                 LuaDLL.lua_getref(luaState, _Reference);
+            }
             else
+            {
                 _Interpreter.pushCSFunction(function);
+            }
         }
+
         public override string ToString()
         {
             return "function";
         }
+
         public override bool Equals(object o)
         {
             if (o is LuaFunction)
@@ -144,6 +261,7 @@ namespace LuaInterface
             }
             else return false;
         }
+
         public override int GetHashCode()
         {
             if (_Reference != 0)

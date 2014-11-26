@@ -14,7 +14,7 @@ public class AnimationCurveWrap
 		new LuaMethod("SmoothTangents", SmoothTangents),
 		new LuaMethod("Linear", Linear),
 		new LuaMethod("EaseInOut", EaseInOut),
-		new LuaMethod("New", Create),
+		new LuaMethod("New", _CreateAnimationCurve),
 		new LuaMethod("GetClassType", GetClassType),
 	};
 
@@ -27,7 +27,7 @@ public class AnimationCurveWrap
 	};
 
 	[MonoPInvokeCallbackAttribute(typeof(LuaCSFunction))]
-	static int Create(IntPtr L)
+	static int _CreateAnimationCurve(IntPtr L)
 	{
 		int count = LuaDLL.lua_gettop(L);
 
@@ -61,7 +61,7 @@ public class AnimationCurveWrap
 
 	public static void Register(IntPtr L)
 	{
-		LuaScriptMgr.RegisterLib(L, "AnimationCurve", typeof(AnimationCurve), regs, fields, "object");
+		LuaScriptMgr.RegisterLib(L, "UnityEngine.AnimationCurve", typeof(AnimationCurve), regs, fields, "System.Object");
 	}
 
 	[MonoPInvokeCallbackAttribute(typeof(LuaCSFunction))]
@@ -71,7 +71,16 @@ public class AnimationCurveWrap
 
 		if (o == null)
 		{
-			LuaDLL.luaL_error(L, "unknown member name keys");
+			LuaTypes types = LuaDLL.lua_type(L, 1);
+
+			if (types == LuaTypes.LUA_TTABLE)
+			{
+				LuaDLL.luaL_error(L, "unknown member name keys");
+			}
+			else
+			{
+				LuaDLL.luaL_error(L, "attempt to index keys on a nil value");
+			}
 		}
 
 		AnimationCurve obj = (AnimationCurve)o;
@@ -86,7 +95,16 @@ public class AnimationCurveWrap
 
 		if (o == null)
 		{
-			LuaDLL.luaL_error(L, "unknown member name length");
+			LuaTypes types = LuaDLL.lua_type(L, 1);
+
+			if (types == LuaTypes.LUA_TTABLE)
+			{
+				LuaDLL.luaL_error(L, "unknown member name length");
+			}
+			else
+			{
+				LuaDLL.luaL_error(L, "attempt to index length on a nil value");
+			}
 		}
 
 		AnimationCurve obj = (AnimationCurve)o;
@@ -101,7 +119,16 @@ public class AnimationCurveWrap
 
 		if (o == null)
 		{
-			LuaDLL.luaL_error(L, "unknown member name preWrapMode");
+			LuaTypes types = LuaDLL.lua_type(L, 1);
+
+			if (types == LuaTypes.LUA_TTABLE)
+			{
+				LuaDLL.luaL_error(L, "unknown member name preWrapMode");
+			}
+			else
+			{
+				LuaDLL.luaL_error(L, "attempt to index preWrapMode on a nil value");
+			}
 		}
 
 		AnimationCurve obj = (AnimationCurve)o;
@@ -116,7 +143,16 @@ public class AnimationCurveWrap
 
 		if (o == null)
 		{
-			LuaDLL.luaL_error(L, "unknown member name postWrapMode");
+			LuaTypes types = LuaDLL.lua_type(L, 1);
+
+			if (types == LuaTypes.LUA_TTABLE)
+			{
+				LuaDLL.luaL_error(L, "unknown member name postWrapMode");
+			}
+			else
+			{
+				LuaDLL.luaL_error(L, "attempt to index postWrapMode on a nil value");
+			}
 		}
 
 		AnimationCurve obj = (AnimationCurve)o;
@@ -131,7 +167,16 @@ public class AnimationCurveWrap
 
 		if (o == null)
 		{
-			LuaDLL.luaL_error(L, "unknown member name keys");
+			LuaTypes types = LuaDLL.lua_type(L, 1);
+
+			if (types == LuaTypes.LUA_TTABLE)
+			{
+				LuaDLL.luaL_error(L, "unknown member name keys");
+			}
+			else
+			{
+				LuaDLL.luaL_error(L, "attempt to index keys on a nil value");
+			}
 		}
 
 		AnimationCurve obj = (AnimationCurve)o;
@@ -146,7 +191,16 @@ public class AnimationCurveWrap
 
 		if (o == null)
 		{
-			LuaDLL.luaL_error(L, "unknown member name preWrapMode");
+			LuaTypes types = LuaDLL.lua_type(L, 1);
+
+			if (types == LuaTypes.LUA_TTABLE)
+			{
+				LuaDLL.luaL_error(L, "unknown member name preWrapMode");
+			}
+			else
+			{
+				LuaDLL.luaL_error(L, "attempt to index preWrapMode on a nil value");
+			}
 		}
 
 		AnimationCurve obj = (AnimationCurve)o;
@@ -161,7 +215,16 @@ public class AnimationCurveWrap
 
 		if (o == null)
 		{
-			LuaDLL.luaL_error(L, "unknown member name postWrapMode");
+			LuaTypes types = LuaDLL.lua_type(L, 1);
+
+			if (types == LuaTypes.LUA_TTABLE)
+			{
+				LuaDLL.luaL_error(L, "unknown member name postWrapMode");
+			}
+			else
+			{
+				LuaDLL.luaL_error(L, "attempt to index postWrapMode on a nil value");
+			}
 		}
 
 		AnimationCurve obj = (AnimationCurve)o;

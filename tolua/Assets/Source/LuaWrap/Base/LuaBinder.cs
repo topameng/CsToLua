@@ -17,8 +17,7 @@ public static class LuaBinder
 		MonoBehaviourWrap.Register(L);
 		ApplicationWrap.Register(L);
 		KeyframeWrap.Register(L);
-		AnimationCurveWrap.Register(L);
-		TestToLuaWrap.Register(L);
+		AnimationCurveWrap.Register(L);		
 		TestEnumWrap.Register(L);
 		SpaceWrap.Register(L);
 		LightWrap.Register(L);

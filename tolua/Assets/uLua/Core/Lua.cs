@@ -1,5 +1,5 @@
 //#if UNITY_IPHONE
-    #define __NOGEN__
+#define __NOGEN__
 //#endif
 
 namespace LuaInterface
@@ -57,9 +57,7 @@ namespace LuaInterface
 			GCHandle handle = GCHandle.Alloc(translator, GCHandleType.Pinned);
 			IntPtr thisptr = GCHandle.ToIntPtr(handle);
 			LuaDLL.lua_pushlightuserdata(L, thisptr);
-			LuaDLL.lua_setglobal(L, "_translator");
-
-            tracebackFunction = new LuaCSFunction(LuaStatic.traceback);
+			LuaDLL.lua_setglobal(L, "_translator");            
 
             // We need to keep this in a managed reference so the delegate doesn't get garbage collected
 			panicCallback = new LuaCSFunction(LuaStatic.panic);
@@ -96,7 +94,8 @@ namespace LuaInterface
             LuaDLL.lua_rawseti( L, loaderTable, 1 );
             LuaDLL.lua_settop( L, 0 );
 
-            DoString(LuaStatic.init_luanet);
+            DoString(LuaStatic.init_luanet);            
+            tracebackFunction = new LuaCSFunction(LuaStatic.traceback);
         }
 
         public void Close()
@@ -279,7 +278,7 @@ namespace LuaInterface
             int oldTop=LuaDLL.lua_gettop(L);
 
             // Load with Unity3D resources            
-            byte[] text = LuaStatic.LoadLua(fileName);
+            byte[] text = LuaStatic.Load(fileName);
 
             if (text == null)
             {
@@ -294,7 +293,7 @@ namespace LuaInterface
                     env.push(L);
                     //LuaDLL.lua_setfenv(L, -1);
                     LuaDLL.lua_setfenv(L, -2);
-                }
+                }                
 
                 if (LuaDLL.lua_pcall(L, 0, -1, -2) == 0)
                 {
@@ -373,8 +372,7 @@ namespace LuaInterface
         }
 
         #region Globals auto-complete
-        //完全无用, 但会造成性能问题 LuaTable["gameObject"] = gameObject; 这种卡
-        //private readonly List<string> globals = new List<string>();     
+        //private readonly List<string> globals = new List<string>();     //完全无用的逗比
         //private bool globalsSorted;
 
         /// <summary>
@@ -562,27 +560,64 @@ namespace LuaInterface
          */
         internal object[] callFunction(object function,object[] args,Type[] returnTypes)
         {
-            int nArgs=0;
-            int oldTop=LuaDLL.lua_gettop(L);
-            if(!LuaDLL.lua_checkstack(L,args.Length+6))
-                throw new LuaException("Lua stack overflow");
-            translator.push(L,function);
-            if(args!=null)
+            //int nArgs=0;
+            //int oldTop=LuaDLL.lua_gettop(L);
+            //if(!LuaDLL.lua_checkstack(L,args.Length+6))
+            //    throw new LuaException("Lua stack overflow");
+            //translator.push(L,function);
+            //if(args!=null)
+            //{
+            //    nArgs=args.Length;
+            //    for(int i=0;i<args.Length;i++)
+            //    {
+            //        translator.push(L,args[i]);
+            //    }
+            //}
+            //int error = LuaDLL.lua_pcall(L, nArgs, -1, 0);
+            //if (error != 0)
+            //    ThrowExceptionFromError(oldTop);
+
+            //if(returnTypes != null)
+            //    return translator.popValues(L,oldTop,returnTypes);
+            //else
+            //    return translator.popValues(L, oldTop);
+
+            int nArgs = 0;
+            LuaDLL.lua_getglobal(L, "traceback");
+            int oldTop = LuaDLL.lua_gettop(L);
+
+            if (!LuaDLL.lua_checkstack(L, args.Length + 6))
             {
-                nArgs=args.Length;
-                for(int i=0;i<args.Length;i++)
+                LuaDLL.lua_pop(L, 1);
+                throw new LuaException("Lua stack overflow");
+            }
+
+            translator.push(L, function);
+
+            if (args != null)
+            {
+                nArgs = args.Length;
+                for (int i = 0; i < args.Length; i++)
                 {
-                    translator.push(L,args[i]);
+                    translator.push(L, args[i]);
                 }
             }
-            int error = LuaDLL.lua_pcall(L, nArgs, -1, 0);
-            if (error != 0)
-                ThrowExceptionFromError(oldTop);
 
-            if(returnTypes != null)
-                return translator.popValues(L,oldTop,returnTypes);
-            else
-                return translator.popValues(L, oldTop);
+            int error = LuaDLL.lua_pcall(L, nArgs, -1, -nArgs - 2);
+
+            if (error != 0)
+            {
+                string err = LuaDLL.lua_tostring(L, -1);
+                LuaDLL.lua_settop(L, oldTop);
+                //LuaTypes luatype = LuaDLL.lua_type(L, -1);
+                LuaDLL.lua_pop(L, 1);
+                if (err == null) err = "Unknown Lua Error";
+                throw new LuaScriptException(err.ToString(), "");
+            }
+
+            object[] ret = returnTypes != null ? translator.popValues(L, oldTop, returnTypes) : translator.popValues(L, oldTop);
+            LuaDLL.lua_pop(L, 1);
+            return ret;
         }
         /*
          * Navigates a table to set the value of one of its fields
@@ -681,7 +716,9 @@ namespace LuaInterface
         internal void dispose(int reference)
         {
             if (L != IntPtr.Zero) //Fix submitted by Qingrui Li
-                LuaDLL.lua_unref(L,reference);
+            {
+                LuaDLL.lua_unref(L, reference);
+            }
         }
         /*
          * Gets a field of the table corresponding to the provided reference
@@ -806,9 +843,8 @@ namespace LuaInterface
         public void Dispose()
         {
 			Dispose(true);
-
-            System.GC.Collect();
-            System.GC.WaitForPendingFinalizers();
+            L = IntPtr.Zero;
+            GC.SuppressFinalize(this);
         }
 		
 		public virtual void Dispose(bool dispose)

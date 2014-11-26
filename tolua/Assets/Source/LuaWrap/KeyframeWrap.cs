@@ -6,7 +6,7 @@ public class KeyframeWrap
 {
 	public static LuaMethod[] regs = new LuaMethod[]
 	{
-		new LuaMethod("New", Create),
+		new LuaMethod("New", _CreateKeyframe),
 		new LuaMethod("GetClassType", GetClassType),
 	};
 
@@ -20,7 +20,7 @@ public class KeyframeWrap
 	};
 
 	[MonoPInvokeCallbackAttribute(typeof(LuaCSFunction))]
-	static int Create(IntPtr L)
+	static int _CreateKeyframe(IntPtr L)
 	{
 		int count = LuaDLL.lua_gettop(L);
 
@@ -65,7 +65,7 @@ public class KeyframeWrap
 
 	public static void Register(IntPtr L)
 	{
-		LuaScriptMgr.RegisterLib(L, "Keyframe", typeof(Keyframe), regs, fields, "object");
+		LuaScriptMgr.RegisterLib(L, "UnityEngine.Keyframe", typeof(Keyframe), regs, fields, null);
 	}
 
 	[MonoPInvokeCallbackAttribute(typeof(LuaCSFunction))]
@@ -75,7 +75,16 @@ public class KeyframeWrap
 
 		if (o == null)
 		{
-			LuaDLL.luaL_error(L, "unknown member name time");
+			LuaTypes types = LuaDLL.lua_type(L, 1);
+
+			if (types == LuaTypes.LUA_TTABLE)
+			{
+				LuaDLL.luaL_error(L, "unknown member name time");
+			}
+			else
+			{
+				LuaDLL.luaL_error(L, "attempt to index time on a nil value");
+			}
 		}
 
 		Keyframe obj = (Keyframe)o;
@@ -90,7 +99,16 @@ public class KeyframeWrap
 
 		if (o == null)
 		{
-			LuaDLL.luaL_error(L, "unknown member name value");
+			LuaTypes types = LuaDLL.lua_type(L, 1);
+
+			if (types == LuaTypes.LUA_TTABLE)
+			{
+				LuaDLL.luaL_error(L, "unknown member name value");
+			}
+			else
+			{
+				LuaDLL.luaL_error(L, "attempt to index value on a nil value");
+			}
 		}
 
 		Keyframe obj = (Keyframe)o;
@@ -105,7 +123,16 @@ public class KeyframeWrap
 
 		if (o == null)
 		{
-			LuaDLL.luaL_error(L, "unknown member name inTangent");
+			LuaTypes types = LuaDLL.lua_type(L, 1);
+
+			if (types == LuaTypes.LUA_TTABLE)
+			{
+				LuaDLL.luaL_error(L, "unknown member name inTangent");
+			}
+			else
+			{
+				LuaDLL.luaL_error(L, "attempt to index inTangent on a nil value");
+			}
 		}
 
 		Keyframe obj = (Keyframe)o;
@@ -120,7 +147,16 @@ public class KeyframeWrap
 
 		if (o == null)
 		{
-			LuaDLL.luaL_error(L, "unknown member name outTangent");
+			LuaTypes types = LuaDLL.lua_type(L, 1);
+
+			if (types == LuaTypes.LUA_TTABLE)
+			{
+				LuaDLL.luaL_error(L, "unknown member name outTangent");
+			}
+			else
+			{
+				LuaDLL.luaL_error(L, "attempt to index outTangent on a nil value");
+			}
 		}
 
 		Keyframe obj = (Keyframe)o;
@@ -135,7 +171,16 @@ public class KeyframeWrap
 
 		if (o == null)
 		{
-			LuaDLL.luaL_error(L, "unknown member name tangentMode");
+			LuaTypes types = LuaDLL.lua_type(L, 1);
+
+			if (types == LuaTypes.LUA_TTABLE)
+			{
+				LuaDLL.luaL_error(L, "unknown member name tangentMode");
+			}
+			else
+			{
+				LuaDLL.luaL_error(L, "attempt to index tangentMode on a nil value");
+			}
 		}
 
 		Keyframe obj = (Keyframe)o;
@@ -150,7 +195,16 @@ public class KeyframeWrap
 
 		if (o == null)
 		{
-			LuaDLL.luaL_error(L, "unknown member name time");
+			LuaTypes types = LuaDLL.lua_type(L, 1);
+
+			if (types == LuaTypes.LUA_TTABLE)
+			{
+				LuaDLL.luaL_error(L, "unknown member name time");
+			}
+			else
+			{
+				LuaDLL.luaL_error(L, "attempt to index time on a nil value");
+			}
 		}
 
 		Keyframe obj = (Keyframe)o;
@@ -166,7 +220,16 @@ public class KeyframeWrap
 
 		if (o == null)
 		{
-			LuaDLL.luaL_error(L, "unknown member name value");
+			LuaTypes types = LuaDLL.lua_type(L, 1);
+
+			if (types == LuaTypes.LUA_TTABLE)
+			{
+				LuaDLL.luaL_error(L, "unknown member name value");
+			}
+			else
+			{
+				LuaDLL.luaL_error(L, "attempt to index value on a nil value");
+			}
 		}
 
 		Keyframe obj = (Keyframe)o;
@@ -182,7 +245,16 @@ public class KeyframeWrap
 
 		if (o == null)
 		{
-			LuaDLL.luaL_error(L, "unknown member name inTangent");
+			LuaTypes types = LuaDLL.lua_type(L, 1);
+
+			if (types == LuaTypes.LUA_TTABLE)
+			{
+				LuaDLL.luaL_error(L, "unknown member name inTangent");
+			}
+			else
+			{
+				LuaDLL.luaL_error(L, "attempt to index inTangent on a nil value");
+			}
 		}
 
 		Keyframe obj = (Keyframe)o;
@@ -198,7 +270,16 @@ public class KeyframeWrap
 
 		if (o == null)
 		{
-			LuaDLL.luaL_error(L, "unknown member name outTangent");
+			LuaTypes types = LuaDLL.lua_type(L, 1);
+
+			if (types == LuaTypes.LUA_TTABLE)
+			{
+				LuaDLL.luaL_error(L, "unknown member name outTangent");
+			}
+			else
+			{
+				LuaDLL.luaL_error(L, "attempt to index outTangent on a nil value");
+			}
 		}
 
 		Keyframe obj = (Keyframe)o;
@@ -214,7 +295,16 @@ public class KeyframeWrap
 
 		if (o == null)
 		{
-			LuaDLL.luaL_error(L, "unknown member name tangentMode");
+			LuaTypes types = LuaDLL.lua_type(L, 1);
+
+			if (types == LuaTypes.LUA_TTABLE)
+			{
+				LuaDLL.luaL_error(L, "unknown member name tangentMode");
+			}
+			else
+			{
+				LuaDLL.luaL_error(L, "attempt to index tangentMode on a nil value");
+			}
 		}
 
 		Keyframe obj = (Keyframe)o;

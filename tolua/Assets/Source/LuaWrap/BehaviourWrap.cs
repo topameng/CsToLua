@@ -6,7 +6,7 @@ public class BehaviourWrap
 {
 	public static LuaMethod[] regs = new LuaMethod[]
 	{
-		new LuaMethod("New", Create),
+		new LuaMethod("New", _CreateBehaviour),
 		new LuaMethod("GetClassType", GetClassType),
 	};
 
@@ -16,7 +16,7 @@ public class BehaviourWrap
 	};
 
 	[MonoPInvokeCallbackAttribute(typeof(LuaCSFunction))]
-	static int Create(IntPtr L)
+	static int _CreateBehaviour(IntPtr L)
 	{
 		int count = LuaDLL.lua_gettop(L);
 
@@ -43,7 +43,7 @@ public class BehaviourWrap
 
 	public static void Register(IntPtr L)
 	{
-		LuaScriptMgr.RegisterLib(L, "Behaviour", typeof(Behaviour), regs, fields, "Component");
+		LuaScriptMgr.RegisterLib(L, "UnityEngine.Behaviour", typeof(Behaviour), regs, fields, "UnityEngine.Component");
 	}
 
 	[MonoPInvokeCallbackAttribute(typeof(LuaCSFunction))]
@@ -53,7 +53,16 @@ public class BehaviourWrap
 
 		if (o == null)
 		{
-			LuaDLL.luaL_error(L, "unknown member name enabled");
+			LuaTypes types = LuaDLL.lua_type(L, 1);
+
+			if (types == LuaTypes.LUA_TTABLE)
+			{
+				LuaDLL.luaL_error(L, "unknown member name enabled");
+			}
+			else
+			{
+				LuaDLL.luaL_error(L, "attempt to index enabled on a nil value");
+			}
 		}
 
 		Behaviour obj = (Behaviour)o;
@@ -68,7 +77,16 @@ public class BehaviourWrap
 
 		if (o == null)
 		{
-			LuaDLL.luaL_error(L, "unknown member name enabled");
+			LuaTypes types = LuaDLL.lua_type(L, 1);
+
+			if (types == LuaTypes.LUA_TTABLE)
+			{
+				LuaDLL.luaL_error(L, "unknown member name enabled");
+			}
+			else
+			{
+				LuaDLL.luaL_error(L, "attempt to index enabled on a nil value");
+			}
 		}
 
 		Behaviour obj = (Behaviour)o;

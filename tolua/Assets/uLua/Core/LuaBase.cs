@@ -13,8 +13,16 @@ namespace LuaInterface
         protected int _Reference;
         protected LuaState _Interpreter;
 
-        ~LuaBase()
+        public string name = null;
+        private int count = 0;
+
+        public LuaBase()
         {
+            count = 1;
+        }
+
+        ~LuaBase()
+        {            
             Dispose(false);
         }
 
@@ -24,15 +32,48 @@ namespace LuaInterface
             GC.SuppressFinalize(this);
         }
 
+        public void AddRef()
+        {
+            ++count;
+        }
+
+        public void Release()
+        {
+            if (_Disposed || name == null)
+            {
+                return;
+            }
+
+            --count;
+
+            if (count > 0)
+            {
+                return;
+            }
+            
+            if (name != null)
+            {
+                LuaScriptMgr mgr = LuaScriptMgr.GetMgrFromLuaState(_Interpreter.L);
+
+                if (mgr != null)
+                {
+                    mgr.RemoveLuaRes(name);
+                }                
+            }
+
+            Dispose();
+        }
+
         public virtual void Dispose(bool disposeManagedResources)
         {
             if (!_Disposed)
             {
-                if (disposeManagedResources)
+                if (_Reference != 0 && _Interpreter != null)
                 {
-                    if (_Reference != 0)
-                        _Interpreter.dispose(_Reference);
+                    _Interpreter.dispose(_Reference);
+                    _Reference = 0;
                 }
+
                 _Interpreter = null;
                 _Disposed = true;
             }

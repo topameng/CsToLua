@@ -104,7 +104,7 @@ namespace LuaInterface
 		}
 
         //把一个table func 放在栈顶
-        public bool RawGetField(string field)
+        /*public bool RawGetField(string field)
         {
             IntPtr L = _Interpreter.L;
             LuaTypes type = LuaTypes.LUA_TNONE;
@@ -132,7 +132,7 @@ namespace LuaInterface
             }
 
             return false;
-        }
+        }*/
 
         /*
          * Gets an string fields of a table ignoring its metatable,

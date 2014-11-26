@@ -58,6 +58,7 @@ public enum TestEnum
     Three,
 }
 
+
 public class Client : MonoBehaviour 
 {
     public Timer timer = null;
@@ -84,7 +85,7 @@ public class Client : MonoBehaviour
         if (timer != null)
         {
             timer.OnUpdate(Time.deltaTime);
-        }
+        }                
     }
 		
 	void OnGUI() 

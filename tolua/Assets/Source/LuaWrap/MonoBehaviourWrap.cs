@@ -16,7 +16,7 @@ public class MonoBehaviourWrap
 		new LuaMethod("StopCoroutine", StopCoroutine),
 		new LuaMethod("StopAllCoroutines", StopAllCoroutines),
 		new LuaMethod("print", print),
-		new LuaMethod("New", Create),
+		new LuaMethod("New", _CreateMonoBehaviour),
 		new LuaMethod("GetClassType", GetClassType),
 	};
 
@@ -26,7 +26,7 @@ public class MonoBehaviourWrap
 	};
 
 	[MonoPInvokeCallbackAttribute(typeof(LuaCSFunction))]
-	static int Create(IntPtr L)
+	static int _CreateMonoBehaviour(IntPtr L)
 	{
 		int count = LuaDLL.lua_gettop(L);
 
@@ -53,7 +53,7 @@ public class MonoBehaviourWrap
 
 	public static void Register(IntPtr L)
 	{
-		LuaScriptMgr.RegisterLib(L, "MonoBehaviour", typeof(MonoBehaviour), regs, fields, "Behaviour");
+		LuaScriptMgr.RegisterLib(L, "UnityEngine.MonoBehaviour", typeof(MonoBehaviour), regs, fields, "UnityEngine.Behaviour");
 	}
 
 	[MonoPInvokeCallbackAttribute(typeof(LuaCSFunction))]
@@ -63,7 +63,16 @@ public class MonoBehaviourWrap
 
 		if (o == null)
 		{
-			LuaDLL.luaL_error(L, "unknown member name useGUILayout");
+			LuaTypes types = LuaDLL.lua_type(L, 1);
+
+			if (types == LuaTypes.LUA_TTABLE)
+			{
+				LuaDLL.luaL_error(L, "unknown member name useGUILayout");
+			}
+			else
+			{
+				LuaDLL.luaL_error(L, "attempt to index useGUILayout on a nil value");
+			}
 		}
 
 		MonoBehaviour obj = (MonoBehaviour)o;
@@ -78,7 +87,16 @@ public class MonoBehaviourWrap
 
 		if (o == null)
 		{
-			LuaDLL.luaL_error(L, "unknown member name useGUILayout");
+			LuaTypes types = LuaDLL.lua_type(L, 1);
+
+			if (types == LuaTypes.LUA_TTABLE)
+			{
+				LuaDLL.luaL_error(L, "unknown member name useGUILayout");
+			}
+			else
+			{
+				LuaDLL.luaL_error(L, "attempt to index useGUILayout on a nil value");
+			}
 		}
 
 		MonoBehaviour obj = (MonoBehaviour)o;
