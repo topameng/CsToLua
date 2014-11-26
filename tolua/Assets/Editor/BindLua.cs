@@ -247,7 +247,7 @@ public static class LuaBinding
         AssetDatabase.Refresh();
     }
 
-    [MenuItem("Thinky/Clear LuaBinder File", false, 13)]
+    [MenuItem("Lua/Clear LuaBinder File", false, 13)]
     static void ClearLuaBinder()
     {
         StringBuilder sb = new StringBuilder();
@@ -272,7 +272,7 @@ public static class LuaBinding
         AssetDatabase.Refresh();
     }
 
-    [MenuItem("Thinky/Gen u3d Wrap Files", false, 11)]
+    [MenuItem("Lua/Gen u3d Wrap Files", false, 11)]
     public static void U3dBinding()
     {
         List<string> dropList = new List<string>
