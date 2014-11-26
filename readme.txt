@@ -1,11 +1,20 @@
-﻿2014.11.10
+﻿2014.11.26
+luajit升级为2.0.3版本
+加入枚举相等判断
+加入Table名称构造函数，如local go = GameObject("Light")
+修改了导出方式，现在可以只写一个类型就能导出类了
+导出了unity所有的类，有一些扔掉了，具体参见BindLua.cs文件
+删除了某些影响build函数，应该是属于内部或者编辑器相关函数
+修改了注册方式，现在所有类型注册顺序无关，注意如果某个基类没有导出，派生类访问基类函数会出错
+加入了lua xml库.
+
+2014.11.10
 向lua压入数组参数潜在的内存泄漏问题
 GetNetObject 对读取的lua参数进行类型匹配检测
 加入GetTypeObject读取Type类型
 把压入到lua的枚举变量转变为userdata,现在重载函数完美区分double和enum类型
 枚举类型加入 IntToEnum 函数，把一个int值转换为当前类型枚举
 加入模版类型导出支持，如导出Dictionary<int,string>类型
-
 
 2014.11.3
 细分Push函数，对于数组提供一种通用的数组metatable，
