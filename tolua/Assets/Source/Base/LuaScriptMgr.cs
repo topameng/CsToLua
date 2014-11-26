@@ -837,28 +837,28 @@ public class LuaScriptMgr
     }
 
     public static void Push(IntPtr L, char d)
-    {        
-        LuaDLL.lua_pushnumber(L, d);
+    {
+        LuaDLL.lua_pushinteger(L, d);
     }
 
     public static void Push(IntPtr L, sbyte d)
     {
-        LuaDLL.lua_pushnumber(L, d);
+        LuaDLL.lua_pushinteger(L, d);
     }
 
     public static void Push(IntPtr L, byte d)
     {
-        LuaDLL.lua_pushnumber(L, d);
+        LuaDLL.lua_pushinteger(L, d);
     }
 
     public static void Push(IntPtr L, short d)
     {
-        LuaDLL.lua_pushnumber(L, d);
+        LuaDLL.lua_pushinteger(L, d);
     }
 
     public static void Push(IntPtr L, ushort d)
     {
-        LuaDLL.lua_pushnumber(L, d);
+        LuaDLL.lua_pushinteger(L, d);
     }
 
     public static void Push(IntPtr L, int d)
