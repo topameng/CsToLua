@@ -421,8 +421,7 @@ public static class LuaBinding
         sb.AppendLine("\t{");
         sb.AppendLine("\t\tobjectWrap.Register(L);");
         sb.AppendLine("\t\tObjectWrap.Register(L);");
-        sb.AppendLine("\t\tDebuggerWrap.Register(L);");
-        sb.AppendLine("\t\tTableMgrWrap.Register(L);");
+        sb.AppendLine("\t\tcoroutineWrap.Register(L);");        
 
 
         for (int i = 0; i < bts.Length; i++)
