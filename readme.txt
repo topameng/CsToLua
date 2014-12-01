@@ -9,6 +9,7 @@ luajit升级为2.0.3版本
 注意如果某个基类没有导出，派生类访问基类函数会出错
 加入了lua xml库.
 加入namespace控制，如GameObject位于UnityEngine空间
+修复了LuaBase派生类的lua ref泄漏问题.
 
 2014.11.10
 向lua压入数组参数潜在的内存泄漏问题
