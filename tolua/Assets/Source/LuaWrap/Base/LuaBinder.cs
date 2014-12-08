@@ -24,8 +24,7 @@ public static class LuaBinder
 		UnityExceptionWrap.Register(L);
 		MissingComponentExceptionWrap.Register(L);
 		UnassignedReferenceExceptionWrap.Register(L);
-		MissingReferenceExceptionWrap.Register(L);
-		TextGenerationSettingsWrap.Register(L);
+		MissingReferenceExceptionWrap.Register(L);		
 		WWWWrap.Register(L);
 		GenericStackWrap.Register(L);
 		ForceModeWrap.Register(L);
@@ -237,8 +236,7 @@ public static class LuaBinder
 		CubemapWrap.Register(L);
 		Texture3DWrap.Register(L);
 		SparseTextureWrap.Register(L);
-		RenderTextureWrap.Register(L);
-		TextAnchorWrap.Register(L);
+		RenderTextureWrap.Register(L);		
 		CharacterInfoWrap.Register(L);
 		FontWrap.Register(L);
 		UICharInfoWrap.Register(L);
@@ -250,8 +248,7 @@ public static class LuaBinder
 		GradientWrap.Register(L);
 		ScaleModeWrap.Register(L);
 		FocusTypeWrap.Register(L);
-		RectOffsetWrap.Register(L);
-		TextWrapModeWrap.Register(L);
+		RectOffsetWrap.Register(L);		
 		ImagePositionWrap.Register(L);
 		EventWrap.Register(L);
 		KeyCodeWrap.Register(L);
@@ -274,8 +271,7 @@ public static class LuaBinder
 		ParticleSystemWrap.Register(L);
 		ParticleSystemParticleWrap.Register(L);
 		ParticleSystemCollisionEventWrap.Register(L);
-		ParticleSystemRendererWrap.Register(L);
-		TextAssetWrap.Register(L);
+		ParticleSystemRendererWrap.Register(L);		
 		ISerializationCallbackReceiverWrap.Register(L);
 		ShaderWrap.Register(L);
 		MaterialWrap.Register(L);
