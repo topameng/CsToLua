@@ -22,7 +22,7 @@ public class LuaScriptMgr
     static ObjectTranslator _translator = null;
 
 #if MULTI_STATE
-    List<LuaScriptMgr> mgrList = new List<LuaScriptMgr>();
+    static List<LuaScriptMgr> mgrList = new List<LuaScriptMgr>();
 #endif
 
     string luaIndex =
