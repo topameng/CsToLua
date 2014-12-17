@@ -70,8 +70,11 @@ namespace LuaInterface
             {
                 if (_Reference != 0 && _Interpreter != null)
                 {
-                    _Interpreter.dispose(_Reference);
-                    _Reference = 0;
+                    if (disposeManagedResources)
+                    {
+	                    _Interpreter.dispose(_Reference);
+        	            _Reference = 0;
+		    }
                 }
 
                 _Interpreter = null;
