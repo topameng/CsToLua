@@ -23,8 +23,7 @@ public class Vector3Wrap
 		new LuaMethod("Normalize", Normalize),
 		new LuaMethod("ToString", ToString),
 		new LuaMethod("Dot", Dot),
-		new LuaMethod("Project", Project),
-		new LuaMethod("Exclude", Exclude),
+		new LuaMethod("Project", Project),		
 		new LuaMethod("Angle", Angle),
 		new LuaMethod("Distance", Distance),
 		new LuaMethod("ClampMagnitude", ClampMagnitude),
@@ -685,17 +684,6 @@ public class Vector3Wrap
 		Vector3 arg0 = LuaScriptMgr.GetNetObject<Vector3>(L, 1);
 		Vector3 arg1 = LuaScriptMgr.GetNetObject<Vector3>(L, 2);
 		Vector3 o = Vector3.Project(arg0,arg1);
-		LuaScriptMgr.PushValue(L, o);
-		return 1;
-	}
-
-	[MonoPInvokeCallbackAttribute(typeof(LuaCSFunction))]
-	static int Exclude(IntPtr L)
-	{
-		LuaScriptMgr.CheckArgsCount(L, 2);
-		Vector3 arg0 = LuaScriptMgr.GetNetObject<Vector3>(L, 1);
-		Vector3 arg1 = LuaScriptMgr.GetNetObject<Vector3>(L, 2);
-		Vector3 o = Vector3.Exclude(arg0,arg1);
 		LuaScriptMgr.PushValue(L, o);
 		return 1;
 	}
