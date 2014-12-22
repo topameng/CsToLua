@@ -754,6 +754,32 @@ public class LuaScriptMgr
         return func;
     }
 
+    public static LuaTable GetTable(IntPtr L, int stackPos)
+    {
+        LuaTypes luatype = LuaDLL.lua_type(L, stackPos);
+
+        if (luatype != LuaTypes.LUA_TTABLE)
+        {
+            return null;
+        }
+
+        LuaDLL.lua_pushvalue(L, stackPos);
+        return new LuaTable(LuaDLL.luaL_ref(L, LuaIndexes.LUA_REGISTRYINDEX), L);
+    }
+
+    public static LuaTable GetLuaTable(IntPtr L, int stackPos)
+    {
+        LuaTable table = GetTable(L, stackPos);
+
+        if (table == null)
+        {
+            LuaDLL.luaL_error(L, string.Format("invalid arguments to method: {0}", GetErrorFunc(1)));
+            return null;
+        }
+
+        return table;
+    }
+
     public static object GetLuaObject(IntPtr L, int stackPos)
     {           
 #if MULTI_STATE
