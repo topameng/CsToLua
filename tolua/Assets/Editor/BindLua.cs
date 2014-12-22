@@ -165,22 +165,22 @@ public static class LuaBinding
         //_GT(typeof(Type)),
         
         ////u3d
-        _GT(typeof(Time)),
-        _GT(typeof(Vector2)),
-        _GT(typeof(Vector3)),        
-        _GT(typeof(GameObject)),
-        _GT(typeof(Component)),        
+        //_GT(typeof(Time)),
+        //_GT(typeof(Vector2)),
+        //_GT(typeof(Vector3)),        
+        //_GT(typeof(GameObject)),
+        //_GT(typeof(Component)),        
         
-        _GT(typeof(Behaviour)),
-        _GT(typeof(Transform)),
-        _GT(typeof(Resources)),
-        _GT(typeof(TextAsset)),    
-        _GT(typeof(Keyframe)),       
-        _GT(typeof(AnimationCurve)),
-        _GT(typeof(Motion)),
-        _GT(typeof(AnimationClip)),
+        //_GT(typeof(Behaviour)),
+        //_GT(typeof(Transform)),
+        //_GT(typeof(Resources)),
+        //_GT(typeof(TextAsset)),    
+        //_GT(typeof(Keyframe)),       
+        //_GT(typeof(AnimationCurve)),
+        //_GT(typeof(Motion)),
+        //_GT(typeof(AnimationClip)),
 
-        _GT(typeof(MonoBehaviour)),
+        //_GT(typeof(MonoBehaviour)),
 
        ////内部
         //_GT(typeof(IAssetFile)),        
@@ -206,7 +206,7 @@ public static class LuaBinding
         //_GT(typeof(UICamera)),
     };
 
-    [MenuItem("Lua/Gen LuaBinding Files", false, 11)]
+    [MenuItem("Lua/Gen Lua Wrap Files", false, 11)]
     public static void Binding()
     {
         if (!Application.isPlaying)
@@ -245,6 +245,42 @@ public static class LuaBinding
         Debug.Log("Generate lua binding files over");
         Debug.Log(sb1.ToString());
         AssetDatabase.Refresh();
+    }
+
+    [MenuItem("Thinky/Gen LuaBinder File", false, 12)]
+    static void GenLuaBinder()
+    {
+        StringBuilder sb = new StringBuilder();
+        sb.AppendLine("using System;");
+        sb.AppendLine();
+        sb.AppendLine("public static class LuaBinder");
+        sb.AppendLine("{");
+        sb.AppendLine("\tpublic static void Bind(IntPtr L)");
+        sb.AppendLine("\t{");
+        sb.AppendLine("\t\tobjectWrap.Register(L);");
+        sb.AppendLine("\t\tObjectWrap.Register(L);");                
+
+        string[] files = Directory.GetFiles("Assets/Source/LuaWrap/", "*.cs", SearchOption.TopDirectoryOnly);
+
+        for (int i = 0; i < files.Length; i++)
+        {
+            string wrapName = Path.GetFileName(files[i]);
+            int pos = wrapName.LastIndexOf(".");
+            wrapName = wrapName.Substring(0, pos);
+            sb.AppendFormat("\t\t{0}.Register(L);\r\n", wrapName);
+        }
+
+        sb.AppendLine("\t}");
+        sb.AppendLine("}");
+
+        string file = Application.dataPath + "/Source/LuaWrap/Base/LuaBinder.cs";
+
+        using (StreamWriter textWriter = new StreamWriter(file, false, Encoding.UTF8))
+        {
+            textWriter.Write(sb.ToString());
+            textWriter.Flush();
+            textWriter.Close();
+        }
     }
 
     [MenuItem("Lua/Clear LuaBinder File", false, 13)]
@@ -406,40 +442,9 @@ public static class LuaBinding
             }
         }
 
-        GenRegFile(list.ToArray());
+        GenLuaBinder();
         Debug.Log("Generate lua binding files over， Generate " + list.Count + " files");
         AssetDatabase.Refresh();
-    }
-
-    static void GenRegFile(BindType[] bts)
-    {
-        StringBuilder sb = new StringBuilder();
-        sb.AppendLine("using System;");
-        sb.AppendLine("public static class LuaBinder");
-        sb.AppendLine("{");
-        sb.AppendLine("\tpublic static void Bind(IntPtr L)");
-        sb.AppendLine("\t{");
-        sb.AppendLine("\t\tobjectWrap.Register(L);");
-        sb.AppendLine("\t\tObjectWrap.Register(L);");
-        sb.AppendLine("\t\tcoroutineWrap.Register(L);");        
-
-
-        for (int i = 0; i < bts.Length; i++)
-        {
-            sb.AppendFormat("\t\t{0}Wrap.Register(L);\r\n", bts[i].wrapName);
-        }
-
-        sb.AppendLine("\t}");
-        sb.AppendLine("}");
-
-        string file = Application.dataPath + "/Source/LuaWrap/Base/LuaBinder.cs";
-
-        using (StreamWriter textWriter = new StreamWriter(file, false, Encoding.UTF8))
-        {
-            textWriter.Write(sb.ToString());
-            textWriter.Flush();
-            textWriter.Close();
-        }
     }
 
     static string GetOS()
