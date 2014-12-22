@@ -86,6 +86,11 @@ public class Client : MonoBehaviour
         {
             timer.OnUpdate(Time.deltaTime);
         }          
+
+        if (luaMgr != null)
+        {
+            luaMgr.Update();
+        }
     }
 		
 	void OnGUI() 
