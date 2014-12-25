@@ -88,16 +88,12 @@ public static class ToLua
     public static void Generate(params string[] param)
     {
         Debugger.Log("Begin Generate lua Wrap for class {0}\r\n", className);
-        sb = new StringBuilder();
-        string fullType = type.ToString();
-        _C(fullType);
-
+        sb = new StringBuilder();                
         usingList.Add("System");
-        int pos = fullType.LastIndexOf('.');
 
-        if (pos > 0)
+        if (type.Namespace != null && type.Namespace != string.Empty)
         {
-            usingList.Add(fullType.Substring(0, pos));
+            usingList.Add(type.Namespace);
         }
 
         if (wrapClassName == "")
