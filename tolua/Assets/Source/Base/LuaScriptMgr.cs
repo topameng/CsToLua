@@ -108,7 +108,7 @@ public class LuaScriptMgr
         _translator = lua.GetTranslator();             
         LuaDLL.luaopen_pb(lua.L);                       
         //LuaDLL.luaopen_ffi(lua.L);
-        OpenXml();
+        //OpenXml();
         //OpenLuaCmd();
                 
         fileList = new HashSet<string>();
