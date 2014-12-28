@@ -1477,7 +1477,7 @@ public class LuaScriptMgr
 #else
         ObjectTranslator translator = _translator;
 #endif        
-        object obj = GetLuaObject(L, 1);
+         Array obj = GetLuaObject(L, 1) as Array;
 
         if (obj == null)
         {
@@ -1486,17 +1486,30 @@ public class LuaScriptMgr
             return 1;
         }
 
-        int index = (int)GetNumber(L, 2);        
-        Array aa = obj as Array;
+        LuaTypes luaType = LuaDLL.lua_type(L, 2);
 
-        if (index >= aa.Length)
+        if (luaType == LuaTypes.LUA_TNUMBER)
         {
-            LuaDLL.luaL_error(L, "array index out of bounds: " + index + " " + aa.Length);
-            return 0;
-        }
+            int index = (int)GetNumber(L, 2);            
 
-        object val = aa.GetValue(index);
-        translator.push(L, val);
+            if (index >= obj.Length)
+            {
+                LuaDLL.luaL_error(L, "array index out of bounds: " + index + " " + obj.Length);
+                return 0;
+            }
+
+            object val = obj.GetValue(index);
+            translator.push(L, val);
+        }
+        else if (luaType == LuaTypes.LUA_TSTRING)
+        {
+            string field = GetLuaString(L, 2);
+
+            if (field == "Length")
+            {                
+                Push(L, obj.Length);
+            }
+        }
 
         return 1;
     }
