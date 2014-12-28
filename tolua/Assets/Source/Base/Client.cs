@@ -85,7 +85,12 @@ public class Client : MonoBehaviour
         if (timer != null)
         {
             timer.OnUpdate(Time.deltaTime);
-        }                
+        }          
+
+        if (luaMgr != null)
+        {
+            luaMgr.Update();
+        }
     }
 		
 	void OnGUI() 
@@ -102,12 +107,6 @@ public class Client : MonoBehaviour
             Debug.Log("c# cost time: " + (Time.realtimeSinceStartup - time));
             
             luaMgr.CallLuaFunction("Test", transform);            
-        }
-        else if (GUI.Button(new Rect(10, 80, 120, 50), "Coroutine"))
-        {
-            //LuaFunction func = luaMgr.GetLuaFunction("myFunc");
-            //thread = new LuaThread(luaMgr.lua, func);
-            //thread.Start();
         }
 	}
 }

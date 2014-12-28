@@ -19,6 +19,8 @@ public class LuaScriptMgr
     HashSet<string> fileList = null;
     Dictionary<string, LuaBase> dict = null;    
     //IAssetFile file = null;
+
+    public LockFreeQueue<int> refGCList = null;
     static ObjectTranslator _translator = null;
 
 #if MULTI_STATE
@@ -110,7 +112,8 @@ public class LuaScriptMgr
         //OpenLuaCmd();
                 
         fileList = new HashSet<string>();
-        dict = new Dictionary<string,LuaBase>();            
+        dict = new Dictionary<string,LuaBase>();
+        refGCList = new LockFreeQueue<int>(2048);
 
         LuaDLL.lua_pushstring(lua.L, "ToLua_Index");
         LuaDLL.luaL_dostring(lua.L, luaIndex);        
@@ -165,6 +168,15 @@ public class LuaScriptMgr
         //}
         
         Debugger.Log("Reload lua files over");
+    }
+
+    public void Update()
+    {
+        while (!refGCList.IsEmpty())
+        {
+            int reference = refGCList.Dequeue();
+            LuaDLL.lua_unref(lua.L, reference);
+        }
     }
 
     void PrintLua(params string[] param)
@@ -742,6 +754,32 @@ public class LuaScriptMgr
         return func;
     }
 
+    public static LuaTable GetTable(IntPtr L, int stackPos)
+    {
+        LuaTypes luatype = LuaDLL.lua_type(L, stackPos);
+
+        if (luatype != LuaTypes.LUA_TTABLE)
+        {
+            return null;
+        }
+
+        LuaDLL.lua_pushvalue(L, stackPos);
+        return new LuaTable(LuaDLL.luaL_ref(L, LuaIndexes.LUA_REGISTRYINDEX), L);
+    }
+
+    public static LuaTable GetLuaTable(IntPtr L, int stackPos)
+    {
+        LuaTable table = GetTable(L, stackPos);
+
+        if (table == null)
+        {
+            LuaDLL.luaL_error(L, string.Format("invalid arguments to method: {0}", GetErrorFunc(1)));
+            return null;
+        }
+
+        return table;
+    }
+
     public static object GetLuaObject(IntPtr L, int stackPos)
     {           
 #if MULTI_STATE
@@ -802,7 +840,7 @@ public class LuaScriptMgr
 
     public static void Push(IntPtr L, UnityEngine.Object obj)
     {
-        PushObject(L, obj);
+        PushObject(L, obj == null ? null : obj);
     }
 
     //压入一个从object派生的变量
@@ -1002,6 +1040,55 @@ public class LuaScriptMgr
     }
 
     static bool CheckType(IntPtr L, LuaTypes luaType, Type t, int pos)
+    {
+        switch (luaType)
+        {
+            case LuaTypes.LUA_TNUMBER:
+                return t.IsPrimitive;
+            case LuaTypes.LUA_TSTRING:
+                return t == typeof(string);
+            case LuaTypes.LUA_TUSERDATA:
+                return CheckUserData(L, luaType, t, pos);
+            case LuaTypes.LUA_TBOOLEAN:
+                return t == typeof(bool);
+            case LuaTypes.LUA_TFUNCTION:
+                return t == typeof(LuaFunction);
+            case LuaTypes.LUA_TTABLE:
+                return t == typeof(LuaTable) || t.IsArray;
+            case LuaTypes.LUA_TNIL:
+                break;
+            default:
+                break;
+        }
+
+        return false;
+    }
+
+    static bool CheckUserData(IntPtr L, LuaTypes luaType, Type t, int pos)
+    {
+        if (t == typeof(object))
+        {
+            return true;
+        }
+
+        object obj = GetLuaObject(L, pos);
+
+        if (t.IsEnum || t == typeof(string))
+        {
+            return obj.GetType() == t;
+        }
+        else if (t == typeof(Type))
+        {
+            string name = obj.GetType().Name;
+            return name == "MonoType" || name == "System.MonoType";
+        }
+        else
+        {
+            return obj.GetType() == t || t.IsAssignableFrom(obj.GetType());
+        }
+    }
+
+    /*static bool CheckType(IntPtr L, LuaTypes luaType, Type t, int pos)
     {                
         if (t == typeof(bool))
         {
@@ -1077,7 +1164,7 @@ public class LuaScriptMgr
         }
 
         return false;
-    }
+    }*/
 
     public static object[] GetParamsObject(IntPtr L, int stackPos, int count)
     {

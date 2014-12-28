@@ -21,6 +21,13 @@ namespace LuaInterface
             _Interpreter = interpreter;
         }
 
+        public LuaTable(int reference, IntPtr L)
+        {            
+            _Reference = reference;
+            ObjectTranslator translator = ObjectTranslator.FromState(L);
+            _Interpreter = translator.interpreter;            
+        }
+
         //bool disposed = false;
         //~LuaTable()
         //{

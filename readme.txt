@@ -1,4 +1,13 @@
-﻿2014.11.26
+﻿2014.12.22
+通过扫描文件，自动产生luabinder文件
+CheckType 优化
+u3d Object 类转 system Object. null 变量问题
+
+感谢晚餐同学发现的2个Bug
+Lua 对象gc多线程问题
+uLua objectsBackMap u3d Object匹配错误问题
+
+2014.11.26
 luajit升级为2.0.3版本,pc需要vs2012运行库
 加入枚举相等判断
 加入Table名称构造函数，如local go = GameObject("Light")

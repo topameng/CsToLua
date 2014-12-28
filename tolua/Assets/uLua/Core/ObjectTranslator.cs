@@ -6,7 +6,7 @@ namespace LuaInterface
 	using System.Reflection;
 	using System.Runtime.InteropServices;
 	using System.Collections.Generic;
-	using System.Diagnostics;
+	//using System.Diagnostics;
 	
 	/*
      * Passes objects from the CLR to Lua and vice-versa
@@ -16,13 +16,32 @@ namespace LuaInterface
      */
 	public class ObjectTranslator
 	{
+        //fix ÄäÃûÎ¯ÍÐ equals ÅÐ¶Ï³ö´íbug, by topameng
+        private class CompareObject:  IEqualityComparer<object>
+        {
+            public new bool Equals(object x, object y)
+            {
+                return x == y;
+            }
+
+            public int GetHashCode(object obj)
+            {
+                if (obj != null)
+                {
+                    obj.GetHashCode();
+                }
+
+                return 0;
+            }
+        }
+
 		internal CheckType typeChecker;
 		
 		// object # to object (FIXME - it should be possible to get object address as an object #)
 		public readonly Dictionary<int, object> objects = new Dictionary<int, object>();        
         //public readonly LuaObjectMap objects = new LuaObjectMap();
 		// object to object #
-		public readonly Dictionary<object, int> objectsBackMap = new Dictionary<object, int>();
+		public readonly Dictionary<object, int> objectsBackMap = new Dictionary<object, int>(new CompareObject());
 		internal LuaState interpreter;
 		public MetaFunctions metaFunctions;
 		public List<Assembly> assemblies;
@@ -59,7 +78,7 @@ namespace LuaInterface
 			getConstructorSigFunction=new LuaCSFunction(getConstructorSignature);
 			
 			ctypeFunction = new LuaCSFunction(ctype);
-			enumFromIntFunction = new LuaCSFunction(enumFromInt);
+			enumFromIntFunction = new LuaCSFunction(enumFromInt);                        
 			
 			createLuaObjectList(luaState);
 			createIndexingMetaFunction(luaState);
@@ -535,7 +554,7 @@ namespace LuaInterface
 		{
 			int index = -1;
 			// Pushes nil
-			if(o==null)
+			if(o == null)
 			{
 				LuaDLL.lua_pushnil(luaState);
 				return;
@@ -545,7 +564,7 @@ namespace LuaInterface
 			bool found = (!o.GetType().IsValueType) && objectsBackMap.TryGetValue(o, out index);
 
 			if(found)
-			{
+			{   
 				LuaDLL.luaL_getmetatable(luaState,"luaNet_objects");
 				LuaDLL.lua_rawgeti(luaState,-1,index);
 				
@@ -961,6 +980,20 @@ namespace LuaInterface
             {
                 bool b = (bool)o;
                 LuaDLL.lua_pushboolean(luaState, b);
+            }
+            else if (t == typeof(UnityEngine.Object))
+            {
+                UnityEngine.Object obj = (UnityEngine.Object)o;
+
+                if (obj == null)
+                {
+                    LuaDLL.lua_pushnil(luaState);
+                    return;
+                }
+                else
+                {
+                    pushObject(luaState, o, "luaNet_metatable");
+                }
             }
             else if (t.IsEnum)
             {

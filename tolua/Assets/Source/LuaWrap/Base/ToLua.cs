@@ -38,7 +38,7 @@ public enum ObjAmbig
 
 public static class ToLua 
 {
-    public static string className = "";
+    public static string className = string.Empty;
     public static Type type = null;
 
     //设置之后继承基类，不然就导入所有基类信息
@@ -88,16 +88,12 @@ public static class ToLua
     public static void Generate(params string[] param)
     {
         Debugger.Log("Begin Generate lua Wrap for class {0}\r\n", className);
-        sb = new StringBuilder();
-        string fullType = type.ToString();
-        _C(fullType);
-
+        sb = new StringBuilder();                
         usingList.Add("System");
-        int pos = fullType.LastIndexOf('.');
 
-        if (pos > 0)
+        if (type.Namespace != null && type.Namespace != string.Empty)
         {
-            usingList.Add(fullType.Substring(0, pos));
+            usingList.Add(type.Namespace);
         }
 
         if (wrapClassName == "")
@@ -872,6 +868,10 @@ public static class ToLua
             {
                 sb.AppendFormat("{2}LuaFunction {0} = LuaScriptMgr.GetLuaFunction(L, {1});\r\n", arg, j + offset, head);
             }
+            else if (param.ParameterType == typeof(LuaTable))
+            {
+                sb.AppendFormat("{2}LuaTable {0} = LuaScriptMgr.GetLuaTable(L, {1});\r\n", arg, j + offset, head);
+            }
             else if (param.ParameterType.IsArray)
             {
                 Type et = param.ParameterType.GetElementType();
@@ -950,6 +950,10 @@ public static class ToLua
             else if (param.ParameterType == typeof(Type))
             {
                 sb.AppendFormat("{0}{1} {2} = LuaScriptMgr.GetTypeObject(L, {3});\r\n", head, str, arg, j + offset);
+            }
+            else if (param.ParameterType == typeof(LuaStringBuffer))
+            {
+                sb.AppendFormat("{2}LuaStringBuffer {0} = LuaScriptMgr.GetStringBuffer(L, {1});\r\n", arg, j + offset, head);
             }
             else //if (param.ParameterType == typeof(object))
             {
@@ -1538,12 +1542,20 @@ public static class ToLua
         }    
         else if (str.Length > 12 && str.Substring(0, 12) == "UnityEngine.")
         {
-            usingList.Add("UnityEngine");
-            str = str.Remove(0, 12);
+            //usingList.Add("UnityEngine");
+            //str = str.Remove(0, 12);
 
             if (str.Contains("Object"))
             {
                 ambig |= ObjAmbig.U3dObj;
+            }
+
+            int pos = str.LastIndexOf('.');
+
+            if (pos > 0)
+            {
+                usingList.Add(str.Substring(0, pos));
+                str = str.Substring(pos + 1);
             }
 
             return _C(str);
@@ -1853,6 +1865,10 @@ public static class ToLua
         else if (t == typeof(LuaFunction))
         {            
             sb.AppendFormat("\t\t{0}.{1} = LuaScriptMgr.GetLuaFunction(L, 3);\r\n", o, name);
+        }
+        else if (t == typeof(LuaTable))
+        {
+            sb.AppendFormat("\t\t{0}.{1} = LuaScriptMgr.GetLuaTable(L, 3);\r\n", o, name);
         }
         else if (t == typeof(object))
         {
