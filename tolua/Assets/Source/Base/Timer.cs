@@ -118,7 +118,18 @@ public class Timer:MonoBehaviour
 
             if (proc.time <= 0)
             {
-                proc.Call();
+                try
+                {
+                    proc.Call();
+                }
+                catch(Exception e)
+                {
+                    list.RemoveAt(i);
+                    //Debugger.threadStack = e.StackTrace;
+                    Debugger.LogError("timer call exception: {0}", e.Message);
+                    continue;
+                }
+                
 
                 if (proc.loop > 0)
                 {
