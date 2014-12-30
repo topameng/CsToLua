@@ -1,5 +1,5 @@
 ﻿2014.12.22
-通过扫描文件，自动产生luabinder文件
+通过扫描wrap文件名，自动产生LuaBinder.cs文件
 CheckType 优化
 u3d Object 类转 system Object. null 变量问题
 
