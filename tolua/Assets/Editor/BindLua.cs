@@ -248,7 +248,7 @@ public static class LuaBinding
         AssetDatabase.Refresh();
     }
 
-    [MenuItem("Thinky/Gen LuaBinder File", false, 12)]
+    [MenuItem("Lua/Gen LuaBinder File", false, 12)]
     static void GenLuaBinder()
     {
         StringBuilder sb = new StringBuilder();
