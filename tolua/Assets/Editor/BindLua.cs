@@ -80,8 +80,8 @@ public static class LuaBinding
         public BindType(Type t)
         {
             string str = t.ToString();
-            str = GetTypeStr(str);
-            libName = str;
+            //str = GetTypeStr(str);
+            libName = GetTypeStr(str);
             type = t;
 
             if (t.BaseType != null)
