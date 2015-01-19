@@ -259,7 +259,8 @@ public static class LuaBinding
         sb.AppendLine("\tpublic static void Bind(IntPtr L)");
         sb.AppendLine("\t{");
         sb.AppendLine("\t\tobjectWrap.Register(L);");
-        sb.AppendLine("\t\tObjectWrap.Register(L);");                
+        sb.AppendLine("\t\tObjectWrap.Register(L);");    
+	sb.AppendLine("\t\tCoroutineWrap.Register(L);");            
 
         string[] files = Directory.GetFiles("Assets/Source/LuaWrap/", "*.cs", SearchOption.TopDirectoryOnly);
 
