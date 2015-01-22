@@ -2,7 +2,7 @@
 using System;
 using LuaInterface;
 
-public class coroutineWrap 
+public class CoroutineWrap 
 {
     public static LuaMethod[] regs = new LuaMethod[]
 	{
