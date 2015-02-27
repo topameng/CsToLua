@@ -28,7 +28,7 @@ namespace LuaInterface
             {
                 if (obj != null)
                 {
-                    obj.GetHashCode();
+                    return obj.GetHashCode();
                 }
 
                 return 0;
