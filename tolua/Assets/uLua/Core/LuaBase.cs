@@ -12,6 +12,7 @@ namespace LuaInterface
         private bool _Disposed;
         protected int _Reference;
         protected LuaState _Interpreter;
+        protected ObjectTranslator translator = null;
 
         public string name = null;
         private int count = 0;
@@ -41,6 +42,7 @@ namespace LuaInterface
         {
             if (_Disposed || name == null)
             {
+                Dispose();
                 return;
             }
 
@@ -50,7 +52,7 @@ namespace LuaInterface
             {
                 return;
             }
-            
+                        
             if (name != null)
             {
                 LuaScriptMgr mgr = LuaScriptMgr.GetMgrFromLuaState(_Interpreter.L);
@@ -72,20 +74,24 @@ namespace LuaInterface
                 {
                     if (disposeManagedResources)
                     {
-                        _Interpreter.dispose(_Reference);                        
+                        _Interpreter.dispose(_Reference);
+                        _Reference = 0;
                     }
-                    else
-                    {
-                        LuaScriptMgr mgr = LuaScriptMgr.GetMgrFromLuaState(_Interpreter.L);
-                        mgr.refGCList.Enqueue(_Reference);                        
+                    else if (_Interpreter.L != IntPtr.Zero)
+                    {                                                
+                        LuaScriptMgr.refGCList.Enqueue(new LuaRef(_Interpreter.L, _Reference));
+                        _Reference = 0;
                     }
-
-                    _Reference = 0;
                 }
 
                 _Interpreter = null;
                 _Disposed = true;
             }
+        }
+
+        protected void PushArgs(IntPtr L, object o)
+        {
+            LuaScriptMgr.PushVarObject(L, o);         
         }
 
         public override bool Equals(object o)

@@ -68,6 +68,7 @@ namespace LuaInterface
 	public delegate string LuaChunkReader(IntPtr luaState,ref ReaderInfo data,ref uint size);
 
     public delegate int LuaFunctionCallback(IntPtr luaState);
+
 	public class LuaDLL
 	{
         public static int LUA_MULTRET = -1;
@@ -75,7 +76,7 @@ namespace LuaInterface
         const string LUADLL = "__Internal";
 #else
         const string LUADLL = "ulua";
-#endif
+#endif              		
         [DllImport(LUADLL, CallingConvention = CallingConvention.Cdecl)]
         public static extern int luaopen_pb(IntPtr L);
 
@@ -85,13 +86,13 @@ namespace LuaInterface
         [DllImport(LUADLL, CallingConvention = CallingConvention.Cdecl)]
         public static extern int luaopen_ffi(IntPtr L);
 
-        //[DllImport(LUADLL, CallingConvention = CallingConvention.Cdecl)]
-        //public static extern int luaopen_pack(IntPtr L);
+        [DllImport(LUADLL, CallingConvention = CallingConvention.Cdecl)]
+        public static extern int luaopen_pack(IntPtr L);
 
-//#if UNITY_EDITOR
-//        [DllImport(LUADLL, CallingConvention = CallingConvention.Cdecl)]
-//        public static extern void PrintCmd(string str);
-//#endif
+#if UNITY_EDITOR
+        [DllImport(LUADLL, CallingConvention = CallingConvention.Cdecl)]
+        public static extern void PrintCmd(string str);
+#endif
 
         // Thread Funcs
 		[DllImport(LUADLL, CallingConvention = CallingConvention.Cdecl)]
@@ -397,5 +398,11 @@ namespace LuaInterface
 
         [DllImport(LUADLL, CallingConvention = CallingConvention.Cdecl)]
         public static extern IntPtr lua_tocbuffer(byte[] bytes, int n);
+
+        [DllImport(LUADLL, CallingConvention = CallingConvention.Cdecl)]
+        public static extern int luaL_typerror(IntPtr luaState, int narg, string tname);
+
+        [DllImport(LUADLL, CallingConvention = CallingConvention.Cdecl)]
+        public static extern int luaL_argerror (IntPtr luaState, int narg, string extramsg);
 	}
 }

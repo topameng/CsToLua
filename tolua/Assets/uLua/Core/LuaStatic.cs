@@ -50,6 +50,7 @@ namespace LuaInterface
 		public static int panic(IntPtr L)
 		{
 			string reason = String.Format("unprotected error in call to Lua API ({0})", LuaDLL.lua_tostring(L, -1));
+            LuaDLL.lua_pop(L, 1);
 			throw new LuaException(reason);
 		}
 
@@ -70,6 +71,13 @@ namespace LuaInterface
 			// For each argument we'll 'tostring' it
 			int n = LuaDLL.lua_gettop(L);
 			string s = String.Empty;
+
+            //LuaDLL.lua_getglobal(L, "debug");
+            //LuaDLL.lua_getfield(L, -1, "traceback");
+            //LuaDLL.lua_pushvalue(L, 1);
+            //LuaDLL.lua_pushnumber(L, 2);
+            //LuaDLL.lua_call(L, 2, 1);
+            //n = LuaDLL.lua_gettop(L);
 			
 			LuaDLL.lua_getglobal(L, "tostring");
 			
@@ -91,6 +99,8 @@ namespace LuaInterface
 
                 //LuaDLL.PrintCmd(s);
 			}
+
+		    
 			return 0;
 		}
 		

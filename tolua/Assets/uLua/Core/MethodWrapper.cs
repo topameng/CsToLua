@@ -260,7 +260,7 @@ namespace LuaInterface
                             ? "invalid arguments to method call"
                             : ("invalid arguments to method: " + candidateName);
 
-                        _Translator.throwError(luaState, msg);
+                        LuaDLL.luaL_error(luaState, msg);
                         LuaDLL.lua_pushnil(luaState);
                         return 1;
                     }
@@ -288,7 +288,7 @@ namespace LuaInterface
                     }
                     else if (methodToCall.ContainsGenericParameters)
                     {
-                        _Translator.throwError(luaState, "unable to invoke method on generic class as the current method is an open generic method");
+                        LuaDLL.luaL_error(luaState, "unable to invoke method on generic class as the current method is an open generic method");
                         LuaDLL.lua_pushnil(luaState);
                         return 1;
                     }
@@ -303,7 +303,7 @@ namespace LuaInterface
 
                     if (!_Translator.matchParameters(luaState, methodToCall, ref _LastCalledMethod))
                     {
-                        _Translator.throwError(luaState, "invalid arguments to method call");
+                        LuaDLL.luaL_error(luaState, "invalid arguments to method call");
                         LuaDLL.lua_pushnil(luaState);
                         return 1;
                     }

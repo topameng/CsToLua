@@ -710,8 +710,8 @@ namespace LuaInterface
 			IReflect klass;
 			object obj = translator.getRawNetObject(luaState, 1);
 			if (obj == null || !(obj is IReflect))
-			{
-				translator.throwError(luaState, "trying to call constructor on an invalid type reference");
+			{				
+                LuaDLL.luaL_error(luaState, "trying to call constructor on an invalid type reference");
 				LuaDLL.lua_pushnil(luaState);
 				return 1;
 			}
@@ -741,10 +741,9 @@ namespace LuaInterface
 			}
 			
 			string constructorName = (constructors.Length == 0) ? "unknown" : constructors[0].Name;
-			
-			translator.throwError(luaState, String.Format("{0} does not contain constructor({1}) argument match",
-			                                              klass.UnderlyingSystemType,
-			                                              constructorName));
+            LuaDLL.luaL_error(luaState, String.Format("{0} does not contain constructor({1}) argument match",
+                                                          klass.UnderlyingSystemType,
+                                                          constructorName));
 			LuaDLL.lua_pushnil(luaState);
 			return 1;
 		}
