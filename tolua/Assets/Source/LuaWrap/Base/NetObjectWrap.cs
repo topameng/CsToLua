@@ -17,6 +17,7 @@ public class objectWrap
         new LuaMethod("GetClassType", GetClassType),
 		new LuaMethod("__tostring", Lua_ToString),
         new LuaMethod("IsNull", IsNull),
+        new LuaMethod("Destroy", Destroy),
 	};
 
     static LuaField[] fields = new LuaField[]
@@ -131,6 +132,14 @@ public class objectWrap
         bool o = arg0 == null;
         LuaScriptMgr.Push(L, o);
         return 1;
+    }
+
+    [MonoPInvokeCallbackAttribute(typeof(LuaCSFunction))]
+    static int Destroy(IntPtr L)
+    {
+        LuaScriptMgr.CheckArgsCount(L, 1);                
+        LuaScriptMgr.__gc(L);          
+        return 0;
     }
 }
 

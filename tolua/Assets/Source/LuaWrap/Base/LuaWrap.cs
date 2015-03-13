@@ -29,17 +29,17 @@ public struct LuaField
     }
 };
 
-public struct LuaEnum
+/*public struct LuaEnum
 {
     public string name;
-    public object val;
+    public System.Enum val;
 
-    public LuaEnum(string str, object v)
+    public LuaEnum(string str, System.Enum v)
     {
         name = str;
         val = v;
     }
-}
+}*/
 
 public class NoToLuaAttribute : System.Attribute
 {
@@ -56,11 +56,23 @@ public interface ILuaWrap
 
 public class LuaStringBuffer
 {
-    public LuaStringBuffer(IntPtr source,int len)
+    public LuaStringBuffer(IntPtr source, int len)
     {
         buffer = new byte[len];
-        Marshal.Copy(source, buffer, 0, len);        
+        Marshal.Copy(source, buffer, 0, len);
     }
 
-    public byte[] buffer = null;    
+    public byte[] buffer = null;
+}
+
+public class LuaRef
+{
+    public IntPtr L;
+    public int reference;
+
+    public LuaRef(IntPtr L, int reference)
+    {
+        this.L = L;
+        this.reference = reference;
+    }
 }
