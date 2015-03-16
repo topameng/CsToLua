@@ -4,13 +4,13 @@ using System;
 using System.Collections;
 
 using Object = UnityEngine.Object;
-using System.Collections.Generic;
 using System.Text;
 using System.IO;
 using System.Runtime.InteropServices;
+using System.Collections.Generic;
 using System.Text.RegularExpressions;
 using System.Reflection;
-
+using UnityEngine.Rendering;
 
 public static class LuaBinding
 {
@@ -80,9 +80,11 @@ public static class LuaBinding
         public BindType(Type t)
         {
             string str = t.ToString();
-            //str = GetTypeStr(str);
+            //str = GetTypeStr(str);            
             libName = GetTypeStr(str);
             type = t;
+
+            if (t.IsGenericType) str = libName;
 
             if (t.BaseType != null)
             {
@@ -159,55 +161,117 @@ public static class LuaBinding
         return new BindType(t);
     }
 
-    //注意必须保持基类在其派生类前面声明，否则自动生成的注册顺序是错误的
     static BindType[] binds = new BindType[]
-    {	
-        //object 由于跟 Object 文件重名就不加入了
-        //_GT(typeof(Type)),
-        
-        ////u3d
-        //_GT(typeof(Time)),
-        //_GT(typeof(Vector2)),
-        //_GT(typeof(Vector3)),        
-        //_GT(typeof(GameObject)),
-        //_GT(typeof(Component)),        
-        
-        //_GT(typeof(Behaviour)),
-        //_GT(typeof(Transform)),
-        //_GT(typeof(Resources)),
-        //_GT(typeof(TextAsset)),    
-        //_GT(typeof(Keyframe)),       
-        //_GT(typeof(AnimationCurve)),
-        //_GT(typeof(Motion)),
-        //_GT(typeof(AnimationClip)),
-
-        //_GT(typeof(MonoBehaviour)),
-
-       ////内部
-        //_GT(typeof(IAssetFile)),        
-        //_GT(typeof(UIBase)),
-        //_GT(typeof(UIEventListener)),
-        //_GT(typeof(LuaHelper)),        
-        //_GT(typeof(AssetFileMgr)),
-        //_GT(typeof(Application)),            
-        //_GT(typeof(UnGfx)),                               
-        //_GT(typeof(TestToLua)),        
-        //_GT(typeof(TestEnum)),        
+    {
+        //object 由于跟 Object 文件重名就不加入了                     
+        //测试模板
         ////_GT(typeof(Dictionary<int,string>)).SetWrapName("DictInt2Str").SetLibName("DictInt2Str"),
-        //_GT(typeof(Light)),
-        //_GT(typeof(LightType)),
+        
+        //custom    
+        _GT(typeof(Debugger)),
+        //_GT(typeof(SocketClient)),        
+        //_GT(typeof(UIBase)),        
+        //_GT(typeof(LuaHelper)),                           
+        //_GT(typeof(UnGfx)),                                                            
+        //_GT(typeof(UIProxy)),
+        //_GT(typeof(SkinnedMeshBaker)),       
+        //_GT(typeof(AssetFileMgr.AssetFile)).SetWrapName("AssetFile"),      
+                 
+        //_GT(typeof(Pathfinding.Path)),
+        //_GT(typeof(Pathfinding.ABPath)),
+        //_GT(typeof(Seeker)),        
+                                                                              
+        
+        //unity                        
+        _GT(typeof(Component)),
+        _GT(typeof(Behaviour)),
+        _GT(typeof(MonoBehaviour)),        
+        _GT(typeof(GameObject)),
+        _GT(typeof(Transform)),
+        _GT(typeof(Space)),
 
-        ////ngui
-        //_GT(typeof(UIRect)),
-        //_GT(typeof(UIWidget)),
-        //_GT(typeof(UILabel)),                 
-        //_GT(typeof(UIEventListener)),                
-        //_GT(typeof(UILabel.Effect)),       
-        //_GT(typeof(Localization)),   
-        //_GT(typeof(UICamera)),
+        _GT(typeof(Camera)),   
+        _GT(typeof(CameraClearFlags)),           
+        _GT(typeof(Material)),
+        _GT(typeof(Renderer)),        
+        _GT(typeof(MeshRenderer)),
+        _GT(typeof(SkinnedMeshRenderer)),
+        _GT(typeof(Light)),
+        _GT(typeof(LightType)),     
+        _GT(typeof(ParticleEmitter)),
+        _GT(typeof(ParticleRenderer)),
+        _GT(typeof(ParticleAnimator)),        
+                
+        _GT(typeof(Physics)),
+        _GT(typeof(Collider)),
+        _GT(typeof(BoxCollider)),
+        _GT(typeof(MeshCollider)),
+        _GT(typeof(SphereCollider)),
+        
+        _GT(typeof(CharacterController)),
+
+        _GT(typeof(Animation)),             
+        _GT(typeof(AnimationClip)),
+        _GT(typeof(TrackedReference)),
+        _GT(typeof(AnimationState)),  
+        _GT(typeof(QueueMode)),  
+        _GT(typeof(PlayMode)),                  
+        
+        _GT(typeof(AudioClip)),
+        _GT(typeof(AudioSource)),                
+        
+        _GT(typeof(Application)),
+        _GT(typeof(Input)),    
+        _GT(typeof(TouchPhase)),            
+        _GT(typeof(KeyCode)),             
+        _GT(typeof(Screen)),
+        _GT(typeof(Time)),
+        _GT(typeof(RenderSettings)),
+        _GT(typeof(SleepTimeout)),        
+
+        _GT(typeof(AsyncOperation)),
+        _GT(typeof(AssetBundle)),   
+        _GT(typeof(BlendWeights)),   
+        _GT(typeof(QualitySettings)),  
+        _GT(typeof(Plane)), 
+        _GT(typeof(AnimationBlendMode)),    
+        _GT(typeof(RenderTexture)),
+        
+
+        //ngui
+        /*_GT(typeof(UICamera)),
+        _GT(typeof(Localization)),
+        _GT(typeof(NGUITools)),
+
+        _GT(typeof(UIRect)),
+        _GT(typeof(UIWidget)),        
+        _GT(typeof(UIWidgetContainer)),     
+        _GT(typeof(UILabel)),        
+        _GT(typeof(UIToggle)),
+        _GT(typeof(UIBasicSprite)),        
+        _GT(typeof(UITexture)),
+        _GT(typeof(UISprite)),           
+        _GT(typeof(UIProgressBar)),
+        _GT(typeof(UISlider)),
+        _GT(typeof(UIGrid)),
+        _GT(typeof(UIInput)),
+        _GT(typeof(UIScrollView)),
+        
+        _GT(typeof(UITweener)),
+        _GT(typeof(TweenWidth)),
+        _GT(typeof(TweenRotation)),
+        _GT(typeof(TweenPosition)),
+        _GT(typeof(TweenScale)),
+        _GT(typeof(UICenterOnChild)),    
+        _GT(typeof(UIAtlas)),*/ 
+   
+        //_GT(typeof(LeanTween)),
+        //_GT(typeof(LTDescr)),
+        
     };
 
-    [MenuItem("Lua/Gen Lua Wrap Files", false, 11)]
+
+    [MenuItem("Thinky/Gen Lua Wrap Files", false, 11)]
     public static void Binding()
     {
         if (!Application.isPlaying)
@@ -215,40 +279,41 @@ public static class LuaBinding
             EditorApplication.isPlaying = true;
         }
 
-        for (int i = 0; i < binds.Length; i++)
+        BindType[] list = binds;
+
+        for (int i = 0; i < list.Length; i++)
         {
             ToLua.Clear();
-            ToLua.className = binds[i].name;
-            ToLua.type = binds[i].type;
-            ToLua.isStaticClass = binds[i].IsStatic;
-            ToLua.baseClassName = binds[i].baseName;
-            ToLua.wrapClassName = binds[i].wrapName;
-            ToLua.libClassName = binds[i].libName;
+            ToLua.className = list[i].name;
+            ToLua.type = list[i].type;
+            ToLua.isStaticClass = list[i].IsStatic;
+            ToLua.baseClassName = list[i].baseName;
+            ToLua.wrapClassName = list[i].wrapName;
+            ToLua.libClassName = list[i].libName;
             ToLua.Generate(null);
         }
 
         StringBuilder sb = new StringBuilder();
 
-        for (int i = 0; i < binds.Length; i++)
+        for (int i = 0; i < list.Length; i++)
         {
-            sb.AppendFormat("\t\t{0}Wrap.Register();\r\n", binds[i].wrapName);
+            sb.AppendFormat("\t\t{0}Wrap.Register();\r\n", list[i].wrapName);
         }
 
         EditorApplication.isPlaying = false;
-        //GenRegFile(binds);
-        StringBuilder sb1 = new StringBuilder();
+        //StringBuilder sb1 = new StringBuilder();
 
-        for (int i = 0; i < binds.Length; i++)
-        {
-            sb1.AppendFormat("\t\t{0}Wrap.Register(L);\r\n", binds[i].wrapName);
-        }
+        //for (int i = 0; i < binds.Length; i++)
+        //{
+        //    sb1.AppendFormat("\t\t{0}Wrap.Register(L);\r\n", binds[i].wrapName);
+        //}
 
+        //GenLuaBinder();
         Debug.Log("Generate lua binding files over");
-        Debug.Log(sb1.ToString());
-        AssetDatabase.Refresh();
+        AssetDatabase.Refresh();        
     }
 
-    [MenuItem("Lua/Gen LuaBinder File", false, 12)]
+    [MenuItem("Thinky/Gen LuaBinder File", false, 12)]
     static void GenLuaBinder()
     {
         StringBuilder sb = new StringBuilder();
@@ -259,8 +324,14 @@ public static class LuaBinding
         sb.AppendLine("\tpublic static void Bind(IntPtr L)");
         sb.AppendLine("\t{");
         sb.AppendLine("\t\tobjectWrap.Register(L);");
-        sb.AppendLine("\t\tObjectWrap.Register(L);");    
-	sb.AppendLine("\t\tCoroutineWrap.Register(L);");            
+        sb.AppendLine("\t\tObjectWrap.Register(L);");
+        sb.AppendLine("\t\tTypeWrap.Register(L);");
+        sb.AppendLine("\t\tDelegateWrap.Register(L);");
+        sb.AppendLine("\t\tIEnumeratorWrap.Register(L);");
+        sb.AppendLine("\t\tEnumWrap.Register(L);");
+        sb.AppendLine("\t\tStringWrap.Register(L);");
+        sb.AppendLine("\t\tMsgPacketWrap.Register(L);");
+        
 
         string[] files = Directory.GetFiles("Assets/Source/LuaWrap/", "*.cs", SearchOption.TopDirectoryOnly);
 
@@ -285,7 +356,7 @@ public static class LuaBinding
         }
     }
 
-    [MenuItem("Lua/Clear LuaBinder File", false, 13)]
+    [MenuItem("Thinky/Clear LuaBinder File", false, 13)]
     static void ClearLuaBinder()
     {
         StringBuilder sb = new StringBuilder();
@@ -310,7 +381,7 @@ public static class LuaBinding
         AssetDatabase.Refresh();
     }
 
-    [MenuItem("Lua/Gen u3d Wrap Files", false, 11)]
+    [MenuItem("Thinky/Gen u3d Wrap Files", false, 11)]
     public static void U3dBinding()
     {
         List<string> dropList = new List<string>
@@ -318,7 +389,7 @@ public static class LuaBinding
             //特殊修改
             "UnityEngine.Object",
 
-            //编辑器相关
+            //一般情况不需要的类, 编辑器相关的
             "HideInInspector",
             "ExecuteInEditMode",
             "AddComponentMenu",
@@ -327,16 +398,24 @@ public static class LuaBinding
             "DisallowMultipleComponent",
             "SerializeField",
             "AssemblyIsEditorAssembly",
-            "Attribute",  //一些列文件，都是编辑器相关的       
-            "Types",
-            "UnitySurrogateSelector",
-            "TrackedReference",
-            "TypeInferenceRules",
-
-            //
+            "Attribute",  //一些列文件，都是编辑器相关的     
             "FFTWindow",
+  
+            "Types",
+            "UnitySurrogateSelector",            
+            "TypeInferenceRules",            
+            "ThreadPriority",
+            "Debug",        //自定义debugger取代
+            "GenericStack",
 
-            //RPC网络,一般不用
+            //异常，lua无法catch
+            "PlayerPrefsException",
+            "UnassignedReferenceException",            
+            "UnityException",
+            "MissingComponentException",
+            "MissingReferenceException",
+
+            //RPC网络
             "RPC",
             "Network",
             "MasterServer",
@@ -344,7 +423,7 @@ public static class LuaBinding
             "HostData",
             "ConnectionTesterStatus",
 
-            //unity 自带GUI
+            //unity 自带编辑器GUI
             "GUI",
             "EventType",
             "EventModifiers",
@@ -355,7 +434,14 @@ public static class LuaBinding
             "TextEditorDblClickSnapping",
             "TextGenerator",
             "TextClipping",
+            "TextGenerationSettings",
+            "TextAnchor",
+            "TextAsset",
+            "TextWrapMode",
             "Gizmos",
+            "ImagePosition",
+            "FocusType",
+            
 
             //地形相关
             "Terrain",                            
@@ -400,6 +486,109 @@ public static class LuaBinding
             "TouchScreenKeyboardType",
             "TouchScreenKeyboard",
             "MovieTexture",
+
+            //我不需要的
+            //2d 类
+            "AccelerationEventWrap", //加速
+            "AnimatorUtility",
+            "AudioChorusFilter",		
+		    "AudioDistortionFilter",
+		    "AudioEchoFilter",
+		    "AudioHighPassFilter",		    
+		    "AudioLowPassFilter",
+		    "AudioReverbFilter",
+		    "AudioReverbPreset",
+		    "AudioReverbZone",
+		    "AudioRolloffMode",
+		    "AudioSettings",		    
+		    "AudioSpeakerMode",
+		    "AudioType",
+		    "AudioVelocityUpdateMode",
+            
+            "Ping",
+            "Profiler",
+            "StaticBatchingUtility",
+            "Font",
+            "Gyroscope",                        //不需要重力感应
+            "ISerializationCallbackReceiver",   //u3d 继承的序列化接口，lua不需要
+            "ImageEffectOpaque",                //后处理
+            "ImageEffectTransformsToLDR",
+            "PrimitiveType",                // 暂时不需要 GameObject.CreatePrimitive           
+            "Skybox",                       //不会u3d自带的Skybox
+            "SparseTexture",                // mega texture 不需要
+            "Plane",
+            "PlayerPrefs",
+
+            //不用ugui
+            "SpriteAlignment",
+		    "SpriteMeshType",
+		    "SpritePackingMode",
+		    "SpritePackingRotation",
+		    "SpriteRenderer",
+		    "Sprite",
+            "UIVertex",
+            "CanvasGroup",
+            "CanvasRenderer",
+            "ICanvasRaycastFilter",
+            "Canvas",
+            "RectTransform",
+            "DrivenRectTransformTracker",
+            "DrivenTransformProperties",
+            "RectTransformAxis",
+		    "RectTransformEdge",
+		    "RectTransformUtility",
+		    "RectTransform",
+            "UICharInfo",
+		    "UILineInfo",
+
+            //不需要轮子碰撞体
+            "WheelCollider",
+		    "WheelFrictionCurve",
+		    "WheelHit",
+
+            //手机不适用雾
+            "FogMode",
+
+            "UnityEventBase",
+		    "UnityEventCallState",
+		    "UnityEvent",
+
+            "LightProbeGroup",
+            "LightProbes",
+
+            "NPOTSupport", //只是SystemInfo 的一个枚举值
+
+            //没用到substance纹理
+            "ProceduralCacheSize",
+		    "ProceduralLoadingBehavior",
+		    "ProceduralMaterial",
+		    "ProceduralOutputType",
+		    "ProceduralProcessorUsage",
+		    "ProceduralPropertyDescription",
+		    "ProceduralPropertyType",
+		    "ProceduralTexture",
+
+            //物理关节系统
+		    "JointDriveMode",
+		    "JointDrive",
+		    "JointLimits",		
+		    "JointMotor",
+		    "JointProjectionMode",
+		    "JointSpring",
+            "SoftJointLimit",
+            "SpringJoint",
+            "HingeJoint",
+            "FixedJoint",
+            "ConfigurableJoint",
+            "CharacterJoint",            
+		    "Joint",
+
+            "LODGroup",
+		    "LOD",
+
+            "DataUtility",          //给sprite使用的
+            "CrashReport",
+            "CombineInstance",
         };
 
         List<BindType> list = new List<BindType>();
@@ -425,6 +614,15 @@ public static class LuaBinding
             list.RemoveAll((p) => { return p.type.ToString().Contains(dropList[i]); });
         }
 
+        //for (int i = 0; i < list.Count; i++)
+        //{
+        //    if (!typeof(UnityEngine.Object).IsAssignableFrom(list[i].type) && !list[i].type.IsEnum && !typeof(UnityEngine.TrackedReference).IsAssignableFrom(list[i].type)
+        //        && !list[i].type.IsValueType && !list[i].type.IsSealed)            
+        //    {
+        //        Debug.Log(list[i].type.Name);
+        //    }
+        //}
+
         for (int i = 0; i < list.Count; i++)
         {
             try
@@ -447,92 +645,5 @@ public static class LuaBinding
         GenLuaBinder();
         Debug.Log("Generate lua binding files over， Generate " + list.Count + " files");
         AssetDatabase.Refresh();
-    }
-
-    static string GetOS()
-    {
-#if UNITY_STANDALONE
-        return "Win";
-#elif UNITY_ANDROID
-        return "Android";
-#elif UNITY_IPHONE
-        return "IOS";
-#endif
-    }
-
-    [MenuItem("Lua/Build Lua with luajit", false, 1)]
-    public static void BuildLua()
-    {
-        BuildAssetBundleOptions options = BuildAssetBundleOptions.CollectDependencies | BuildAssetBundleOptions.CompleteAssets | BuildAssetBundleOptions.DeterministicAssetBundle;
-
-        System.Diagnostics.Process proc = System.Diagnostics.Process.Start(Application.dataPath + "/Lua/Build.bat");
-        proc.WaitForExit();
-        AssetDatabase.Refresh();
-        string[] files = Directory.GetFiles("Assets/Lua/Out", "*.lua.bytes");
-        List<Object> list = new List<Object>();
-
-        for (int i = 0; i < files.Length; i++)
-        {
-            Object obj = AssetDatabase.LoadMainAssetAtPath(files[i]);
-            list.Add(obj);
-        }
-
-        if (files.Length > 0)
-        {
-            string output = string.Format("{0}/Bundle/Lua.unity3d", Application.dataPath);
-            BuildPipeline.BuildAssetBundle(null, list.ToArray(), output, options, EditorUserBuildSettings.activeBuildTarget);
-            string output1 = string.Format("{0}/{1}/Lua.unity3d", Application.persistentDataPath, GetOS());
-            FileUtil.DeleteFileOrDirectory(output1);
-            Directory.CreateDirectory(Path.GetDirectoryName(output1));
-            FileUtil.CopyFileOrDirectory(output, output1);
-            AssetDatabase.Refresh();
-        }
-
-        UnityEngine.Debug.Log("编译lua文件结束");
-    }
-
-    [MenuItem("Lua/Build Lua without jit", false, 2)]
-    public static void BuildLuaNoJit()
-    {
-        BuildAssetBundleOptions options = BuildAssetBundleOptions.CollectDependencies | BuildAssetBundleOptions.CompleteAssets | BuildAssetBundleOptions.DeterministicAssetBundle;
-
-        string[] files = Directory.GetFiles("Assets/Lua/Out", "*.lua.bytes");
-
-        for (int i = 0; i < files.Length; i++)
-        {            
-            FileUtil.DeleteFileOrDirectory(files[i]);
-        }
-
-        files = Directory.GetFiles(Application.dataPath + "/Lua/", "*.lua", SearchOption.TopDirectoryOnly);
-
-        for (int i = 0; i < files.Length; i++)
-        {
-            string fname = Path.GetFileName(files[i]);
-            FileUtil.CopyFileOrDirectory(files[i], Application.dataPath + "/Lua/Out/" + fname + ".bytes");
-        }
-
-        AssetDatabase.Refresh();
-
-        files = Directory.GetFiles("Assets/Lua/Out", "*.lua.bytes");
-        List<Object> list = new List<Object>();
-
-        for (int i = 0; i < files.Length; i++)
-        {
-            Object obj = AssetDatabase.LoadMainAssetAtPath(files[i]);
-            list.Add(obj);
-        }
-
-        if (files.Length > 0)
-        {
-            string output = string.Format("{0}/Bundle/Lua.unity3d", Application.dataPath);
-            BuildPipeline.BuildAssetBundle(null, list.ToArray(), output, options, EditorUserBuildSettings.activeBuildTarget);
-            string output1 = string.Format("{0}/{1}/Lua.unity3d", Application.persistentDataPath, GetOS());
-            FileUtil.DeleteFileOrDirectory(output1);
-            Directory.CreateDirectory(Path.GetDirectoryName(output1));
-            FileUtil.CopyFileOrDirectory(output, output1);
-            AssetDatabase.Refresh();
-        }
-
-        UnityEngine.Debug.Log("编译lua文件结束");
     }
 }
