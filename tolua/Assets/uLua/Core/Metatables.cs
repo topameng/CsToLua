@@ -643,7 +643,7 @@ namespace LuaInterface
 			if (te != null)
 				e = te.InnerException;
 			
-			translator.throwError(luaState, e);
+			translator.throwError(luaState, e.Message);
 		}
 		
 		/*

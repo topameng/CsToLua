@@ -139,12 +139,10 @@ namespace LuaInterface
         /// <returns>num of things on stack</returns>
         /// <param name="e">null for no pending exception</param>
         internal int SetPendingException(Exception e)
-        {
-            Exception caughtExcept = e;
-
-            if (caughtExcept != null)
+        {            
+            if (e != null)
             {
-                translator.throwError(L, caughtExcept);
+                translator.throwError(L, e.Message);
                 LuaDLL.lua_pushnil(L);
 
                 return 1;
