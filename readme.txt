@@ -1,5 +1,29 @@
 ﻿2015.2.28
-1.8 更新中，请勿下载
+解决Unity 空对象并非真的.net null 问题, 解决ulua对象池Unity空对象匹配bug
+加入protobuf proto-gen-lua 导入导出支持
+修改ulua使用GCHandle 64位问题
+修改LuaBase多state下释放bug (c# gc多线程问题)
+LuaFunction 增加辅助函数，辅助实现Call()函数优化（使用可变参数会有GC Alloc）
+LuaTable 增加获取函数
+ObjectTranslator 正确压入为null的UnityEngine.Object派生对象和TrackedReference派生对象（u3d这些对象不是真正的null）。
+加入Delegate导入类型，委托可以调用Add,Remove等函数
+加入Enum导入类型，优化枚举存储
+加入string导入类型，可以把常用lua string 转为c# string保存（如动画名称等），避免GC Alloc
+支持Update, LateUpdate, FixedUpdate等调用。
+扩展lua协同，可以完美模拟c#协程
+加入lua Timer 支持定时器
+加入lua Event 模拟c#委托操作, 全逻辑基于lua事件不需要c#委托
+加入lua Vector3, Vector2, Vector4, Quaternion, Color, Touch, RaycastHit, Ray, LayerMask等值类型支持
+修改了自动生成wrap文件中的Type[] 数组，减少GC Alloc
+修改了lua支持c#包裹类的 __index和__newindex 函数。加入枚举类型 __index 函数
+完美支持多state.包括多state协同等问题
+更完善的出错信息
+对于函数参数的out类型参数，在lua端可以使用nil匹配函数输入参数，如：
+local flag, hit = Physics.Raycast(self.transform.position, self.dir, nil, 1, self.layerMask)
+
+加入了class, list, set 等数据结构
+加入 Plane.lua 用来进行平面射线检测
+扩展了lua math 数学库，加入部分u3d mathf 功能
 
 
 2014.12.22
