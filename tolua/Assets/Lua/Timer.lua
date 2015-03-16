@@ -154,6 +154,7 @@ function CoTimer:Reset(func, duration, loop)
 	self.func		= func
 	self.time		= duration
 	self.running	= false
+	self.count		= Time.frameCount + 1
 end
 
 function CoTimer:Stop()
@@ -168,7 +169,7 @@ function CoTimer:Update()
 		
 	self.time = self.time - Time.deltaTime
 	
-	if self.time <= 0 then
+	if self.time <= 0 and Time.frameCount > self.count then
 		self.func()
 		
 		if self.loop > 0 then

@@ -54,16 +54,4 @@ if lt.type == LightType.Directional then
 end
 
 
-function TestCo()
-	print("a simple coroutine test")
-	print("current time:"..Time.time)
-	coroutine.wait(1)
-	print("sleep time:"..Time.time)
-	print("current frame:"..Time.frameCount)
-	coroutine.step()
-	print("yield frame:"..Time.frameCount)		
-	print("coroutine over")
-end
 
---测试协同
-coroutine.start(TestCo)
