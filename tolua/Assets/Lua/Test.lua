@@ -1,65 +1,60 @@
---°´namespaceÇø·ÖÀàĞÍ¶¨Òå
-object			= System.Object
-Type			= System.Type
-Time 			= UnityEngine.Time
-GameObject 		= UnityEngine.GameObject
-Light 			= UnityEngine.Light
-LightType 		= UnityEngine.LightType
-Transform 		= UnityEngine.Transform
-Vector3			= UnityEngine.Vector3
-MonoBehaviour 	= UnityEngine.MonoBehaviour
-Space			= UnityEngine.Space
+ï»¿--æŒ‰namespaceåŒºåˆ†ç±»å‹å®šä¹‰
+require "Golbal"
 
---²âÊÔ¼«¶ËÌõ¼şĞÔÄÜ
+--æµ‹è¯•æç«¯æ¡ä»¶æ€§èƒ½
 function Test(transform)
-	local t = Time.realtimeSinceStartup;
+	local cube = GameObject("Script cube")
+	transform = cube.transform
+	
+	local t = Time.time;	
+	
 	local v = Vector3.one
+	local one = Vector3.one
 
-	for i=1,200000 do
+	for i = 1,800000 do
+		v = transform.position
+		v:Add(one)
 		transform.position = v
 	end
 
-	print("lua cost time: " .. (Time.realtimeSinceStartup - t));
+	print("lua cost time: ", Time.time - t)
 end
 
 
---²âÊÔ²Ù×÷·ûº¯Êı
+--æµ‹è¯•æ“ä½œç¬¦å‡½æ•°
 print("Test Vector3 operator func")
 local v1 = Vector3(1,2,3)
 v1 = v1 + Vector3.one
 print("Vector3 value is:" .. tostring(v1))
 
---Ö§³ÖtableÃû³Æ¹¹Ôìº¯Êı
+--æ”¯æŒtableåç§°æ„é€ å‡½æ•°
 local go = GameObject("Testenum")
---Çø·ÖÃ¶¾ÙºÍnumberÖµÖØÔØº¯Êı
+--åŒºåˆ†æšä¸¾å’Œnumberå€¼é‡è½½å‡½æ•°
 go.transform:Rotate(Vector3.one, Space.Self)
 go.transform:Rotate(Vector3.up, 12.5)
 
 local go = GameObject("Light")
---·½±ãµÄ»ñÈ¡ÀàĞÍĞÅÏ¢ ±íÃû.GetClassType
+--æ–¹ä¾¿çš„è·å–ç±»å‹ä¿¡æ¯ è¡¨å.GetClassType
 local lt = go:AddComponent(Light.GetClassType())
---°ÑÒ»¸önumberÀàĞÍ×ª»»ÎªÃ¶¾Ù
+--æŠŠä¸€ä¸ªnumberç±»å‹è½¬æ¢ä¸ºæšä¸¾
 lt.type = LightType.IntToEnum(1)
 
---Ã¶¾Ù±È½Ï
+--æšä¸¾æ¯”è¾ƒ
 if lt.type == LightType.Directional then
 	print("we have a directional light")
 end
 
 
 function TestCo()
+	print("a simple coroutine test")
 	print("current time:"..Time.time)
-	coroutine.waitforseconds(1)
+	coroutine.wait(1)
 	print("sleep time:"..Time.time)
 	print("current frame:"..Time.frameCount)
-	coroutine.yieldone()
-	print("yield frame:"..Time.frameCount)
-	print("end frame:"..Time.frameCount)
-	coroutine.waitforendofframe()
-	print("end frame:"..Time.frameCount)
+	coroutine.step()
+	print("yield frame:"..Time.frameCount)		
 	print("coroutine over")
 end
 
---²âÊÔĞ­Í¬
-local co = coroutine.create(TestCo)
-coroutine.resume(co)
+--æµ‹è¯•ååŒ
+coroutine.start(TestCo)
