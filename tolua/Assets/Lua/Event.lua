@@ -1,32 +1,31 @@
-﻿--[[Slot 	= {}
-Slot.func 	= nil
-Slot.obj	= nil
+﻿--------------------------------------------------------------------------------
+--      Copyright (c) 2010 , 蒙占志(topameng) topameng@gmail.com
+--      All rights reserved.
+--
+--      Use, modification and distribution are subject to the "New BSD License"
+--      as listed at <url: http://www.opensource.org/licenses/bsd-license.php >.
+--------------------------------------------------------------------------------
 
-function Slot:New(func, obj)
-	local object = {}		
-	object.func = func
-	object.obj = obj
-	setmetatable(object, self)
-	self.__index = self	
-	return object
+function slot(func, obj)
+	local slot	= {}
+	slot.func	= func
+	slot.obj	= obj
+	slot.class	= "functor"
+	setmetatable(slot, slot)	
+	
+	slot.__call	= function(self, ...)
+		local flag 	= true	
+		local msg = nil	
+
+		if nil == self.obj then
+			self.func(...)						
+		else		
+			self.func(self.obj, ...)
+		end
+	end
+	
+	return slot
 end
-
-function Slot:Fire(...)
-	local flag 	= true	
-	local msg = nil	
-	
-	if nil == self.obj then
-		flag, msg = xpcall(self.func, Error, ...)	
-	else		
-		flag, msg = xpcall(self.func, Error, self.obj, ...)		
-	end
-	
-	if not flag then
-		Debugger.LogError(msg)
-	end
-	
-	return flag	
-end]]
 
 
 function functor(func, obj)

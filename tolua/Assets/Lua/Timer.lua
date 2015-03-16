@@ -1,4 +1,12 @@
-﻿Timer = 
+﻿--------------------------------------------------------------------------------
+--      Copyright (c) 2010 , 蒙占志(topameng) topameng@gmail.com
+--      All rights reserved.
+--
+--      Use, modification and distribution are subject to the "New BSD License"
+--      as listed at <url: http://www.opensource.org/licenses/bsd-license.php >.
+--------------------------------------------------------------------------------
+
+Timer = 
 {
 	time	 = 0,
 	duration = 1,

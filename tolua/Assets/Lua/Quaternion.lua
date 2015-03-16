@@ -1,3 +1,11 @@
+--------------------------------------------------------------------------------
+--      Copyright (c) 2010 , √…’º÷æ(topameng) topameng@gmail.com
+--      All rights reserved.
+--
+--      Use, modification and distribution are subject to the "New BSD License"
+--      as listed at <url: http://www.opensource.org/licenses/bsd-license.php >.
+--------------------------------------------------------------------------------
+
 local sin 	= math.sin
 local cos 	= math.cos
 local acos 	= math.acos
