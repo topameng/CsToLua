@@ -7,8 +7,7 @@ using LuaInterface;
 
 
 public class Client : MonoBehaviour 
-{
-    public Timer timer = null;
+{    
     LuaScriptMgr luaMgr = null;
 
     void Awake()
@@ -24,11 +23,6 @@ public class Client : MonoBehaviour
 
     void Update()
     {
-        if (timer != null)
-        {
-            timer.OnUpdate(Time.deltaTime);
-        }          
-
         if (luaMgr != null)
         {
             luaMgr.Update();
