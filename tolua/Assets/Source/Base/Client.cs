@@ -70,5 +70,19 @@ public class Client : MonoBehaviour
             transform.position = Vector3.zero;
             luaMgr.CallLuaFunction("Test", transform);            
         }
+
+        if (GUI.Button(new Rect(10,70,120,50), "Test2"))
+        {
+            float time = Time.realtimeSinceStartup;
+            Vector3 v = Vector3.one;
+
+            for (int i = 0; i < 800000; i++)
+            {
+                v += Vector3.one;                
+            }
+
+            Debug.Log("c# cost time: " + (Time.realtimeSinceStartup - time));            
+            luaMgr.CallLuaFunction("Test2", transform);    
+        }
 	}
 }

@@ -2,11 +2,8 @@
 require "Golbal"
 
 --测试极端条件性能
-function Test(transform)
-	local cube = GameObject("Script cube")
-	transform = cube.transform
-	
-	local t = Time.time;	
+function Test(transform)	
+	local t = Time.time
 	
 	local v = Vector3.one
 	local one = Vector3.one
@@ -18,6 +15,18 @@ function Test(transform)
 	end
 
 	print("lua cost time: ", Time.time - t)
+end
+
+function Test2()	
+	local t = Time.time	
+	local v = Vector3.one
+	local one = Vector3.one
+
+	for i = 1,800000 do		
+		v:Add(one)		
+	end
+
+	print("lua cost time: ", Time.time - t, v)
 end
 
 
