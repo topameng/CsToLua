@@ -1,5 +1,5 @@
 ﻿/*    
- * Copyright (c) 2014 , 蒙占志 (Zhanzhi Meng) topameng@gmail.com
+ * Copyright (c) 2014.9 , 蒙占志 (Zhanzhi Meng) topameng@gmail.com
  * All rights reserved.
  * Use, modification and distribution are subject to the "New BSD License"
 */
@@ -40,8 +40,7 @@ public static class ToLua
 {
     public static string className = string.Empty;
     public static Type type = null;
-
-    //设置之后继承基类，不然就导入所有基类信息
+    
     public static string baseClassName = null;
     public static bool isStaticClass = true;    
 
@@ -83,12 +82,66 @@ public static class ToLua
         ambig = ObjAmbig.NetObj;
         wrapClassName = "";
         libClassName = "";
-    }    
+    }
+
+    private static MetaOp GetOp(string name)
+    {
+        if (name == "op_Addition")
+        {
+            return MetaOp.Add;
+        }
+        else if (name == "op_Subtraction")
+        {
+            return MetaOp.Sub;
+        }
+        else if (name == "op_Equality")
+        {
+            return MetaOp.Eq;
+        }
+        else if (name == "op_Multiply")
+        {
+            return MetaOp.Mul;
+        }
+        else if (name == "op_Division")
+        {
+            return MetaOp.Div;
+        }
+        else if (name == "op_UnaryNegation")
+        {
+            return MetaOp.Neg;
+        }
+
+        return MetaOp.None;
+    }
+
+    //操作符函数无法通过继承metatable实现
+    static void GenBaseOpFunction(List<MethodInfo> list)
+    {        
+        Type baseType = type.BaseType;
+
+        while (baseType != null)
+        {
+            MethodInfo[] methods = baseType.GetMethods(BindingFlags.Instance | BindingFlags.Public | BindingFlags.Static | BindingFlags.IgnoreCase);
+
+            for (int i = 0; i < methods.Length; i++)
+            {
+                MetaOp baseOp = GetOp(methods[i].Name);
+
+                if (baseOp != MetaOp.None && (op & baseOp) == 0)
+                {
+                    list.Add(methods[i]);
+                    op |= baseOp;
+                }
+            }
+
+            baseType = baseType.BaseType;
+        }
+    }
 
     public static void Generate(params string[] param)
     {
         Debugger.Log("Begin Generate lua Wrap for class {0}\r\n", className);
-        sb = new StringBuilder();                
+        sb = new StringBuilder();
         usingList.Add("System");
 
         if (type.Namespace != null && type.Namespace != string.Empty)
@@ -175,10 +228,11 @@ public static class ToLua
             }
         }
 
+        GenBaseOpFunction(list);
         methods = list.ToArray();
         
         sb.AppendFormat("public class {0}Wrap\r\n", wrapClassName);
-        sb.AppendLine("{");        
+        sb.AppendLine("{");
         
         AddRegVar();
         GenConstruct();
@@ -395,7 +449,7 @@ public static class ToLua
         }
         else
         {
-            sb.AppendFormat("\t\tLuaScriptMgr.RegisterLib(L, \"{0}\", typeof({2}), regs, fields, \"{1}\");\r\n", libClassName, baseClassName, className);
+            sb.AppendFormat("\t\tLuaScriptMgr.RegisterLib(L, \"{0}\", typeof({2}), regs, fields, typeof({1}));\r\n", libClassName, baseClassName, className);
         }
 
         sb.AppendLine("\t}");
@@ -453,7 +507,17 @@ public static class ToLua
 
             if (!haveParams)
             {
-                sb.AppendFormat("\t\tLuaScriptMgr.CheckArgsCount(L, {0});\r\n", paramInfos.Length + offset - 1);
+                int count = paramInfos.Length + offset - 1;
+
+                for (int j = 0; j < paramInfos.Length - 1; j++)
+                {
+                    if (paramInfos[j].Attributes == ParameterAttributes.Out)
+                    {
+                        --count;
+                    }
+                }
+
+                sb.AppendFormat("\t\tLuaScriptMgr.CheckArgsCount(L, {0});\r\n", count);
             }
             else
             {
@@ -481,10 +545,19 @@ public static class ToLua
     {        
         if (t.IsEnum)
         {
-            return "PushEnum";
+            return "Push";
         }
         else if (t == typeof(bool) || t.IsPrimitive || t == typeof(string) || t == typeof(LuaTable) || t == typeof(LuaCSFunction) || t == typeof(LuaFunction) || 
-            typeof(UnityEngine.Object).IsAssignableFrom(t) || t == typeof(Type) || t == typeof(IntPtr))
+            typeof(UnityEngine.Object).IsAssignableFrom(t) || t == typeof(Type) || t == typeof(IntPtr) || typeof(Delegate).IsAssignableFrom(t) ||
+            typeof(UnityEngine.TrackedReference).IsAssignableFrom(t) || typeof(IEnumerator).IsAssignableFrom(t))
+        {
+            return "Push";
+        }
+        else if (t == typeof(Vector3) || t == typeof(Vector2) || t == typeof(Vector4) || t == typeof(Quaternion) || t == typeof(Color))
+        {
+            return "Push";
+        }
+        else if (t == typeof(RaycastHit) || t == typeof(Ray) || t == typeof(Touch))
         {
             return "Push";
         }
@@ -609,8 +682,7 @@ public static class ToLua
         sb.AppendLine("\r\n\t[MonoPInvokeCallbackAttribute(typeof(LuaCSFunction))]");
         sb.AppendFormat("\tstatic int _Create{0}(IntPtr L)\r\n", wrapClassName);
         sb.AppendLine("\t{");
-        sb.AppendLine("\t\tint count = LuaDLL.lua_gettop(L);");
-        //ParameterInfo[] p0 = list[0].GetParameters();        
+        sb.AppendLine("\t\tint count = LuaDLL.lua_gettop(L);");          
         sb.AppendLine();
 
         List<ConstructorInfo> countList = new List<ConstructorInfo>();
@@ -622,14 +694,6 @@ public static class ToLua
             if (index >= 0 || (HasOptionalParam(list[i].GetParameters()) && list[i].GetParameters().Length > 1))
             {
                 countList.Add(list[i]);
-            }
-        }
-
-        for (int i = 0; i < list.Count; i++)
-        {
-            if (countList.Contains(list[i]))
-            {
-                CreateParamTypes(i, list[i].GetParameters(), true);
             }
         }
 
@@ -649,8 +713,9 @@ public static class ToLua
             str = _C(str);
 
             if (paramInfos.Length > 1)
-            {
-                sb.AppendFormat("\t\tif (LuaScriptMgr.CheckTypes(L, types0, 1) && LuaScriptMgr.CheckParamsType(L, typeof({0}), {1}, {2}))\r\n", str, paramInfos.Length, GetCountStr(paramInfos.Length - 1));
+            {                
+                string strParams = GenParamTypes(paramInfos, true);
+                sb.AppendFormat("\t\tif (LuaScriptMgr.CheckTypes(L, 1, {0}) && LuaScriptMgr.CheckParamsType(L, typeof({1}), {2}, {3}))\r\n", strParams, str, paramInfos.Length, GetCountStr(paramInfos.Length - 1));
             }
             else
             {
@@ -659,13 +724,16 @@ public static class ToLua
         }
         else
         {
+            ParameterInfo[] paramInfos = md.GetParameters();
+
             if (list.Count == 1 || md.GetParameters().Length != list[1].GetParameters().Length)
             {
-                sb.AppendFormat("\t\tif (count == {0})\r\n", md.GetParameters().Length);
+                sb.AppendFormat("\t\tif (count == {0})\r\n", paramInfos.Length);
             }
             else
-            {
-                sb.AppendFormat("\t\tif (count == {0} && LuaScriptMgr.CheckTypes(L, types0, {1}))\r\n", md.GetParameters().Length, 1);
+            {                
+                string strParams = GenParamTypes(paramInfos, true);
+                sb.AppendFormat("\t\tif (count == {0} && LuaScriptMgr.CheckTypes(L, 1, {1}))\r\n", paramInfos.Length, strParams);
             }
         }
 
@@ -678,28 +746,32 @@ public static class ToLua
         {
             hasEmptyCon = list[i].GetParameters().Length == 0 ? true : hasEmptyCon;
             md = list[i];
+            ParameterInfo[] paramInfos = md.GetParameters();
 
             if (!HasOptionalParam(md.GetParameters()))
             {
                 if (countList.Contains(list[i]))
                 {
-                    sb.AppendFormat("\t\telse if (count == {0} && LuaScriptMgr.CheckTypes(L, types{1}, {2}))\r\n", md.GetParameters().Length, i, 1);
+                    //sb.AppendFormat("\t\telse if (count == {0} && LuaScriptMgr.CheckTypes(L, types{1}, {2}))\r\n", paramInfos.Length, i, 1);
+                    string strParams = GenParamTypes(paramInfos, true);
+                    sb.AppendFormat("\t\telse if (count == {0} && LuaScriptMgr.CheckTypes(L, 1, {1}))\r\n", paramInfos.Length, strParams);
                 }
                 else
                 {
-                    sb.AppendFormat("\t\telse if (count == {0})\r\n", md.GetParameters().Length);
+                    sb.AppendFormat("\t\telse if (count == {0})\r\n", paramInfos.Length);
                 }
             }
             else
-            {
-                ParameterInfo[] paramInfos = md.GetParameters();
+            {                
                 ParameterInfo param = paramInfos[paramInfos.Length - 1];
                 string str = param.ParameterType.GetElementType().ToString();
                 str = _C(str);
 
                 if (paramInfos.Length > 1)
-                {
-                    sb.AppendFormat("\t\telse if (LuaScriptMgr.CheckTypes(L, types{2}, 1) && LuaScriptMgr.CheckParamsType(L, typeof({0}), {1}, {3}))\r\n", str, paramInfos.Length, i, GetCountStr(paramInfos.Length - 1));
+                {                    
+                    //sb.AppendFormat("\t\telse if (LuaScriptMgr.CheckTypes(L, types{2}, 1) && LuaScriptMgr.CheckParamsType(L, typeof({0}), {1}, {3}))\r\n", str, paramInfos.Length, i, GetCountStr(paramInfos.Length - 1));
+                    string strParams = GenParamTypes(paramInfos, true);
+                    sb.AppendFormat("\t\telse if (LuaScriptMgr.CheckTypes(L, 1, {0}) && LuaScriptMgr.CheckParamsType(L, typeof({1}), {2}, {3}))\r\n", strParams, str, paramInfos.Length, GetCountStr(paramInfos.Length - 1));
                 }
                 else
                 {
@@ -717,8 +789,9 @@ public static class ToLua
         {
             sb.AppendLine("\t\telse if (count == 0)");
             sb.AppendLine("\t\t{");
-            sb.AppendFormat("\t\t\t{0} obj = new {0}();\r\n", className);
-            sb.AppendLine("\t\t\tLuaScriptMgr.PushValue(L, obj);");
+            sb.AppendFormat("\t\t\t{0} obj = new {0}();\r\n", className);            
+            string str = GetPushFunction(type);
+            sb.AppendFormat("\t\t\tLuaScriptMgr.{0}(L, obj);\r\n", str);
             sb.AppendLine("\t\t\treturn 1;");
             sb.AppendLine("\t\t}");
         }
@@ -808,7 +881,7 @@ public static class ToLua
     static Type GetRefBaseType(string str)
     {
         int index = str.IndexOf("&");
-        string ss = str.Remove(index);
+        string ss = index >= 0 ? str.Remove(index): str;
         Type t = Type.GetType(ss);
 
         if (t == null)
@@ -819,20 +892,34 @@ public static class ToLua
         return t;
     }
 
+
+
     static int ProcessParams(MethodBase md, int tab, bool beConstruct, bool beOverride)
     {
         ParameterInfo[] paramInfos = md.GetParameters();
         int count = paramInfos.Length;
-        string head = string.Empty;
+        string head = string.Empty;        
 
         for (int i = 0; i < tab; i++)
         {
             head += "\t";
         }
+        
 
         if (!md.IsStatic && !beConstruct)
-        {
-            if (className != "Type")
+        {            
+            if (md.Name == "Equals")
+            {
+                if (!type.IsValueType)
+                {
+                    sb.AppendFormat("{0}{1} obj = LuaScriptMgr.GetVarObject(L, 1) as {1};\r\n", head, className);
+                }
+                else
+                {
+                    sb.AppendFormat("{0}{1} obj = ({1})LuaScriptMgr.GetVarObject(L, 1);\r\n", head, className);
+                }
+            }
+            else if (className != "Type")
             {
                 sb.AppendFormat("{0}{1} obj = LuaScriptMgr.GetNetObject<{1}>(L, 1);\r\n", head, className);
             }
@@ -851,7 +938,20 @@ public static class ToLua
             string arg = "arg" + j;
             int offset = (md.IsStatic || beConstruct) ? 1 : 2;
 
-            if (param.ParameterType == typeof(bool))
+            if (param.Attributes == ParameterAttributes.Out)
+            {                
+                Type outType = GetRefBaseType(param.ParameterType.ToString());
+
+                if (outType.IsValueType)
+                {
+                    sb.AppendFormat("{0}{1} {2};\r\n", head, str, arg);
+                }
+                else
+                {
+                    sb.AppendFormat("{0}{1} {2} = null;\r\n", head, str, arg);
+                }
+            }
+            else if (param.ParameterType == typeof(bool))
             {
                 sb.AppendFormat("{2}bool {0} = LuaScriptMgr.GetBoolean(L, {1});\r\n", arg, j + offset, head);
             }
@@ -871,6 +971,42 @@ public static class ToLua
             else if (param.ParameterType == typeof(LuaTable))
             {
                 sb.AppendFormat("{2}LuaTable {0} = LuaScriptMgr.GetLuaTable(L, {1});\r\n", arg, j + offset, head);
+            }
+            else if (param.ParameterType == typeof(Vector2) || GetRefBaseType(param.ParameterType.ToString()) == typeof(Vector2))
+            {
+                sb.AppendFormat("{2}Vector2 {0} = LuaScriptMgr.GetVector2(L, {1});\r\n", arg, j + offset, head);
+            }
+            else if (param.ParameterType == typeof(Vector3) || GetRefBaseType(param.ParameterType.ToString()) == typeof(Vector3))
+            {
+                sb.AppendFormat("{2}Vector3 {0} = LuaScriptMgr.GetVector3(L, {1});\r\n", arg, j + offset, head);
+            }
+            else if (param.ParameterType == typeof(Vector4) || GetRefBaseType(param.ParameterType.ToString()) == typeof(Vector4))
+            {
+                sb.AppendFormat("{2}Vector4 {0} = LuaScriptMgr.GetVector4(L, {1});\r\n", arg, j + offset, head);
+            }
+            else if (param.ParameterType == typeof(Quaternion) || GetRefBaseType(param.ParameterType.ToString()) == typeof(Quaternion))
+            {
+                sb.AppendFormat("{2}Quaternion {0} = LuaScriptMgr.GetQuaternion(L, {1});\r\n", arg, j + offset, head);
+            }
+            else if (param.ParameterType == typeof(Color) || GetRefBaseType(param.ParameterType.ToString()) == typeof(Color))
+            {
+                sb.AppendFormat("{2}Color {0} = LuaScriptMgr.GetColor(L, {1});\r\n", arg, j + offset, head);
+            }
+            else if (param.ParameterType == typeof(Ray) || GetRefBaseType(param.ParameterType.ToString()) == typeof(Ray))
+            {
+                sb.AppendFormat("{2}Ray {0} = LuaScriptMgr.GetRay(L, {1});\r\n", arg, j + offset, head);
+            }
+            else if (param.ParameterType == typeof(object))
+            {
+                sb.AppendFormat("{2}object {0} = LuaScriptMgr.GetVarObject(L, {1});\r\n", arg, j + offset, head);
+            }
+            else if (param.ParameterType == typeof(Type))
+            {
+                sb.AppendFormat("{0}{1} {2} = LuaScriptMgr.GetTypeObject(L, {3});\r\n", head, str, arg, j + offset);
+            }
+            else if (param.ParameterType == typeof(LuaStringBuffer))
+            {
+                sb.AppendFormat("{2}LuaStringBuffer {0} = LuaScriptMgr.GetStringBuffer(L, {1});\r\n", arg, j + offset, head);
             }
             else if (param.ParameterType.IsArray)
             {
@@ -899,7 +1035,7 @@ public static class ToLua
                 {
                     flag = true;
                     optional = IsParams(param);
-                    fname = optional ? "GetParamsObject" : "GetArrayObject";   
+                    fname = optional ? "GetParamsObject" : "GetArrayObject";
 
                     if (et == typeof(object))
                     {
@@ -912,7 +1048,7 @@ public static class ToLua
                         ambig |= ObjAmbig.U3dObj;
                     }
                 }
-                
+
                 if (flag)
                 {
                     if (optional)
@@ -943,27 +1079,29 @@ public static class ToLua
                     }
                 }
             }
-            else if (param.ParameterType == typeof(object))
-            {
-                sb.AppendFormat("{2}object {0} = LuaScriptMgr.GetVarObject(L, {1});\r\n", arg, j + offset, head);
-            }
-            else if (param.ParameterType == typeof(Type))
-            {
-                sb.AppendFormat("{0}{1} {2} = LuaScriptMgr.GetTypeObject(L, {3});\r\n", head, str, arg, j + offset);
-            }
-            else if (param.ParameterType == typeof(LuaStringBuffer))
-            {
-                sb.AppendFormat("{2}LuaStringBuffer {0} = LuaScriptMgr.GetStringBuffer(L, {1});\r\n", arg, j + offset, head);
-            }
             else //if (param.ParameterType == typeof(object))
             {
-                sb.AppendFormat("{3}{0} {1} = LuaScriptMgr.GetNetObject<{0}>(L, {2});\r\n", str, arg, j + offset, head);
+                if (md.Name == "op_Equality")
+                {
+                    if (!type.IsValueType)
+                    {
+                        sb.AppendFormat("{3}{0} {1} = LuaScriptMgr.GetVarObject(L, {2}) as {0};\r\n", str, arg, j + offset, head);
+                    }
+                    else
+                    {
+                        sb.AppendFormat("{3}{0} {1} = ({0})LuaScriptMgr.GetVarObject(L, {2});\r\n", str, arg, j + offset, head);
+                    }
+                }
+                else
+                {
+                    sb.AppendFormat("{3}{0} {1} = LuaScriptMgr.GetNetObject<{0}>(L, {2});\r\n", str, arg, j + offset, head);
+                }
             }
         }
 
         StringBuilder sbArgs = new StringBuilder();
         List<string> refList = new List<string>();
-        List<Type> refType = new List<Type>();
+        List<Type> refTypes = new List<Type>();
 
         for (int j = 0; j < count - 1; j++)
         {
@@ -987,7 +1125,7 @@ public static class ToLua
                     }
 
                     refList.Add("arg" + j);
-                    refType.Add(GetRefBaseType(param.ParameterType.ToString()));
+                    refTypes.Add(GetRefBaseType(param.ParameterType.ToString()));
                 }
             }
             else
@@ -1021,7 +1159,7 @@ public static class ToLua
                     }
 
                     refList.Add("arg" + (count - 1));
-                    refType.Add(GetRefBaseType(param.ParameterType.ToString()));
+                    refTypes.Add(GetRefBaseType(param.ParameterType.ToString()));
                 }
             }
             else
@@ -1040,7 +1178,7 @@ public static class ToLua
 
             for (int i = 0; i < refList.Count; i++)
             {
-                str = GetPushFunction(refType[i]);
+                str = GetPushFunction(refTypes[i]);
                 sb.AppendFormat("{1}LuaScriptMgr.{2}(L, {0});\r\n", refList[i], head, str);
             }
             
@@ -1102,13 +1240,13 @@ public static class ToLua
             }
 
             string str = GetPushFunction(m.ReturnType);
-            sb.AppendFormat("{0}LuaScriptMgr.{1}(L, o);\r\n", head, str);
+            sb.AppendFormat("{0}LuaScriptMgr.{1}(L, o);\r\n", head, str);            
         }
 
         for (int i = 0; i < refList.Count; i++)
         {
-            string str = GetPushFunction(refType[i]);
-            sb.AppendFormat("{1}LuaScriptMgr.{2}(L, {0});\r\n", refList[i], head, str);
+            string str = GetPushFunction(refTypes[i]);
+            sb.AppendFormat("{1}LuaScriptMgr.{2}(L, {0});\r\n", refList[i], head, str);            
         }
 
         return refList.Count;
@@ -1273,8 +1411,7 @@ public static class ToLua
         sb.AppendLine("\r\n\t[MonoPInvokeCallbackAttribute(typeof(LuaCSFunction))]");
         sb.AppendFormat("\tstatic int {0}(IntPtr L)\r\n", GetFuncName(name));
         sb.AppendLine("\t{");
-        sb.AppendLine("\t\tint count = LuaDLL.lua_gettop(L);");
-        sb.AppendLine();
+        sb.AppendLine("\t\tint count = LuaDLL.lua_gettop(L);");        
 
         List<MethodInfo> countList = new List<MethodInfo>();
 
@@ -1287,14 +1424,6 @@ public static class ToLua
                 countList.Add(list[i]);                
             }            
         }
-
-        for (int i = 0; i < list.Count; i++)
-        {
-            if (countList.Contains(list[i]))
-            {
-                CreateParamTypes(i, list[i].GetParameters(), list[i].IsStatic);
-            }
-        }                        
 
         if (countList.Count >= 1)
         {
@@ -1317,7 +1446,9 @@ public static class ToLua
 
             if (paramInfos.Length > 1)
             {
-                sb.AppendFormat("\t\tif (LuaScriptMgr.CheckTypes(L, types0, 1) && LuaScriptMgr.CheckParamsType(L, typeof({0}), {1}, {2}))\r\n", str, paramInfos.Length + offset, GetCountStr(paramInfos.Length + offset - 1));
+                //sb.AppendFormat("\t\tif (LuaScriptMgr.CheckTypes(L, types0, 1) && LuaScriptMgr.CheckParamsType(L, typeof({0}), {1}, {2}))\r\n", str, paramInfos.Length + offset, GetCountStr(paramInfos.Length + offset - 1));
+                string strParams = GenParamTypes(paramInfos, md.IsStatic);
+                sb.AppendFormat("\t\tif (LuaScriptMgr.CheckTypes(L, 1, {0}) && LuaScriptMgr.CheckParamsType(L, typeof({1}), {2}, {3}))\r\n", strParams, str, paramInfos.Length + offset, GetCountStr(paramInfos.Length + offset - 1));
             }
             else
             {
@@ -1332,8 +1463,11 @@ public static class ToLua
                 noLuaString = false;
             }
             else
-            {
-                sb.AppendFormat("\t\tif (count == {0} && LuaScriptMgr.CheckTypes(L, types0, {1}))\r\n", md.GetParameters().Length + offset, 1);
+            {                
+                //sb.AppendFormat("\t\tif (count == {0} && LuaScriptMgr.CheckTypes(L, types0, {1}))\r\n", md.GetParameters().Length + offset, 1);
+                ParameterInfo[] paramInfos = md.GetParameters();
+                string strParams = GenParamTypes(paramInfos, md.IsStatic);
+                sb.AppendFormat("\t\tif (count == {0} && LuaScriptMgr.CheckTypes(L, 1, {1}))\r\n", paramInfos.Length + offset, strParams);
             }
         }
 
@@ -1352,13 +1486,17 @@ public static class ToLua
 
             if (!HasOptionalParam(md.GetParameters()))
             {
+                ParameterInfo[] paramInfos = md.GetParameters();
+
                 if (countList.Contains(list[i]))
                 {
-                    sb.AppendFormat("\t\telse if (count == {0} && LuaScriptMgr.CheckTypes(L, types{1}, {2}))\r\n", md.GetParameters().Length + offset, i, 1);
+                    //sb.AppendFormat("\t\telse if (count == {0} && LuaScriptMgr.CheckTypes(L, types{1}, {2}))\r\n", md.GetParameters().Length + offset, i, 1);                    
+                    string strParams = GenParamTypes(paramInfos, md.IsStatic);
+                    sb.AppendFormat("\t\telse if (count == {0} && LuaScriptMgr.CheckTypes(L, 1, {1}))\r\n", paramInfos.Length + offset, strParams);
                 }
                 else
                 {
-                    sb.AppendFormat("\t\telse if (count == {0})\r\n", md.GetParameters().Length + offset);
+                    sb.AppendFormat("\t\telse if (count == {0})\r\n", paramInfos.Length + offset);
                     noLuaString = false;
                 }
             }
@@ -1371,7 +1509,9 @@ public static class ToLua
 
                 if (paramInfos.Length > 1)
                 {
-                    sb.AppendFormat("\t\telse if (LuaScriptMgr.CheckTypes(L, types{2}, 1) && LuaScriptMgr.CheckParamsType(L, typeof({0}), {1}, {3}))\r\n", str, paramInfos.Length + offset, i, GetCountStr(paramInfos.Length + offset - 1));
+                    //sb.AppendFormat("\t\telse if (LuaScriptMgr.CheckTypes(L, types{2}, 1) && LuaScriptMgr.CheckParamsType(L, typeof({0}), {1}, {3}))\r\n", str, paramInfos.Length + offset, i, GetCountStr(paramInfos.Length + offset - 1));                    
+                    string strParams = GenParamTypes(paramInfos, md.IsStatic);
+                    sb.AppendFormat("\t\telse if (LuaScriptMgr.CheckTypes(L, 1, {0}) && LuaScriptMgr.CheckParamsType(L, typeof({1}), {2}, {3}))\r\n", strParams, str, paramInfos.Length + offset, GetCountStr(paramInfos.Length + offset - 1));
                 }
                 else
                 {
@@ -1479,7 +1619,7 @@ public static class ToLua
             usingList.Add("System");
             ambig |= ObjAmbig.NetObj;
             return "object";
-        }    
+        }
         else if (str.Contains("`"))
         {
             string regStr = @"^(?<s0>.*?)\.?(?<s1>\w*)`[1-9]\[(?<s2>.*?)\]$";            
@@ -1539,7 +1679,7 @@ public static class ToLua
             }
 
             return str.Replace('+', '.');
-        }    
+        }   
         else if (str.Length > 12 && str.Substring(0, 12) == "UnityEngine.")
         {
             //usingList.Add("UnityEngine");
@@ -1654,6 +1794,84 @@ public static class ToLua
         }
     }
 
+    static bool IsLuaTableType(Type t)
+    {
+        if (t.IsArray)
+        {
+            t = t.GetElementType();
+        }
+
+        return t == typeof(Vector3) || t == typeof(Vector2) || t == typeof(Vector4) || t == typeof(Quaternion) || t == typeof(Color) || t == typeof(Ray);
+    }
+
+    static string GetTypeOf(Type t, string sep)
+    {
+        string str;
+
+        if (t == null)
+        {
+            str = string.Format("null{0}", sep);
+        }
+        else if (IsLuaTableType(t))
+        {
+            str = string.Format("typeof(LuaTable{1}){0}", sep, t.IsArray ? "[]" : "");
+        }
+        else
+        {
+           str = string.Format("typeof({0}){1}", _PT(t), sep);
+        }
+
+        return str;
+    }
+
+    static string GenParamTypes(ParameterInfo[] p, bool notAddSelf)
+    {
+        StringBuilder sb = new StringBuilder();
+        List<Type> list = new List<Type>();
+
+        if (!notAddSelf)
+        {
+            list.Add(type);
+        }
+
+        for (int i = 0; i < p.Length; i++)
+        {
+            if (IsParams(p[i]))
+            {
+                continue;                
+            }
+
+            if (p[i].Attributes != ParameterAttributes.Out)
+            {
+                list.Add(p[i].ParameterType);
+            }
+            else
+            {
+                list.Add(null);
+            }
+        }
+
+        for (int i = 0; i < list.Count - 1; i++)
+        {
+            sb.Append(GetTypeOf(list[i], ", "));
+        }
+
+        sb.Append(GetTypeOf(list[list.Count - 1], ""));
+        return sb.ToString();
+    }
+
+    static void CheckObjectNull()
+    {
+        if (type.IsValueType)
+        {
+            sb.AppendLine("\t\tif (o == null)");
+        }
+        else
+        {
+            sb.AppendLine("\t\tif (obj == null)");
+        }
+    }
+
     static void GenIndexFunc()
     {
         for(int i = 0; i < fields.Length; i++)
@@ -1666,13 +1884,26 @@ public static class ToLua
 
             if (fields[i].IsStatic)
             {
-                sb.AppendFormat("\t\tLuaScriptMgr.{2}(L, {0}.{1});\r\n", className, fields[i].Name, str);
+                //if (str == "PushObject")
+                //{
+                //    sb.AppendFormat("\t\tLuaScriptMgr.{2}(L, {0}.{1} == null ? null : {0}.{1});\r\n", className, fields[i].Name, str);                    
+                //}
+                //else
+                //{
+                    sb.AppendFormat("\t\tLuaScriptMgr.{2}(L, {0}.{1});\r\n", className, fields[i].Name, str);
+                //}
             }
             else
             {
                 sb.AppendFormat("\t\tobject o = LuaScriptMgr.GetLuaObject(L, 1);\r\n");
+
+                if (!type.IsValueType)
+                {
+                    sb.AppendFormat("\t\t{0} obj = ({0})o;\r\n", className);
+                }
+
                 sb.AppendLine();
-                sb.AppendLine("\t\tif (o == null)");
+                CheckObjectNull();
                 sb.AppendLine("\t\t{");
                 sb.AppendLine("\t\t\tLuaTypes types = LuaDLL.lua_type(L, 1);");
                 sb.AppendLine();
@@ -1686,8 +1917,20 @@ public static class ToLua
                 sb.AppendLine("\t\t\t}");
                 sb.AppendLine("\t\t}");
                 sb.AppendLine();
-                sb.AppendFormat("\t\t{0} obj = ({0})o;\r\n", className);
-                sb.AppendFormat("\t\tLuaScriptMgr.{1}(L, obj.{0});\r\n", fields[i].Name, str);
+
+                if (type.IsValueType)
+                {
+                    sb.AppendFormat("\t\t{0} obj = ({0})o;\r\n", className);
+                }
+
+                //if (str == "PushObject")
+                //{
+                //    sb.AppendFormat("\t\tLuaScriptMgr.{1}(L, obj.{0} == null ? null : obj.{0});\r\n", fields[i].Name, str);                    
+                //}
+                //else
+                //{
+                    sb.AppendFormat("\t\tLuaScriptMgr.{1}(L, obj.{0});\r\n", fields[i].Name, str);
+                //}
             }
 
             sb.AppendLine("\t\treturn 1;");
@@ -1716,14 +1959,27 @@ public static class ToLua
             string str = GetPushFunction(props[i].PropertyType);
 
             if (isStatic)
-            {
-                sb.AppendFormat("\t\tLuaScriptMgr.{2}(L, {0}.{1});\r\n", className, props[i].Name, str);
+            {               
+                //if (str == "PushObject")
+                //{
+                //    sb.AppendFormat("\t\tLuaScriptMgr.{2}(L, {0}.{1} == null ? null : {0}.{1});\r\n", className, props[i].Name, str);                    
+                //}
+                //else
+                //{
+                    sb.AppendFormat("\t\tLuaScriptMgr.{2}(L, {0}.{1});\r\n", className, props[i].Name, str);
+                //}
             }
             else
             {
-                sb.AppendFormat("\t\tobject o = LuaScriptMgr.GetLuaObject(L, 1);\r\n");
+                sb.AppendFormat("\t\tobject o = LuaScriptMgr.GetLuaObject(L, 1);\r\n");                
+                
+                if (!type.IsValueType)
+                {
+                    sb.AppendFormat("\t\t{0} obj = ({0})o;\r\n", className);
+                }
+
                 sb.AppendLine();
-                sb.AppendLine("\t\tif (o == null)");
+                CheckObjectNull();
                 sb.AppendLine("\t\t{");
                 sb.AppendLine("\t\t\tLuaTypes types = LuaDLL.lua_type(L, 1);");
                 sb.AppendLine();
@@ -1737,8 +1993,20 @@ public static class ToLua
                 sb.AppendLine("\t\t\t}");
                 sb.AppendLine("\t\t}");
                 sb.AppendLine();
-                sb.AppendFormat("\t\t{0} obj = ({0})o;\r\n", className);
-                sb.AppendFormat("\t\tLuaScriptMgr.{1}(L, obj.{0});\r\n", props[i].Name, str);
+
+                if (type.IsValueType)
+                {
+                    sb.AppendFormat("\t\t{0} obj = ({0})o;\r\n", className);
+                }
+
+                //if (str == "PushObject")
+                //{
+                //    sb.AppendFormat("\t\tLuaScriptMgr.{1}(L, obj.{0} == null ? null : obj.{0});\r\n", props[i].Name, str);                    
+                //}
+                //else
+                //{
+                    sb.AppendFormat("\t\tLuaScriptMgr.{1}(L, obj.{0});\r\n", props[i].Name, str);
+                //}
 
             }
 
@@ -1763,9 +2031,15 @@ public static class ToLua
 
             if (!fields[i].IsStatic)
             {                                
-                sb.AppendFormat("\t\tobject o = LuaScriptMgr.GetLuaObject(L, 1);\r\n");
+                sb.AppendFormat("\t\tobject o = LuaScriptMgr.GetLuaObject(L, 1);\r\n");                
+
+                if (!type.IsValueType)
+                {
+                    sb.AppendFormat("\t\t{0} obj = ({0})o;\r\n", className);
+                }
+
                 sb.AppendLine();
-                sb.AppendLine("\t\tif (o == null)");
+                CheckObjectNull();
                 sb.AppendLine("\t\t{");
                 sb.AppendLine("\t\t\tLuaTypes types = LuaDLL.lua_type(L, 1);");
                 sb.AppendLine();
@@ -1780,7 +2054,11 @@ public static class ToLua
                 sb.AppendLine("\t\t}");
 
                 sb.AppendLine();
-                sb.AppendFormat("\t\t{0} obj = ({0})o;\r\n", className);                
+
+                if (type.IsValueType)
+                {
+                    sb.AppendFormat("\t\t{0} obj = ({0})o;\r\n", className);
+                }
             }
 
             NewIndexSetValue(fields[i].FieldType, o, fields[i].Name);
@@ -1817,8 +2095,14 @@ public static class ToLua
             if (!isStatic)
             {
                 sb.AppendFormat("\t\tobject o = LuaScriptMgr.GetLuaObject(L, 1);\r\n");
+
+                if (!type.IsValueType)
+                {
+                    sb.AppendFormat("\t\t{0} obj = ({0})o;\r\n", className);
+                }
+    
                 sb.AppendLine();
-                sb.AppendLine("\t\tif (o == null)");
+                CheckObjectNull();
                 sb.AppendLine("\t\t{");
                 sb.AppendLine("\t\t\tLuaTypes types = LuaDLL.lua_type(L, 1);");
                 sb.AppendLine();
@@ -1832,7 +2116,11 @@ public static class ToLua
                 sb.AppendLine("\t\t\t}");
                 sb.AppendLine("\t\t}");
                 sb.AppendLine();
-                sb.AppendFormat("\t\t{0} obj = ({0})o;\r\n", className);     
+
+                if (type.IsValueType)
+                {
+                    sb.AppendFormat("\t\t{0} obj = ({0})o;\r\n", className);
+                }
             }
 
             NewIndexSetValue(props[i].PropertyType, o, props[i].Name);
@@ -1873,6 +2161,30 @@ public static class ToLua
         else if (t == typeof(object))
         {
             sb.AppendFormat("\t\t{0}.{1} = LuaScriptMgr.GetVarObject(L, 3);\r\n", o, name);
+        }
+        else if (t == typeof(Vector3))
+        {
+            sb.AppendFormat("\t\t{0}.{1} = LuaScriptMgr.GetVector3(L, 3);\r\n", o, name);
+        }
+        else if (t == typeof(Quaternion))
+        {
+            sb.AppendFormat("\t\t{0}.{1} = LuaScriptMgr.GetQuaternion(L, 3);\r\n", o, name);
+        }
+        else if (t == typeof(Vector2))
+        {
+            sb.AppendFormat("\t\t{0}.{1} = LuaScriptMgr.GetVector2(L, 3);\r\n", o, name);
+        }
+        else if (t == typeof(Vector4))
+        {
+            sb.AppendFormat("\t\t{0}.{1} = LuaScriptMgr.GetVector4(L, 3);\r\n", o, name);
+        }
+        else if (t == typeof(Color))
+        {
+            sb.AppendFormat("\t\t{0}.{1} = LuaScriptMgr.GetColor(L, 3);\r\n", o, name);
+        }
+        else if (t == typeof(Ray))
+        {
+            sb.AppendFormat("\t\t{0}.{1} = LuaScriptMgr.GetRay(L, 3);\r\n", o, name);
         }
         else if (typeof(object).IsAssignableFrom(t) || t.IsEnum)
         {
@@ -2043,37 +2355,42 @@ public static class ToLua
 
         fields = list.ToArray();
         sb.AppendFormat("public class {0}Wrap\r\n", wrapClassName);
-        sb.AppendLine("{");    
-        sb.AppendLine("\tstatic LuaEnum[] enums = new LuaEnum[]");
+        sb.AppendLine("{");
+        sb.AppendLine("\tstatic LuaMethod[] enums = new LuaMethod[]");
         sb.AppendLine("\t{");
 
         for (int i = 0; i < fields.Length; i++)
         {
-            sb.AppendFormat("\t\tnew LuaEnum(\"{0}\", {1}.{0}),\r\n", fields[i].Name, className);
+            sb.AppendFormat("\t\tnew LuaMethod(\"{0}\", Get{0}),\r\n", fields[i].Name);
         }
 
+        sb.AppendFormat("\t\tnew LuaMethod(\"IntToEnum\", IntToEnum),\r\n");
         sb.AppendLine("\t};");
 
         sb.AppendLine("\r\n\tpublic static void Register(IntPtr L)");
         sb.AppendLine("\t{");
-        sb.AppendFormat("\t\tLuaScriptMgr.RegisterLib(L, \"{0}\", enums);\r\n", libClassName);
-        sb.AppendFormat("\t\tLuaScriptMgr.RegisterFunc(L, \"{0}\", IntToEnum, \"IntToEnum\");\r\n", libClassName);
-        sb.AppendLine("\t}");                   
+        sb.AppendFormat("\t\tLuaScriptMgr.RegisterLib(L, \"{0}\", typeof({1}), enums);\r\n", libClassName, className);        
+        sb.AppendLine("\t}");        
+
+        for (int i = 0; i < fields.Length; i++)
+        {
+            sb.AppendLine("\r\n\t[MonoPInvokeCallbackAttribute(typeof(LuaCSFunction))]");
+            sb.AppendFormat("\tstatic int Get{0}(IntPtr L)\r\n", fields[i].Name);
+            sb.AppendLine("\t{");
+            sb.AppendFormat("\t\tLuaScriptMgr.Push(L, {0}.{1});\r\n", className, fields[i].Name);
+            sb.AppendLine("\t\treturn 1;");
+            sb.AppendLine("\t}");            
+        }
     }
 
     static void GenEnumTranslator()
     {
-        if (!type.IsEnum)
-        {
-            return;
-        }
-
         sb.AppendLine("\r\n\t[MonoPInvokeCallbackAttribute(typeof(LuaCSFunction))]");
         sb.AppendLine("\tstatic int IntToEnum(IntPtr L)");
         sb.AppendLine("\t{");
         sb.AppendLine("\t\tint arg0 = (int)LuaDLL.lua_tonumber(L, 1);");
         sb.AppendFormat("\t\t{0} o = ({0})arg0;\r\n", className);
-        sb.AppendLine("\t\tLuaScriptMgr.PushEnum(L, o);");
+        sb.AppendLine("\t\tLuaScriptMgr.Push(L, o);");
         sb.AppendLine("\t\treturn 1;");
         sb.AppendLine("\t}");        
     }

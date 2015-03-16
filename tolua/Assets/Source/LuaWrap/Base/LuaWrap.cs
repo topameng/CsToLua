@@ -76,3 +76,30 @@ public class LuaRef
         this.reference = reference;
     }
 }
+
+/*一个发送协议的例子结构*/
+//在lua中得到MsgPacket对象msg，然后local data = msg:PushLuaString() 获取数据缓冲区
+//之后是lua对应协议对象调用 ParseFromString(data)
+public class MsgPacket
+{
+    //包头
+    public ushort id;       //协议id
+    public int seq;         //协议 sequence id
+    public ushort errno;    //错误码
+
+    //包数据
+    public byte[] data;     //协议数据
+
+    public void PushLuaString(IntPtr L)
+    {
+        if (data != null)
+        {
+            LuaDLL.lua_pushlstring(L, data, data.Length);
+        }
+        else
+        {
+            LuaDLL.lua_pushnil(L);
+        }
+
+    }
+}
