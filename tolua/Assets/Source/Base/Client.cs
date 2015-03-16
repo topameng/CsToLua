@@ -5,59 +5,6 @@ using System;
 using System.Reflection;
 using LuaInterface;
 
-public struct TestToLua
-{
-    public TestToLua(params object[] objs)
-    {
-
-    }
-
-    public int Test(ref int x, ref int y)
-    {
-        int ret = x + y;
-        x = 1;
-        y = 2;
-        return ret;
-    }
-
-    public void Empty(Func<int, int, int, string> s1)
-    {
-
-    }
-
-    public void TestDef(int i = 234, string str = "123")
-    {
-
-    }
-
-    public void Test2(int i, params object[] objs)
-    {
-
-    }
-
-    public void Test3(params GameObject[] objs)
-    {
-
-    }
-
-   //public void Test4(int i, object o)
-   //{
-   //     Debug.Log("test4 obj");
-   // }
-
-    public void Test4(int i, string str, int j)
-    {
-        Debug.Log("test4 str:" + str + "," + j.ToString());
-    }
-}
-
-public enum TestEnum
-{
-    One,
-    Two,
-    Three,
-}
-
 
 public class Client : MonoBehaviour 
 {
@@ -77,11 +24,6 @@ public class Client : MonoBehaviour
 
     void Update()
     {
-        //if (thread != null && !thread.IsDead())
-        //{
-        //    thread.Resume();
-        //}
-
         if (timer != null)
         {
             timer.OnUpdate(Time.deltaTime);
@@ -92,20 +34,40 @@ public class Client : MonoBehaviour
             luaMgr.Update();
         }
     }
+
+    void LateUpdate()
+    {
+        if (luaMgr != null)
+        {
+            luaMgr.LateUpate();
+        }
+    }
+
+    void FixedUpdate()
+    {
+        if (luaMgr != null)
+        {
+            luaMgr.FixedUpdate();
+        }
+    }
 		
 	void OnGUI() 
     {
 	    if (GUI.Button(new Rect(10,10,120,50), "Test"))
         {            
             float time = Time.realtimeSinceStartup;
+            Vector3 v = Vector3.one;
 
-            for (int i = 0; i < 200000; i++)
+            for (int i = 0; i < 800000; i++)
             {
+                v = transform.position;
+                v += Vector3.one;
                 transform.position = Vector3.one;
             }
 
             Debug.Log("c# cost time: " + (Time.realtimeSinceStartup - time));
-            
+
+            transform.position = Vector3.zero;
             luaMgr.CallLuaFunction("Test", transform);            
         }
 	}
