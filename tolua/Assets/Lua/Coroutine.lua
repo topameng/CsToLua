@@ -1,4 +1,11 @@
-﻿-- 扩展lua协同为c#协同形式
+﻿--------------------------------------------------------------------------------
+--      Copyright (c) 2015 , 蒙占志(topameng) topameng@gmail.com
+--      All rights reserved.
+--
+--      Use, modification and distribution are subject to the "New BSD License"
+--      as listed at <url: http://www.opensource.org/licenses/bsd-license.php >.
+--------------------------------------------------------------------------------
+-- 扩展lua协同为c#协同形式
 
 function coroutine.start(f, ...)		
 	local co = coroutine.create(f)
