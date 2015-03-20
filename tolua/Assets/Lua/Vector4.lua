@@ -1,5 +1,5 @@
---------------------------------------------------------------------------------
---      Copyright (c) 2015 , ��ռ־(topameng) topameng@gmail.com
+﻿--------------------------------------------------------------------------------
+--      Copyright (c) 2015 , 蒙占志(topameng) topameng@gmail.com
 --      All rights reserved.
 --
 --      Use, modification and distribution are subject to the "New BSD License"

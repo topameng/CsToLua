@@ -1,5 +1,5 @@
---------------------------------------------------------------------------------
---      Copyright (c) 2015 , ÃÉÕ¼Ö¾(topameng) topameng@gmail.com
+ï»¿--------------------------------------------------------------------------------
+--      Copyright (c) 2015 , è’™å å¿—(topameng) topameng@gmail.com
 --      All rights reserved.
 --
 --      Use, modification and distribution are subject to the "New BSD License"
@@ -155,14 +155,14 @@ function Quaternion:SetNormalize()
 	end
 end
 
---²úÉúÒ»¸öĞÂµÄ´Ófromµ½toµÄËÄÔªÊı
+--äº§ç”Ÿä¸€ä¸ªæ–°çš„ä»fromåˆ°toçš„å››å…ƒæ•°
 function Quaternion.FromToRotation(from, to)
 	local quat = Quaternion.New()
 	quat:SetFromToRotation(from, to)
 	return quat
 end
 
---ÉèÖÃµ±Ç°ËÄÔªÊıÎª from µ½ toµÄĞı×ª, ×¢ÒâfromºÍtoÍ¬ forwardÆ½ĞĞ»áÍ¬unity²»Ò»ÖÂ
+--è®¾ç½®å½“å‰å››å…ƒæ•°ä¸º from åˆ° toçš„æ—‹è½¬, æ³¨æ„fromå’ŒtoåŒ forwardå¹³è¡Œä¼šåŒunityä¸ä¸€è‡´
 function Quaternion:SetFromToRotation(from, to)
 	local v0 = from:Normalize()
 	local v1 = to:Normalize()
@@ -296,7 +296,7 @@ function Quaternion:ToAngleAxis()
 	local scale = sqrt(self.x * self.x + self.y * self.y + self.z * self.z)
 	local w = clamp(self.w / scale, -1, 1)
 	
-	--»³ÒÉu3dÕâÀïĞ´´íÁË w < -1 Ò²Ó¦¸ÃÔÚÕâÀï
+	--æ€€ç–‘u3dè¿™é‡Œå†™é”™äº† w < -1 ä¹Ÿåº”è¯¥åœ¨è¿™é‡Œ
 	if scale < 1e-6 and w > 1 then		
 		return 0, Vector3.New(1, 0, 0)		
 	end
