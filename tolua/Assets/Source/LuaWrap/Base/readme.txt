@@ -1,6 +1,6 @@
-EnumWrap ÊÖ¶¯¼ÓÈëÁË __eq º¯Êı
-DelegateWrap ÊÖ¶¯¼ÓÈëÁË Add º¯Êı£¬ÆäÊµºÍCombineÒ»Ñù¹¦ÄÜ
-IEnumeratorWrap ÎŞĞŞ¸Ä
-ObjectWrap DestroyÀàº¯Êı¼ÓÈëÁËÖ÷¶¯gc
-MsgPackWrap ĞŞ¸ÄÁËPushLuaStringº¯Êı£¬ÓÃÓÚÑ¹ÈëĞ­Òébuffer
-NetObjectWrap ¼ÓÈëÁËIsNull ºÍ Destroy (ÓÃÓÚ¼°Ê±»ØÊÕ)º¯Êı
+ï»¿EnumWrap æ‰‹åŠ¨åŠ å…¥äº† __eq å‡½æ•°
+DelegateWrap æ‰‹åŠ¨åŠ å…¥äº† Add å‡½æ•°ï¼Œå…¶å®å’ŒCombineä¸€æ ·åŠŸèƒ½
+IEnumeratorWrap æ— ä¿®æ”¹
+ObjectWrap Destroyç±»å‡½æ•°åŠ å…¥äº†ä¸»åŠ¨gc
+MsgPackWrap ä¿®æ”¹äº†PushLuaStringå‡½æ•°ï¼Œç”¨äºå‹å…¥åè®®buffer
+NetObjectWrap åŠ å…¥äº†IsNull å’Œ Destroy (ç”¨äºåŠæ—¶å›æ”¶)å‡½æ•°
