@@ -2149,7 +2149,7 @@ public class LuaScriptMgr
         LuaDLL.lua_pushvalue(L, stackPos);  
         float x = 0,y = 0,z = 0;
 
-        if (LuaDLL.lua_call(L, 1, -1) == 0)
+        if (LuaDLL.lua_pcall(L, 1, -1, 0) == 0)
         {
             x = (float)LuaDLL.lua_tonumber(L, oldTop + 1);
             y = (float)LuaDLL.lua_tonumber(L, oldTop + 2);
@@ -2172,7 +2172,7 @@ public class LuaScriptMgr
         LuaScriptMgr.Push(L, v3.y);
         LuaScriptMgr.Push(L, v3.z);
 
-        if (LuaDLL.lua_call(L, 3, -1) != 0)
+        if (LuaDLL.lua_pcall(L, 3, -1, 0) != 0)
         {
             ThrowLuaException(L);
         }        
@@ -2187,7 +2187,7 @@ public class LuaScriptMgr
         LuaScriptMgr.Push(L, q.z);
         LuaScriptMgr.Push(L, q.w);
 
-        if (LuaDLL.lua_call(L, 4, -1) != 0)
+        if (LuaDLL.lua_pcall(L, 4, -1, 0) != 0)
         {
             ThrowLuaException(L);
         }        
@@ -2202,7 +2202,7 @@ public class LuaScriptMgr
         LuaDLL.lua_pushvalue(L, stackPos);
         float x = 0, y = 0, z = 0, w =1;
 
-        if (LuaDLL.lua_call(L, 1, -1) == 0)
+        if (LuaDLL.lua_pcall(L, 1, -1, 0) == 0)
         {
             x = (float)LuaDLL.lua_tonumber(L, oldTop + 1);
             y = (float)LuaDLL.lua_tonumber(L, oldTop + 2);
@@ -2227,7 +2227,7 @@ public class LuaScriptMgr
         LuaDLL.lua_pushvalue(L, stackPos);
         float x = 0, y = 0;
 
-        if (LuaDLL.lua_call(L, 1, -1) == 0)
+        if (LuaDLL.lua_pcall(L, 1, -1, 0) == 0)
         {
             x = (float)LuaDLL.lua_tonumber(L, oldTop + 1);
             y = (float)LuaDLL.lua_tonumber(L, oldTop + 2);            
@@ -2248,7 +2248,7 @@ public class LuaScriptMgr
         LuaScriptMgr.Push(L, v2.x);
         LuaScriptMgr.Push(L, v2.y);        
 
-        if (LuaDLL.lua_call(L, 2, -1) != 0)
+        if (LuaDLL.lua_pcall(L, 2, -1, 0) != 0)
         {
             ThrowLuaException(L);
         }
@@ -2263,7 +2263,7 @@ public class LuaScriptMgr
         LuaDLL.lua_pushvalue(L, stackPos);
         float x = 0, y = 0, z = 0, w = 0;
 
-        if (LuaDLL.lua_call(L, 1, -1) == 0)
+        if (LuaDLL.lua_pcall(L, 1, -1, 0) == 0)
         {
             x = (float)LuaDLL.lua_tonumber(L, oldTop + 1);
             y = (float)LuaDLL.lua_tonumber(L, oldTop + 2);
@@ -2288,7 +2288,7 @@ public class LuaScriptMgr
         LuaScriptMgr.Push(L, v4.z);
         LuaScriptMgr.Push(L, v4.w);
 
-        if (LuaDLL.lua_call(L, 4, -1) != 0)
+        if (LuaDLL.lua_pcall(L, 4, -1, 0) != 0)
         {
             ThrowLuaException(L);
         }  
@@ -2306,7 +2306,7 @@ public class LuaScriptMgr
         Push(L, hit.rigidbody);
         Push(L, hit.transform);
 
-        if (LuaDLL.lua_call(L, 6, -1) != 0)
+        if (LuaDLL.lua_pcall(L, 6, -1, 0) != 0)
         {
             ThrowLuaException(L);
         }    
@@ -2320,7 +2320,7 @@ public class LuaScriptMgr
         Push(L, ray.direction);
         Push(L, ray.origin);
 
-        if (LuaDLL.lua_call(L, 2, -1) != 0)
+        if (LuaDLL.lua_pcall(L, 2, -1, 0) != 0)
         {
             ThrowLuaException(L);
         }        
@@ -2337,7 +2337,7 @@ public class LuaScriptMgr
         Vector3 dir = new Vector3();
         Vector3 origin = new Vector3();
 
-        if (LuaDLL.lua_call(L, 1, -1) == 0)
+        if (LuaDLL.lua_pcall(L, 1, -1, 0) == 0)
         {
             x = (float)LuaDLL.lua_tonumber(L, oldTop + 1);
             y = (float)LuaDLL.lua_tonumber(L, oldTop + 2);
@@ -2366,7 +2366,7 @@ public class LuaScriptMgr
         LuaDLL.lua_pushvalue(L, stackPos);
         float r = 0, g = 0, b = 0, a = 0;
 
-        if (LuaDLL.lua_call(L, 1, -1) == 0)
+        if (LuaDLL.lua_pcall(L, 1, -1, 0) == 0)
         {
             r = (float)LuaDLL.lua_tonumber(L, oldTop + 1);
             g = (float)LuaDLL.lua_tonumber(L, oldTop + 2);
@@ -2391,7 +2391,7 @@ public class LuaScriptMgr
         LuaScriptMgr.Push(L, clr.b);
         LuaScriptMgr.Push(L, clr.a);
 
-        if (LuaDLL.lua_call(L, 4, -1) != 0)
+        if (LuaDLL.lua_pcall(L, 4, -1, 0) != 0)
         {
             ThrowLuaException(L);
         }        
@@ -2410,7 +2410,7 @@ public class LuaScriptMgr
         Push(L, touch.tapCount);
         Push(L, touch.phase);
 
-        if (LuaDLL.lua_call(L, 7, -1) != 0)
+        if (LuaDLL.lua_pcall(L, 7, -1, 0) != 0)
         {
             ThrowLuaException(L);
         }        
