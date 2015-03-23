@@ -311,7 +311,7 @@ namespace LuaInterface
 		}
 
 		[DllImport(LUADLL,CallingConvention=CallingConvention.Cdecl)]
-		public static extern int lua_call(IntPtr luaState, int nArgs, int nResults);
+		public static extern void lua_call(IntPtr luaState, int nArgs, int nResults);
 		[DllImport(LUADLL,CallingConvention=CallingConvention.Cdecl)]
 		public static extern int lua_pcall(IntPtr luaState, int nArgs, int nResults, int errfunc);
 		[DllImport(LUADLL,CallingConvention=CallingConvention.Cdecl)]
