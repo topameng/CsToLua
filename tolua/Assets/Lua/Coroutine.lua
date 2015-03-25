@@ -5,7 +5,8 @@
 --      Use, modification and distribution are subject to the "New BSD License"
 --      as listed at <url: http://www.opensource.org/licenses/bsd-license.php >.
 --------------------------------------------------------------------------------
--- 扩展lua协同为c#协同形式
+-- 扩展lua协同为c#协同形式, 注意当协同挂起时，不能回调协同堆栈上的局部函数
+-- 例如加载资源异步回调
 
 function coroutine.start(f, ...)		
 	local co = coroutine.create(f)
