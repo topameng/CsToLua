@@ -509,13 +509,13 @@ public static class ToLua
             {
                 int count = paramInfos.Length + offset - 1;
 
-                for (int j = 0; j < paramInfos.Length - 1; j++)
+                /*for (int j = 0; j < paramInfos.Length - 1; j++)
                 {
                     if (paramInfos[j].Attributes == ParameterAttributes.Out)
                     {
                         --count;
                     }
-                }
+                }*/
 
                 sb.AppendFormat("\t\tLuaScriptMgr.CheckArgsCount(L, {0});\r\n", count);
             }
