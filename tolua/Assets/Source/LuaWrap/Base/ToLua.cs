@@ -313,7 +313,7 @@ public static class ToLua
 
         int index = Array.FindIndex<MethodInfo>(methods, (p) => { return p.Name == "ToString"; });
 
-        if (index >= 0)
+        if (index >= 0 && !isStaticClass)
         {
             sb.AppendLine("\t\tnew LuaMethod(\"__tostring\", Lua_ToString),");
         }
