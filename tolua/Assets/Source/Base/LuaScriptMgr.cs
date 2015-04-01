@@ -1899,12 +1899,14 @@ public class LuaScriptMgr
 
         if (LuaDLL.lua_isnil(L, -1))
         {
+            LuaDLL.lua_settop(L, oldTop);
             LuaDLL.lua_pushvalue(L, stackPos);
             o = new LuaTable(LuaDLL.luaL_ref(L, LuaIndexes.LUA_REGISTRYINDEX), L);            
         }
         else
         {
-            string cls = LuaDLL.lua_tostring(L, -1);            
+            string cls = LuaDLL.lua_tostring(L, -1);
+            LuaDLL.lua_settop(L, oldTop);
 
             if (cls == "Vector3")
             {
@@ -1936,8 +1938,7 @@ public class LuaScriptMgr
                 o = new LuaTable(LuaDLL.luaL_ref(L, LuaIndexes.LUA_REGISTRYINDEX), L);      
             }
         }
-
-        LuaDLL.lua_settop(L, oldTop);
+        
         return o;
     }
 
