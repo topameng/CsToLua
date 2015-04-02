@@ -17,10 +17,13 @@ mt.__declared = {}
 
 mt.__newindex = function (t, n, v)
   if __STRICT and not mt.__declared[n] then
-    local w = debug.getinfo(2, "S").what
-    if w ~= "main" and w ~= "C" then
-      error("assign to undeclared variable '"..n.."'", 2)
-    end
+    local w = debug.getinfo(2, "S")
+	if w~= nil then
+		w = w.what
+		if w ~= "main" and w ~= "C" then
+			error("assign to undeclared variable '"..n.."'", 2)
+		end	
+	end
     mt.__declared[n] = true
   end
   rawset(t, n, v)
