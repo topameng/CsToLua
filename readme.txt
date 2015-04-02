@@ -1,4 +1,8 @@
-﻿2015.3.16
+﻿2015.4.2
+加入两个新的函数GetUnityObject和GetTrackedObject用于生成wrap文件
+解决lua访问的对象在c#端已经被删除也能提示lua代码错误位置
+
+2015.3.16
 解决Unity 空对象并非真的.net null 问题, 解决ulua对象池Unity空对象匹配bug
 加入protobuf proto-gen-lua 导入导出支持
 修改ulua使用GCHandle 64位问题
