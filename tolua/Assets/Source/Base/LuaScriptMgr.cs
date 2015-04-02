@@ -1052,7 +1052,7 @@ public class LuaScriptMgr
             }
         }
 
-        if (type == objType || type.IsSubclassOf(objType))
+        if (type != objType && !objType.IsSubclassOf(type))
         {
             LuaDLL.luaL_argerror(L, stackPos, string.Format("{0} expected, got {1}", type.Name, objType.Name));
         }
@@ -1080,7 +1080,7 @@ public class LuaScriptMgr
             }
         }
 
-        if (type == objType || type.IsSubclassOf(objType))
+        if (type != objType && !objType.IsSubclassOf(type))
         {
             LuaDLL.luaL_argerror(L, stackPos, string.Format("{0} expected, got {1}", type.Name, objType.Name));
         }
