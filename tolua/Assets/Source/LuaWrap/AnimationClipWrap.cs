@@ -227,7 +227,7 @@ public class AnimationClipWrap
 	static int SetCurve(IntPtr L)
 	{
 		LuaScriptMgr.CheckArgsCount(L, 5);
-		AnimationClip obj = LuaScriptMgr.GetNetObject<AnimationClip>(L, 1);
+		AnimationClip obj = LuaScriptMgr.GetUnityObject<AnimationClip>(L, 1);
 		string arg0 = LuaScriptMgr.GetLuaString(L, 2);
 		Type arg1 = LuaScriptMgr.GetTypeObject(L, 3);
 		string arg2 = LuaScriptMgr.GetLuaString(L, 4);
@@ -240,7 +240,7 @@ public class AnimationClipWrap
 	static int EnsureQuaternionContinuity(IntPtr L)
 	{
 		LuaScriptMgr.CheckArgsCount(L, 1);
-		AnimationClip obj = LuaScriptMgr.GetNetObject<AnimationClip>(L, 1);
+		AnimationClip obj = LuaScriptMgr.GetUnityObject<AnimationClip>(L, 1);
 		obj.EnsureQuaternionContinuity();
 		return 0;
 	}
@@ -249,7 +249,7 @@ public class AnimationClipWrap
 	static int ClearCurves(IntPtr L)
 	{
 		LuaScriptMgr.CheckArgsCount(L, 1);
-		AnimationClip obj = LuaScriptMgr.GetNetObject<AnimationClip>(L, 1);
+		AnimationClip obj = LuaScriptMgr.GetUnityObject<AnimationClip>(L, 1);
 		obj.ClearCurves();
 		return 0;
 	}
@@ -258,7 +258,7 @@ public class AnimationClipWrap
 	static int AddEvent(IntPtr L)
 	{
 		LuaScriptMgr.CheckArgsCount(L, 2);
-		AnimationClip obj = LuaScriptMgr.GetNetObject<AnimationClip>(L, 1);
+		AnimationClip obj = LuaScriptMgr.GetUnityObject<AnimationClip>(L, 1);
 		AnimationEvent arg0 = LuaScriptMgr.GetNetObject<AnimationEvent>(L, 2);
 		obj.AddEvent(arg0);
 		return 0;

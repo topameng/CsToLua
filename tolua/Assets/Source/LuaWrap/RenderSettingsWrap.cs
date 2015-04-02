@@ -208,7 +208,7 @@ public class RenderSettingsWrap
 	[MonoPInvokeCallbackAttribute(typeof(LuaCSFunction))]
 	static int set_skybox(IntPtr L)
 	{
-		RenderSettings.skybox = LuaScriptMgr.GetNetObject<Material>(L, 3);
+		RenderSettings.skybox = LuaScriptMgr.GetUnityObject<Material>(L, 3);
 		return 0;
 	}
 

@@ -244,7 +244,7 @@ public class SkinnedMeshRendererWrap
 			}
 		}
 
-		obj.rootBone = LuaScriptMgr.GetNetObject<Transform>(L, 3);
+		obj.rootBone = LuaScriptMgr.GetUnityObject<Transform>(L, 3);
 		return 0;
 	}
 
@@ -292,7 +292,7 @@ public class SkinnedMeshRendererWrap
 			}
 		}
 
-		obj.sharedMesh = LuaScriptMgr.GetNetObject<Mesh>(L, 3);
+		obj.sharedMesh = LuaScriptMgr.GetUnityObject<Mesh>(L, 3);
 		return 0;
 	}
 
@@ -348,8 +348,8 @@ public class SkinnedMeshRendererWrap
 	static int BakeMesh(IntPtr L)
 	{
 		LuaScriptMgr.CheckArgsCount(L, 2);
-		SkinnedMeshRenderer obj = LuaScriptMgr.GetNetObject<SkinnedMeshRenderer>(L, 1);
-		Mesh arg0 = LuaScriptMgr.GetNetObject<Mesh>(L, 2);
+		SkinnedMeshRenderer obj = LuaScriptMgr.GetUnityObject<SkinnedMeshRenderer>(L, 1);
+		Mesh arg0 = LuaScriptMgr.GetUnityObject<Mesh>(L, 2);
 		obj.BakeMesh(arg0);
 		return 0;
 	}
@@ -358,7 +358,7 @@ public class SkinnedMeshRendererWrap
 	static int GetBlendShapeWeight(IntPtr L)
 	{
 		LuaScriptMgr.CheckArgsCount(L, 2);
-		SkinnedMeshRenderer obj = LuaScriptMgr.GetNetObject<SkinnedMeshRenderer>(L, 1);
+		SkinnedMeshRenderer obj = LuaScriptMgr.GetUnityObject<SkinnedMeshRenderer>(L, 1);
 		int arg0 = (int)LuaScriptMgr.GetNumber(L, 2);
 		float o = obj.GetBlendShapeWeight(arg0);
 		LuaScriptMgr.Push(L, o);
@@ -369,7 +369,7 @@ public class SkinnedMeshRendererWrap
 	static int SetBlendShapeWeight(IntPtr L)
 	{
 		LuaScriptMgr.CheckArgsCount(L, 3);
-		SkinnedMeshRenderer obj = LuaScriptMgr.GetNetObject<SkinnedMeshRenderer>(L, 1);
+		SkinnedMeshRenderer obj = LuaScriptMgr.GetUnityObject<SkinnedMeshRenderer>(L, 1);
 		int arg0 = (int)LuaScriptMgr.GetNumber(L, 2);
 		float arg1 = (float)LuaScriptMgr.GetNumber(L, 3);
 		obj.SetBlendShapeWeight(arg0,arg1);

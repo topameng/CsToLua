@@ -267,7 +267,7 @@ public class ColliderWrap
 			}
 		}
 
-		obj.material = LuaScriptMgr.GetNetObject<PhysicMaterial>(L, 3);
+		obj.material = LuaScriptMgr.GetUnityObject<PhysicMaterial>(L, 3);
 		return 0;
 	}
 
@@ -291,7 +291,7 @@ public class ColliderWrap
 			}
 		}
 
-		obj.sharedMaterial = LuaScriptMgr.GetNetObject<PhysicMaterial>(L, 3);
+		obj.sharedMaterial = LuaScriptMgr.GetUnityObject<PhysicMaterial>(L, 3);
 		return 0;
 	}
 
@@ -299,7 +299,7 @@ public class ColliderWrap
 	static int ClosestPointOnBounds(IntPtr L)
 	{
 		LuaScriptMgr.CheckArgsCount(L, 2);
-		Collider obj = LuaScriptMgr.GetNetObject<Collider>(L, 1);
+		Collider obj = LuaScriptMgr.GetUnityObject<Collider>(L, 1);
 		Vector3 arg0 = LuaScriptMgr.GetVector3(L, 2);
 		Vector3 o = obj.ClosestPointOnBounds(arg0);
 		LuaScriptMgr.Push(L, o);
@@ -309,8 +309,8 @@ public class ColliderWrap
 	[MonoPInvokeCallbackAttribute(typeof(LuaCSFunction))]
 	static int Raycast(IntPtr L)
 	{
-		LuaScriptMgr.CheckArgsCount(L, 3);
-		Collider obj = LuaScriptMgr.GetNetObject<Collider>(L, 1);
+		LuaScriptMgr.CheckArgsCount(L, 4);
+		Collider obj = LuaScriptMgr.GetUnityObject<Collider>(L, 1);
 		Ray arg0 = LuaScriptMgr.GetRay(L, 2);
 		RaycastHit arg1;
 		float arg2 = (float)LuaScriptMgr.GetNumber(L, 4);

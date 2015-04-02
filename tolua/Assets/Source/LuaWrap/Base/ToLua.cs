@@ -509,13 +509,13 @@ public static class ToLua
             {
                 int count = paramInfos.Length + offset - 1;
 
-                /*for (int j = 0; j < paramInfos.Length - 1; j++)
-                {
-                    if (paramInfos[j].Attributes == ParameterAttributes.Out)
-                    {
-                        --count;
-                    }
-                }*/
+                //for (int j = 0; j < paramInfos.Length - 1; j++)
+                //{
+                //    if (paramInfos[j].Attributes == ParameterAttributes.Out)
+                //    {
+                //        --count;
+                //    }
+                //}
 
                 sb.AppendFormat("\t\tLuaScriptMgr.CheckArgsCount(L, {0});\r\n", count);
             }
@@ -612,7 +612,7 @@ public static class ToLua
 
     static void GenConstruct()
     {        
-        if (isStaticClass || (baseClassName != null && baseClassName.Contains("MonoBehaviour")))
+        if (isStaticClass || typeof(MonoBehaviour).IsAssignableFrom(type))
         {
             NoConsturct();
             return;
@@ -921,7 +921,18 @@ public static class ToLua
             }
             else if (className != "Type")
             {
-                sb.AppendFormat("{0}{1} obj = LuaScriptMgr.GetNetObject<{1}>(L, 1);\r\n", head, className);
+                if (typeof(UnityEngine.Object).IsAssignableFrom(type))
+                {
+                    sb.AppendFormat("{0}{1} obj = LuaScriptMgr.GetUnityObject<{1}>(L, 1);\r\n", head, className);
+                }
+                else if(typeof(UnityEngine.TrackedReference).IsAssignableFrom(type))
+                {
+                    sb.AppendFormat("{0}{1} obj = LuaScriptMgr.GetTrackedObject<{1}>(L, 1);\r\n", head, className);
+                }
+                else
+                {
+                    sb.AppendFormat("{0}{1} obj = LuaScriptMgr.GetNetObject<{1}>(L, 1);\r\n", head, className);
+                }
             }
             else
             {
@@ -1094,7 +1105,18 @@ public static class ToLua
                 }
                 else
                 {
-                    sb.AppendFormat("{3}{0} {1} = LuaScriptMgr.GetNetObject<{0}>(L, {2});\r\n", str, arg, j + offset, head);
+                    if (typeof(UnityEngine.Object).IsAssignableFrom(param.ParameterType))
+                    {                        
+                        sb.AppendFormat("{3}{0} {1} = LuaScriptMgr.GetUnityObject<{0}>(L, {2});\r\n", str, arg, j + offset, head);
+                    }
+                    else if (typeof(UnityEngine.TrackedReference).IsAssignableFrom(param.ParameterType))
+                    {
+                        sb.AppendFormat("{3}{0} {1} = LuaScriptMgr.GetTrackedObject<{0}>(L, {2});\r\n", str, arg, j + offset, head);
+                    }
+                    else
+                    {
+                        sb.AppendFormat("{3}{0} {1} = LuaScriptMgr.GetNetObject<{0}>(L, {2});\r\n", str, arg, j + offset, head);
+                    }
                 }
             }
         }
@@ -2185,6 +2207,14 @@ public static class ToLua
         else if (t == typeof(Ray))
         {
             sb.AppendFormat("\t\t{0}.{1} = LuaScriptMgr.GetRay(L, 3);\r\n", o, name);
+        }
+        else if (typeof(UnityEngine.TrackedReference).IsAssignableFrom(t))
+        {
+            sb.AppendFormat("\t\t{0}.{1} = LuaScriptMgr.GetTrackedObject<{2}>(L, 3);\r\n", o, name, _C(t.ToString()));
+        }
+        else if (typeof(UnityEngine.Object).IsAssignableFrom(t))
+        {
+            sb.AppendFormat("\t\t{0}.{1} = LuaScriptMgr.GetUnityObject<{2}>(L, 3);\r\n", o, name, _C(t.ToString()));
         }
         else if (typeof(object).IsAssignableFrom(t) || t.IsEnum)
         {

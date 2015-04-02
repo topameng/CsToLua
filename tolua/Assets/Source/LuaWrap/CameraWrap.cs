@@ -1330,7 +1330,7 @@ public class CameraWrap
 			}
 		}
 
-		obj.targetTexture = LuaScriptMgr.GetNetObject<RenderTexture>(L, 3);
+		obj.targetTexture = LuaScriptMgr.GetUnityObject<RenderTexture>(L, 3);
 		return 0;
 	}
 
@@ -1581,7 +1581,7 @@ public class CameraWrap
 
 		if (count == 3 && LuaScriptMgr.CheckTypes(L, 1, typeof(Camera), typeof(RenderBuffer[]), typeof(RenderBuffer)))
 		{
-			Camera obj = LuaScriptMgr.GetNetObject<Camera>(L, 1);
+			Camera obj = LuaScriptMgr.GetUnityObject<Camera>(L, 1);
 			RenderBuffer[] objs0 = LuaScriptMgr.GetArrayObject<RenderBuffer>(L, 2);
 			RenderBuffer arg1 = LuaScriptMgr.GetNetObject<RenderBuffer>(L, 3);
 			obj.SetTargetBuffers(objs0,arg1);
@@ -1589,7 +1589,7 @@ public class CameraWrap
 		}
 		else if (count == 3 && LuaScriptMgr.CheckTypes(L, 1, typeof(Camera), typeof(RenderBuffer), typeof(RenderBuffer)))
 		{
-			Camera obj = LuaScriptMgr.GetNetObject<Camera>(L, 1);
+			Camera obj = LuaScriptMgr.GetUnityObject<Camera>(L, 1);
 			RenderBuffer arg0 = LuaScriptMgr.GetNetObject<RenderBuffer>(L, 2);
 			RenderBuffer arg1 = LuaScriptMgr.GetNetObject<RenderBuffer>(L, 3);
 			obj.SetTargetBuffers(arg0,arg1);
@@ -1607,7 +1607,7 @@ public class CameraWrap
 	static int ResetWorldToCameraMatrix(IntPtr L)
 	{
 		LuaScriptMgr.CheckArgsCount(L, 1);
-		Camera obj = LuaScriptMgr.GetNetObject<Camera>(L, 1);
+		Camera obj = LuaScriptMgr.GetUnityObject<Camera>(L, 1);
 		obj.ResetWorldToCameraMatrix();
 		return 0;
 	}
@@ -1616,7 +1616,7 @@ public class CameraWrap
 	static int ResetProjectionMatrix(IntPtr L)
 	{
 		LuaScriptMgr.CheckArgsCount(L, 1);
-		Camera obj = LuaScriptMgr.GetNetObject<Camera>(L, 1);
+		Camera obj = LuaScriptMgr.GetUnityObject<Camera>(L, 1);
 		obj.ResetProjectionMatrix();
 		return 0;
 	}
@@ -1625,7 +1625,7 @@ public class CameraWrap
 	static int ResetAspect(IntPtr L)
 	{
 		LuaScriptMgr.CheckArgsCount(L, 1);
-		Camera obj = LuaScriptMgr.GetNetObject<Camera>(L, 1);
+		Camera obj = LuaScriptMgr.GetUnityObject<Camera>(L, 1);
 		obj.ResetAspect();
 		return 0;
 	}
@@ -1634,7 +1634,7 @@ public class CameraWrap
 	static int WorldToScreenPoint(IntPtr L)
 	{
 		LuaScriptMgr.CheckArgsCount(L, 2);
-		Camera obj = LuaScriptMgr.GetNetObject<Camera>(L, 1);
+		Camera obj = LuaScriptMgr.GetUnityObject<Camera>(L, 1);
 		Vector3 arg0 = LuaScriptMgr.GetVector3(L, 2);
 		Vector3 o = obj.WorldToScreenPoint(arg0);
 		LuaScriptMgr.Push(L, o);
@@ -1645,7 +1645,7 @@ public class CameraWrap
 	static int WorldToViewportPoint(IntPtr L)
 	{
 		LuaScriptMgr.CheckArgsCount(L, 2);
-		Camera obj = LuaScriptMgr.GetNetObject<Camera>(L, 1);
+		Camera obj = LuaScriptMgr.GetUnityObject<Camera>(L, 1);
 		Vector3 arg0 = LuaScriptMgr.GetVector3(L, 2);
 		Vector3 o = obj.WorldToViewportPoint(arg0);
 		LuaScriptMgr.Push(L, o);
@@ -1656,7 +1656,7 @@ public class CameraWrap
 	static int ViewportToWorldPoint(IntPtr L)
 	{
 		LuaScriptMgr.CheckArgsCount(L, 2);
-		Camera obj = LuaScriptMgr.GetNetObject<Camera>(L, 1);
+		Camera obj = LuaScriptMgr.GetUnityObject<Camera>(L, 1);
 		Vector3 arg0 = LuaScriptMgr.GetVector3(L, 2);
 		Vector3 o = obj.ViewportToWorldPoint(arg0);
 		LuaScriptMgr.Push(L, o);
@@ -1667,7 +1667,7 @@ public class CameraWrap
 	static int ScreenToWorldPoint(IntPtr L)
 	{
 		LuaScriptMgr.CheckArgsCount(L, 2);
-		Camera obj = LuaScriptMgr.GetNetObject<Camera>(L, 1);
+		Camera obj = LuaScriptMgr.GetUnityObject<Camera>(L, 1);
 		Vector3 arg0 = LuaScriptMgr.GetVector3(L, 2);
 		Vector3 o = obj.ScreenToWorldPoint(arg0);
 		LuaScriptMgr.Push(L, o);
@@ -1678,7 +1678,7 @@ public class CameraWrap
 	static int ScreenToViewportPoint(IntPtr L)
 	{
 		LuaScriptMgr.CheckArgsCount(L, 2);
-		Camera obj = LuaScriptMgr.GetNetObject<Camera>(L, 1);
+		Camera obj = LuaScriptMgr.GetUnityObject<Camera>(L, 1);
 		Vector3 arg0 = LuaScriptMgr.GetVector3(L, 2);
 		Vector3 o = obj.ScreenToViewportPoint(arg0);
 		LuaScriptMgr.Push(L, o);
@@ -1689,7 +1689,7 @@ public class CameraWrap
 	static int ViewportToScreenPoint(IntPtr L)
 	{
 		LuaScriptMgr.CheckArgsCount(L, 2);
-		Camera obj = LuaScriptMgr.GetNetObject<Camera>(L, 1);
+		Camera obj = LuaScriptMgr.GetUnityObject<Camera>(L, 1);
 		Vector3 arg0 = LuaScriptMgr.GetVector3(L, 2);
 		Vector3 o = obj.ViewportToScreenPoint(arg0);
 		LuaScriptMgr.Push(L, o);
@@ -1700,7 +1700,7 @@ public class CameraWrap
 	static int ViewportPointToRay(IntPtr L)
 	{
 		LuaScriptMgr.CheckArgsCount(L, 2);
-		Camera obj = LuaScriptMgr.GetNetObject<Camera>(L, 1);
+		Camera obj = LuaScriptMgr.GetUnityObject<Camera>(L, 1);
 		Vector3 arg0 = LuaScriptMgr.GetVector3(L, 2);
 		Ray o = obj.ViewportPointToRay(arg0);
 		LuaScriptMgr.Push(L, o);
@@ -1711,7 +1711,7 @@ public class CameraWrap
 	static int ScreenPointToRay(IntPtr L)
 	{
 		LuaScriptMgr.CheckArgsCount(L, 2);
-		Camera obj = LuaScriptMgr.GetNetObject<Camera>(L, 1);
+		Camera obj = LuaScriptMgr.GetUnityObject<Camera>(L, 1);
 		Vector3 arg0 = LuaScriptMgr.GetVector3(L, 2);
 		Ray o = obj.ScreenPointToRay(arg0);
 		LuaScriptMgr.Push(L, o);
@@ -1732,7 +1732,7 @@ public class CameraWrap
 	static int Render(IntPtr L)
 	{
 		LuaScriptMgr.CheckArgsCount(L, 1);
-		Camera obj = LuaScriptMgr.GetNetObject<Camera>(L, 1);
+		Camera obj = LuaScriptMgr.GetUnityObject<Camera>(L, 1);
 		obj.Render();
 		return 0;
 	}
@@ -1741,8 +1741,8 @@ public class CameraWrap
 	static int RenderWithShader(IntPtr L)
 	{
 		LuaScriptMgr.CheckArgsCount(L, 3);
-		Camera obj = LuaScriptMgr.GetNetObject<Camera>(L, 1);
-		Shader arg0 = LuaScriptMgr.GetNetObject<Shader>(L, 2);
+		Camera obj = LuaScriptMgr.GetUnityObject<Camera>(L, 1);
+		Shader arg0 = LuaScriptMgr.GetUnityObject<Shader>(L, 2);
 		string arg1 = LuaScriptMgr.GetLuaString(L, 3);
 		obj.RenderWithShader(arg0,arg1);
 		return 0;
@@ -1752,8 +1752,8 @@ public class CameraWrap
 	static int SetReplacementShader(IntPtr L)
 	{
 		LuaScriptMgr.CheckArgsCount(L, 3);
-		Camera obj = LuaScriptMgr.GetNetObject<Camera>(L, 1);
-		Shader arg0 = LuaScriptMgr.GetNetObject<Shader>(L, 2);
+		Camera obj = LuaScriptMgr.GetUnityObject<Camera>(L, 1);
+		Shader arg0 = LuaScriptMgr.GetUnityObject<Shader>(L, 2);
 		string arg1 = LuaScriptMgr.GetLuaString(L, 3);
 		obj.SetReplacementShader(arg0,arg1);
 		return 0;
@@ -1763,7 +1763,7 @@ public class CameraWrap
 	static int ResetReplacementShader(IntPtr L)
 	{
 		LuaScriptMgr.CheckArgsCount(L, 1);
-		Camera obj = LuaScriptMgr.GetNetObject<Camera>(L, 1);
+		Camera obj = LuaScriptMgr.GetUnityObject<Camera>(L, 1);
 		obj.ResetReplacementShader();
 		return 0;
 	}
@@ -1772,7 +1772,7 @@ public class CameraWrap
 	static int RenderDontRestore(IntPtr L)
 	{
 		LuaScriptMgr.CheckArgsCount(L, 1);
-		Camera obj = LuaScriptMgr.GetNetObject<Camera>(L, 1);
+		Camera obj = LuaScriptMgr.GetUnityObject<Camera>(L, 1);
 		obj.RenderDontRestore();
 		return 0;
 	}
@@ -1781,7 +1781,7 @@ public class CameraWrap
 	static int SetupCurrent(IntPtr L)
 	{
 		LuaScriptMgr.CheckArgsCount(L, 1);
-		Camera arg0 = LuaScriptMgr.GetNetObject<Camera>(L, 1);
+		Camera arg0 = LuaScriptMgr.GetUnityObject<Camera>(L, 1);
 		Camera.SetupCurrent(arg0);
 		return 0;
 	}
@@ -1793,24 +1793,24 @@ public class CameraWrap
 
 		if (count == 2 && LuaScriptMgr.CheckTypes(L, 1, typeof(Camera), typeof(RenderTexture)))
 		{
-			Camera obj = LuaScriptMgr.GetNetObject<Camera>(L, 1);
-			RenderTexture arg0 = LuaScriptMgr.GetNetObject<RenderTexture>(L, 2);
+			Camera obj = LuaScriptMgr.GetUnityObject<Camera>(L, 1);
+			RenderTexture arg0 = LuaScriptMgr.GetUnityObject<RenderTexture>(L, 2);
 			bool o = obj.RenderToCubemap(arg0);
 			LuaScriptMgr.Push(L, o);
 			return 1;
 		}
 		else if (count == 2 && LuaScriptMgr.CheckTypes(L, 1, typeof(Camera), typeof(Cubemap)))
 		{
-			Camera obj = LuaScriptMgr.GetNetObject<Camera>(L, 1);
-			Cubemap arg0 = LuaScriptMgr.GetNetObject<Cubemap>(L, 2);
+			Camera obj = LuaScriptMgr.GetUnityObject<Camera>(L, 1);
+			Cubemap arg0 = LuaScriptMgr.GetUnityObject<Cubemap>(L, 2);
 			bool o = obj.RenderToCubemap(arg0);
 			LuaScriptMgr.Push(L, o);
 			return 1;
 		}
 		else if (count == 3 && LuaScriptMgr.CheckTypes(L, 1, typeof(Camera), typeof(RenderTexture), typeof(int)))
 		{
-			Camera obj = LuaScriptMgr.GetNetObject<Camera>(L, 1);
-			RenderTexture arg0 = LuaScriptMgr.GetNetObject<RenderTexture>(L, 2);
+			Camera obj = LuaScriptMgr.GetUnityObject<Camera>(L, 1);
+			RenderTexture arg0 = LuaScriptMgr.GetUnityObject<RenderTexture>(L, 2);
 			int arg1 = (int)LuaScriptMgr.GetNumber(L, 3);
 			bool o = obj.RenderToCubemap(arg0,arg1);
 			LuaScriptMgr.Push(L, o);
@@ -1818,8 +1818,8 @@ public class CameraWrap
 		}
 		else if (count == 3 && LuaScriptMgr.CheckTypes(L, 1, typeof(Camera), typeof(Cubemap), typeof(int)))
 		{
-			Camera obj = LuaScriptMgr.GetNetObject<Camera>(L, 1);
-			Cubemap arg0 = LuaScriptMgr.GetNetObject<Cubemap>(L, 2);
+			Camera obj = LuaScriptMgr.GetUnityObject<Camera>(L, 1);
+			Cubemap arg0 = LuaScriptMgr.GetUnityObject<Cubemap>(L, 2);
 			int arg1 = (int)LuaScriptMgr.GetNumber(L, 3);
 			bool o = obj.RenderToCubemap(arg0,arg1);
 			LuaScriptMgr.Push(L, o);
@@ -1837,8 +1837,8 @@ public class CameraWrap
 	static int CopyFrom(IntPtr L)
 	{
 		LuaScriptMgr.CheckArgsCount(L, 2);
-		Camera obj = LuaScriptMgr.GetNetObject<Camera>(L, 1);
-		Camera arg0 = LuaScriptMgr.GetNetObject<Camera>(L, 2);
+		Camera obj = LuaScriptMgr.GetUnityObject<Camera>(L, 1);
+		Camera arg0 = LuaScriptMgr.GetUnityObject<Camera>(L, 2);
 		obj.CopyFrom(arg0);
 		return 0;
 	}
@@ -1847,7 +1847,7 @@ public class CameraWrap
 	static int CalculateObliqueMatrix(IntPtr L)
 	{
 		LuaScriptMgr.CheckArgsCount(L, 2);
-		Camera obj = LuaScriptMgr.GetNetObject<Camera>(L, 1);
+		Camera obj = LuaScriptMgr.GetUnityObject<Camera>(L, 1);
 		Vector4 arg0 = LuaScriptMgr.GetVector4(L, 2);
 		Matrix4x4 o = obj.CalculateObliqueMatrix(arg0);
 		LuaScriptMgr.PushValue(L, o);

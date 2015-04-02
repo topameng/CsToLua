@@ -179,7 +179,7 @@ public class AudioClipWrap
 	static int GetData(IntPtr L)
 	{
 		LuaScriptMgr.CheckArgsCount(L, 3);
-		AudioClip obj = LuaScriptMgr.GetNetObject<AudioClip>(L, 1);
+		AudioClip obj = LuaScriptMgr.GetUnityObject<AudioClip>(L, 1);
 		float[] objs0 = LuaScriptMgr.GetArrayNumber<float>(L, 2);
 		int arg1 = (int)LuaScriptMgr.GetNumber(L, 3);
 		obj.GetData(objs0,arg1);
@@ -190,7 +190,7 @@ public class AudioClipWrap
 	static int SetData(IntPtr L)
 	{
 		LuaScriptMgr.CheckArgsCount(L, 3);
-		AudioClip obj = LuaScriptMgr.GetNetObject<AudioClip>(L, 1);
+		AudioClip obj = LuaScriptMgr.GetUnityObject<AudioClip>(L, 1);
 		float[] objs0 = LuaScriptMgr.GetArrayNumber<float>(L, 2);
 		int arg1 = (int)LuaScriptMgr.GetNumber(L, 3);
 		obj.SetData(objs0,arg1);

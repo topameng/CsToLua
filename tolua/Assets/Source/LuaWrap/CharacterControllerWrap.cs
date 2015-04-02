@@ -422,7 +422,7 @@ public class CharacterControllerWrap
 	static int SimpleMove(IntPtr L)
 	{
 		LuaScriptMgr.CheckArgsCount(L, 2);
-		CharacterController obj = LuaScriptMgr.GetNetObject<CharacterController>(L, 1);
+		CharacterController obj = LuaScriptMgr.GetUnityObject<CharacterController>(L, 1);
 		Vector3 arg0 = LuaScriptMgr.GetVector3(L, 2);
 		bool o = obj.SimpleMove(arg0);
 		LuaScriptMgr.Push(L, o);
@@ -433,7 +433,7 @@ public class CharacterControllerWrap
 	static int Move(IntPtr L)
 	{
 		LuaScriptMgr.CheckArgsCount(L, 2);
-		CharacterController obj = LuaScriptMgr.GetNetObject<CharacterController>(L, 1);
+		CharacterController obj = LuaScriptMgr.GetUnityObject<CharacterController>(L, 1);
 		Vector3 arg0 = LuaScriptMgr.GetVector3(L, 2);
 		CollisionFlags o = obj.Move(arg0);
 		LuaScriptMgr.Push(L, o);

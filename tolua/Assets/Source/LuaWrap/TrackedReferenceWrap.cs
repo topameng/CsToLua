@@ -51,7 +51,7 @@ public class TrackedReferenceWrap
 	static int GetHashCode(IntPtr L)
 	{
 		LuaScriptMgr.CheckArgsCount(L, 1);
-		TrackedReference obj = LuaScriptMgr.GetNetObject<TrackedReference>(L, 1);
+		TrackedReference obj = LuaScriptMgr.GetTrackedObject<TrackedReference>(L, 1);
 		int o = obj.GetHashCode();
 		LuaScriptMgr.Push(L, o);
 		return 1;

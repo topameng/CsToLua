@@ -757,7 +757,7 @@ public class LightWrap
 			}
 		}
 
-		obj.cookie = LuaScriptMgr.GetNetObject<Texture>(L, 3);
+		obj.cookie = LuaScriptMgr.GetUnityObject<Texture>(L, 3);
 		return 0;
 	}
 
@@ -781,7 +781,7 @@ public class LightWrap
 			}
 		}
 
-		obj.flare = LuaScriptMgr.GetNetObject<Flare>(L, 3);
+		obj.flare = LuaScriptMgr.GetUnityObject<Flare>(L, 3);
 		return 0;
 	}
 

@@ -114,7 +114,7 @@ public class AssetBundleWrap
 	static int Contains(IntPtr L)
 	{
 		LuaScriptMgr.CheckArgsCount(L, 2);
-		AssetBundle obj = LuaScriptMgr.GetNetObject<AssetBundle>(L, 1);
+		AssetBundle obj = LuaScriptMgr.GetUnityObject<AssetBundle>(L, 1);
 		string arg0 = LuaScriptMgr.GetLuaString(L, 2);
 		bool o = obj.Contains(arg0);
 		LuaScriptMgr.Push(L, o);
@@ -127,7 +127,7 @@ public class AssetBundleWrap
 		int count = LuaDLL.lua_gettop(L);
 		if (count == 2)
 		{
-			AssetBundle obj = LuaScriptMgr.GetNetObject<AssetBundle>(L, 1);
+			AssetBundle obj = LuaScriptMgr.GetUnityObject<AssetBundle>(L, 1);
 			string arg0 = LuaScriptMgr.GetLuaString(L, 2);
 			Object o = obj.Load(arg0);
 			LuaScriptMgr.Push(L, o);
@@ -135,7 +135,7 @@ public class AssetBundleWrap
 		}
 		else if (count == 3)
 		{
-			AssetBundle obj = LuaScriptMgr.GetNetObject<AssetBundle>(L, 1);
+			AssetBundle obj = LuaScriptMgr.GetUnityObject<AssetBundle>(L, 1);
 			string arg0 = LuaScriptMgr.GetLuaString(L, 2);
 			Type arg1 = LuaScriptMgr.GetTypeObject(L, 3);
 			Object o = obj.Load(arg0,arg1);
@@ -154,7 +154,7 @@ public class AssetBundleWrap
 	static int LoadAsync(IntPtr L)
 	{
 		LuaScriptMgr.CheckArgsCount(L, 3);
-		AssetBundle obj = LuaScriptMgr.GetNetObject<AssetBundle>(L, 1);
+		AssetBundle obj = LuaScriptMgr.GetUnityObject<AssetBundle>(L, 1);
 		string arg0 = LuaScriptMgr.GetLuaString(L, 2);
 		Type arg1 = LuaScriptMgr.GetTypeObject(L, 3);
 		AssetBundleRequest o = obj.LoadAsync(arg0,arg1);
@@ -168,14 +168,14 @@ public class AssetBundleWrap
 		int count = LuaDLL.lua_gettop(L);
 		if (count == 1)
 		{
-			AssetBundle obj = LuaScriptMgr.GetNetObject<AssetBundle>(L, 1);
+			AssetBundle obj = LuaScriptMgr.GetUnityObject<AssetBundle>(L, 1);
 			Object[] o = obj.LoadAll();
 			LuaScriptMgr.PushArray(L, o);
 			return 1;
 		}
 		else if (count == 2)
 		{
-			AssetBundle obj = LuaScriptMgr.GetNetObject<AssetBundle>(L, 1);
+			AssetBundle obj = LuaScriptMgr.GetUnityObject<AssetBundle>(L, 1);
 			Type arg0 = LuaScriptMgr.GetTypeObject(L, 2);
 			Object[] o = obj.LoadAll(arg0);
 			LuaScriptMgr.PushArray(L, o);
@@ -193,7 +193,7 @@ public class AssetBundleWrap
 	static int Unload(IntPtr L)
 	{
 		LuaScriptMgr.CheckArgsCount(L, 2);
-		AssetBundle obj = LuaScriptMgr.GetNetObject<AssetBundle>(L, 1);
+		AssetBundle obj = LuaScriptMgr.GetUnityObject<AssetBundle>(L, 1);
 		bool arg0 = LuaScriptMgr.GetBoolean(L, 2);
 		obj.Unload(arg0);
 		return 0;

@@ -912,7 +912,7 @@ public class ParticleEmitterWrap
 	static int ClearParticles(IntPtr L)
 	{
 		LuaScriptMgr.CheckArgsCount(L, 1);
-		ParticleEmitter obj = LuaScriptMgr.GetNetObject<ParticleEmitter>(L, 1);
+		ParticleEmitter obj = LuaScriptMgr.GetUnityObject<ParticleEmitter>(L, 1);
 		obj.ClearParticles();
 		return 0;
 	}
@@ -923,20 +923,20 @@ public class ParticleEmitterWrap
 		int count = LuaDLL.lua_gettop(L);
 		if (count == 1)
 		{
-			ParticleEmitter obj = LuaScriptMgr.GetNetObject<ParticleEmitter>(L, 1);
+			ParticleEmitter obj = LuaScriptMgr.GetUnityObject<ParticleEmitter>(L, 1);
 			obj.Emit();
 			return 0;
 		}
 		else if (count == 2)
 		{
-			ParticleEmitter obj = LuaScriptMgr.GetNetObject<ParticleEmitter>(L, 1);
+			ParticleEmitter obj = LuaScriptMgr.GetUnityObject<ParticleEmitter>(L, 1);
 			int arg0 = (int)LuaScriptMgr.GetNumber(L, 2);
 			obj.Emit(arg0);
 			return 0;
 		}
 		else if (count == 6)
 		{
-			ParticleEmitter obj = LuaScriptMgr.GetNetObject<ParticleEmitter>(L, 1);
+			ParticleEmitter obj = LuaScriptMgr.GetUnityObject<ParticleEmitter>(L, 1);
 			Vector3 arg0 = LuaScriptMgr.GetVector3(L, 2);
 			Vector3 arg1 = LuaScriptMgr.GetVector3(L, 3);
 			float arg2 = (float)LuaScriptMgr.GetNumber(L, 4);
@@ -947,7 +947,7 @@ public class ParticleEmitterWrap
 		}
 		else if (count == 8)
 		{
-			ParticleEmitter obj = LuaScriptMgr.GetNetObject<ParticleEmitter>(L, 1);
+			ParticleEmitter obj = LuaScriptMgr.GetUnityObject<ParticleEmitter>(L, 1);
 			Vector3 arg0 = LuaScriptMgr.GetVector3(L, 2);
 			Vector3 arg1 = LuaScriptMgr.GetVector3(L, 3);
 			float arg2 = (float)LuaScriptMgr.GetNumber(L, 4);
@@ -970,7 +970,7 @@ public class ParticleEmitterWrap
 	static int Simulate(IntPtr L)
 	{
 		LuaScriptMgr.CheckArgsCount(L, 2);
-		ParticleEmitter obj = LuaScriptMgr.GetNetObject<ParticleEmitter>(L, 1);
+		ParticleEmitter obj = LuaScriptMgr.GetUnityObject<ParticleEmitter>(L, 1);
 		float arg0 = (float)LuaScriptMgr.GetNumber(L, 2);
 		obj.Simulate(arg0);
 		return 0;

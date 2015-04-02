@@ -1032,6 +1032,62 @@ public class LuaScriptMgr
         return (T)obj;        
     }
 
+    public static T GetUnityObject<T>(IntPtr L, int stackPos)
+    {
+        object obj = GetLuaObject(L, stackPos);
+        Type type = typeof(T);
+        Type objType = obj.GetType();
+
+        if (obj == null)
+        {
+            LuaDLL.luaL_argerror(L, stackPos, string.Format("{0} expected, got nil", type.Name));
+        }
+        else
+        {
+            UnityEngine.Object uObj = obj as UnityEngine.Object;
+
+            if (uObj == null)
+            {
+                LuaDLL.luaL_argerror(L, stackPos, string.Format("{0} expected, got nil", type.Name));
+            }
+        }
+
+        if (type == objType || type.IsSubclassOf(objType))
+        {
+            LuaDLL.luaL_argerror(L, stackPos, string.Format("{0} expected, got {1}", type.Name, objType.Name));
+        }
+
+        return (T)obj;
+    }
+
+    public static T GetTrackedObject<T>(IntPtr L, int stackPos)
+    {
+        object obj = GetLuaObject(L, stackPos);
+        Type type = typeof(T);
+        Type objType = obj.GetType();
+
+        if (obj == null)
+        {
+            LuaDLL.luaL_argerror(L, stackPos, string.Format("{0} expected, got nil", type.Name));
+        }
+        else
+        {
+            UnityEngine.TrackedReference uObj = obj as UnityEngine.TrackedReference;
+
+            if (uObj == null)
+            {
+                LuaDLL.luaL_argerror(L, stackPos, string.Format("{0} expected, got nil", type.Name));
+            }
+        }
+
+        if (type == objType || type.IsSubclassOf(objType))
+        {
+            LuaDLL.luaL_argerror(L, stackPos, string.Format("{0} expected, got {1}", type.Name, objType.Name));
+        }
+
+        return (T)obj;
+    }
+
     public static Type GetTypeObject(IntPtr L, int stackPos)
     {
         object obj = GetLuaObject(L, stackPos);

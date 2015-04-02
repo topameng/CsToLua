@@ -142,7 +142,7 @@ public class MeshColliderWrap
 			}
 		}
 
-		obj.sharedMesh = LuaScriptMgr.GetNetObject<Mesh>(L, 3);
+		obj.sharedMesh = LuaScriptMgr.GetUnityObject<Mesh>(L, 3);
 		return 0;
 	}
 

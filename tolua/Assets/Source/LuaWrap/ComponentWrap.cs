@@ -564,7 +564,7 @@ public class ComponentWrap
 
 		if (count == 2 && LuaScriptMgr.CheckTypes(L, 1, typeof(Component), typeof(string)))
 		{
-			Component obj = LuaScriptMgr.GetNetObject<Component>(L, 1);
+			Component obj = LuaScriptMgr.GetUnityObject<Component>(L, 1);
 			string arg0 = LuaScriptMgr.GetString(L, 2);
 			Component o = obj.GetComponent(arg0);
 			LuaScriptMgr.Push(L, o);
@@ -572,7 +572,7 @@ public class ComponentWrap
 		}
 		else if (count == 2 && LuaScriptMgr.CheckTypes(L, 1, typeof(Component), typeof(Type)))
 		{
-			Component obj = LuaScriptMgr.GetNetObject<Component>(L, 1);
+			Component obj = LuaScriptMgr.GetUnityObject<Component>(L, 1);
 			Type arg0 = LuaScriptMgr.GetTypeObject(L, 2);
 			Component o = obj.GetComponent(arg0);
 			LuaScriptMgr.Push(L, o);
@@ -590,7 +590,7 @@ public class ComponentWrap
 	static int GetComponentInChildren(IntPtr L)
 	{
 		LuaScriptMgr.CheckArgsCount(L, 2);
-		Component obj = LuaScriptMgr.GetNetObject<Component>(L, 1);
+		Component obj = LuaScriptMgr.GetUnityObject<Component>(L, 1);
 		Type arg0 = LuaScriptMgr.GetTypeObject(L, 2);
 		Component o = obj.GetComponentInChildren(arg0);
 		LuaScriptMgr.Push(L, o);
@@ -603,7 +603,7 @@ public class ComponentWrap
 		int count = LuaDLL.lua_gettop(L);
 		if (count == 2)
 		{
-			Component obj = LuaScriptMgr.GetNetObject<Component>(L, 1);
+			Component obj = LuaScriptMgr.GetUnityObject<Component>(L, 1);
 			Type arg0 = LuaScriptMgr.GetTypeObject(L, 2);
 			Component[] o = obj.GetComponentsInChildren(arg0);
 			LuaScriptMgr.PushArray(L, o);
@@ -611,7 +611,7 @@ public class ComponentWrap
 		}
 		else if (count == 3)
 		{
-			Component obj = LuaScriptMgr.GetNetObject<Component>(L, 1);
+			Component obj = LuaScriptMgr.GetUnityObject<Component>(L, 1);
 			Type arg0 = LuaScriptMgr.GetTypeObject(L, 2);
 			bool arg1 = LuaScriptMgr.GetBoolean(L, 3);
 			Component[] o = obj.GetComponentsInChildren(arg0,arg1);
@@ -630,7 +630,7 @@ public class ComponentWrap
 	static int GetComponentInParent(IntPtr L)
 	{
 		LuaScriptMgr.CheckArgsCount(L, 2);
-		Component obj = LuaScriptMgr.GetNetObject<Component>(L, 1);
+		Component obj = LuaScriptMgr.GetUnityObject<Component>(L, 1);
 		Type arg0 = LuaScriptMgr.GetTypeObject(L, 2);
 		Component o = obj.GetComponentInParent(arg0);
 		LuaScriptMgr.Push(L, o);
@@ -643,7 +643,7 @@ public class ComponentWrap
 		int count = LuaDLL.lua_gettop(L);
 		if (count == 2)
 		{
-			Component obj = LuaScriptMgr.GetNetObject<Component>(L, 1);
+			Component obj = LuaScriptMgr.GetUnityObject<Component>(L, 1);
 			Type arg0 = LuaScriptMgr.GetTypeObject(L, 2);
 			Component[] o = obj.GetComponentsInParent(arg0);
 			LuaScriptMgr.PushArray(L, o);
@@ -651,7 +651,7 @@ public class ComponentWrap
 		}
 		else if (count == 3)
 		{
-			Component obj = LuaScriptMgr.GetNetObject<Component>(L, 1);
+			Component obj = LuaScriptMgr.GetUnityObject<Component>(L, 1);
 			Type arg0 = LuaScriptMgr.GetTypeObject(L, 2);
 			bool arg1 = LuaScriptMgr.GetBoolean(L, 3);
 			Component[] o = obj.GetComponentsInParent(arg0,arg1);
@@ -672,7 +672,7 @@ public class ComponentWrap
 		int count = LuaDLL.lua_gettop(L);
 		if (count == 2)
 		{
-			Component obj = LuaScriptMgr.GetNetObject<Component>(L, 1);
+			Component obj = LuaScriptMgr.GetUnityObject<Component>(L, 1);
 			Type arg0 = LuaScriptMgr.GetTypeObject(L, 2);
 			Component[] o = obj.GetComponents(arg0);
 			LuaScriptMgr.PushArray(L, o);
@@ -680,7 +680,7 @@ public class ComponentWrap
 		}
 		else if (count == 3)
 		{
-			Component obj = LuaScriptMgr.GetNetObject<Component>(L, 1);
+			Component obj = LuaScriptMgr.GetUnityObject<Component>(L, 1);
 			Type arg0 = LuaScriptMgr.GetTypeObject(L, 2);
 			List<Component> arg1 = LuaScriptMgr.GetNetObject<List<Component>>(L, 3);
 			obj.GetComponents(arg0,arg1);
@@ -698,7 +698,7 @@ public class ComponentWrap
 	static int CompareTag(IntPtr L)
 	{
 		LuaScriptMgr.CheckArgsCount(L, 2);
-		Component obj = LuaScriptMgr.GetNetObject<Component>(L, 1);
+		Component obj = LuaScriptMgr.GetUnityObject<Component>(L, 1);
 		string arg0 = LuaScriptMgr.GetLuaString(L, 2);
 		bool o = obj.CompareTag(arg0);
 		LuaScriptMgr.Push(L, o);
@@ -712,14 +712,14 @@ public class ComponentWrap
 
 		if (count == 2)
 		{
-			Component obj = LuaScriptMgr.GetNetObject<Component>(L, 1);
+			Component obj = LuaScriptMgr.GetUnityObject<Component>(L, 1);
 			string arg0 = LuaScriptMgr.GetLuaString(L, 2);
 			obj.SendMessageUpwards(arg0);
 			return 0;
 		}
 		else if (count == 3 && LuaScriptMgr.CheckTypes(L, 1, typeof(Component), typeof(string), typeof(SendMessageOptions)))
 		{
-			Component obj = LuaScriptMgr.GetNetObject<Component>(L, 1);
+			Component obj = LuaScriptMgr.GetUnityObject<Component>(L, 1);
 			string arg0 = LuaScriptMgr.GetString(L, 2);
 			SendMessageOptions arg1 = LuaScriptMgr.GetNetObject<SendMessageOptions>(L, 3);
 			obj.SendMessageUpwards(arg0,arg1);
@@ -727,7 +727,7 @@ public class ComponentWrap
 		}
 		else if (count == 3 && LuaScriptMgr.CheckTypes(L, 1, typeof(Component), typeof(string), typeof(object)))
 		{
-			Component obj = LuaScriptMgr.GetNetObject<Component>(L, 1);
+			Component obj = LuaScriptMgr.GetUnityObject<Component>(L, 1);
 			string arg0 = LuaScriptMgr.GetString(L, 2);
 			object arg1 = LuaScriptMgr.GetVarObject(L, 3);
 			obj.SendMessageUpwards(arg0,arg1);
@@ -735,7 +735,7 @@ public class ComponentWrap
 		}
 		else if (count == 4)
 		{
-			Component obj = LuaScriptMgr.GetNetObject<Component>(L, 1);
+			Component obj = LuaScriptMgr.GetUnityObject<Component>(L, 1);
 			string arg0 = LuaScriptMgr.GetLuaString(L, 2);
 			object arg1 = LuaScriptMgr.GetVarObject(L, 3);
 			SendMessageOptions arg2 = LuaScriptMgr.GetNetObject<SendMessageOptions>(L, 4);
@@ -757,14 +757,14 @@ public class ComponentWrap
 
 		if (count == 2)
 		{
-			Component obj = LuaScriptMgr.GetNetObject<Component>(L, 1);
+			Component obj = LuaScriptMgr.GetUnityObject<Component>(L, 1);
 			string arg0 = LuaScriptMgr.GetLuaString(L, 2);
 			obj.SendMessage(arg0);
 			return 0;
 		}
 		else if (count == 3 && LuaScriptMgr.CheckTypes(L, 1, typeof(Component), typeof(string), typeof(SendMessageOptions)))
 		{
-			Component obj = LuaScriptMgr.GetNetObject<Component>(L, 1);
+			Component obj = LuaScriptMgr.GetUnityObject<Component>(L, 1);
 			string arg0 = LuaScriptMgr.GetString(L, 2);
 			SendMessageOptions arg1 = LuaScriptMgr.GetNetObject<SendMessageOptions>(L, 3);
 			obj.SendMessage(arg0,arg1);
@@ -772,7 +772,7 @@ public class ComponentWrap
 		}
 		else if (count == 3 && LuaScriptMgr.CheckTypes(L, 1, typeof(Component), typeof(string), typeof(object)))
 		{
-			Component obj = LuaScriptMgr.GetNetObject<Component>(L, 1);
+			Component obj = LuaScriptMgr.GetUnityObject<Component>(L, 1);
 			string arg0 = LuaScriptMgr.GetString(L, 2);
 			object arg1 = LuaScriptMgr.GetVarObject(L, 3);
 			obj.SendMessage(arg0,arg1);
@@ -780,7 +780,7 @@ public class ComponentWrap
 		}
 		else if (count == 4)
 		{
-			Component obj = LuaScriptMgr.GetNetObject<Component>(L, 1);
+			Component obj = LuaScriptMgr.GetUnityObject<Component>(L, 1);
 			string arg0 = LuaScriptMgr.GetLuaString(L, 2);
 			object arg1 = LuaScriptMgr.GetVarObject(L, 3);
 			SendMessageOptions arg2 = LuaScriptMgr.GetNetObject<SendMessageOptions>(L, 4);
@@ -802,14 +802,14 @@ public class ComponentWrap
 
 		if (count == 2)
 		{
-			Component obj = LuaScriptMgr.GetNetObject<Component>(L, 1);
+			Component obj = LuaScriptMgr.GetUnityObject<Component>(L, 1);
 			string arg0 = LuaScriptMgr.GetLuaString(L, 2);
 			obj.BroadcastMessage(arg0);
 			return 0;
 		}
 		else if (count == 3 && LuaScriptMgr.CheckTypes(L, 1, typeof(Component), typeof(string), typeof(SendMessageOptions)))
 		{
-			Component obj = LuaScriptMgr.GetNetObject<Component>(L, 1);
+			Component obj = LuaScriptMgr.GetUnityObject<Component>(L, 1);
 			string arg0 = LuaScriptMgr.GetString(L, 2);
 			SendMessageOptions arg1 = LuaScriptMgr.GetNetObject<SendMessageOptions>(L, 3);
 			obj.BroadcastMessage(arg0,arg1);
@@ -817,7 +817,7 @@ public class ComponentWrap
 		}
 		else if (count == 3 && LuaScriptMgr.CheckTypes(L, 1, typeof(Component), typeof(string), typeof(object)))
 		{
-			Component obj = LuaScriptMgr.GetNetObject<Component>(L, 1);
+			Component obj = LuaScriptMgr.GetUnityObject<Component>(L, 1);
 			string arg0 = LuaScriptMgr.GetString(L, 2);
 			object arg1 = LuaScriptMgr.GetVarObject(L, 3);
 			obj.BroadcastMessage(arg0,arg1);
@@ -825,7 +825,7 @@ public class ComponentWrap
 		}
 		else if (count == 4)
 		{
-			Component obj = LuaScriptMgr.GetNetObject<Component>(L, 1);
+			Component obj = LuaScriptMgr.GetUnityObject<Component>(L, 1);
 			string arg0 = LuaScriptMgr.GetLuaString(L, 2);
 			object arg1 = LuaScriptMgr.GetVarObject(L, 3);
 			SendMessageOptions arg2 = LuaScriptMgr.GetNetObject<SendMessageOptions>(L, 4);

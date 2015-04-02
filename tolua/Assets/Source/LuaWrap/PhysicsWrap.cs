@@ -857,15 +857,15 @@ public class PhysicsWrap
 		int count = LuaDLL.lua_gettop(L);
 		if (count == 2)
 		{
-			Collider arg0 = LuaScriptMgr.GetNetObject<Collider>(L, 1);
-			Collider arg1 = LuaScriptMgr.GetNetObject<Collider>(L, 2);
+			Collider arg0 = LuaScriptMgr.GetUnityObject<Collider>(L, 1);
+			Collider arg1 = LuaScriptMgr.GetUnityObject<Collider>(L, 2);
 			Physics.IgnoreCollision(arg0,arg1);
 			return 0;
 		}
 		else if (count == 3)
 		{
-			Collider arg0 = LuaScriptMgr.GetNetObject<Collider>(L, 1);
-			Collider arg1 = LuaScriptMgr.GetNetObject<Collider>(L, 2);
+			Collider arg0 = LuaScriptMgr.GetUnityObject<Collider>(L, 1);
+			Collider arg1 = LuaScriptMgr.GetUnityObject<Collider>(L, 2);
 			bool arg2 = LuaScriptMgr.GetBoolean(L, 3);
 			Physics.IgnoreCollision(arg0,arg1,arg2);
 			return 0;
