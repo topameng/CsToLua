@@ -179,7 +179,7 @@ public class LuaScriptMgr
         LuaDLL.luaopen_pb(lua.L);               
         //LuaDLL.luaopen_pack(lua.L);
         //LuaDLL.luaopen_ffi(lua.L);
-        OpenXml();        
+        //OpenXml();        
                 
         fileList = new HashSet<string>();
         dict = new Dictionary<string,LuaBase>();        
@@ -216,7 +216,7 @@ public class LuaScriptMgr
         //CmdTable.RegisterCommand("ToLua", ToLua.Generate);
         //CmdTable.RegisterCommand("LuaGC", LuaGC);
         //CmdTable.RegisterCommand("memory", LuaMem);
-        //CmdTable.RegisterCommand("GM", SendGMmsg);        
+        //CmdTable.RegisterCommand("GM", SendGMmsg);                
     }
 
     void SendGMmsg(params string[] param)
@@ -235,18 +235,19 @@ public class LuaScriptMgr
         }
         CallLuaFunction("GMMsg", str);
     }
-    void OpenXml()
-    {
-        IntPtr L = lua.L;
-        LuaDLL.luaopen_LuaXML(L);
-        LuaDLL.lua_getglobal(L, "xml");
 
-        LuaDLL.lua_pushstring(L, "read");
-        LuaDLL.lua_pushstdcallcfunction(L, Xml_read);
-        LuaDLL.lua_rawset(L, -3);
+    //void OpenXml()
+    //{
+    //    IntPtr L = lua.L;
+    //    LuaDLL.luaopen_LuaXML(L);
+    //    LuaDLL.lua_getglobal(L, "xml");
 
-        LuaDLL.lua_settop(L, 0);
-    }
+    //    LuaDLL.lua_pushstring(L, "read");
+    //    LuaDLL.lua_pushstdcallcfunction(L, Xml_read);
+    //    LuaDLL.lua_rawset(L, -3);
+
+    //    LuaDLL.lua_settop(L, 0);
+    //}
 
     void Bind()
     {
@@ -2036,16 +2037,16 @@ public class LuaScriptMgr
         }        
     }
 
-    [MonoPInvokeCallbackAttribute(typeof(LuaCSFunction))]
-    public static int Xml_read (IntPtr L) 
-    {
-        string xml = GetLuaString(L, 1);
-        Debugger.Log("read {0}", xml);
-        TextAsset ta = Resources.Load(xml, typeof(TextAsset)) as TextAsset;
-        IntPtr buffer = LuaDLL.lua_tocbuffer(ta.bytes, ta.bytes.Length);        
-        LuaDLL.lua_pushlightuserdata(L, buffer);
-        return 1;
-    }
+    //[MonoPInvokeCallbackAttribute(typeof(LuaCSFunction))]
+    //public static int Xml_read (IntPtr L) 
+    //{
+    //    string xml = GetLuaString(L, 1);
+    //    Debugger.Log("read {0}", xml);
+    //    TextAsset ta = Resources.Load(xml, typeof(TextAsset)) as TextAsset;
+    //    IntPtr buffer = LuaDLL.lua_tocbuffer(ta.bytes, ta.bytes.Length);        
+    //    LuaDLL.lua_pushlightuserdata(L, buffer);
+    //    return 1;
+    //}
 
     [MonoPInvokeCallbackAttribute(typeof(LuaCSFunction))]
     public static int IndexArray(IntPtr L)
