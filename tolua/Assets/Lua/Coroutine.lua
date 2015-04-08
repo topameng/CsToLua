@@ -10,13 +10,27 @@
 
 function coroutine.start(f, ...)		
 	local co = coroutine.create(f)
-	local flag, msg = coroutine.resume(co, ...)
 	
-	if not flag then
-		error(msg)
+	if coroutine.running() == nil then
+		local flag, msg = coroutine.resume(co, ...)
+	
+		if not flag then		
+			error(msg)
+		end		
+	else
+		local args = {...}
+		
+		local action = function()							
+			local flag, msg = coroutine.resume(co, unpack(args))
+	
+			if not flag then				
+				error(msg)		
+			end		
+		end
+			
+		local timer = FrameTimer.New(action, 0, 1)
+		timer:Start()
 	end
-	
-	return co
 end
 
 function coroutine.wait(t, ...)
