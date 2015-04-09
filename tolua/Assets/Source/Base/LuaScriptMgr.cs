@@ -1036,8 +1036,7 @@ public class LuaScriptMgr
     public static T GetUnityObject<T>(IntPtr L, int stackPos)
     {
         object obj = GetLuaObject(L, stackPos);
-        Type type = typeof(T);
-        Type objType = obj.GetType();
+        Type type = typeof(T);        
 
         if (obj == null)
         {
@@ -1053,6 +1052,8 @@ public class LuaScriptMgr
             }
         }
 
+        Type objType = obj.GetType();
+
         if (type != objType && !objType.IsSubclassOf(type))
         {
             LuaDLL.luaL_argerror(L, stackPos, string.Format("{0} expected, got {1}", type.Name, objType.Name));
@@ -1064,8 +1065,7 @@ public class LuaScriptMgr
     public static T GetTrackedObject<T>(IntPtr L, int stackPos)
     {
         object obj = GetLuaObject(L, stackPos);
-        Type type = typeof(T);
-        Type objType = obj.GetType();
+        Type type = typeof(T);        
 
         if (obj == null)
         {
@@ -1080,6 +1080,8 @@ public class LuaScriptMgr
                 LuaDLL.luaL_argerror(L, stackPos, string.Format("{0} expected, got nil", type.Name));
             }
         }
+
+        Type objType = obj.GetType();
 
         if (type != objType && !objType.IsSubclassOf(type))
         {
