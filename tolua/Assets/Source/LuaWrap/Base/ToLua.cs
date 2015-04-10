@@ -61,6 +61,38 @@ public static class ToLua
 
     public static string libClassName = "";
 
+    public static List<string> memberFilter = new List<string>
+    {
+        "AnimationClip.averageDuration",
+        "AnimationClip.averageAngularSpeed",
+        "AnimationClip.averageSpeed",
+        "AnimationClip.apparentSpeed",
+        "AnimationClip.isLooping",
+        "AnimationClip.isAnimatorMotion",
+        "AnimationClip.isHumanMotion",
+        "AnimatorOverrideController.PerformOverrideClipListCleanup",
+        "Caching.SetNoBackupFlag",
+        "Caching.ResetNoBackupFlag",
+        "Light.areaSize",
+        "Security.GetChainOfTrustValue",
+        "Texture2D.alphaIsTransparency",
+        "WWW.movie",
+        "WebCamTexture.MarkNonReadable",
+        "WebCamTexture.isReadable",
+		// i don't why below 2 functions missed in iOS platform
+		"Graphic.OnRebuildRequested",
+		"Text.OnRebuildRequested",
+        //NGUI
+        "UIInput.ProcessEvent",
+        "UIWidget.showHandlesWithMoveTool",
+        "UIWidget.showHandles",
+    };
+
+    public static bool isMemberFilter(MemberInfo mi)
+    {
+        return memberFilter.Contains(type.Name + "." + mi.Name);
+    }
+
     static ToLua()
     {
                 
@@ -2365,6 +2397,11 @@ public static class ToLua
             {
                 return true;               
             }
+        }
+
+        if (IsMemberFilter(mb))
+        {
+            return true;
         }
 
         return false;
