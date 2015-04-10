@@ -2,6 +2,7 @@
 加入了过滤列表，扔掉无用的函数和属性（感谢Master shifu提供），有点懒一直没加这个。造成了反复的提问。
 也感谢骏擎的耐心回答
 修改了GetUnityObject和GetTrackedObject函数，临时修改总是伴随bug. sigh
+修正了LuaFunction 获取问题，不影响协同中使用回调函数。感谢最后的骄傲提供的方法
 
 2015.4.2
 加入两个新的函数GetUnityObject和GetTrackedObject用于生成wrap文件

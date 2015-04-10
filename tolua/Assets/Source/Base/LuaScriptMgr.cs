@@ -959,8 +959,8 @@ public class LuaScriptMgr
             return null;
         }
 
-        LuaDLL.lua_pushvalue(L, stackPos);
-        return new LuaFunction(LuaDLL.luaL_ref(L, LuaIndexes.LUA_REGISTRYINDEX), L);
+        LuaDLL.lua_pushvalue(L, stackPos);        
+        return new LuaFunction(LuaDLL.luaL_ref(L, LuaIndexes.LUA_REGISTRYINDEX), GetTranslator(L).interpreter);   
     }
 
     public static LuaFunction GetLuaFunction(IntPtr L, int stackPos)
@@ -2480,7 +2480,7 @@ public class LuaScriptMgr
     public static void PushTraceBack(IntPtr L)
     {
 #if !MULTI_STATE
-        traceback.push(L);
+        traceback.push();
 #else
         LuaDLL.lua_getglobal(L, "traceback");
 #endif

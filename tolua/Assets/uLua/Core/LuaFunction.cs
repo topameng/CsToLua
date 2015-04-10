@@ -235,6 +235,18 @@ namespace LuaInterface
             }
         }
 
+        internal void push()
+        {
+            if (_Reference != 0)
+            {
+                LuaDLL.lua_getref(L, _Reference);
+            }
+            else
+            {
+                _Interpreter.pushCSFunction(function);
+            }
+        }
+
         public override string ToString()
         {
             return "function";
