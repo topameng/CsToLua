@@ -42,7 +42,7 @@ end
 
 function Vector4.New(x, y, z, w)
 	local v = {}
-	setmetatable(v, Vector2)
+	setmetatable(v, Vector4)
 	v:Set(x,y)
 	return v
 end

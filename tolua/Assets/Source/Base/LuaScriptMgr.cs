@@ -986,7 +986,7 @@ public class LuaScriptMgr
         }
 
         LuaDLL.lua_pushvalue(L, stackPos);
-        return new LuaTable(LuaDLL.luaL_ref(L, LuaIndexes.LUA_REGISTRYINDEX), L);
+        return new LuaTable(LuaDLL.luaL_ref(L, LuaIndexes.LUA_REGISTRYINDEX), GetTranslator(L).interpreter);
     }
 
     public static LuaTable GetLuaTable(IntPtr L, int stackPos)
@@ -1960,7 +1960,7 @@ public class LuaScriptMgr
         {
             LuaDLL.lua_settop(L, oldTop);
             LuaDLL.lua_pushvalue(L, stackPos);
-            o = new LuaTable(LuaDLL.luaL_ref(L, LuaIndexes.LUA_REGISTRYINDEX), L);            
+            o = new LuaTable(LuaDLL.luaL_ref(L, LuaIndexes.LUA_REGISTRYINDEX), GetTranslator(L).interpreter);            
         }
         else
         {
@@ -1994,7 +1994,7 @@ public class LuaScriptMgr
             else
             {
                 LuaDLL.lua_pushvalue(L, stackPos);
-                o = new LuaTable(LuaDLL.luaL_ref(L, LuaIndexes.LUA_REGISTRYINDEX), L);      
+                o = new LuaTable(LuaDLL.luaL_ref(L, LuaIndexes.LUA_REGISTRYINDEX), GetTranslator(L).interpreter);      
             }
         }
         
