@@ -29,4 +29,4 @@ cp src/libluajit.a ../tmp/libluajit.a
 
 cd ..
 
-gcc lua_wrap.c -o Plugins/x86/ulua.dll -m32 -shared -Iluajit/src -Wl,--whole-archive tmp/libluajit.a -Wl,--no-whole-archive
+gcc lua_wrap.c pb.c -o Plugins/x86/ulua.dll -m32 -shared -Iluajit/src -Wl,--whole-archive tmp/libluajit.a -Wl,--no-whole-archive
