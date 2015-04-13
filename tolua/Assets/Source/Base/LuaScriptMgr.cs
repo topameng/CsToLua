@@ -1534,6 +1534,55 @@ public class LuaScriptMgr
         return true;
     }    
 
+    static bool CheckTableType(IntPtr L, Type t, int stackPos)
+    {
+        if (t.IsArray)
+        {
+            return true;
+        }
+        else if (t == typeof(LuaTable))
+        {
+            return true;
+        }
+        else if (t.IsValueType)
+        {
+            int oldTop = LuaDLL.lua_gettop(L);
+            LuaDLL.lua_pushvalue(L, stackPos);
+            LuaDLL.lua_pushstring(L, "class");
+            LuaDLL.lua_gettable(L, -2);
+
+            string cls = LuaDLL.lua_tostring(L, -1);
+            LuaDLL.lua_settop(L, oldTop);            
+
+            if (cls == "Vector3")
+            {
+                return t == typeof(Vector3);
+            }
+            else if (cls == "Vector2")
+            {
+                return t == typeof(Vector2);
+            }
+            else if (cls == "Quaternion")
+            {
+                return t == typeof(Quaternion);
+            }
+            else if (cls == "Color")
+            {
+                return t == typeof(Color);
+            }
+            else if (cls == "Vector4")
+            {
+                return t == typeof(Vector4);
+            }
+            else if (cls == "Ray")
+            {
+                return t == typeof(Ray);
+            }
+        }
+
+        return false;
+    }
+
     public static bool CheckType(IntPtr L, Type t, int pos)
     {
         if (t == typeof(object))
@@ -1556,7 +1605,7 @@ public class LuaScriptMgr
             case LuaTypes.LUA_TFUNCTION:
                 return t == typeof(LuaFunction);
             case LuaTypes.LUA_TTABLE:
-                return t == typeof(LuaTable) || t.IsArray;
+                return CheckTableType(L, t, pos);
             case LuaTypes.LUA_TNIL:
                 return t == null;
             default:
