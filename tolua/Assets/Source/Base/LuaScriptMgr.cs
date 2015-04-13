@@ -1665,7 +1665,7 @@ public class LuaScriptMgr
                     LuaDLL.lua_pop(L, 1);
                     return list.ToArray();
                 }
-                else if (CheckType(L, t, -1))
+                else if (!CheckType(L, t, -1))
                 {
                     LuaDLL.lua_pop(L, 1);
                     break;
