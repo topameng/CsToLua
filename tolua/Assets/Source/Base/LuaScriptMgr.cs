@@ -1536,6 +1536,11 @@ public class LuaScriptMgr
 
     public static bool CheckType(IntPtr L, Type t, int pos)
     {
+        if (t == typeof(object))
+        {
+            return true;
+        }
+
         LuaTypes luaType = LuaDLL.lua_type(L, pos);
 
         switch (luaType)
@@ -1648,6 +1653,7 @@ public class LuaScriptMgr
             T val = default(T);
             List<T> list = new List<T>();
             LuaDLL.lua_pushvalue(L, stackPos);
+            Type t = typeof(T);
 
             do
             {                
@@ -1656,15 +1662,16 @@ public class LuaScriptMgr
 
                 if (luatype == LuaTypes.LUA_TNIL)
                 {
-                    return list.ToArray(); ;
+                    LuaDLL.lua_pop(L, 1);
+                    return list.ToArray();
                 }
-                else if (luatype != LuaTypes.LUA_TUSERDATA)
+                else if (CheckType(L, t, -1))
                 {
                     LuaDLL.lua_pop(L, 1);
                     break;
-                }
+                }                
 
-                val = (T)translator.getRawNetObject(L, -1);
+                val = (T)GetVarObject(L, -1);
                 list.Add(val);
                 LuaDLL.lua_pop(L, 1);
                 ++index;
@@ -1967,8 +1974,10 @@ public class LuaScriptMgr
             string cls = LuaDLL.lua_tostring(L, -1);
             LuaDLL.lua_settop(L, oldTop);
 
+            stackPos = stackPos > 0 ? stackPos : stackPos + oldTop;
+
             if (cls == "Vector3")
-            {
+            {                
                 o = GetVector3(L, stackPos);
             }
             else if (cls == "Vector2")
