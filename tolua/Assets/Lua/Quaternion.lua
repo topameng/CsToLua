@@ -226,19 +226,19 @@ function Quaternion.LookRotation(forward, up)
 end
 
 function Quaternion.Slerp(from, to, t)
+	assert(t >= 0 and t <= 1, "Slerp time range must in [0,1]")	
 	local cosAngle = Quaternion.Dot(from, to)
-	t = clamp(t, 0, 1)
 	
     if cosAngle < 0 then    
         cosAngle = -cosAngle
         to = -to
     end
     
-    local angle 	= acos(cosAngle)
-    local sinAngle 	= sin(angle)
     local t1, t2
     
-    if sinAngle > 0.001 then    
+    if cosAngle < 0.9999 then    
+	    local angle 	= acos(cosAngle)
+		local sinAngle 	= sin(angle)
         local invSinAngle = 1 / sinAngle
         t1 = sin((1 - t) * angle) * invSinAngle
         t2 = sin(t * angle) * invSinAngle    
