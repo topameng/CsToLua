@@ -88,7 +88,7 @@ public static class ToLua
         "UIWidget.showHandles",
     };
 
-    public static bool isMemberFilter(MemberInfo mi)
+    public static bool IsMemberFilter(MemberInfo mi)
     {
         return memberFilter.Contains(type.Name + "." + mi.Name);
     }
