@@ -11,6 +11,7 @@ local create = coroutine.create
 local running = coroutine.running
 local resume = coroutine.resume
 local yield = coroutine.yield
+local error = error
 
 function coroutine.start(f, ...)		
 	local co = create(f)

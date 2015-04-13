@@ -56,5 +56,5 @@ function FixedUpdate(fixedTime)
 end
 
 function OnLevelWasLoaded(level)
-	
+	Time.timeSinceLevelLoad = 0
 end
