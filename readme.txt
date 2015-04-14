@@ -1,6 +1,6 @@
-﻿2015.4.13
+﻿2015.4.13 1.9.0
 优化 Quaternion Slerp函数。
-修正GetArrayObject 和 GetVarTable bug
+修正GetArrayObject (感谢敏敏特木耳提醒) 和 GetVarTable bug
 CheckType支持LuaTable值类型
 
 2015.4.10
