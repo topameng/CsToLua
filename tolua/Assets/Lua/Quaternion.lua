@@ -226,7 +226,7 @@ function Quaternion.LookRotation(forward, up)
 end
 
 function Quaternion.Slerp(from, to, t)
-	assert(t >= 0 and t <= 1, "Slerp time range must in [0,1]")	
+	t = clamp(t, 0, 1)	
 	local cosAngle = Quaternion.Dot(from, to)
 	
     if cosAngle < 0 then    
