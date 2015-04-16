@@ -71,10 +71,10 @@ Color.__sub = function(a, b)
 	return Color.New(a.r - b.r, a.g - b.g, a.b - b.b, a.a - b.a)
 end
 
-Color.__mul = function(a, d)
-	if type(d) == "number" then
+Color.__mul = function(a, b)
+	if type(b) == "number" then
 		return Color.New(a.r * b, a.g * b, a.b * b, a.a * b)
-	elseif d.class == Color.class then
+	elseif b.class == Color.class then
 		return Color.New(a.r * b.r, a.g * b.g, a.b * b.b, a.a * b.a)
 	end
 end
