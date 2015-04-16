@@ -1,4 +1,8 @@
-﻿2015.4.13 1.9.0
+﻿2015.4.13 1.9.1
+修正Params数组参数在重载函数中的排序问题(放在最后面，感谢BeTheOne发现)
+修正Color.lua参数问题
+
+2015.4.13 1.9.0
 优化 Quaternion Slerp函数。
 修正GetArrayObject (感谢敏敏特木耳提醒) 和 GetVarTable bug
 CheckType支持LuaTable值类型
