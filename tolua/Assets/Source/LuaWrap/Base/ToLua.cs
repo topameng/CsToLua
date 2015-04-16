@@ -838,6 +838,19 @@ public static class ToLua
         sb.AppendLine("\t}");
     }
 
+    static int GetOptionalParamPos(ParameterInfo[] infos)
+    {
+        for (int i = 0; i < infos.Length; i++)
+        {
+            if (IsParams(infos[i]))
+            {
+                return i;
+            }
+        }
+
+        return -1;
+    }
+
     static int Compare(MethodBase lhs, MethodBase rhs)
     {
         int off1 = lhs.IsStatic ? 0 : 1;
@@ -845,6 +858,39 @@ public static class ToLua
 
         ParameterInfo[] lp = lhs.GetParameters();
         ParameterInfo[] rp = rhs.GetParameters();
+
+        if (pos1 >= 0 && pos2 < 0)
+        {
+            return 1;
+        }
+        else if (pos1 < 0 && pos2 >= 0)
+        {
+            return -1;
+        }
+        else if(pos1 >= 0 && pos2 >= 0)
+        {
+            pos1 += off1;
+            pos2 += off2;
+
+            if (pos1 != pos2)
+            {
+                return pos1 > pos2 ? -1 : 1;
+            }
+            else
+            {
+                pos1 -= off1;
+                pos2 -= off2;
+
+                if (lp[pos1].ParameterType.GetElementType() == typeof(object) && rp[pos2].ParameterType.GetElementType() != typeof(object))
+                {
+                    return 1;
+                }
+                else if (lp[pos1].ParameterType.GetElementType() != typeof(object) && rp[pos2].ParameterType.GetElementType() == typeof(object))
+                {
+                    return -1;
+                }
+            }
+        }
 
         int c1 = off1 + lp.Length;
         int c2 = off2 + rp.Length;
