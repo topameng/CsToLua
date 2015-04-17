@@ -859,6 +859,9 @@ public static class ToLua
         ParameterInfo[] lp = lhs.GetParameters();
         ParameterInfo[] rp = rhs.GetParameters();
 
+        int pos1 = GetOptionalParamPos(lp);
+        int pos2 = GetOptionalParamPos(rp);
+
         if (pos1 >= 0 && pos2 < 0)
         {
             return 1;
