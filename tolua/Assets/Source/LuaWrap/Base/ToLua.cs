@@ -86,6 +86,8 @@ public static class ToLua
         "UIInput.ProcessEvent",
         "UIWidget.showHandlesWithMoveTool",
         "UIWidget.showHandles",
+        "Application.ExternalEval",
+        "Resources.LoadAssetAtPath",
     };
 
     public static bool IsMemberFilter(MemberInfo mi)
