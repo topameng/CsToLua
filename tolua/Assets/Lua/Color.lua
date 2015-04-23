@@ -15,12 +15,11 @@ local fields = {}
 Color.__index = function(t,k)
 	local var = rawget(Color, k)
 		
-	if var == nil then					
-		t = fields
-		var = rawget(t, k)
+	if var == nil then							
+		var = rawget(fields, k)
 		
 		if var ~= nil then
-			return var()	
+			return var(t)	
 		end
 	end
 	

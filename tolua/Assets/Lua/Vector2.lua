@@ -21,12 +21,11 @@ local fields = {}
 Vector2.__index = function(t,k)
 	local var = rawget(Vector2, k)
 	
-	if var == nil then					
-		t = fields
-		var = rawget(t, k)
+	if var == nil then							
+		var = rawget(fields, k)
 		
 		if var ~= nil then
-			return var()	
+			return var(t)	
 		end
 	end
 	
@@ -53,8 +52,8 @@ function Vector2:SqrMagnitude()
 	return self.x * self.x + self.y * self.y
 end
 
-function Vector2.Normalize(v2)
-	local v2 = vector2.New()
+function Vector2:Normalize()
+	local v2 = vector2.New(self.x, self.y)
 	return v2:SetNormalize()
 end
 

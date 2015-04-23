@@ -28,12 +28,11 @@ local fields = {}
 Vector4.__index = function(t,k)
 	local var = rawget(Vector4, k)
 	
-	if var == nil then					
-		t = fields
-		var = rawget(t, k)
+	if var == nil then							
+		var = rawget(fields, k)
 		
 		if var ~= nil then
-			return var()	
+			return var(t)	
 		end
 	end
 	
@@ -88,8 +87,8 @@ function Vector4:SetScale(scale)
 	self.w = self.w * scale.w
 end
 
-function Vector4.Normalize(a)
-	local v = vector4.New()
+function Vector4:Normalize()
+	local v = vector4.New(self.x, self.y, self.z, self.w)
 	return v:SetNormalize()
 end
 
