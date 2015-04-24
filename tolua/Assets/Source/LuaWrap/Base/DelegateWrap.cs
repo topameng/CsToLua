@@ -16,7 +16,7 @@ public class DelegateWrap
 		new LuaMethod("GetInvocationList", GetInvocationList),
 		new LuaMethod("Combine", Combine),
 		new LuaMethod("Remove", Remove),
-	        new LuaMethod("Add", Add),
+        new LuaMethod("Add", Add),
 		new LuaMethod("RemoveAll", RemoveAll),
 		new LuaMethod("New", _CreateDelegate),
 		new LuaMethod("GetClassType", GetClassType),
@@ -230,8 +230,8 @@ public class DelegateWrap
 	static int Equals(IntPtr L)
 	{
 		LuaScriptMgr.CheckArgsCount(L, 2);
-		Delegate obj = LuaScriptMgr.GetNetObject<Delegate>(L, 1);
-		object arg0 = LuaScriptMgr.GetVarObject(L, 2);
+		Delegate obj = LuaScriptMgr.GetLuaObject(L, 1) as Delegate;
+        object arg0 = LuaScriptMgr.GetLuaObject(L, 2);
 		bool o = obj.Equals(arg0);
 		LuaScriptMgr.Push(L, o);
 		return 1;

@@ -177,9 +177,9 @@ public class ObjectWrap
 	static int Equals(IntPtr L)
 	{
 		LuaScriptMgr.CheckArgsCount(L, 2);
-		Object obj = LuaScriptMgr.GetNetObject<Object>(L, 1);
-		object arg0 = LuaScriptMgr.GetVarObject(L, 2);
-		bool o = obj.Equals(arg0);
+		Object obj = LuaScriptMgr.GetLuaObject(L, 1) as Object;
+		object arg0 = LuaScriptMgr.GetLuaObject(L, 2);		
+        bool o = obj != null ? obj.Equals(arg0) : arg0 == null;
 		LuaScriptMgr.Push(L, o);
 		return 1;
 	}
@@ -188,7 +188,7 @@ public class ObjectWrap
 	static int GetHashCode(IntPtr L)
 	{
 		LuaScriptMgr.CheckArgsCount(L, 1);
-		Object obj = LuaScriptMgr.GetNetObject<Object>(L, 1);
+		Object obj = LuaScriptMgr.GetUnityObject<Object>(L, 1);
 		int o = obj.GetHashCode();
 		LuaScriptMgr.Push(L, o);
 		return 1;
@@ -198,7 +198,7 @@ public class ObjectWrap
 	static int GetInstanceID(IntPtr L)
 	{
 		LuaScriptMgr.CheckArgsCount(L, 1);
-		Object obj = LuaScriptMgr.GetNetObject<Object>(L, 1);
+		Object obj = LuaScriptMgr.GetUnityObject<Object>(L, 1);
 		int o = obj.GetInstanceID();
 		LuaScriptMgr.Push(L, o);
 		return 1;
@@ -210,16 +210,16 @@ public class ObjectWrap
 		int count = LuaDLL.lua_gettop(L);
 		if (count == 1)
 		{
-			Object arg0 = LuaScriptMgr.GetNetObject<Object>(L, 1);
+			Object arg0 = LuaScriptMgr.GetUnityObject<Object>(L, 1);
 			Object o = Object.Instantiate(arg0);
 			LuaScriptMgr.Push(L, o);
 			return 1;
 		}
 		else if (count == 3)
 		{
-			Object arg0 = LuaScriptMgr.GetNetObject<Object>(L, 1);
+			Object arg0 = LuaScriptMgr.GetUnityObject<Object>(L, 1);
 			Vector3 arg1 = LuaScriptMgr.GetVector3(L, 2);
-            Quaternion arg2 = LuaScriptMgr.GetQuaternion(L, 3);
+			Quaternion arg2 = LuaScriptMgr.GetQuaternion(L, 3);
 			Object o = Object.Instantiate(arg0,arg1,arg2);
 			LuaScriptMgr.Push(L, o);
 			return 1;
@@ -236,17 +236,16 @@ public class ObjectWrap
 	static int Destroy(IntPtr L)
 	{
 		int count = LuaDLL.lua_gettop(L);
-
 		if (count == 1)
 		{
-			Object arg0 = LuaScriptMgr.GetNetObject<Object>(L, 1);
+            Object arg0 = LuaScriptMgr.GetLuaObject(L, 1) as Object;
             LuaScriptMgr.__gc(L);
 			Object.Destroy(arg0);
 			return 0;
 		}
 		else if (count == 2)
 		{
-			Object arg0 = LuaScriptMgr.GetNetObject<Object>(L, 1);
+            Object arg0 = LuaScriptMgr.GetLuaObject(L, 1) as Object;
 			float arg1 = (float)LuaScriptMgr.GetNumber(L, 2);
             LuaScriptMgr.__gc(L);
 			Object.Destroy(arg0,arg1);
@@ -264,17 +263,16 @@ public class ObjectWrap
 	static int DestroyImmediate(IntPtr L)
 	{
 		int count = LuaDLL.lua_gettop(L);
-
 		if (count == 1)
 		{
-			Object arg0 = LuaScriptMgr.GetNetObject<Object>(L, 1);
+            Object arg0 = LuaScriptMgr.GetLuaObject(L, 1) as Object;
             LuaScriptMgr.__gc(L);
 			Object.DestroyImmediate(arg0);
 			return 0;
 		}
 		else if (count == 2)
 		{
-			Object arg0 = LuaScriptMgr.GetNetObject<Object>(L, 1);
+            Object arg0 = LuaScriptMgr.GetLuaObject(L, 1) as Object;
 			bool arg1 = LuaScriptMgr.GetBoolean(L, 2);
             LuaScriptMgr.__gc(L);
 			Object.DestroyImmediate(arg0,arg1);
@@ -312,7 +310,7 @@ public class ObjectWrap
 	static int DontDestroyOnLoad(IntPtr L)
 	{
 		LuaScriptMgr.CheckArgsCount(L, 1);
-		Object arg0 = LuaScriptMgr.GetNetObject<Object>(L, 1);
+		Object arg0 = LuaScriptMgr.GetUnityObject<Object>(L, 1);
 		Object.DontDestroyOnLoad(arg0);
 		return 0;
 	}
@@ -321,17 +319,16 @@ public class ObjectWrap
 	static int DestroyObject(IntPtr L)
 	{
 		int count = LuaDLL.lua_gettop(L);
-
 		if (count == 1)
 		{
-			Object arg0 = LuaScriptMgr.GetNetObject<Object>(L, 1);
+            Object arg0 = LuaScriptMgr.GetLuaObject(L, 1) as Object;
             LuaScriptMgr.__gc(L);
 			Object.DestroyObject(arg0);
 			return 0;
 		}
 		else if (count == 2)
 		{
-			Object arg0 = LuaScriptMgr.GetNetObject<Object>(L, 1);
+            Object arg0 = LuaScriptMgr.GetLuaObject(L, 1) as Object;
 			float arg1 = (float)LuaScriptMgr.GetNumber(L, 2);
             LuaScriptMgr.__gc(L);
 			Object.DestroyObject(arg0,arg1);
@@ -349,7 +346,7 @@ public class ObjectWrap
 	static int ToString(IntPtr L)
 	{
 		LuaScriptMgr.CheckArgsCount(L, 1);
-		Object obj = LuaScriptMgr.GetNetObject<Object>(L, 1);
+		Object obj = LuaScriptMgr.GetUnityObject<Object>(L, 1);
 		string o = obj.ToString();
 		LuaScriptMgr.Push(L, o);
 		return 1;

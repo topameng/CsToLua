@@ -1,5 +1,4 @@
 ﻿using System;
-using UnityEngine;
 using LuaInterface;
 
 public class objectWrap
@@ -13,7 +12,7 @@ public class objectWrap
 		new LuaMethod("GetType", GetType),
 		new LuaMethod("ToString", ToString),
 		new LuaMethod("ReferenceEquals", ReferenceEquals),
-		new LuaMethod("New", Create),
+		new LuaMethod("New", _CreateNetObject),
         new LuaMethod("GetClassType", GetClassType),
 		new LuaMethod("__tostring", Lua_ToString),
         new LuaMethod("IsNull", IsNull),
@@ -25,7 +24,7 @@ public class objectWrap
 	};
 
     [MonoPInvokeCallbackAttribute(typeof(LuaCSFunction))]
-    static int Create(IntPtr L)
+    static int _CreateNetObject(IntPtr L)
     {
         int count = LuaDLL.lua_gettop(L);
         object obj = null;
