@@ -971,6 +971,10 @@ public static class ToLua
         {
             t = Type.GetType(ss + ", UnityEngine");
         }
+	if (t == null)
+        {
+            t = Assembly.Load("Assembly-CSharp-firstpass").GetType(ss);
+        }
 
         return t;
     }
