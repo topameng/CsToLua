@@ -1283,8 +1283,9 @@ public class LuaScriptMgr
                 return;
             }
 
-            LuaDLL.lua_remove(L, -1);
-            LuaDLL.lua_remove(L, -1);
+            //LuaDLL.lua_remove(L, -1);
+            //LuaDLL.lua_remove(L, -1);
+            LuaDLL.lua_pop(L, 2);	    
             translator.collectObject(index);
         }
 
@@ -2140,7 +2141,9 @@ public class LuaScriptMgr
                 return 0;
             }
 
-            Type et = val.GetType();
+            PushVarObject(L, val);		
+
+            /*Type et = val.GetType();
 
             if (et.IsValueType)
             {
@@ -2156,7 +2159,7 @@ public class LuaScriptMgr
             else
             {
                 PushObject(L, val);                
-            }            
+            }*/            
         }
         else if (luaType == LuaTypes.LUA_TSTRING)
         {
