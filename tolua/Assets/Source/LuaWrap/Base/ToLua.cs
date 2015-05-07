@@ -88,6 +88,7 @@ public static class ToLua
         "UIWidget.showHandles",
         "Application.ExternalEval",
         "Resources.LoadAssetAtPath",
+        "Input.IsJoystickPreconfigured",
     };
 
     public static bool IsMemberFilter(MemberInfo mi)
