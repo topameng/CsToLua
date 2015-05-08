@@ -1,4 +1,17 @@
-﻿2015.4.13 1.9.1
+﻿使用luac虚拟机的同学需要注意：使用cstolua 时候需要自己手动更改部分Event。lua脚本。luajit vm的xpcall不同于luac vm
+		if nil == self.obj then
+			flag, msg = xpcall(self.func, traceback, ...)						
+		else		
+			flag, msg = xpcall(self.func, traceback, self.obj, ...)		
+		end
+使用注释掉的代码替换上面几行
+
+2015.4.13 1.9.3
+修正Vector2.lua 和 Vectoe4.lua 部分bug
+Object 和object Equals判断支持null对象
+IndexArray 支持所有类型（感谢钟纬提醒）
+
+2015.4.13 1.9.1
 修正Params数组参数在重载函数中的排序问题(放在最后面，感谢BeTheOne发现)
 修正Color.lua参数问题
 
