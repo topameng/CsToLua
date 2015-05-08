@@ -54,7 +54,7 @@ function functor(func, obj)
 		else		
 			local func = function() self.func(self.obj, unpack(args)) end
 			flag, msg = xpcall(func, traceback)		
-		end]]
+		end]]--for luac
 	
 		
 		--[[if not flag then						
