@@ -1,4 +1,4 @@
-﻿使用luac虚拟机的同学需要注意：使用cstolua 时候需要自己手动更改部分Event。lua脚本。luajit vm的xpcall不同于luac vm
+﻿使用luac虚拟机的同学需要注意：使用cstolua 时候需要自己手动更改部分Event.lua脚本。luajit vm的xpcall不同于luac vm
 		if nil == self.obj then
 			flag, msg = xpcall(self.func, traceback, ...)						
 		else		
