@@ -36,12 +36,12 @@ function Main()
 	Time:Init()
 	
 	--测试协同
-	coroutine.start(TestCo)
-	coroutine.start(TestCo2)
+	--coroutine.start(TestCo)
+	--coroutine.start(TestCo2)
 end
 
-function Update(deltatime)
-	Time:SetDeltaTime(deltatime)
+function Update(deltatime, unscaledDeltaTime)
+	Time:SetDeltaTime(deltatime, unscaledDeltaTime)
 	UpdateBeat()
 end
 

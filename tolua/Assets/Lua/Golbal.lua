@@ -40,7 +40,7 @@ ParticleAnimator= UnityEngine.ParticleAnimator
 TouchPhase 		= UnityEngine.TouchPhase
 AnimationBlendMode = UnityEngine.AnimationBlendMode
 
-function print(...)
+--[[function print(...)
 	local str = ""	
 	local arg = {...}
 	local n = select('#', ...)
@@ -50,7 +50,7 @@ function print(...)
 	end
 	
 	Debugger.Log(str)
-end
+end]]
 
 function printf(format, ...)
 	Debugger.Log(string.format(format, ...))

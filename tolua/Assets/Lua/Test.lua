@@ -2,19 +2,23 @@
 require "Golbal"
 
 --测试极端条件性能
-function Test(transform)	
-	local t = Time.time
-	
-	local v = Vector3.one
-	local one = Vector3.one
+local go = GameObject.New()
+local node = go.transform
 
-	for i = 1,800000 do
-		v = transform.position
-		v:Add(one)
+function Test()	
+	--local v = Vector3.one
+	--local one = Vector3.one
+	local transform = node
+	
+	local t = os.clock()
+	for i = 1,200000 do
+		local v = transform.position
+		--v:Add(one)
 		transform.position = v
 	end
 
-	print("lua cost time: ", Time.time - t)
+	t = os.clock() - t
+	print("lua cost time: ", t)
 end
 
 function Test2()	
@@ -22,8 +26,9 @@ function Test2()
 	local v = Vector3.one
 	local one = Vector3.one
 
-	for i = 1,800000 do		
+	for i = 1,200000 do		
 		v:Add(one)		
+		--GameObject.New()
 	end
 
 	print("lua cost time: ", Time.time - t, v)

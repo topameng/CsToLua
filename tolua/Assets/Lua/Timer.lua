@@ -40,6 +40,7 @@ function Timer:Reset(func, duration, loop, scale)
 	self.func		= func
 	self.time		= duration
 	self.running	= false
+	self.count		= Time.frameCount + 1
 end
 
 function Timer:Stop()
@@ -55,7 +56,7 @@ function Timer:Update()
 	local delta = self.scale and Time.deltaTime or Time.unscaledDeltaTime	
 	self.time = self.time - delta
 	
-	if self.time <= 0 then
+	if self.time <= 0 and Time.frameCount > self.count then
 		self.func()
 		
 		if self.loop > 0 then
@@ -145,6 +146,7 @@ end
 
 function CoTimer:Start()
 	self.running = true
+	self.count = Time.frameCount + 1
 	CoUpdateBeat:Add(self.Update, self)
 end
 
@@ -165,12 +167,10 @@ end
 function CoTimer:Update()
 	if not self.running then
 		return
-	end
-		
-	self.time = self.time - Time.deltaTime
+	end		
 	
 	if self.time <= 0 and Time.frameCount > self.count then
-		self.func()
+		self.func()		
 		
 		if self.loop > 0 then
 			self.loop = self.loop - 1
@@ -183,4 +183,6 @@ function CoTimer:Update()
 			self.time = self.time + self.duration
 		end
 	end
+	
+	self.time = self.time - Time.deltaTime
 end

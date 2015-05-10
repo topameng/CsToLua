@@ -272,6 +272,11 @@ namespace LuaInterface
             else
                 return function.GetHashCode();
         }
+
+        public int GetReference()
+        {
+            return _Reference;
+        }
     }
 
 }

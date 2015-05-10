@@ -38,8 +38,8 @@ namespace LuaInterface
 		internal CheckType typeChecker;
 		
 		// object # to object (FIXME - it should be possible to get object address as an object #)
-		public readonly Dictionary<int, object> objects = new Dictionary<int, object>();        
-        //public readonly LuaObjectMap objects = new LuaObjectMap();
+		//public readonly Dictionary<int, object> objects = new Dictionary<int, object>();        
+        public readonly LuaObjectMap objects = new LuaObjectMap();
 		// object to object #
 		public readonly Dictionary<object, int> objectsBackMap = new Dictionary<object, int>(new CompareObject());
 		internal LuaState interpreter;
@@ -51,18 +51,12 @@ namespace LuaInterface
 		internal EventHandlerContainer pendingEvents = new EventHandlerContainer();
 
         static List<ObjectTranslator> list = new List<ObjectTranslator>();
+
         static int indexTranslator = 0;
+        static int weakTableRef = -1;
 		
 		public static ObjectTranslator FromState(IntPtr luaState)
 		{
-            //LuaDLL.lua_getglobal(luaState, "_translator");
-            //IntPtr thisptr = LuaDLL.lua_touserdata(luaState, -1);
-
-            //GCHandle handle = GCHandle.FromIntPtr(thisptr);
-            //ObjectTranslator translator = (ObjectTranslator)handle.Target;
-            //LuaDLL.lua_pop(luaState, 1);
-            //return translator;
-
             LuaDLL.lua_getglobal(luaState, "_translator");
             int pos = (int)LuaDLL.lua_tonumber(luaState, -1);
             LuaDLL.lua_pop(luaState, 1);
@@ -108,14 +102,17 @@ namespace LuaInterface
          */
 		private void createLuaObjectList(IntPtr luaState)
 		{
-			LuaDLL.lua_pushstring(luaState,"luaNet_objects");
-			LuaDLL.lua_newtable(luaState);
-			LuaDLL.lua_newtable(luaState);
-			LuaDLL.lua_pushstring(luaState,"__mode");
-			LuaDLL.lua_pushstring(luaState,"v");
-			LuaDLL.lua_settable(luaState,-3);
-			LuaDLL.lua_setmetatable(luaState,-2);
-			LuaDLL.lua_settable(luaState, (int) LuaIndexes.LUA_REGISTRYINDEX);
+            LuaDLL.lua_pushstring(luaState, "luaNet_objects");
+            LuaDLL.lua_newtable(luaState);
+            LuaDLL.lua_pushvalue(luaState, -1);
+            weakTableRef = LuaDLL.luaL_ref(luaState, LuaIndexes.LUA_REGISTRYINDEX);
+            LuaDLL.lua_pushvalue(luaState, -1);
+            LuaDLL.lua_setmetatable(luaState, -2);
+            LuaDLL.lua_pushstring(luaState, "__mode");
+            LuaDLL.lua_pushstring(luaState, "v");
+            LuaDLL.lua_settable(luaState, -3);
+            //LuaDLL.lua_setmetatable(luaState,-2);
+            LuaDLL.lua_settable(luaState, (int)LuaIndexes.LUA_REGISTRYINDEX);
 		}
 		/*
          * Registers the indexing function of CLR objects
@@ -582,33 +579,62 @@ namespace LuaInterface
 
             if (found)
             {
-                LuaDLL.luaL_getmetatable(luaState, "luaNet_objects");
-                LuaDLL.lua_rawgeti(luaState, -1, index);
+                if (LuaDLL.tolua_pushudata(luaState, weakTableRef, index))
+                {
+                    return;
+                }
 
                 // Note: starting with lua5.1 the garbage collector may remove weak reference items (such as our luaNet_objects values) when the initial GC sweep
                 // occurs, but the actual call of the __gc finalizer for that object may not happen until a little while later.  During that window we might call
                 // this routine and find the element missing from luaNet_objects, but collectObject() has not yet been called.  In that case, we go ahead and call collect
                 // object here
-                // did we find a non nil object in our table? if not, we need to call collect object
-                LuaTypes type = LuaDLL.lua_type(luaState, -1);
-                if (type != LuaTypes.LUA_TNIL)
-                {
-                    LuaDLL.lua_remove(luaState, -2);     // drop the metatable - we're going to leave our object on the stack					
-                    return;
-                }
-
-                // MetaFunctions.dumpStack(this, luaState);
-                LuaDLL.lua_remove(luaState, -1);    // remove the nil object value
-                LuaDLL.lua_remove(luaState, -1);    // remove the metatable
-
-                collectObject(o, index);            // Remove from both our tables and fall out to get a new ID
+                // did we find a non nil object in our table? if not, we need to call collect object                
+                //collectObject(o, index);            // Remove from both our tables and fall out to get a new ID
             }
 
 			index = addObject(o);			
 			pushNewObject(luaState,o,index,metatable);
 		}
-		
-		
+
+        public void pushObject(IntPtr luaState, object o)
+        {
+            int index = -1;
+            // Pushes nil
+            if (o == null)
+            {
+                LuaDLL.lua_pushnil(luaState);
+                return;
+            }
+            
+            bool found = objectsBackMap.TryGetValue(o, out index);
+
+            if (found)
+            {
+                if (LuaDLL.tolua_pushudata(luaState, weakTableRef, index))
+                {
+                    return;
+                }                        
+            }
+
+            index = addObject(o);
+            pushNewObject(luaState, o, index, "luaNet_metatable");
+        }
+
+        static Dictionary<Type, string> typeNameMap = new Dictionary<Type, string>();
+
+        static string GetAQName(Type t)
+        {
+            string name;
+
+            if (!typeNameMap.TryGetValue(t, out name))
+            {
+                name = t.AssemblyQualifiedName;
+                typeNameMap.Add(t, t.AssemblyQualifiedName);
+            }
+
+            return name;
+        }
+
 		/*
          * Pushes a new object into the Lua stack with the provided
          * metatable
@@ -621,13 +647,14 @@ namespace LuaInterface
             if (metatable == "luaNet_metatable")
             {
                 // Gets or creates the metatable for the object's type
-                LuaDLL.luaL_getmetatable(luaState, o.GetType().AssemblyQualifiedName);
+                string meta = GetAQName(o.GetType());
+                LuaDLL.luaL_getmetatable(luaState, meta);
 
                 if (LuaDLL.lua_isnil(luaState, -1))
                 {
-                    Debugger.LogWarning("Create not wrap ulua type:" + o.GetType().AssemblyQualifiedName);
+                    Debugger.LogWarning("Create not wrap ulua type:" + meta);
                     LuaDLL.lua_settop(luaState, -2);
-                    LuaDLL.luaL_newmetatable(luaState, o.GetType().AssemblyQualifiedName);
+                    LuaDLL.luaL_newmetatable(luaState, meta);
                     LuaDLL.lua_pushstring(luaState, "cache");
                     LuaDLL.lua_newtable(luaState);
                     LuaDLL.lua_rawset(luaState, -3);
@@ -662,14 +689,15 @@ namespace LuaInterface
 
         public void PushNewValueObject(IntPtr luaState, object o, int index)
         {
-            LuaDLL.luanet_newudata(luaState, index);            
-            LuaDLL.luaL_getmetatable(luaState, o.GetType().AssemblyQualifiedName);
+            LuaDLL.luanet_newudata(luaState, index);
+            string meta = GetAQName(o.GetType());
+            LuaDLL.luaL_getmetatable(luaState, meta);
 
             if (LuaDLL.lua_isnil(luaState, -1))
             {
-                Debugger.LogWarning("Create not wrap ulua type:" + o.GetType().AssemblyQualifiedName);
+                Debugger.LogWarning("Create not wrap ulua type:" + meta);
                 LuaDLL.lua_settop(luaState, -2);                
-                LuaDLL.luaL_newmetatable(luaState, o.GetType().AssemblyQualifiedName);
+                LuaDLL.luaL_newmetatable(luaState, meta);
                 LuaDLL.lua_pushstring(luaState, "cache");
                 LuaDLL.lua_newtable(luaState);
                 LuaDLL.lua_rawset(luaState, -3);
@@ -712,14 +740,27 @@ namespace LuaInterface
 		/// <param name="udata"></param>
 		internal void collectObject(int udata)
 		{
-            object o;
-            bool found = objects.TryGetValue(udata, out o);
+            objects.Remove(udata);
 
-            // The other variant of collectObject might have gotten here first, in that case we will silently ignore the missing entry
-            if (found)
-            {
-                collectObject(o, udata);
-            }
+            //backmap使用weakdictionary将不用查询删除
+            //object o;
+            //bool found = objects.TryGetValue(udata, out o);
+
+            //// The other variant of collectObject might have gotten here first, in that case we will silently ignore the missing entry
+            //if (found)
+            //{
+            //    objects.Remove(udata);
+
+            //    if (o != null && !o.GetType().IsValueType)
+            //    {
+            //        int index = -1;
+
+            //        if (objectsBackMap.TryGetValue(o, out index) && index == udata)
+            //        {
+            //            objectsBackMap.Remove(o);
+            //        }
+            //    }
+            //}
 		}
 		
 		
@@ -729,12 +770,23 @@ namespace LuaInterface
 		/// <param name="udata"></param>
 		void collectObject(object o, int udata)
 		{
-			// Debug.WriteLine("Removing " + o.ToString() + " @ " + udata);			
-			objects.Remove(udata);
+            return;
+            object obj;
+            bool found = objects.TryGetValue(udata, out obj);
+
+            if (found && obj == o)
+            {
+                objects.Remove(udata);
+            }
             
             if (o != null && !o.GetType().IsValueType)
             {
-                objectsBackMap.Remove(o);                
+                int index = udata;
+
+                if (objectsBackMap.TryGetValue(o, out index) && index == udata)
+                {
+                    objectsBackMap.Remove(o);
+                }          
             }
 		}
 		
@@ -742,14 +794,14 @@ namespace LuaInterface
 		/// <summary>
 		/// We want to ensure that objects always have a unique ID
 		/// </summary>
-		int nextObj = 0;
+		//int nextObj = 0;
 		
 		public int addObject(object obj)
 		{
 			// New object: inserts it in the list
-			int index = nextObj++;
-            objects[index] = obj;
-            //int index = objects.Add(obj);
+            //int index = nextObj++;
+            //objects[index] = obj;
+            int index = objects.Add(obj);
 
             if (!obj.GetType().IsValueType)
             {
@@ -802,18 +854,14 @@ namespace LuaInterface
         internal object getRawNetObject(IntPtr luaState, int index)
         {
             int udata = LuaDLL.luanet_rawnetobj(luaState, index);
+            object obj = null;
 
-            if (udata != -1)
+            if (objects.TryGetValue(udata, out obj))
             {
-                object obj = null;
-
-                if (objects.TryGetValue(udata, out obj))
-                {
-                    return obj;
-                }
+                return obj;
             }
 
-            return null;
+            return obj;
         }
 
         public void SetValueObject(IntPtr luaState, int stackPos, object obj)
@@ -823,7 +871,7 @@ namespace LuaInterface
             if (udata != -1)
             {
                 objects[udata] = obj;
-            }            
+            }
         }
 
 		/*

@@ -7,7 +7,7 @@ Time =
 	frameCount 		= 1,
 	timeScale		= 1,
 	timeSinceLevelLoad 	= 0,
-	unscaledDeltaTime	= 0,	--todo
+	unscaledDeltaTime	= 0,	
 }
 
 local mt = {}
@@ -27,10 +27,11 @@ function Time:Init()
 	setmetatable(self, mt)
 end
 
-function Time:SetDeltaTime(deltaTime)
+function Time:SetDeltaTime(deltaTime, unscaledDeltaTime)
 	self.deltaTime = deltaTime
 	self.frameCount = self.frameCount + 1
 	self.timeSinceLevelLoad = self.timeSinceLevelLoad + deltaTime
+	self.unscaledDeltaTime = unscaledDeltaTime
 end
 
 function Time:SetFixedDelta(time)

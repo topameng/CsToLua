@@ -205,15 +205,13 @@ namespace LuaInterface
             }
             else if (LuaDLL.lua_type(luaState, stackPos) == LuaTypes.LUA_TTABLE)
             {
-                if (LuaDLL.luaL_getmetafield(luaState, stackPos, "__index"))
+                if (LuaTypes.LUA_TNIL != LuaDLL.luaL_getmetafield(luaState, stackPos, "__index"))
                 {
                     object obj = translator.getNetObject(luaState, -1);
                     LuaDLL.lua_settop(luaState, -2);
                     if (obj != null && paramType.IsAssignableFrom(obj.GetType()))
                         return extractNetObject;
                 }
-                else
-                    return null;
             }
             else
             {
@@ -341,7 +339,7 @@ namespace LuaInterface
         {
             if(LuaDLL.lua_type(luaState,stackPos)==LuaTypes.LUA_TTABLE)
             {
-                if(LuaDLL.luaL_getmetafield(luaState,stackPos,"__index"))
+                if(LuaTypes.LUA_TNIL != LuaDLL.luaL_getmetafield(luaState,stackPos,"__index"))
                 {
                     if(LuaDLL.luaL_checkmetatable(luaState,-1))
                     {
@@ -364,7 +362,7 @@ namespace LuaInterface
             object obj = translator.getRawNetObject(luaState, stackPos);
             if(obj==null && LuaDLL.lua_type(luaState,stackPos)==LuaTypes.LUA_TTABLE)
             {
-                if(LuaDLL.luaL_getmetafield(luaState,stackPos,"__index"))
+                if (LuaTypes.LUA_TNIL != LuaDLL.luaL_getmetafield(luaState, stackPos, "__index"))
                 {
                     if(LuaDLL.luaL_checkmetatable(luaState,-1))
                     {

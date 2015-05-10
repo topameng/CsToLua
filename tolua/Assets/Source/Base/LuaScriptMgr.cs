@@ -25,15 +25,15 @@ public class LuaScriptMgr
     LuaFunction lateUpdateFunc = null;
     LuaFunction fixedUpdateFunc = null;    
     LuaFunction levelLoaded = null;
-
-    LuaFunction unpackVec3 = null;    
+    
+    int unpackVec3 = 0;    
     LuaFunction unpackVec2 = null;
     LuaFunction unpackVec4 = null;
     LuaFunction unpackQuat = null;
     LuaFunction unpackColor = null;
     LuaFunction unpackRay = null;
 
-    LuaFunction packVec3 = null;
+    int packVec3 = 0;    
     LuaFunction packVec2 = null;
     LuaFunction packVec4 = null;
     LuaFunction packQuat = null;
@@ -328,14 +328,16 @@ public class LuaScriptMgr
     void OnBundleLoaded()
     {
         DoFile("Golbal.lua");
-        unpackVec3 = GetLuaFunction("Vector3.Get");
+        LuaFunction func = GetLuaFunction("Vector3.Get");
+        unpackVec3 = func.GetReference();
         unpackVec2 = GetLuaFunction("Vector2.Get");
         unpackVec4 = GetLuaFunction("Vector4.Get");
         unpackQuat = GetLuaFunction("Quaternion.Get");
         unpackColor = GetLuaFunction("Color.Get");
         unpackRay = GetLuaFunction("Ray.Get");
 
-        packVec3 = GetLuaFunction("Vector3.New");        
+        func = GetLuaFunction("Vector3.New");
+        packVec3 = func.GetReference();
         packVec2 = GetLuaFunction("Vector2.New");
         packVec4 = GetLuaFunction("Vector4.New");
         packQuat = GetLuaFunction("Quaternion.New");
@@ -365,8 +367,13 @@ public class LuaScriptMgr
     public void Update()
     {
         if (updateFunc != null)
-        {
-            updateFunc.Call(Time.deltaTime);
+        {            
+            int top = updateFunc.BeginPCall();
+            IntPtr L = updateFunc.GetLuaState();
+            LuaScriptMgr.Push(L, Time.deltaTime);
+            LuaScriptMgr.Push(L, Time.unscaledDeltaTime);
+            updateFunc.PCall(top, 2);
+            updateFunc.EndPCall();   
         }
         
         while (!refGCList.IsEmpty())
@@ -397,43 +404,9 @@ public class LuaScriptMgr
         }
     }
 
-
-    void SafeRelease(ref LuaFunction func)
-    {
-        if (func != null)
-        {
-            func.Release();
-            func = null;
-        }
-    }
-
     public void Destroy()
     {        
-        Instance = null;        
-        SafeRelease(ref unpackVec3);        
-        SafeRelease(ref unpackVec2);
-        SafeRelease(ref unpackVec4);
-        SafeRelease(ref unpackQuat);
-        SafeRelease(ref unpackColor);
-        SafeRelease(ref unpackRay);
-
-        SafeRelease(ref packVec3);                
-        SafeRelease(ref packVec2);
-        SafeRelease(ref packVec4);
-        SafeRelease(ref packQuat);
-        SafeRelease(ref packRay);
-        SafeRelease(ref packRaycastHit);        
-        SafeRelease(ref packColor);
-        SafeRelease(ref packTouch);
-
-        SafeRelease(ref updateFunc);
-        SafeRelease(ref lateUpdateFunc);
-        SafeRelease(ref fixedUpdateFunc);       
- 
-#if !MULTI_STATE
-        SafeRelease(ref traceback);
-#endif
-
+        Instance = null;
         LuaDLL.lua_gc(lua.L, LuaGCOptions.LUA_GCCOLLECT, 0);
 
         foreach(KeyValuePair<string, LuaBase> kv in dict)
@@ -1003,16 +976,8 @@ public class LuaScriptMgr
     }
 
     public static object GetLuaObject(IntPtr L, int stackPos)
-    {           
-        LuaTypes luatype = LuaDLL.lua_type(L, stackPos);
-        object o = null;
-
-        if (luatype == LuaTypes.LUA_TUSERDATA)
-        {
-            o = GetTranslator(L).getRawNetObject(L, stackPos);
-        }
-        
-        return o;        
+    {                   
+        return GetTranslator(L).getRawNetObject(L, stackPos);             
     }
 
     public static T GetNetObject<T>(IntPtr L, int stackPos)
@@ -1257,7 +1222,8 @@ public class LuaScriptMgr
 
     public static void Push(IntPtr L, UnityEngine.Object obj)
     {
-        PushObject(L, obj == null ? null : obj);
+        object o = obj == null ? null : obj;
+        GetTranslator(L).pushObject(L, o);
     }
 
     public static void Push(IntPtr L, TrackedReference obj)
@@ -1693,8 +1659,7 @@ public class LuaScriptMgr
     }
 
     public static T[] GetArrayObject<T>(IntPtr L, int stackPos)
-    {
-        ObjectTranslator translator = GetTranslator(L);
+    {        
         LuaTypes luatype = LuaDLL.lua_type(L, stackPos);
 
         if (luatype == LuaTypes.LUA_TTABLE)
@@ -2024,7 +1989,7 @@ public class LuaScriptMgr
             string cls = LuaDLL.lua_tostring(L, -1);
             LuaDLL.lua_settop(L, oldTop);
 
-            stackPos = stackPos > 0 ? stackPos : stackPos + oldTop;
+            stackPos = stackPos > 0 ? stackPos : stackPos + oldTop + 1;
 
             if (cls == "Vector3")
             {                
@@ -2263,40 +2228,16 @@ public class LuaScriptMgr
     //无缝兼容原生写法 transform.position = v3    
     public static Vector3 GetVector3(IntPtr L, int stackPos)
     {
-        int oldTop = LuaDLL.lua_gettop(L);         
-        LuaScriptMgr luaMgr = GetMgrFromLuaState(L);                               
-        luaMgr.unpackVec3.push(L);        
-
-        LuaDLL.lua_pushvalue(L, stackPos);  
-        float x = 0,y = 0,z = 0;
-
-        if (LuaDLL.lua_pcall(L, 1, -1, 0) == 0)
-        {
-            x = (float)LuaDLL.lua_tonumber(L, oldTop + 1);
-            y = (float)LuaDLL.lua_tonumber(L, oldTop + 2);
-            z = (float)LuaDLL.lua_tonumber(L, oldTop + 3);
-        }
-        else
-        {
-            ThrowLuaException(L);
-        }
-            
-        LuaDLL.lua_settop(L, oldTop);
+        LuaScriptMgr luaMgr = GetMgrFromLuaState(L);        
+        float x, y, z = 0;
+        LuaDLL.tolua_getvector3(L, luaMgr.unpackVec3, stackPos, out x, out y, out z);
         return new Vector3(x, y, z);
     }
 
     public static void Push(IntPtr L, Vector3 v3)
     {
-        LuaScriptMgr luaMgr = GetMgrFromLuaState(L);        
-        luaMgr.packVec3.push(L);
-        LuaScriptMgr.Push(L, v3.x);
-        LuaScriptMgr.Push(L, v3.y);
-        LuaScriptMgr.Push(L, v3.z);
-
-        if (LuaDLL.lua_pcall(L, 3, -1, 0) != 0)
-        {
-            ThrowLuaException(L);
-        }        
+        LuaScriptMgr luaMgr = GetMgrFromLuaState(L);
+        LuaDLL.tolua_pushvector3(L, luaMgr.packVec3, v3.x, v3.y, v3.z);
     }
 
     public static void Push(IntPtr L, Quaternion q)
