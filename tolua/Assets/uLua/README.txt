@@ -1,17 +1,3 @@
-uLua 1.02
-==========================
-- Added UTF-8 Support
-- Added Coroutine example
-- Added Lua 'require' explanation
-- Minor Fixes
-
-uLua 1.01
-==========================
-- Fixed iOS build (was using out of date scripts which were causing AOT errors as well as not finding the symbols in some cases)
-
-uLua 1.0 (Initial Release)
-==========================
-
 Lua + LuaJIT + LuaInterface
 
 Supported Platforms: iOS, Android, Windows, Mac (x86 only), Linux
@@ -40,29 +26,6 @@ USAGE
 Copy all (or relevant) plugins from 'uLua/Plugins/' to your project Plugins directory.
 
 Add LuaInterface namespace to your script and you're good to go.
-
-Check out the examples for some basic usage. The main code is quite readable (Lua.cs) and the LuaInterface manual included is relevant.
-
-EXAMPLES
-========
-
-01_HelloWorld
-02_CreateGameObject
-03_AccessingLuaVariables
-04_ScriptsFromFile
-05_CallLuaFunction
-06_LuaCoroutines
-
-Lua 'require' or 'dofile'
-=============
-
-In order to import a file with require and/or dofile you must have the text asset placed within 'Assets/Resources' of your root project directory and it must be named '*.lua.txt'.
-
-For example: 
-'Assets/Resources/MyDir/myscript.lua.txt'
-
-And then in your Lua code it can be required with: 
-'require("MyDir/myscript.lua")'
 
 MacOS
 ======
