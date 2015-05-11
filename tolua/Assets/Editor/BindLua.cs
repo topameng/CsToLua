@@ -77,6 +77,31 @@ public static class LuaBinding
             return str;
         }
 
+		private static string[] getGenericName(Type[] _types)
+		{
+			string[] results = new string[_types.Length];
+			for (int i = 0; i < _types.Length; i++)
+			{
+				if (_types[i].IsGenericType)
+					results[i] = getGenericName(_types[i]);
+				else
+					results[i] = _types[i].ToString();
+
+			}
+
+			return results;
+		}
+
+		private static string getGenericName(Type _type)
+		{
+			if (_type.GetGenericArguments().Length == 0)
+				return _type.Name;
+
+			var gArgs = _type.GetGenericArguments();
+			var typeName = _type.Name;
+			var pureTypeName = typeName.Substring(0, typeName.IndexOf('`'));
+			return pureTypeName + "<" + string.Join(",", getGenericName(gArgs)) + ">";
+		}
         public BindType(Type t)
         {
             string str = t.ToString();
@@ -88,7 +113,12 @@ public static class LuaBinding
 
             if (t.BaseType != null)
             {
-                baseName = t.BaseType.ToString();
+				if (t.BaseType.IsGenericType)
+				{
+					baseName = getGenericName(t.BaseType);
+				}
+				else
+					baseName = t.BaseType.ToString();
 
                 if (baseName == "System.ValueType")
                 {
