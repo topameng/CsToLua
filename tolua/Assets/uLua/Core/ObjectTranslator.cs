@@ -38,8 +38,8 @@ namespace LuaInterface
 		internal CheckType typeChecker;
 		
 		// object # to object (FIXME - it should be possible to get object address as an object #)
-		//public readonly Dictionary<int, object> objects = new Dictionary<int, object>();        
-        public readonly LuaObjectMap objects = new LuaObjectMap();
+		public readonly Dictionary<int, object> objects = new Dictionary<int, object>();        
+        //public readonly LuaObjectMap objects = new LuaObjectMap();
 		// object to object #
 		public readonly Dictionary<object, int> objectsBackMap = new Dictionary<object, int>(new CompareObject());
 		internal LuaState interpreter;
@@ -740,27 +740,19 @@ namespace LuaInterface
 		/// <param name="udata"></param>
 		internal void collectObject(int udata)
 		{
-            objects.Remove(udata);
+            object o;
+            bool found = objects.TryGetValue(udata, out o);
 
-            //backmap使用weakdictionary将不用查询删除
-            //object o;
-            //bool found = objects.TryGetValue(udata, out o);
+            // The other variant of collectObject might have gotten here first, in that case we will silently ignore the missing entry
+            if (found)
+            {
+                objects.Remove(udata);
 
-            //// The other variant of collectObject might have gotten here first, in that case we will silently ignore the missing entry
-            //if (found)
-            //{
-            //    objects.Remove(udata);
-
-            //    if (o != null && !o.GetType().IsValueType)
-            //    {
-            //        int index = -1;
-
-            //        if (objectsBackMap.TryGetValue(o, out index) && index == udata)
-            //        {
-            //            objectsBackMap.Remove(o);
-            //        }
-            //    }
-            //}
+                if (o != null && !o.GetType().IsValueType)
+                {
+                    objectsBackMap.Remove(o);
+                }
+            } 
 		}
 		
 		
@@ -770,38 +762,22 @@ namespace LuaInterface
 		/// <param name="udata"></param>
 		void collectObject(object o, int udata)
 		{
-            return;
-            object obj;
-            bool found = objects.TryGetValue(udata, out obj);
-
-            if (found && obj == o)
-            {
-                objects.Remove(udata);
-            }
-            
-            if (o != null && !o.GetType().IsValueType)
-            {
-                int index = udata;
-
-                if (objectsBackMap.TryGetValue(o, out index) && index == udata)
-                {
-                    objectsBackMap.Remove(o);
-                }          
-            }
+            objectsBackMap.Remove(o);
+            objects.Remove(udata);   
 		}
 		
 		
 		/// <summary>
 		/// We want to ensure that objects always have a unique ID
 		/// </summary>
-		//int nextObj = 0;
+		int nextObj = 0;
 		
 		public int addObject(object obj)
 		{
 			// New object: inserts it in the list
-            //int index = nextObj++;
-            //objects[index] = obj;
-            int index = objects.Add(obj);
+            int index = nextObj++;
+            objects[index] = obj;
+            //int index = objects.Add(obj);
 
             if (!obj.GetType().IsValueType)
             {

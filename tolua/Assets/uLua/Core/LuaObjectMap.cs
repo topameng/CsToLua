@@ -1,7 +1,7 @@
 ﻿using UnityEngine;
 using System.Collections.Generic;
 
-//忘了原来的设计了，不重复造轮子了
+//忘了原来的设计了，不重复造轮子了. 用这个不能即时删除 Object 了
 public class LuaObjectMap
 {    
     private List<object> list;
