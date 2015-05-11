@@ -352,7 +352,7 @@ namespace LuaInterface
 					if (cachedMember == null) setMemberCache(memberCache, objType, methodName, member);
 					try
 					{
-						object val = property.GetValue(obj, null);
+						object val = property.GetGetMethod().Invoke(obj, null);
 						
 						translator.push(luaState, val);
 					}
