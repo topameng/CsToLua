@@ -364,7 +364,7 @@ public static class LuaBinding
         return new DelegateType(t);
     }
 
-    [MenuItem("Thinky/Gen Lua Delegates", false, 14)]
+    [MenuItem("Lua/Gen Lua Delegates", false, 14)]
     static void GenLuaDelegates()
     {
         DelegateType[] list = new DelegateType[]

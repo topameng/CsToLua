@@ -15,6 +15,7 @@
 加入了委托变量可以赋值 LuaFunction，并且没有gc alloc (如果需要支持委托 + 操作，需要另外导出委托)感谢kingowl提供
 修改了Quaternion.Lerp 的bug
 修正一个了ios反射编译问题 
+协同出错时，stack信息更详细
 
 2015.4.13 1.9.3
 修正Vector2.lua 和 Vectoe4.lua 部分bug
