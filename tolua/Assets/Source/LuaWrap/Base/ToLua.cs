@@ -2282,7 +2282,7 @@ public static class ToLua
         else
         {
             sb.AppendFormat("{0}\tobject[] objs = func.EndPCall(top);\r\n", head);
-            sb.AppendFormat("{0}\treturn ({0})objs[0];\r\n", GetTypeStr(mi.ReturnType), head);
+            sb.AppendFormat("{1}\treturn ({0})objs[0];\r\n", GetTypeStr(mi.ReturnType), head);
         }
 
         sb.AppendFormat("{0}}};\r\n", head);
