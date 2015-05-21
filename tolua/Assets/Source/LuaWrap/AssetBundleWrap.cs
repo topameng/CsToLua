@@ -44,16 +44,19 @@ public class AssetBundleWrap
 		return 0;
 	}
 
+	static Type classType = typeof(AssetBundle);
+
 	[MonoPInvokeCallbackAttribute(typeof(LuaCSFunction))]
 	static int GetClassType(IntPtr L)
 	{
-		LuaScriptMgr.Push(L, typeof(AssetBundle));
+		LuaScriptMgr.Push(L, classType);
+
 		return 1;
 	}
 
 	public static void Register(IntPtr L)
 	{
-		LuaScriptMgr.RegisterLib(L, "UnityEngine.AssetBundle", typeof(AssetBundle), regs, fields, typeof(UnityEngine.Object));
+		LuaScriptMgr.RegisterLib(L, "UnityEngine.AssetBundle", typeof(AssetBundle), regs, fields, typeof(Object));
 	}
 
 	[MonoPInvokeCallbackAttribute(typeof(LuaCSFunction))]
@@ -114,7 +117,7 @@ public class AssetBundleWrap
 	static int Contains(IntPtr L)
 	{
 		LuaScriptMgr.CheckArgsCount(L, 2);
-		AssetBundle obj = LuaScriptMgr.GetUnityObject<AssetBundle>(L, 1);
+		AssetBundle obj = (AssetBundle)LuaScriptMgr.GetUnityObject(L, 1, typeof(AssetBundle));
 		string arg0 = LuaScriptMgr.GetLuaString(L, 2);
 		bool o = obj.Contains(arg0);
 		LuaScriptMgr.Push(L, o);
@@ -127,7 +130,7 @@ public class AssetBundleWrap
 		int count = LuaDLL.lua_gettop(L);
 		if (count == 2)
 		{
-			AssetBundle obj = LuaScriptMgr.GetUnityObject<AssetBundle>(L, 1);
+			AssetBundle obj = (AssetBundle)LuaScriptMgr.GetUnityObject(L, 1, typeof(AssetBundle));
 			string arg0 = LuaScriptMgr.GetLuaString(L, 2);
 			Object o = obj.Load(arg0);
 			LuaScriptMgr.Push(L, o);
@@ -135,7 +138,7 @@ public class AssetBundleWrap
 		}
 		else if (count == 3)
 		{
-			AssetBundle obj = LuaScriptMgr.GetUnityObject<AssetBundle>(L, 1);
+			AssetBundle obj = (AssetBundle)LuaScriptMgr.GetUnityObject(L, 1, typeof(AssetBundle));
 			string arg0 = LuaScriptMgr.GetLuaString(L, 2);
 			Type arg1 = LuaScriptMgr.GetTypeObject(L, 3);
 			Object o = obj.Load(arg0,arg1);
@@ -154,7 +157,7 @@ public class AssetBundleWrap
 	static int LoadAsync(IntPtr L)
 	{
 		LuaScriptMgr.CheckArgsCount(L, 3);
-		AssetBundle obj = LuaScriptMgr.GetUnityObject<AssetBundle>(L, 1);
+		AssetBundle obj = (AssetBundle)LuaScriptMgr.GetUnityObject(L, 1, typeof(AssetBundle));
 		string arg0 = LuaScriptMgr.GetLuaString(L, 2);
 		Type arg1 = LuaScriptMgr.GetTypeObject(L, 3);
 		AssetBundleRequest o = obj.LoadAsync(arg0,arg1);
@@ -168,14 +171,14 @@ public class AssetBundleWrap
 		int count = LuaDLL.lua_gettop(L);
 		if (count == 1)
 		{
-			AssetBundle obj = LuaScriptMgr.GetUnityObject<AssetBundle>(L, 1);
+			AssetBundle obj = (AssetBundle)LuaScriptMgr.GetUnityObject(L, 1, typeof(AssetBundle));
 			Object[] o = obj.LoadAll();
 			LuaScriptMgr.PushArray(L, o);
 			return 1;
 		}
 		else if (count == 2)
 		{
-			AssetBundle obj = LuaScriptMgr.GetUnityObject<AssetBundle>(L, 1);
+			AssetBundle obj = (AssetBundle)LuaScriptMgr.GetUnityObject(L, 1, typeof(AssetBundle));
 			Type arg0 = LuaScriptMgr.GetTypeObject(L, 2);
 			Object[] o = obj.LoadAll(arg0);
 			LuaScriptMgr.PushArray(L, o);
@@ -193,7 +196,7 @@ public class AssetBundleWrap
 	static int Unload(IntPtr L)
 	{
 		LuaScriptMgr.CheckArgsCount(L, 2);
-		AssetBundle obj = LuaScriptMgr.GetUnityObject<AssetBundle>(L, 1);
+		AssetBundle obj = (AssetBundle)LuaScriptMgr.GetUnityObject(L, 1, typeof(AssetBundle));
 		bool arg0 = LuaScriptMgr.GetBoolean(L, 2);
 		obj.Unload(arg0);
 		return 0;
@@ -203,8 +206,8 @@ public class AssetBundleWrap
 	static int Lua_Eq(IntPtr L)
 	{
 		LuaScriptMgr.CheckArgsCount(L, 2);
-		Object arg0 = LuaScriptMgr.GetVarObject(L, 1) as Object;
-		Object arg1 = LuaScriptMgr.GetVarObject(L, 2) as Object;
+		Object arg0 = LuaScriptMgr.GetLuaObject(L, 1) as Object;
+		Object arg1 = LuaScriptMgr.GetLuaObject(L, 2) as Object;
 		bool o = arg0 == arg1;
 		LuaScriptMgr.Push(L, o);
 		return 1;

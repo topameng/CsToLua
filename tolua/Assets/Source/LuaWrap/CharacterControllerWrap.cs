@@ -46,16 +46,19 @@ public class CharacterControllerWrap
 		return 0;
 	}
 
+	static Type classType = typeof(CharacterController);
+
 	[MonoPInvokeCallbackAttribute(typeof(LuaCSFunction))]
 	static int GetClassType(IntPtr L)
 	{
-		LuaScriptMgr.Push(L, typeof(CharacterController));
+		LuaScriptMgr.Push(L, classType);
+
 		return 1;
 	}
 
 	public static void Register(IntPtr L)
 	{
-		LuaScriptMgr.RegisterLib(L, "UnityEngine.CharacterController", typeof(CharacterController), regs, fields, typeof(UnityEngine.Collider));
+		LuaScriptMgr.RegisterLib(L, "UnityEngine.CharacterController", typeof(CharacterController), regs, fields, typeof(Collider));
 	}
 
 	[MonoPInvokeCallbackAttribute(typeof(LuaCSFunction))]
@@ -422,7 +425,7 @@ public class CharacterControllerWrap
 	static int SimpleMove(IntPtr L)
 	{
 		LuaScriptMgr.CheckArgsCount(L, 2);
-		CharacterController obj = LuaScriptMgr.GetUnityObject<CharacterController>(L, 1);
+		CharacterController obj = (CharacterController)LuaScriptMgr.GetUnityObject(L, 1, typeof(CharacterController));
 		Vector3 arg0 = LuaScriptMgr.GetVector3(L, 2);
 		bool o = obj.SimpleMove(arg0);
 		LuaScriptMgr.Push(L, o);
@@ -433,7 +436,7 @@ public class CharacterControllerWrap
 	static int Move(IntPtr L)
 	{
 		LuaScriptMgr.CheckArgsCount(L, 2);
-		CharacterController obj = LuaScriptMgr.GetUnityObject<CharacterController>(L, 1);
+		CharacterController obj = (CharacterController)LuaScriptMgr.GetUnityObject(L, 1, typeof(CharacterController));
 		Vector3 arg0 = LuaScriptMgr.GetVector3(L, 2);
 		CollisionFlags o = obj.Move(arg0);
 		LuaScriptMgr.Push(L, o);
@@ -444,8 +447,8 @@ public class CharacterControllerWrap
 	static int Lua_Eq(IntPtr L)
 	{
 		LuaScriptMgr.CheckArgsCount(L, 2);
-		Object arg0 = LuaScriptMgr.GetVarObject(L, 1) as Object;
-		Object arg1 = LuaScriptMgr.GetVarObject(L, 2) as Object;
+		Object arg0 = LuaScriptMgr.GetLuaObject(L, 1) as Object;
+		Object arg1 = LuaScriptMgr.GetLuaObject(L, 2) as Object;
 		bool o = arg0 == arg1;
 		LuaScriptMgr.Push(L, o);
 		return 1;

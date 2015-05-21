@@ -56,16 +56,19 @@ public class QualitySettingsWrap
 		return 0;
 	}
 
+	static Type classType = typeof(QualitySettings);
+
 	[MonoPInvokeCallbackAttribute(typeof(LuaCSFunction))]
 	static int GetClassType(IntPtr L)
 	{
-		LuaScriptMgr.Push(L, typeof(QualitySettings));
+		LuaScriptMgr.Push(L, classType);
+
 		return 1;
 	}
 
 	public static void Register(IntPtr L)
 	{
-		LuaScriptMgr.RegisterLib(L, "UnityEngine.QualitySettings", typeof(QualitySettings), regs, fields, typeof(UnityEngine.Object));
+		LuaScriptMgr.RegisterLib(L, "UnityEngine.QualitySettings", typeof(QualitySettings), regs, fields, typeof(Object));
 	}
 
 	[MonoPInvokeCallbackAttribute(typeof(LuaCSFunction))]
@@ -197,7 +200,7 @@ public class QualitySettingsWrap
 	[MonoPInvokeCallbackAttribute(typeof(LuaCSFunction))]
 	static int set_shadowProjection(IntPtr L)
 	{
-		QualitySettings.shadowProjection = LuaScriptMgr.GetNetObject<ShadowProjection>(L, 3);
+		QualitySettings.shadowProjection = (ShadowProjection)LuaScriptMgr.GetNetObject(L, 3, typeof(ShadowProjection));
 		return 0;
 	}
 
@@ -225,7 +228,7 @@ public class QualitySettingsWrap
 	[MonoPInvokeCallbackAttribute(typeof(LuaCSFunction))]
 	static int set_anisotropicFiltering(IntPtr L)
 	{
-		QualitySettings.anisotropicFiltering = LuaScriptMgr.GetNetObject<AnisotropicFiltering>(L, 3);
+		QualitySettings.anisotropicFiltering = (AnisotropicFiltering)LuaScriptMgr.GetNetObject(L, 3, typeof(AnisotropicFiltering));
 		return 0;
 	}
 
@@ -281,7 +284,7 @@ public class QualitySettingsWrap
 	[MonoPInvokeCallbackAttribute(typeof(LuaCSFunction))]
 	static int set_blendWeights(IntPtr L)
 	{
-		QualitySettings.blendWeights = LuaScriptMgr.GetNetObject<BlendWeights>(L, 3);
+		QualitySettings.blendWeights = (BlendWeights)LuaScriptMgr.GetNetObject(L, 3, typeof(BlendWeights));
 		return 0;
 	}
 
@@ -369,8 +372,8 @@ public class QualitySettingsWrap
 	static int Lua_Eq(IntPtr L)
 	{
 		LuaScriptMgr.CheckArgsCount(L, 2);
-		Object arg0 = LuaScriptMgr.GetVarObject(L, 1) as Object;
-		Object arg1 = LuaScriptMgr.GetVarObject(L, 2) as Object;
+		Object arg0 = LuaScriptMgr.GetLuaObject(L, 1) as Object;
+		Object arg1 = LuaScriptMgr.GetLuaObject(L, 2) as Object;
 		bool o = arg0 == arg1;
 		LuaScriptMgr.Push(L, o);
 		return 1;

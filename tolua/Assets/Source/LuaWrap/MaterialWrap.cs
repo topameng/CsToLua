@@ -56,14 +56,14 @@ public class MaterialWrap
 
 		if (count == 1 && LuaScriptMgr.CheckTypes(L, 1, typeof(Material)))
 		{
-			Material arg0 = LuaScriptMgr.GetUnityObject<Material>(L, 1);
+			Material arg0 = (Material)LuaScriptMgr.GetUnityObject(L, 1, typeof(Material));
 			Material obj = new Material(arg0);
 			LuaScriptMgr.Push(L, obj);
 			return 1;
 		}
 		else if (count == 1 && LuaScriptMgr.CheckTypes(L, 1, typeof(Shader)))
 		{
-			Shader arg0 = LuaScriptMgr.GetUnityObject<Shader>(L, 1);
+			Shader arg0 = (Shader)LuaScriptMgr.GetUnityObject(L, 1, typeof(Shader));
 			Material obj = new Material(arg0);
 			LuaScriptMgr.Push(L, obj);
 			return 1;
@@ -83,16 +83,19 @@ public class MaterialWrap
 		return 0;
 	}
 
+	static Type classType = typeof(Material);
+
 	[MonoPInvokeCallbackAttribute(typeof(LuaCSFunction))]
 	static int GetClassType(IntPtr L)
 	{
-		LuaScriptMgr.Push(L, typeof(Material));
+		LuaScriptMgr.Push(L, classType);
+
 		return 1;
 	}
 
 	public static void Register(IntPtr L)
 	{
-		LuaScriptMgr.RegisterLib(L, "UnityEngine.Material", typeof(Material), regs, fields, typeof(UnityEngine.Object));
+		LuaScriptMgr.RegisterLib(L, "UnityEngine.Material", typeof(Material), regs, fields, typeof(Object));
 	}
 
 	[MonoPInvokeCallbackAttribute(typeof(LuaCSFunction))]
@@ -307,7 +310,7 @@ public class MaterialWrap
 			}
 		}
 
-		obj.shader = LuaScriptMgr.GetUnityObject<Shader>(L, 3);
+		obj.shader = (Shader)LuaScriptMgr.GetUnityObject(L, 3, typeof(Shader));
 		return 0;
 	}
 
@@ -355,7 +358,7 @@ public class MaterialWrap
 			}
 		}
 
-		obj.mainTexture = LuaScriptMgr.GetUnityObject<Texture>(L, 3);
+		obj.mainTexture = (Texture)LuaScriptMgr.GetUnityObject(L, 3, typeof(Texture));
 		return 0;
 	}
 
@@ -451,7 +454,7 @@ public class MaterialWrap
 			}
 		}
 
-		obj.shaderKeywords = LuaScriptMgr.GetNetObject<String[]>(L, 3);
+		obj.shaderKeywords = (String[])LuaScriptMgr.GetNetObject(L, 3, typeof(String[]));
 		return 0;
 	}
 
@@ -462,7 +465,7 @@ public class MaterialWrap
 
 		if (count == 3 && LuaScriptMgr.CheckTypes(L, 1, typeof(Material), typeof(int), typeof(LuaTable)))
 		{
-			Material obj = LuaScriptMgr.GetUnityObject<Material>(L, 1);
+			Material obj = (Material)LuaScriptMgr.GetUnityObject(L, 1, typeof(Material));
 			int arg0 = (int)LuaScriptMgr.GetNumber(L, 2);
 			Color arg1 = LuaScriptMgr.GetColor(L, 3);
 			obj.SetColor(arg0,arg1);
@@ -470,7 +473,7 @@ public class MaterialWrap
 		}
 		else if (count == 3 && LuaScriptMgr.CheckTypes(L, 1, typeof(Material), typeof(string), typeof(LuaTable)))
 		{
-			Material obj = LuaScriptMgr.GetUnityObject<Material>(L, 1);
+			Material obj = (Material)LuaScriptMgr.GetUnityObject(L, 1, typeof(Material));
 			string arg0 = LuaScriptMgr.GetString(L, 2);
 			Color arg1 = LuaScriptMgr.GetColor(L, 3);
 			obj.SetColor(arg0,arg1);
@@ -491,7 +494,7 @@ public class MaterialWrap
 
 		if (count == 2 && LuaScriptMgr.CheckTypes(L, 1, typeof(Material), typeof(int)))
 		{
-			Material obj = LuaScriptMgr.GetUnityObject<Material>(L, 1);
+			Material obj = (Material)LuaScriptMgr.GetUnityObject(L, 1, typeof(Material));
 			int arg0 = (int)LuaScriptMgr.GetNumber(L, 2);
 			Color o = obj.GetColor(arg0);
 			LuaScriptMgr.Push(L, o);
@@ -499,7 +502,7 @@ public class MaterialWrap
 		}
 		else if (count == 2 && LuaScriptMgr.CheckTypes(L, 1, typeof(Material), typeof(string)))
 		{
-			Material obj = LuaScriptMgr.GetUnityObject<Material>(L, 1);
+			Material obj = (Material)LuaScriptMgr.GetUnityObject(L, 1, typeof(Material));
 			string arg0 = LuaScriptMgr.GetString(L, 2);
 			Color o = obj.GetColor(arg0);
 			LuaScriptMgr.Push(L, o);
@@ -520,7 +523,7 @@ public class MaterialWrap
 
 		if (count == 3 && LuaScriptMgr.CheckTypes(L, 1, typeof(Material), typeof(int), typeof(LuaTable)))
 		{
-			Material obj = LuaScriptMgr.GetUnityObject<Material>(L, 1);
+			Material obj = (Material)LuaScriptMgr.GetUnityObject(L, 1, typeof(Material));
 			int arg0 = (int)LuaScriptMgr.GetNumber(L, 2);
 			Vector4 arg1 = LuaScriptMgr.GetVector4(L, 3);
 			obj.SetVector(arg0,arg1);
@@ -528,7 +531,7 @@ public class MaterialWrap
 		}
 		else if (count == 3 && LuaScriptMgr.CheckTypes(L, 1, typeof(Material), typeof(string), typeof(LuaTable)))
 		{
-			Material obj = LuaScriptMgr.GetUnityObject<Material>(L, 1);
+			Material obj = (Material)LuaScriptMgr.GetUnityObject(L, 1, typeof(Material));
 			string arg0 = LuaScriptMgr.GetString(L, 2);
 			Vector4 arg1 = LuaScriptMgr.GetVector4(L, 3);
 			obj.SetVector(arg0,arg1);
@@ -549,7 +552,7 @@ public class MaterialWrap
 
 		if (count == 2 && LuaScriptMgr.CheckTypes(L, 1, typeof(Material), typeof(int)))
 		{
-			Material obj = LuaScriptMgr.GetUnityObject<Material>(L, 1);
+			Material obj = (Material)LuaScriptMgr.GetUnityObject(L, 1, typeof(Material));
 			int arg0 = (int)LuaScriptMgr.GetNumber(L, 2);
 			Vector4 o = obj.GetVector(arg0);
 			LuaScriptMgr.Push(L, o);
@@ -557,7 +560,7 @@ public class MaterialWrap
 		}
 		else if (count == 2 && LuaScriptMgr.CheckTypes(L, 1, typeof(Material), typeof(string)))
 		{
-			Material obj = LuaScriptMgr.GetUnityObject<Material>(L, 1);
+			Material obj = (Material)LuaScriptMgr.GetUnityObject(L, 1, typeof(Material));
 			string arg0 = LuaScriptMgr.GetString(L, 2);
 			Vector4 o = obj.GetVector(arg0);
 			LuaScriptMgr.Push(L, o);
@@ -578,17 +581,17 @@ public class MaterialWrap
 
 		if (count == 3 && LuaScriptMgr.CheckTypes(L, 1, typeof(Material), typeof(int), typeof(Texture)))
 		{
-			Material obj = LuaScriptMgr.GetUnityObject<Material>(L, 1);
+			Material obj = (Material)LuaScriptMgr.GetUnityObject(L, 1, typeof(Material));
 			int arg0 = (int)LuaScriptMgr.GetNumber(L, 2);
-			Texture arg1 = LuaScriptMgr.GetUnityObject<Texture>(L, 3);
+			Texture arg1 = (Texture)LuaScriptMgr.GetUnityObject(L, 3, typeof(Texture));
 			obj.SetTexture(arg0,arg1);
 			return 0;
 		}
 		else if (count == 3 && LuaScriptMgr.CheckTypes(L, 1, typeof(Material), typeof(string), typeof(Texture)))
 		{
-			Material obj = LuaScriptMgr.GetUnityObject<Material>(L, 1);
+			Material obj = (Material)LuaScriptMgr.GetUnityObject(L, 1, typeof(Material));
 			string arg0 = LuaScriptMgr.GetString(L, 2);
-			Texture arg1 = LuaScriptMgr.GetUnityObject<Texture>(L, 3);
+			Texture arg1 = (Texture)LuaScriptMgr.GetUnityObject(L, 3, typeof(Texture));
 			obj.SetTexture(arg0,arg1);
 			return 0;
 		}
@@ -607,7 +610,7 @@ public class MaterialWrap
 
 		if (count == 2 && LuaScriptMgr.CheckTypes(L, 1, typeof(Material), typeof(int)))
 		{
-			Material obj = LuaScriptMgr.GetUnityObject<Material>(L, 1);
+			Material obj = (Material)LuaScriptMgr.GetUnityObject(L, 1, typeof(Material));
 			int arg0 = (int)LuaScriptMgr.GetNumber(L, 2);
 			Texture o = obj.GetTexture(arg0);
 			LuaScriptMgr.Push(L, o);
@@ -615,7 +618,7 @@ public class MaterialWrap
 		}
 		else if (count == 2 && LuaScriptMgr.CheckTypes(L, 1, typeof(Material), typeof(string)))
 		{
-			Material obj = LuaScriptMgr.GetUnityObject<Material>(L, 1);
+			Material obj = (Material)LuaScriptMgr.GetUnityObject(L, 1, typeof(Material));
 			string arg0 = LuaScriptMgr.GetString(L, 2);
 			Texture o = obj.GetTexture(arg0);
 			LuaScriptMgr.Push(L, o);
@@ -633,7 +636,7 @@ public class MaterialWrap
 	static int SetTextureOffset(IntPtr L)
 	{
 		LuaScriptMgr.CheckArgsCount(L, 3);
-		Material obj = LuaScriptMgr.GetUnityObject<Material>(L, 1);
+		Material obj = (Material)LuaScriptMgr.GetUnityObject(L, 1, typeof(Material));
 		string arg0 = LuaScriptMgr.GetLuaString(L, 2);
 		Vector2 arg1 = LuaScriptMgr.GetVector2(L, 3);
 		obj.SetTextureOffset(arg0,arg1);
@@ -644,7 +647,7 @@ public class MaterialWrap
 	static int GetTextureOffset(IntPtr L)
 	{
 		LuaScriptMgr.CheckArgsCount(L, 2);
-		Material obj = LuaScriptMgr.GetUnityObject<Material>(L, 1);
+		Material obj = (Material)LuaScriptMgr.GetUnityObject(L, 1, typeof(Material));
 		string arg0 = LuaScriptMgr.GetLuaString(L, 2);
 		Vector2 o = obj.GetTextureOffset(arg0);
 		LuaScriptMgr.Push(L, o);
@@ -655,7 +658,7 @@ public class MaterialWrap
 	static int SetTextureScale(IntPtr L)
 	{
 		LuaScriptMgr.CheckArgsCount(L, 3);
-		Material obj = LuaScriptMgr.GetUnityObject<Material>(L, 1);
+		Material obj = (Material)LuaScriptMgr.GetUnityObject(L, 1, typeof(Material));
 		string arg0 = LuaScriptMgr.GetLuaString(L, 2);
 		Vector2 arg1 = LuaScriptMgr.GetVector2(L, 3);
 		obj.SetTextureScale(arg0,arg1);
@@ -666,7 +669,7 @@ public class MaterialWrap
 	static int GetTextureScale(IntPtr L)
 	{
 		LuaScriptMgr.CheckArgsCount(L, 2);
-		Material obj = LuaScriptMgr.GetUnityObject<Material>(L, 1);
+		Material obj = (Material)LuaScriptMgr.GetUnityObject(L, 1, typeof(Material));
 		string arg0 = LuaScriptMgr.GetLuaString(L, 2);
 		Vector2 o = obj.GetTextureScale(arg0);
 		LuaScriptMgr.Push(L, o);
@@ -680,17 +683,17 @@ public class MaterialWrap
 
 		if (count == 3 && LuaScriptMgr.CheckTypes(L, 1, typeof(Material), typeof(int), typeof(Matrix4x4)))
 		{
-			Material obj = LuaScriptMgr.GetUnityObject<Material>(L, 1);
+			Material obj = (Material)LuaScriptMgr.GetUnityObject(L, 1, typeof(Material));
 			int arg0 = (int)LuaScriptMgr.GetNumber(L, 2);
-			Matrix4x4 arg1 = LuaScriptMgr.GetNetObject<Matrix4x4>(L, 3);
+			Matrix4x4 arg1 = (Matrix4x4)LuaScriptMgr.GetNetObject(L, 3, typeof(Matrix4x4));
 			obj.SetMatrix(arg0,arg1);
 			return 0;
 		}
 		else if (count == 3 && LuaScriptMgr.CheckTypes(L, 1, typeof(Material), typeof(string), typeof(Matrix4x4)))
 		{
-			Material obj = LuaScriptMgr.GetUnityObject<Material>(L, 1);
+			Material obj = (Material)LuaScriptMgr.GetUnityObject(L, 1, typeof(Material));
 			string arg0 = LuaScriptMgr.GetString(L, 2);
-			Matrix4x4 arg1 = LuaScriptMgr.GetNetObject<Matrix4x4>(L, 3);
+			Matrix4x4 arg1 = (Matrix4x4)LuaScriptMgr.GetNetObject(L, 3, typeof(Matrix4x4));
 			obj.SetMatrix(arg0,arg1);
 			return 0;
 		}
@@ -709,7 +712,7 @@ public class MaterialWrap
 
 		if (count == 2 && LuaScriptMgr.CheckTypes(L, 1, typeof(Material), typeof(int)))
 		{
-			Material obj = LuaScriptMgr.GetUnityObject<Material>(L, 1);
+			Material obj = (Material)LuaScriptMgr.GetUnityObject(L, 1, typeof(Material));
 			int arg0 = (int)LuaScriptMgr.GetNumber(L, 2);
 			Matrix4x4 o = obj.GetMatrix(arg0);
 			LuaScriptMgr.PushValue(L, o);
@@ -717,7 +720,7 @@ public class MaterialWrap
 		}
 		else if (count == 2 && LuaScriptMgr.CheckTypes(L, 1, typeof(Material), typeof(string)))
 		{
-			Material obj = LuaScriptMgr.GetUnityObject<Material>(L, 1);
+			Material obj = (Material)LuaScriptMgr.GetUnityObject(L, 1, typeof(Material));
 			string arg0 = LuaScriptMgr.GetString(L, 2);
 			Matrix4x4 o = obj.GetMatrix(arg0);
 			LuaScriptMgr.PushValue(L, o);
@@ -738,7 +741,7 @@ public class MaterialWrap
 
 		if (count == 3 && LuaScriptMgr.CheckTypes(L, 1, typeof(Material), typeof(int), typeof(float)))
 		{
-			Material obj = LuaScriptMgr.GetUnityObject<Material>(L, 1);
+			Material obj = (Material)LuaScriptMgr.GetUnityObject(L, 1, typeof(Material));
 			int arg0 = (int)LuaScriptMgr.GetNumber(L, 2);
 			float arg1 = (float)LuaScriptMgr.GetNumber(L, 3);
 			obj.SetFloat(arg0,arg1);
@@ -746,7 +749,7 @@ public class MaterialWrap
 		}
 		else if (count == 3 && LuaScriptMgr.CheckTypes(L, 1, typeof(Material), typeof(string), typeof(float)))
 		{
-			Material obj = LuaScriptMgr.GetUnityObject<Material>(L, 1);
+			Material obj = (Material)LuaScriptMgr.GetUnityObject(L, 1, typeof(Material));
 			string arg0 = LuaScriptMgr.GetString(L, 2);
 			float arg1 = (float)LuaScriptMgr.GetNumber(L, 3);
 			obj.SetFloat(arg0,arg1);
@@ -767,7 +770,7 @@ public class MaterialWrap
 
 		if (count == 2 && LuaScriptMgr.CheckTypes(L, 1, typeof(Material), typeof(int)))
 		{
-			Material obj = LuaScriptMgr.GetUnityObject<Material>(L, 1);
+			Material obj = (Material)LuaScriptMgr.GetUnityObject(L, 1, typeof(Material));
 			int arg0 = (int)LuaScriptMgr.GetNumber(L, 2);
 			float o = obj.GetFloat(arg0);
 			LuaScriptMgr.Push(L, o);
@@ -775,7 +778,7 @@ public class MaterialWrap
 		}
 		else if (count == 2 && LuaScriptMgr.CheckTypes(L, 1, typeof(Material), typeof(string)))
 		{
-			Material obj = LuaScriptMgr.GetUnityObject<Material>(L, 1);
+			Material obj = (Material)LuaScriptMgr.GetUnityObject(L, 1, typeof(Material));
 			string arg0 = LuaScriptMgr.GetString(L, 2);
 			float o = obj.GetFloat(arg0);
 			LuaScriptMgr.Push(L, o);
@@ -796,7 +799,7 @@ public class MaterialWrap
 
 		if (count == 3 && LuaScriptMgr.CheckTypes(L, 1, typeof(Material), typeof(int), typeof(int)))
 		{
-			Material obj = LuaScriptMgr.GetUnityObject<Material>(L, 1);
+			Material obj = (Material)LuaScriptMgr.GetUnityObject(L, 1, typeof(Material));
 			int arg0 = (int)LuaScriptMgr.GetNumber(L, 2);
 			int arg1 = (int)LuaScriptMgr.GetNumber(L, 3);
 			obj.SetInt(arg0,arg1);
@@ -804,7 +807,7 @@ public class MaterialWrap
 		}
 		else if (count == 3 && LuaScriptMgr.CheckTypes(L, 1, typeof(Material), typeof(string), typeof(int)))
 		{
-			Material obj = LuaScriptMgr.GetUnityObject<Material>(L, 1);
+			Material obj = (Material)LuaScriptMgr.GetUnityObject(L, 1, typeof(Material));
 			string arg0 = LuaScriptMgr.GetString(L, 2);
 			int arg1 = (int)LuaScriptMgr.GetNumber(L, 3);
 			obj.SetInt(arg0,arg1);
@@ -825,7 +828,7 @@ public class MaterialWrap
 
 		if (count == 2 && LuaScriptMgr.CheckTypes(L, 1, typeof(Material), typeof(int)))
 		{
-			Material obj = LuaScriptMgr.GetUnityObject<Material>(L, 1);
+			Material obj = (Material)LuaScriptMgr.GetUnityObject(L, 1, typeof(Material));
 			int arg0 = (int)LuaScriptMgr.GetNumber(L, 2);
 			int o = obj.GetInt(arg0);
 			LuaScriptMgr.Push(L, o);
@@ -833,7 +836,7 @@ public class MaterialWrap
 		}
 		else if (count == 2 && LuaScriptMgr.CheckTypes(L, 1, typeof(Material), typeof(string)))
 		{
-			Material obj = LuaScriptMgr.GetUnityObject<Material>(L, 1);
+			Material obj = (Material)LuaScriptMgr.GetUnityObject(L, 1, typeof(Material));
 			string arg0 = LuaScriptMgr.GetString(L, 2);
 			int o = obj.GetInt(arg0);
 			LuaScriptMgr.Push(L, o);
@@ -851,9 +854,9 @@ public class MaterialWrap
 	static int SetBuffer(IntPtr L)
 	{
 		LuaScriptMgr.CheckArgsCount(L, 3);
-		Material obj = LuaScriptMgr.GetUnityObject<Material>(L, 1);
+		Material obj = (Material)LuaScriptMgr.GetUnityObject(L, 1, typeof(Material));
 		string arg0 = LuaScriptMgr.GetLuaString(L, 2);
-		ComputeBuffer arg1 = LuaScriptMgr.GetNetObject<ComputeBuffer>(L, 3);
+		ComputeBuffer arg1 = (ComputeBuffer)LuaScriptMgr.GetNetObject(L, 3, typeof(ComputeBuffer));
 		obj.SetBuffer(arg0,arg1);
 		return 0;
 	}
@@ -865,7 +868,7 @@ public class MaterialWrap
 
 		if (count == 2 && LuaScriptMgr.CheckTypes(L, 1, typeof(Material), typeof(int)))
 		{
-			Material obj = LuaScriptMgr.GetUnityObject<Material>(L, 1);
+			Material obj = (Material)LuaScriptMgr.GetUnityObject(L, 1, typeof(Material));
 			int arg0 = (int)LuaScriptMgr.GetNumber(L, 2);
 			bool o = obj.HasProperty(arg0);
 			LuaScriptMgr.Push(L, o);
@@ -873,7 +876,7 @@ public class MaterialWrap
 		}
 		else if (count == 2 && LuaScriptMgr.CheckTypes(L, 1, typeof(Material), typeof(string)))
 		{
-			Material obj = LuaScriptMgr.GetUnityObject<Material>(L, 1);
+			Material obj = (Material)LuaScriptMgr.GetUnityObject(L, 1, typeof(Material));
 			string arg0 = LuaScriptMgr.GetString(L, 2);
 			bool o = obj.HasProperty(arg0);
 			LuaScriptMgr.Push(L, o);
@@ -893,7 +896,7 @@ public class MaterialWrap
 		int count = LuaDLL.lua_gettop(L);
 		if (count == 3)
 		{
-			Material obj = LuaScriptMgr.GetUnityObject<Material>(L, 1);
+			Material obj = (Material)LuaScriptMgr.GetUnityObject(L, 1, typeof(Material));
 			string arg0 = LuaScriptMgr.GetLuaString(L, 2);
 			bool arg1 = LuaScriptMgr.GetBoolean(L, 3);
 			string o = obj.GetTag(arg0,arg1);
@@ -902,7 +905,7 @@ public class MaterialWrap
 		}
 		else if (count == 4)
 		{
-			Material obj = LuaScriptMgr.GetUnityObject<Material>(L, 1);
+			Material obj = (Material)LuaScriptMgr.GetUnityObject(L, 1, typeof(Material));
 			string arg0 = LuaScriptMgr.GetLuaString(L, 2);
 			bool arg1 = LuaScriptMgr.GetBoolean(L, 3);
 			string arg2 = LuaScriptMgr.GetLuaString(L, 4);
@@ -922,9 +925,9 @@ public class MaterialWrap
 	static int Lerp(IntPtr L)
 	{
 		LuaScriptMgr.CheckArgsCount(L, 4);
-		Material obj = LuaScriptMgr.GetUnityObject<Material>(L, 1);
-		Material arg0 = LuaScriptMgr.GetUnityObject<Material>(L, 2);
-		Material arg1 = LuaScriptMgr.GetUnityObject<Material>(L, 3);
+		Material obj = (Material)LuaScriptMgr.GetUnityObject(L, 1, typeof(Material));
+		Material arg0 = (Material)LuaScriptMgr.GetUnityObject(L, 2, typeof(Material));
+		Material arg1 = (Material)LuaScriptMgr.GetUnityObject(L, 3, typeof(Material));
 		float arg2 = (float)LuaScriptMgr.GetNumber(L, 4);
 		obj.Lerp(arg0,arg1,arg2);
 		return 0;
@@ -934,7 +937,7 @@ public class MaterialWrap
 	static int SetPass(IntPtr L)
 	{
 		LuaScriptMgr.CheckArgsCount(L, 2);
-		Material obj = LuaScriptMgr.GetUnityObject<Material>(L, 1);
+		Material obj = (Material)LuaScriptMgr.GetUnityObject(L, 1, typeof(Material));
 		int arg0 = (int)LuaScriptMgr.GetNumber(L, 2);
 		bool o = obj.SetPass(arg0);
 		LuaScriptMgr.Push(L, o);
@@ -945,8 +948,8 @@ public class MaterialWrap
 	static int CopyPropertiesFromMaterial(IntPtr L)
 	{
 		LuaScriptMgr.CheckArgsCount(L, 2);
-		Material obj = LuaScriptMgr.GetUnityObject<Material>(L, 1);
-		Material arg0 = LuaScriptMgr.GetUnityObject<Material>(L, 2);
+		Material obj = (Material)LuaScriptMgr.GetUnityObject(L, 1, typeof(Material));
+		Material arg0 = (Material)LuaScriptMgr.GetUnityObject(L, 2, typeof(Material));
 		obj.CopyPropertiesFromMaterial(arg0);
 		return 0;
 	}
@@ -955,7 +958,7 @@ public class MaterialWrap
 	static int EnableKeyword(IntPtr L)
 	{
 		LuaScriptMgr.CheckArgsCount(L, 2);
-		Material obj = LuaScriptMgr.GetUnityObject<Material>(L, 1);
+		Material obj = (Material)LuaScriptMgr.GetUnityObject(L, 1, typeof(Material));
 		string arg0 = LuaScriptMgr.GetLuaString(L, 2);
 		obj.EnableKeyword(arg0);
 		return 0;
@@ -965,7 +968,7 @@ public class MaterialWrap
 	static int DisableKeyword(IntPtr L)
 	{
 		LuaScriptMgr.CheckArgsCount(L, 2);
-		Material obj = LuaScriptMgr.GetUnityObject<Material>(L, 1);
+		Material obj = (Material)LuaScriptMgr.GetUnityObject(L, 1, typeof(Material));
 		string arg0 = LuaScriptMgr.GetLuaString(L, 2);
 		obj.DisableKeyword(arg0);
 		return 0;
@@ -975,8 +978,8 @@ public class MaterialWrap
 	static int Lua_Eq(IntPtr L)
 	{
 		LuaScriptMgr.CheckArgsCount(L, 2);
-		Object arg0 = LuaScriptMgr.GetVarObject(L, 1) as Object;
-		Object arg1 = LuaScriptMgr.GetVarObject(L, 2) as Object;
+		Object arg0 = LuaScriptMgr.GetLuaObject(L, 1) as Object;
+		Object arg1 = LuaScriptMgr.GetLuaObject(L, 2) as Object;
 		bool o = arg0 == arg1;
 		LuaScriptMgr.Push(L, o);
 		return 1;

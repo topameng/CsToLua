@@ -47,16 +47,19 @@ public class TimeWrap
 		return 0;
 	}
 
+	static Type classType = typeof(Time);
+
 	[MonoPInvokeCallbackAttribute(typeof(LuaCSFunction))]
 	static int GetClassType(IntPtr L)
 	{
-		LuaScriptMgr.Push(L, typeof(Time));
+		LuaScriptMgr.Push(L, classType);
+
 		return 1;
 	}
 
 	public static void Register(IntPtr L)
 	{
-		LuaScriptMgr.RegisterLib(L, "UnityEngine.Time", typeof(Time), regs, fields, typeof(System.Object));
+		LuaScriptMgr.RegisterLib(L, "UnityEngine.Time", typeof(Time), regs, fields, typeof(object));
 	}
 
 	[MonoPInvokeCallbackAttribute(typeof(LuaCSFunction))]

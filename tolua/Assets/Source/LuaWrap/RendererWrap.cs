@@ -57,16 +57,19 @@ public class RendererWrap
 		return 0;
 	}
 
+	static Type classType = typeof(Renderer);
+
 	[MonoPInvokeCallbackAttribute(typeof(LuaCSFunction))]
 	static int GetClassType(IntPtr L)
 	{
-		LuaScriptMgr.Push(L, typeof(Renderer));
+		LuaScriptMgr.Push(L, classType);
+
 		return 1;
 	}
 
 	public static void Register(IntPtr L)
 	{
-		LuaScriptMgr.RegisterLib(L, "UnityEngine.Renderer", typeof(Renderer), regs, fields, typeof(UnityEngine.Component));
+		LuaScriptMgr.RegisterLib(L, "UnityEngine.Renderer", typeof(Renderer), regs, fields, typeof(Component));
 	}
 
 	[MonoPInvokeCallbackAttribute(typeof(LuaCSFunction))]
@@ -329,7 +332,7 @@ public class RendererWrap
 			}
 		}
 
-		LuaScriptMgr.PushValue(L, obj.bounds);
+		LuaScriptMgr.Push(L, obj.bounds);
 		return 1;
 	}
 
@@ -617,7 +620,7 @@ public class RendererWrap
 			}
 		}
 
-		obj.material = LuaScriptMgr.GetUnityObject<Material>(L, 3);
+		obj.material = (Material)LuaScriptMgr.GetUnityObject(L, 3, typeof(Material));
 		return 0;
 	}
 
@@ -641,7 +644,7 @@ public class RendererWrap
 			}
 		}
 
-		obj.sharedMaterial = LuaScriptMgr.GetUnityObject<Material>(L, 3);
+		obj.sharedMaterial = (Material)LuaScriptMgr.GetUnityObject(L, 3, typeof(Material));
 		return 0;
 	}
 
@@ -665,7 +668,7 @@ public class RendererWrap
 			}
 		}
 
-		obj.sharedMaterials = LuaScriptMgr.GetNetObject<Material[]>(L, 3);
+		obj.sharedMaterials = (Material[])LuaScriptMgr.GetNetObject(L, 3, typeof(Material[]));
 		return 0;
 	}
 
@@ -689,7 +692,7 @@ public class RendererWrap
 			}
 		}
 
-		obj.materials = LuaScriptMgr.GetNetObject<Material[]>(L, 3);
+		obj.materials = (Material[])LuaScriptMgr.GetNetObject(L, 3, typeof(Material[]));
 		return 0;
 	}
 
@@ -785,7 +788,7 @@ public class RendererWrap
 			}
 		}
 
-		obj.lightProbeAnchor = LuaScriptMgr.GetUnityObject<Transform>(L, 3);
+		obj.lightProbeAnchor = (Transform)LuaScriptMgr.GetUnityObject(L, 3, typeof(Transform));
 		return 0;
 	}
 
@@ -865,8 +868,8 @@ public class RendererWrap
 	static int SetPropertyBlock(IntPtr L)
 	{
 		LuaScriptMgr.CheckArgsCount(L, 2);
-		Renderer obj = LuaScriptMgr.GetUnityObject<Renderer>(L, 1);
-		MaterialPropertyBlock arg0 = LuaScriptMgr.GetNetObject<MaterialPropertyBlock>(L, 2);
+		Renderer obj = (Renderer)LuaScriptMgr.GetUnityObject(L, 1, typeof(Renderer));
+		MaterialPropertyBlock arg0 = (MaterialPropertyBlock)LuaScriptMgr.GetNetObject(L, 2, typeof(MaterialPropertyBlock));
 		obj.SetPropertyBlock(arg0);
 		return 0;
 	}
@@ -875,8 +878,8 @@ public class RendererWrap
 	static int GetPropertyBlock(IntPtr L)
 	{
 		LuaScriptMgr.CheckArgsCount(L, 2);
-		Renderer obj = LuaScriptMgr.GetUnityObject<Renderer>(L, 1);
-		MaterialPropertyBlock arg0 = LuaScriptMgr.GetNetObject<MaterialPropertyBlock>(L, 2);
+		Renderer obj = (Renderer)LuaScriptMgr.GetUnityObject(L, 1, typeof(Renderer));
+		MaterialPropertyBlock arg0 = (MaterialPropertyBlock)LuaScriptMgr.GetNetObject(L, 2, typeof(MaterialPropertyBlock));
 		obj.GetPropertyBlock(arg0);
 		return 0;
 	}
@@ -885,7 +888,7 @@ public class RendererWrap
 	static int Render(IntPtr L)
 	{
 		LuaScriptMgr.CheckArgsCount(L, 2);
-		Renderer obj = LuaScriptMgr.GetUnityObject<Renderer>(L, 1);
+		Renderer obj = (Renderer)LuaScriptMgr.GetUnityObject(L, 1, typeof(Renderer));
 		int arg0 = (int)LuaScriptMgr.GetNumber(L, 2);
 		obj.Render(arg0);
 		return 0;
@@ -895,8 +898,8 @@ public class RendererWrap
 	static int Lua_Eq(IntPtr L)
 	{
 		LuaScriptMgr.CheckArgsCount(L, 2);
-		Object arg0 = LuaScriptMgr.GetVarObject(L, 1) as Object;
-		Object arg1 = LuaScriptMgr.GetVarObject(L, 2) as Object;
+		Object arg0 = LuaScriptMgr.GetLuaObject(L, 1) as Object;
+		Object arg1 = LuaScriptMgr.GetLuaObject(L, 2) as Object;
 		bool o = arg0 == arg1;
 		LuaScriptMgr.Push(L, o);
 		return 1;

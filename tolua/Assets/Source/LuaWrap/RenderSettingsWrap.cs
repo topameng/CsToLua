@@ -46,16 +46,19 @@ public class RenderSettingsWrap
 		return 0;
 	}
 
+	static Type classType = typeof(RenderSettings);
+
 	[MonoPInvokeCallbackAttribute(typeof(LuaCSFunction))]
 	static int GetClassType(IntPtr L)
 	{
-		LuaScriptMgr.Push(L, typeof(RenderSettings));
+		LuaScriptMgr.Push(L, classType);
+
 		return 1;
 	}
 
 	public static void Register(IntPtr L)
 	{
-		LuaScriptMgr.RegisterLib(L, "UnityEngine.RenderSettings", typeof(RenderSettings), regs, fields, typeof(UnityEngine.Object));
+		LuaScriptMgr.RegisterLib(L, "UnityEngine.RenderSettings", typeof(RenderSettings), regs, fields, typeof(Object));
 	}
 
 	[MonoPInvokeCallbackAttribute(typeof(LuaCSFunction))]
@@ -145,7 +148,7 @@ public class RenderSettingsWrap
 	[MonoPInvokeCallbackAttribute(typeof(LuaCSFunction))]
 	static int set_fogMode(IntPtr L)
 	{
-		RenderSettings.fogMode = LuaScriptMgr.GetNetObject<FogMode>(L, 3);
+		RenderSettings.fogMode = (FogMode)LuaScriptMgr.GetNetObject(L, 3, typeof(FogMode));
 		return 0;
 	}
 
@@ -208,7 +211,7 @@ public class RenderSettingsWrap
 	[MonoPInvokeCallbackAttribute(typeof(LuaCSFunction))]
 	static int set_skybox(IntPtr L)
 	{
-		RenderSettings.skybox = LuaScriptMgr.GetUnityObject<Material>(L, 3);
+		RenderSettings.skybox = (Material)LuaScriptMgr.GetUnityObject(L, 3, typeof(Material));
 		return 0;
 	}
 
@@ -216,8 +219,8 @@ public class RenderSettingsWrap
 	static int Lua_Eq(IntPtr L)
 	{
 		LuaScriptMgr.CheckArgsCount(L, 2);
-		Object arg0 = LuaScriptMgr.GetVarObject(L, 1) as Object;
-		Object arg1 = LuaScriptMgr.GetVarObject(L, 2) as Object;
+		Object arg0 = LuaScriptMgr.GetLuaObject(L, 1) as Object;
+		Object arg1 = LuaScriptMgr.GetLuaObject(L, 2) as Object;
 		bool o = arg0 == arg1;
 		LuaScriptMgr.Push(L, o);
 		return 1;

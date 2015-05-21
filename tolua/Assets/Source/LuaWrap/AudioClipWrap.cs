@@ -43,16 +43,19 @@ public class AudioClipWrap
 		return 0;
 	}
 
+	static Type classType = typeof(AudioClip);
+
 	[MonoPInvokeCallbackAttribute(typeof(LuaCSFunction))]
 	static int GetClassType(IntPtr L)
 	{
-		LuaScriptMgr.Push(L, typeof(AudioClip));
+		LuaScriptMgr.Push(L, classType);
+
 		return 1;
 	}
 
 	public static void Register(IntPtr L)
 	{
-		LuaScriptMgr.RegisterLib(L, "UnityEngine.AudioClip", typeof(AudioClip), regs, fields, typeof(UnityEngine.Object));
+		LuaScriptMgr.RegisterLib(L, "UnityEngine.AudioClip", typeof(AudioClip), regs, fields, typeof(Object));
 	}
 
 	[MonoPInvokeCallbackAttribute(typeof(LuaCSFunction))]
@@ -179,7 +182,7 @@ public class AudioClipWrap
 	static int GetData(IntPtr L)
 	{
 		LuaScriptMgr.CheckArgsCount(L, 3);
-		AudioClip obj = LuaScriptMgr.GetUnityObject<AudioClip>(L, 1);
+		AudioClip obj = (AudioClip)LuaScriptMgr.GetUnityObject(L, 1, typeof(AudioClip));
 		float[] objs0 = LuaScriptMgr.GetArrayNumber<float>(L, 2);
 		int arg1 = (int)LuaScriptMgr.GetNumber(L, 3);
 		obj.GetData(objs0,arg1);
@@ -190,7 +193,7 @@ public class AudioClipWrap
 	static int SetData(IntPtr L)
 	{
 		LuaScriptMgr.CheckArgsCount(L, 3);
-		AudioClip obj = LuaScriptMgr.GetUnityObject<AudioClip>(L, 1);
+		AudioClip obj = (AudioClip)LuaScriptMgr.GetUnityObject(L, 1, typeof(AudioClip));
 		float[] objs0 = LuaScriptMgr.GetArrayNumber<float>(L, 2);
 		int arg1 = (int)LuaScriptMgr.GetNumber(L, 3);
 		obj.SetData(objs0,arg1);
@@ -221,7 +224,7 @@ public class AudioClipWrap
 			int arg3 = (int)LuaScriptMgr.GetNumber(L, 4);
 			bool arg4 = LuaScriptMgr.GetBoolean(L, 5);
 			bool arg5 = LuaScriptMgr.GetBoolean(L, 6);
-			UnityEngine.AudioClip.PCMReaderCallback arg6 = LuaScriptMgr.GetNetObject<UnityEngine.AudioClip.PCMReaderCallback>(L, 7);
+			UnityEngine.AudioClip.PCMReaderCallback arg6 = (UnityEngine.AudioClip.PCMReaderCallback)LuaScriptMgr.GetNetObject(L, 7, typeof(UnityEngine.AudioClip.PCMReaderCallback));
 			AudioClip o = AudioClip.Create(arg0,arg1,arg2,arg3,arg4,arg5,arg6);
 			LuaScriptMgr.Push(L, o);
 			return 1;
@@ -234,8 +237,8 @@ public class AudioClipWrap
 			int arg3 = (int)LuaScriptMgr.GetNumber(L, 4);
 			bool arg4 = LuaScriptMgr.GetBoolean(L, 5);
 			bool arg5 = LuaScriptMgr.GetBoolean(L, 6);
-			UnityEngine.AudioClip.PCMReaderCallback arg6 = LuaScriptMgr.GetNetObject<UnityEngine.AudioClip.PCMReaderCallback>(L, 7);
-			UnityEngine.AudioClip.PCMSetPositionCallback arg7 = LuaScriptMgr.GetNetObject<UnityEngine.AudioClip.PCMSetPositionCallback>(L, 8);
+			UnityEngine.AudioClip.PCMReaderCallback arg6 = (UnityEngine.AudioClip.PCMReaderCallback)LuaScriptMgr.GetNetObject(L, 7, typeof(UnityEngine.AudioClip.PCMReaderCallback));
+			UnityEngine.AudioClip.PCMSetPositionCallback arg7 = (UnityEngine.AudioClip.PCMSetPositionCallback)LuaScriptMgr.GetNetObject(L, 8, typeof(UnityEngine.AudioClip.PCMSetPositionCallback));
 			AudioClip o = AudioClip.Create(arg0,arg1,arg2,arg3,arg4,arg5,arg6,arg7);
 			LuaScriptMgr.Push(L, o);
 			return 1;
@@ -252,8 +255,8 @@ public class AudioClipWrap
 	static int Lua_Eq(IntPtr L)
 	{
 		LuaScriptMgr.CheckArgsCount(L, 2);
-		Object arg0 = LuaScriptMgr.GetVarObject(L, 1) as Object;
-		Object arg1 = LuaScriptMgr.GetVarObject(L, 2) as Object;
+		Object arg0 = LuaScriptMgr.GetLuaObject(L, 1) as Object;
+		Object arg1 = LuaScriptMgr.GetLuaObject(L, 2) as Object;
 		bool o = arg0 == arg1;
 		LuaScriptMgr.Push(L, o);
 		return 1;

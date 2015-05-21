@@ -71,16 +71,19 @@ public class InputWrap
 		return 0;
 	}
 
+	static Type classType = typeof(Input);
+
 	[MonoPInvokeCallbackAttribute(typeof(LuaCSFunction))]
 	static int GetClassType(IntPtr L)
 	{
-		LuaScriptMgr.Push(L, typeof(Input));
+		LuaScriptMgr.Push(L, classType);
+
 		return 1;
 	}
 
 	public static void Register(IntPtr L)
 	{
-		LuaScriptMgr.RegisterLib(L, "UnityEngine.Input", typeof(Input), regs, fields, typeof(System.Object));
+		LuaScriptMgr.RegisterLib(L, "UnityEngine.Input", typeof(Input), regs, fields, typeof(object));
 	}
 
 	[MonoPInvokeCallbackAttribute(typeof(LuaCSFunction))]
@@ -268,7 +271,7 @@ public class InputWrap
 	[MonoPInvokeCallbackAttribute(typeof(LuaCSFunction))]
 	static int set_imeCompositionMode(IntPtr L)
 	{
-		Input.imeCompositionMode = LuaScriptMgr.GetNetObject<IMECompositionMode>(L, 3);
+		Input.imeCompositionMode = (IMECompositionMode)LuaScriptMgr.GetNetObject(L, 3, typeof(IMECompositionMode));
 		return 0;
 	}
 
@@ -336,7 +339,7 @@ public class InputWrap
 
 		if (count == 1 && LuaScriptMgr.CheckTypes(L, 1, typeof(KeyCode)))
 		{
-			KeyCode arg0 = LuaScriptMgr.GetNetObject<KeyCode>(L, 1);
+			KeyCode arg0 = (KeyCode)LuaScriptMgr.GetNetObject(L, 1, typeof(KeyCode));
 			bool o = Input.GetKey(arg0);
 			LuaScriptMgr.Push(L, o);
 			return 1;
@@ -363,7 +366,7 @@ public class InputWrap
 
 		if (count == 1 && LuaScriptMgr.CheckTypes(L, 1, typeof(KeyCode)))
 		{
-			KeyCode arg0 = LuaScriptMgr.GetNetObject<KeyCode>(L, 1);
+			KeyCode arg0 = (KeyCode)LuaScriptMgr.GetNetObject(L, 1, typeof(KeyCode));
 			bool o = Input.GetKeyDown(arg0);
 			LuaScriptMgr.Push(L, o);
 			return 1;
@@ -390,7 +393,7 @@ public class InputWrap
 
 		if (count == 1 && LuaScriptMgr.CheckTypes(L, 1, typeof(KeyCode)))
 		{
-			KeyCode arg0 = LuaScriptMgr.GetNetObject<KeyCode>(L, 1);
+			KeyCode arg0 = (KeyCode)LuaScriptMgr.GetNetObject(L, 1, typeof(KeyCode));
 			bool o = Input.GetKeyUp(arg0);
 			LuaScriptMgr.Push(L, o);
 			return 1;

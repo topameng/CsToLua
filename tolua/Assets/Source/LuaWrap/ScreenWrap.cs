@@ -49,16 +49,19 @@ public class ScreenWrap
 		return 0;
 	}
 
+	static Type classType = typeof(Screen);
+
 	[MonoPInvokeCallbackAttribute(typeof(LuaCSFunction))]
 	static int GetClassType(IntPtr L)
 	{
-		LuaScriptMgr.Push(L, typeof(Screen));
+		LuaScriptMgr.Push(L, classType);
+
 		return 1;
 	}
 
 	public static void Register(IntPtr L)
 	{
-		LuaScriptMgr.RegisterLib(L, "UnityEngine.Screen", typeof(Screen), regs, fields, typeof(System.Object));
+		LuaScriptMgr.RegisterLib(L, "UnityEngine.Screen", typeof(Screen), regs, fields, typeof(object));
 	}
 
 	[MonoPInvokeCallbackAttribute(typeof(LuaCSFunction))]
@@ -218,7 +221,7 @@ public class ScreenWrap
 	[MonoPInvokeCallbackAttribute(typeof(LuaCSFunction))]
 	static int set_orientation(IntPtr L)
 	{
-		Screen.orientation = LuaScriptMgr.GetNetObject<ScreenOrientation>(L, 3);
+		Screen.orientation = (ScreenOrientation)LuaScriptMgr.GetNetObject(L, 3, typeof(ScreenOrientation));
 		return 0;
 	}
 

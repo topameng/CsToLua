@@ -44,16 +44,19 @@ public class ParticleAnimatorWrap
 		return 0;
 	}
 
+	static Type classType = typeof(ParticleAnimator);
+
 	[MonoPInvokeCallbackAttribute(typeof(LuaCSFunction))]
 	static int GetClassType(IntPtr L)
 	{
-		LuaScriptMgr.Push(L, typeof(ParticleAnimator));
+		LuaScriptMgr.Push(L, classType);
+
 		return 1;
 	}
 
 	public static void Register(IntPtr L)
 	{
-		LuaScriptMgr.RegisterLib(L, "UnityEngine.ParticleAnimator", typeof(ParticleAnimator), regs, fields, typeof(UnityEngine.Component));
+		LuaScriptMgr.RegisterLib(L, "UnityEngine.ParticleAnimator", typeof(ParticleAnimator), regs, fields, typeof(Component));
 	}
 
 	[MonoPInvokeCallbackAttribute(typeof(LuaCSFunction))]
@@ -484,7 +487,7 @@ public class ParticleAnimatorWrap
 			}
 		}
 
-		obj.colorAnimation = LuaScriptMgr.GetNetObject<Color[]>(L, 3);
+		obj.colorAnimation = (Color[])LuaScriptMgr.GetNetObject(L, 3, typeof(Color[]));
 		return 0;
 	}
 
@@ -492,8 +495,8 @@ public class ParticleAnimatorWrap
 	static int Lua_Eq(IntPtr L)
 	{
 		LuaScriptMgr.CheckArgsCount(L, 2);
-		Object arg0 = LuaScriptMgr.GetVarObject(L, 1) as Object;
-		Object arg1 = LuaScriptMgr.GetVarObject(L, 2) as Object;
+		Object arg0 = LuaScriptMgr.GetLuaObject(L, 1) as Object;
+		Object arg1 = LuaScriptMgr.GetLuaObject(L, 2) as Object;
 		bool o = arg0 == arg1;
 		LuaScriptMgr.Push(L, o);
 		return 1;

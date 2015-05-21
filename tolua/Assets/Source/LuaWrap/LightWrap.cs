@@ -31,7 +31,6 @@ public class LightWrap
 		new LuaField("renderMode", get_renderMode, set_renderMode),
 		new LuaField("alreadyLightmapped", get_alreadyLightmapped, set_alreadyLightmapped),
 		new LuaField("cullingMask", get_cullingMask, set_cullingMask),
-		new LuaField("areaSize", get_areaSize, set_areaSize),
 	};
 
 	[MonoPInvokeCallbackAttribute(typeof(LuaCSFunction))]
@@ -53,16 +52,19 @@ public class LightWrap
 		return 0;
 	}
 
+	static Type classType = typeof(Light);
+
 	[MonoPInvokeCallbackAttribute(typeof(LuaCSFunction))]
 	static int GetClassType(IntPtr L)
 	{
-		LuaScriptMgr.Push(L, typeof(Light));
+		LuaScriptMgr.Push(L, classType);
+
 		return 1;
 	}
 
 	public static void Register(IntPtr L)
 	{
-		LuaScriptMgr.RegisterLib(L, "UnityEngine.Light", typeof(Light), regs, fields, typeof(UnityEngine.Behaviour));
+		LuaScriptMgr.RegisterLib(L, "UnityEngine.Light", typeof(Light), regs, fields, typeof(Behaviour));
 	}
 
 	[MonoPInvokeCallbackAttribute(typeof(LuaCSFunction))]
@@ -450,30 +452,6 @@ public class LightWrap
 	}
 
 	[MonoPInvokeCallbackAttribute(typeof(LuaCSFunction))]
-	static int get_areaSize(IntPtr L)
-	{
-		object o = LuaScriptMgr.GetLuaObject(L, 1);
-		Light obj = (Light)o;
-
-		if (obj == null)
-		{
-			LuaTypes types = LuaDLL.lua_type(L, 1);
-
-			if (types == LuaTypes.LUA_TTABLE)
-			{
-				LuaDLL.luaL_error(L, "unknown member name areaSize");
-			}
-			else
-			{
-				LuaDLL.luaL_error(L, "attempt to index areaSize on a nil value");
-			}
-		}
-
-		LuaScriptMgr.Push(L, obj.areaSize);
-		return 1;
-	}
-
-	[MonoPInvokeCallbackAttribute(typeof(LuaCSFunction))]
 	static int set_type(IntPtr L)
 	{
 		object o = LuaScriptMgr.GetLuaObject(L, 1);
@@ -493,7 +471,7 @@ public class LightWrap
 			}
 		}
 
-		obj.type = LuaScriptMgr.GetNetObject<LightType>(L, 3);
+		obj.type = (LightType)LuaScriptMgr.GetNetObject(L, 3, typeof(LightType));
 		return 0;
 	}
 
@@ -565,7 +543,7 @@ public class LightWrap
 			}
 		}
 
-		obj.shadows = LuaScriptMgr.GetNetObject<LightShadows>(L, 3);
+		obj.shadows = (LightShadows)LuaScriptMgr.GetNetObject(L, 3, typeof(LightShadows));
 		return 0;
 	}
 
@@ -757,7 +735,7 @@ public class LightWrap
 			}
 		}
 
-		obj.cookie = LuaScriptMgr.GetUnityObject<Texture>(L, 3);
+		obj.cookie = (Texture)LuaScriptMgr.GetUnityObject(L, 3, typeof(Texture));
 		return 0;
 	}
 
@@ -781,7 +759,7 @@ public class LightWrap
 			}
 		}
 
-		obj.flare = LuaScriptMgr.GetUnityObject<Flare>(L, 3);
+		obj.flare = (Flare)LuaScriptMgr.GetUnityObject(L, 3, typeof(Flare));
 		return 0;
 	}
 
@@ -805,7 +783,7 @@ public class LightWrap
 			}
 		}
 
-		obj.renderMode = LuaScriptMgr.GetNetObject<LightRenderMode>(L, 3);
+		obj.renderMode = (LightRenderMode)LuaScriptMgr.GetNetObject(L, 3, typeof(LightRenderMode));
 		return 0;
 	}
 
@@ -858,34 +836,10 @@ public class LightWrap
 	}
 
 	[MonoPInvokeCallbackAttribute(typeof(LuaCSFunction))]
-	static int set_areaSize(IntPtr L)
-	{
-		object o = LuaScriptMgr.GetLuaObject(L, 1);
-		Light obj = (Light)o;
-
-		if (obj == null)
-		{
-			LuaTypes types = LuaDLL.lua_type(L, 1);
-
-			if (types == LuaTypes.LUA_TTABLE)
-			{
-				LuaDLL.luaL_error(L, "unknown member name areaSize");
-			}
-			else
-			{
-				LuaDLL.luaL_error(L, "attempt to index areaSize on a nil value");
-			}
-		}
-
-		obj.areaSize = LuaScriptMgr.GetVector2(L, 3);
-		return 0;
-	}
-
-	[MonoPInvokeCallbackAttribute(typeof(LuaCSFunction))]
 	static int GetLights(IntPtr L)
 	{
 		LuaScriptMgr.CheckArgsCount(L, 2);
-		LightType arg0 = LuaScriptMgr.GetNetObject<LightType>(L, 1);
+		LightType arg0 = (LightType)LuaScriptMgr.GetNetObject(L, 1, typeof(LightType));
 		int arg1 = (int)LuaScriptMgr.GetNumber(L, 2);
 		Light[] o = Light.GetLights(arg0,arg1);
 		LuaScriptMgr.PushArray(L, o);
@@ -896,8 +850,8 @@ public class LightWrap
 	static int Lua_Eq(IntPtr L)
 	{
 		LuaScriptMgr.CheckArgsCount(L, 2);
-		Object arg0 = LuaScriptMgr.GetVarObject(L, 1) as Object;
-		Object arg1 = LuaScriptMgr.GetVarObject(L, 2) as Object;
+		Object arg0 = LuaScriptMgr.GetLuaObject(L, 1) as Object;
+		Object arg1 = LuaScriptMgr.GetLuaObject(L, 2) as Object;
 		bool o = arg0 == arg1;
 		LuaScriptMgr.Push(L, o);
 		return 1;

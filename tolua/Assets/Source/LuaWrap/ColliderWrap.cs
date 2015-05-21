@@ -43,16 +43,19 @@ public class ColliderWrap
 		return 0;
 	}
 
+	static Type classType = typeof(Collider);
+
 	[MonoPInvokeCallbackAttribute(typeof(LuaCSFunction))]
 	static int GetClassType(IntPtr L)
 	{
-		LuaScriptMgr.Push(L, typeof(Collider));
+		LuaScriptMgr.Push(L, classType);
+
 		return 1;
 	}
 
 	public static void Register(IntPtr L)
 	{
-		LuaScriptMgr.RegisterLib(L, "UnityEngine.Collider", typeof(Collider), regs, fields, typeof(UnityEngine.Component));
+		LuaScriptMgr.RegisterLib(L, "UnityEngine.Collider", typeof(Collider), regs, fields, typeof(Component));
 	}
 
 	[MonoPInvokeCallbackAttribute(typeof(LuaCSFunction))]
@@ -195,7 +198,7 @@ public class ColliderWrap
 			}
 		}
 
-		LuaScriptMgr.PushValue(L, obj.bounds);
+		LuaScriptMgr.Push(L, obj.bounds);
 		return 1;
 	}
 
@@ -267,7 +270,7 @@ public class ColliderWrap
 			}
 		}
 
-		obj.material = LuaScriptMgr.GetUnityObject<PhysicMaterial>(L, 3);
+		obj.material = (PhysicMaterial)LuaScriptMgr.GetUnityObject(L, 3, typeof(PhysicMaterial));
 		return 0;
 	}
 
@@ -291,7 +294,7 @@ public class ColliderWrap
 			}
 		}
 
-		obj.sharedMaterial = LuaScriptMgr.GetUnityObject<PhysicMaterial>(L, 3);
+		obj.sharedMaterial = (PhysicMaterial)LuaScriptMgr.GetUnityObject(L, 3, typeof(PhysicMaterial));
 		return 0;
 	}
 
@@ -299,7 +302,7 @@ public class ColliderWrap
 	static int ClosestPointOnBounds(IntPtr L)
 	{
 		LuaScriptMgr.CheckArgsCount(L, 2);
-		Collider obj = LuaScriptMgr.GetUnityObject<Collider>(L, 1);
+		Collider obj = (Collider)LuaScriptMgr.GetUnityObject(L, 1, typeof(Collider));
 		Vector3 arg0 = LuaScriptMgr.GetVector3(L, 2);
 		Vector3 o = obj.ClosestPointOnBounds(arg0);
 		LuaScriptMgr.Push(L, o);
@@ -310,7 +313,7 @@ public class ColliderWrap
 	static int Raycast(IntPtr L)
 	{
 		LuaScriptMgr.CheckArgsCount(L, 4);
-		Collider obj = LuaScriptMgr.GetUnityObject<Collider>(L, 1);
+		Collider obj = (Collider)LuaScriptMgr.GetUnityObject(L, 1, typeof(Collider));
 		Ray arg0 = LuaScriptMgr.GetRay(L, 2);
 		RaycastHit arg1;
 		float arg2 = (float)LuaScriptMgr.GetNumber(L, 4);
@@ -324,8 +327,8 @@ public class ColliderWrap
 	static int Lua_Eq(IntPtr L)
 	{
 		LuaScriptMgr.CheckArgsCount(L, 2);
-		Object arg0 = LuaScriptMgr.GetVarObject(L, 1) as Object;
-		Object arg1 = LuaScriptMgr.GetVarObject(L, 2) as Object;
+		Object arg0 = LuaScriptMgr.GetLuaObject(L, 1) as Object;
+		Object arg1 = LuaScriptMgr.GetLuaObject(L, 2) as Object;
 		bool o = arg0 == arg1;
 		LuaScriptMgr.Push(L, o);
 		return 1;

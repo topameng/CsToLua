@@ -69,16 +69,19 @@ public class AudioSourceWrap
 		return 0;
 	}
 
+	static Type classType = typeof(AudioSource);
+
 	[MonoPInvokeCallbackAttribute(typeof(LuaCSFunction))]
 	static int GetClassType(IntPtr L)
 	{
-		LuaScriptMgr.Push(L, typeof(AudioSource));
+		LuaScriptMgr.Push(L, classType);
+
 		return 1;
 	}
 
 	public static void Register(IntPtr L)
 	{
-		LuaScriptMgr.RegisterLib(L, "UnityEngine.AudioSource", typeof(AudioSource), regs, fields, typeof(UnityEngine.Behaviour));
+		LuaScriptMgr.RegisterLib(L, "UnityEngine.AudioSource", typeof(AudioSource), regs, fields, typeof(Behaviour));
 	}
 
 	[MonoPInvokeCallbackAttribute(typeof(LuaCSFunction))]
@@ -749,7 +752,7 @@ public class AudioSourceWrap
 			}
 		}
 
-		obj.clip = LuaScriptMgr.GetUnityObject<AudioClip>(L, 3);
+		obj.clip = (AudioClip)LuaScriptMgr.GetUnityObject(L, 3, typeof(AudioClip));
 		return 0;
 	}
 
@@ -869,7 +872,7 @@ public class AudioSourceWrap
 			}
 		}
 
-		obj.velocityUpdateMode = LuaScriptMgr.GetNetObject<AudioVelocityUpdateMode>(L, 3);
+		obj.velocityUpdateMode = (AudioVelocityUpdateMode)LuaScriptMgr.GetNetObject(L, 3, typeof(AudioVelocityUpdateMode));
 		return 0;
 	}
 
@@ -1157,7 +1160,7 @@ public class AudioSourceWrap
 			}
 		}
 
-		obj.rolloffMode = LuaScriptMgr.GetNetObject<AudioRolloffMode>(L, 3);
+		obj.rolloffMode = (AudioRolloffMode)LuaScriptMgr.GetNetObject(L, 3, typeof(AudioRolloffMode));
 		return 0;
 	}
 
@@ -1167,13 +1170,13 @@ public class AudioSourceWrap
 		int count = LuaDLL.lua_gettop(L);
 		if (count == 1)
 		{
-			AudioSource obj = LuaScriptMgr.GetUnityObject<AudioSource>(L, 1);
+			AudioSource obj = (AudioSource)LuaScriptMgr.GetUnityObject(L, 1, typeof(AudioSource));
 			obj.Play();
 			return 0;
 		}
 		else if (count == 2)
 		{
-			AudioSource obj = LuaScriptMgr.GetUnityObject<AudioSource>(L, 1);
+			AudioSource obj = (AudioSource)LuaScriptMgr.GetUnityObject(L, 1, typeof(AudioSource));
 			ulong arg0 = (ulong)LuaScriptMgr.GetNumber(L, 2);
 			obj.Play(arg0);
 			return 0;
@@ -1190,7 +1193,7 @@ public class AudioSourceWrap
 	static int PlayDelayed(IntPtr L)
 	{
 		LuaScriptMgr.CheckArgsCount(L, 2);
-		AudioSource obj = LuaScriptMgr.GetUnityObject<AudioSource>(L, 1);
+		AudioSource obj = (AudioSource)LuaScriptMgr.GetUnityObject(L, 1, typeof(AudioSource));
 		float arg0 = (float)LuaScriptMgr.GetNumber(L, 2);
 		obj.PlayDelayed(arg0);
 		return 0;
@@ -1200,7 +1203,7 @@ public class AudioSourceWrap
 	static int PlayScheduled(IntPtr L)
 	{
 		LuaScriptMgr.CheckArgsCount(L, 2);
-		AudioSource obj = LuaScriptMgr.GetUnityObject<AudioSource>(L, 1);
+		AudioSource obj = (AudioSource)LuaScriptMgr.GetUnityObject(L, 1, typeof(AudioSource));
 		double arg0 = (double)LuaScriptMgr.GetNumber(L, 2);
 		obj.PlayScheduled(arg0);
 		return 0;
@@ -1210,7 +1213,7 @@ public class AudioSourceWrap
 	static int SetScheduledStartTime(IntPtr L)
 	{
 		LuaScriptMgr.CheckArgsCount(L, 2);
-		AudioSource obj = LuaScriptMgr.GetUnityObject<AudioSource>(L, 1);
+		AudioSource obj = (AudioSource)LuaScriptMgr.GetUnityObject(L, 1, typeof(AudioSource));
 		double arg0 = (double)LuaScriptMgr.GetNumber(L, 2);
 		obj.SetScheduledStartTime(arg0);
 		return 0;
@@ -1220,7 +1223,7 @@ public class AudioSourceWrap
 	static int SetScheduledEndTime(IntPtr L)
 	{
 		LuaScriptMgr.CheckArgsCount(L, 2);
-		AudioSource obj = LuaScriptMgr.GetUnityObject<AudioSource>(L, 1);
+		AudioSource obj = (AudioSource)LuaScriptMgr.GetUnityObject(L, 1, typeof(AudioSource));
 		double arg0 = (double)LuaScriptMgr.GetNumber(L, 2);
 		obj.SetScheduledEndTime(arg0);
 		return 0;
@@ -1230,7 +1233,7 @@ public class AudioSourceWrap
 	static int Stop(IntPtr L)
 	{
 		LuaScriptMgr.CheckArgsCount(L, 1);
-		AudioSource obj = LuaScriptMgr.GetUnityObject<AudioSource>(L, 1);
+		AudioSource obj = (AudioSource)LuaScriptMgr.GetUnityObject(L, 1, typeof(AudioSource));
 		obj.Stop();
 		return 0;
 	}
@@ -1239,7 +1242,7 @@ public class AudioSourceWrap
 	static int Pause(IntPtr L)
 	{
 		LuaScriptMgr.CheckArgsCount(L, 1);
-		AudioSource obj = LuaScriptMgr.GetUnityObject<AudioSource>(L, 1);
+		AudioSource obj = (AudioSource)LuaScriptMgr.GetUnityObject(L, 1, typeof(AudioSource));
 		obj.Pause();
 		return 0;
 	}
@@ -1250,15 +1253,15 @@ public class AudioSourceWrap
 		int count = LuaDLL.lua_gettop(L);
 		if (count == 2)
 		{
-			AudioSource obj = LuaScriptMgr.GetUnityObject<AudioSource>(L, 1);
-			AudioClip arg0 = LuaScriptMgr.GetUnityObject<AudioClip>(L, 2);
+			AudioSource obj = (AudioSource)LuaScriptMgr.GetUnityObject(L, 1, typeof(AudioSource));
+			AudioClip arg0 = (AudioClip)LuaScriptMgr.GetUnityObject(L, 2, typeof(AudioClip));
 			obj.PlayOneShot(arg0);
 			return 0;
 		}
 		else if (count == 3)
 		{
-			AudioSource obj = LuaScriptMgr.GetUnityObject<AudioSource>(L, 1);
-			AudioClip arg0 = LuaScriptMgr.GetUnityObject<AudioClip>(L, 2);
+			AudioSource obj = (AudioSource)LuaScriptMgr.GetUnityObject(L, 1, typeof(AudioSource));
+			AudioClip arg0 = (AudioClip)LuaScriptMgr.GetUnityObject(L, 2, typeof(AudioClip));
 			float arg1 = (float)LuaScriptMgr.GetNumber(L, 3);
 			obj.PlayOneShot(arg0,arg1);
 			return 0;
@@ -1277,14 +1280,14 @@ public class AudioSourceWrap
 		int count = LuaDLL.lua_gettop(L);
 		if (count == 2)
 		{
-			AudioClip arg0 = LuaScriptMgr.GetUnityObject<AudioClip>(L, 1);
+			AudioClip arg0 = (AudioClip)LuaScriptMgr.GetUnityObject(L, 1, typeof(AudioClip));
 			Vector3 arg1 = LuaScriptMgr.GetVector3(L, 2);
 			AudioSource.PlayClipAtPoint(arg0,arg1);
 			return 0;
 		}
 		else if (count == 3)
 		{
-			AudioClip arg0 = LuaScriptMgr.GetUnityObject<AudioClip>(L, 1);
+			AudioClip arg0 = (AudioClip)LuaScriptMgr.GetUnityObject(L, 1, typeof(AudioClip));
 			Vector3 arg1 = LuaScriptMgr.GetVector3(L, 2);
 			float arg2 = (float)LuaScriptMgr.GetNumber(L, 3);
 			AudioSource.PlayClipAtPoint(arg0,arg1,arg2);
@@ -1302,7 +1305,7 @@ public class AudioSourceWrap
 	static int GetOutputData(IntPtr L)
 	{
 		LuaScriptMgr.CheckArgsCount(L, 3);
-		AudioSource obj = LuaScriptMgr.GetUnityObject<AudioSource>(L, 1);
+		AudioSource obj = (AudioSource)LuaScriptMgr.GetUnityObject(L, 1, typeof(AudioSource));
 		float[] objs0 = LuaScriptMgr.GetArrayNumber<float>(L, 2);
 		int arg1 = (int)LuaScriptMgr.GetNumber(L, 3);
 		obj.GetOutputData(objs0,arg1);
@@ -1313,10 +1316,10 @@ public class AudioSourceWrap
 	static int GetSpectrumData(IntPtr L)
 	{
 		LuaScriptMgr.CheckArgsCount(L, 4);
-		AudioSource obj = LuaScriptMgr.GetUnityObject<AudioSource>(L, 1);
+		AudioSource obj = (AudioSource)LuaScriptMgr.GetUnityObject(L, 1, typeof(AudioSource));
 		float[] objs0 = LuaScriptMgr.GetArrayNumber<float>(L, 2);
 		int arg1 = (int)LuaScriptMgr.GetNumber(L, 3);
-		FFTWindow arg2 = LuaScriptMgr.GetNetObject<FFTWindow>(L, 4);
+		FFTWindow arg2 = (FFTWindow)LuaScriptMgr.GetNetObject(L, 4, typeof(FFTWindow));
 		obj.GetSpectrumData(objs0,arg1,arg2);
 		return 0;
 	}
@@ -1325,8 +1328,8 @@ public class AudioSourceWrap
 	static int Lua_Eq(IntPtr L)
 	{
 		LuaScriptMgr.CheckArgsCount(L, 2);
-		Object arg0 = LuaScriptMgr.GetVarObject(L, 1) as Object;
-		Object arg1 = LuaScriptMgr.GetVarObject(L, 2) as Object;
+		Object arg0 = LuaScriptMgr.GetLuaObject(L, 1) as Object;
+		Object arg1 = LuaScriptMgr.GetLuaObject(L, 2) as Object;
 		bool o = arg0 == arg1;
 		LuaScriptMgr.Push(L, o);
 		return 1;

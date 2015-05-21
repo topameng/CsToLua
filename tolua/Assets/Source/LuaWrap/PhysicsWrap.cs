@@ -59,16 +59,19 @@ public class PhysicsWrap
 		return 0;
 	}
 
+	static Type classType = typeof(Physics);
+
 	[MonoPInvokeCallbackAttribute(typeof(LuaCSFunction))]
 	static int GetClassType(IntPtr L)
 	{
-		LuaScriptMgr.Push(L, typeof(Physics));
+		LuaScriptMgr.Push(L, classType);
+
 		return 1;
 	}
 
 	public static void Register(IntPtr L)
 	{
-		LuaScriptMgr.RegisterLib(L, "UnityEngine.Physics", typeof(Physics), regs, fields, typeof(System.Object));
+		LuaScriptMgr.RegisterLib(L, "UnityEngine.Physics", typeof(Physics), regs, fields, typeof(object));
 	}
 
 	[MonoPInvokeCallbackAttribute(typeof(LuaCSFunction))]
@@ -857,15 +860,15 @@ public class PhysicsWrap
 		int count = LuaDLL.lua_gettop(L);
 		if (count == 2)
 		{
-			Collider arg0 = LuaScriptMgr.GetUnityObject<Collider>(L, 1);
-			Collider arg1 = LuaScriptMgr.GetUnityObject<Collider>(L, 2);
+			Collider arg0 = (Collider)LuaScriptMgr.GetUnityObject(L, 1, typeof(Collider));
+			Collider arg1 = (Collider)LuaScriptMgr.GetUnityObject(L, 2, typeof(Collider));
 			Physics.IgnoreCollision(arg0,arg1);
 			return 0;
 		}
 		else if (count == 3)
 		{
-			Collider arg0 = LuaScriptMgr.GetUnityObject<Collider>(L, 1);
-			Collider arg1 = LuaScriptMgr.GetUnityObject<Collider>(L, 2);
+			Collider arg0 = (Collider)LuaScriptMgr.GetUnityObject(L, 1, typeof(Collider));
+			Collider arg1 = (Collider)LuaScriptMgr.GetUnityObject(L, 2, typeof(Collider));
 			bool arg2 = LuaScriptMgr.GetBoolean(L, 3);
 			Physics.IgnoreCollision(arg0,arg1,arg2);
 			return 0;

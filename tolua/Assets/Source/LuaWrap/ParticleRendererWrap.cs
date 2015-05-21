@@ -45,16 +45,19 @@ public class ParticleRendererWrap
 		return 0;
 	}
 
+	static Type classType = typeof(ParticleRenderer);
+
 	[MonoPInvokeCallbackAttribute(typeof(LuaCSFunction))]
 	static int GetClassType(IntPtr L)
 	{
-		LuaScriptMgr.Push(L, typeof(ParticleRenderer));
+		LuaScriptMgr.Push(L, classType);
+
 		return 1;
 	}
 
 	public static void Register(IntPtr L)
 	{
-		LuaScriptMgr.RegisterLib(L, "UnityEngine.ParticleRenderer", typeof(ParticleRenderer), regs, fields, typeof(UnityEngine.Renderer));
+		LuaScriptMgr.RegisterLib(L, "UnityEngine.ParticleRenderer", typeof(ParticleRenderer), regs, fields, typeof(Renderer));
 	}
 
 	[MonoPInvokeCallbackAttribute(typeof(LuaCSFunction))]
@@ -317,7 +320,7 @@ public class ParticleRendererWrap
 			}
 		}
 
-		obj.particleRenderMode = LuaScriptMgr.GetNetObject<ParticleRenderMode>(L, 3);
+		obj.particleRenderMode = (ParticleRenderMode)LuaScriptMgr.GetNetObject(L, 3, typeof(ParticleRenderMode));
 		return 0;
 	}
 
@@ -533,7 +536,7 @@ public class ParticleRendererWrap
 			}
 		}
 
-		obj.uvTiles = LuaScriptMgr.GetNetObject<Rect[]>(L, 3);
+		obj.uvTiles = (Rect[])LuaScriptMgr.GetNetObject(L, 3, typeof(Rect[]));
 		return 0;
 	}
 
@@ -541,8 +544,8 @@ public class ParticleRendererWrap
 	static int Lua_Eq(IntPtr L)
 	{
 		LuaScriptMgr.CheckArgsCount(L, 2);
-		Object arg0 = LuaScriptMgr.GetVarObject(L, 1) as Object;
-		Object arg1 = LuaScriptMgr.GetVarObject(L, 2) as Object;
+		Object arg0 = LuaScriptMgr.GetLuaObject(L, 1) as Object;
+		Object arg1 = LuaScriptMgr.GetLuaObject(L, 2) as Object;
 		bool o = arg0 == arg1;
 		LuaScriptMgr.Push(L, o);
 		return 1;

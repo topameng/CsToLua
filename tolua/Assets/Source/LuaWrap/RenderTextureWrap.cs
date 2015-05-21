@@ -61,7 +61,7 @@ public class RenderTextureWrap
 			int arg0 = (int)LuaScriptMgr.GetNumber(L, 1);
 			int arg1 = (int)LuaScriptMgr.GetNumber(L, 2);
 			int arg2 = (int)LuaScriptMgr.GetNumber(L, 3);
-			RenderTextureFormat arg3 = LuaScriptMgr.GetNetObject<RenderTextureFormat>(L, 4);
+			RenderTextureFormat arg3 = (RenderTextureFormat)LuaScriptMgr.GetNetObject(L, 4, typeof(RenderTextureFormat));
 			RenderTexture obj = new RenderTexture(arg0,arg1,arg2,arg3);
 			LuaScriptMgr.Push(L, obj);
 			return 1;
@@ -71,8 +71,8 @@ public class RenderTextureWrap
 			int arg0 = (int)LuaScriptMgr.GetNumber(L, 1);
 			int arg1 = (int)LuaScriptMgr.GetNumber(L, 2);
 			int arg2 = (int)LuaScriptMgr.GetNumber(L, 3);
-			RenderTextureFormat arg3 = LuaScriptMgr.GetNetObject<RenderTextureFormat>(L, 4);
-			RenderTextureReadWrite arg4 = LuaScriptMgr.GetNetObject<RenderTextureReadWrite>(L, 5);
+			RenderTextureFormat arg3 = (RenderTextureFormat)LuaScriptMgr.GetNetObject(L, 4, typeof(RenderTextureFormat));
+			RenderTextureReadWrite arg4 = (RenderTextureReadWrite)LuaScriptMgr.GetNetObject(L, 5, typeof(RenderTextureReadWrite));
 			RenderTexture obj = new RenderTexture(arg0,arg1,arg2,arg3,arg4);
 			LuaScriptMgr.Push(L, obj);
 			return 1;
@@ -85,16 +85,19 @@ public class RenderTextureWrap
 		return 0;
 	}
 
+	static Type classType = typeof(RenderTexture);
+
 	[MonoPInvokeCallbackAttribute(typeof(LuaCSFunction))]
 	static int GetClassType(IntPtr L)
 	{
-		LuaScriptMgr.Push(L, typeof(RenderTexture));
+		LuaScriptMgr.Push(L, classType);
+
 		return 1;
 	}
 
 	public static void Register(IntPtr L)
 	{
-		LuaScriptMgr.RegisterLib(L, "UnityEngine.RenderTexture", typeof(RenderTexture), regs, fields, typeof(UnityEngine.Texture));
+		LuaScriptMgr.RegisterLib(L, "UnityEngine.RenderTexture", typeof(RenderTexture), regs, fields, typeof(Texture));
 	}
 
 	[MonoPInvokeCallbackAttribute(typeof(LuaCSFunction))]
@@ -580,7 +583,7 @@ public class RenderTextureWrap
 			}
 		}
 
-		obj.format = LuaScriptMgr.GetNetObject<RenderTextureFormat>(L, 3);
+		obj.format = (RenderTextureFormat)LuaScriptMgr.GetNetObject(L, 3, typeof(RenderTextureFormat));
 		return 0;
 	}
 
@@ -755,7 +758,7 @@ public class RenderTextureWrap
 	[MonoPInvokeCallbackAttribute(typeof(LuaCSFunction))]
 	static int set_active(IntPtr L)
 	{
-		RenderTexture.active = LuaScriptMgr.GetUnityObject<RenderTexture>(L, 3);
+		RenderTexture.active = (RenderTexture)LuaScriptMgr.GetUnityObject(L, 3, typeof(RenderTexture));
 		return 0;
 	}
 
@@ -785,7 +788,7 @@ public class RenderTextureWrap
 			int arg0 = (int)LuaScriptMgr.GetNumber(L, 1);
 			int arg1 = (int)LuaScriptMgr.GetNumber(L, 2);
 			int arg2 = (int)LuaScriptMgr.GetNumber(L, 3);
-			RenderTextureFormat arg3 = LuaScriptMgr.GetNetObject<RenderTextureFormat>(L, 4);
+			RenderTextureFormat arg3 = (RenderTextureFormat)LuaScriptMgr.GetNetObject(L, 4, typeof(RenderTextureFormat));
 			RenderTexture o = RenderTexture.GetTemporary(arg0,arg1,arg2,arg3);
 			LuaScriptMgr.Push(L, o);
 			return 1;
@@ -795,8 +798,8 @@ public class RenderTextureWrap
 			int arg0 = (int)LuaScriptMgr.GetNumber(L, 1);
 			int arg1 = (int)LuaScriptMgr.GetNumber(L, 2);
 			int arg2 = (int)LuaScriptMgr.GetNumber(L, 3);
-			RenderTextureFormat arg3 = LuaScriptMgr.GetNetObject<RenderTextureFormat>(L, 4);
-			RenderTextureReadWrite arg4 = LuaScriptMgr.GetNetObject<RenderTextureReadWrite>(L, 5);
+			RenderTextureFormat arg3 = (RenderTextureFormat)LuaScriptMgr.GetNetObject(L, 4, typeof(RenderTextureFormat));
+			RenderTextureReadWrite arg4 = (RenderTextureReadWrite)LuaScriptMgr.GetNetObject(L, 5, typeof(RenderTextureReadWrite));
 			RenderTexture o = RenderTexture.GetTemporary(arg0,arg1,arg2,arg3,arg4);
 			LuaScriptMgr.Push(L, o);
 			return 1;
@@ -806,8 +809,8 @@ public class RenderTextureWrap
 			int arg0 = (int)LuaScriptMgr.GetNumber(L, 1);
 			int arg1 = (int)LuaScriptMgr.GetNumber(L, 2);
 			int arg2 = (int)LuaScriptMgr.GetNumber(L, 3);
-			RenderTextureFormat arg3 = LuaScriptMgr.GetNetObject<RenderTextureFormat>(L, 4);
-			RenderTextureReadWrite arg4 = LuaScriptMgr.GetNetObject<RenderTextureReadWrite>(L, 5);
+			RenderTextureFormat arg3 = (RenderTextureFormat)LuaScriptMgr.GetNetObject(L, 4, typeof(RenderTextureFormat));
+			RenderTextureReadWrite arg4 = (RenderTextureReadWrite)LuaScriptMgr.GetNetObject(L, 5, typeof(RenderTextureReadWrite));
 			int arg5 = (int)LuaScriptMgr.GetNumber(L, 6);
 			RenderTexture o = RenderTexture.GetTemporary(arg0,arg1,arg2,arg3,arg4,arg5);
 			LuaScriptMgr.Push(L, o);
@@ -825,7 +828,7 @@ public class RenderTextureWrap
 	static int ReleaseTemporary(IntPtr L)
 	{
 		LuaScriptMgr.CheckArgsCount(L, 1);
-		RenderTexture arg0 = LuaScriptMgr.GetUnityObject<RenderTexture>(L, 1);
+		RenderTexture arg0 = (RenderTexture)LuaScriptMgr.GetUnityObject(L, 1, typeof(RenderTexture));
 		RenderTexture.ReleaseTemporary(arg0);
 		return 0;
 	}
@@ -834,7 +837,7 @@ public class RenderTextureWrap
 	static int Create(IntPtr L)
 	{
 		LuaScriptMgr.CheckArgsCount(L, 1);
-		RenderTexture obj = LuaScriptMgr.GetUnityObject<RenderTexture>(L, 1);
+		RenderTexture obj = (RenderTexture)LuaScriptMgr.GetUnityObject(L, 1, typeof(RenderTexture));
 		bool o = obj.Create();
 		LuaScriptMgr.Push(L, o);
 		return 1;
@@ -844,7 +847,7 @@ public class RenderTextureWrap
 	static int Release(IntPtr L)
 	{
 		LuaScriptMgr.CheckArgsCount(L, 1);
-		RenderTexture obj = LuaScriptMgr.GetUnityObject<RenderTexture>(L, 1);
+		RenderTexture obj = (RenderTexture)LuaScriptMgr.GetUnityObject(L, 1, typeof(RenderTexture));
 		obj.Release();
 		return 0;
 	}
@@ -853,7 +856,7 @@ public class RenderTextureWrap
 	static int IsCreated(IntPtr L)
 	{
 		LuaScriptMgr.CheckArgsCount(L, 1);
-		RenderTexture obj = LuaScriptMgr.GetUnityObject<RenderTexture>(L, 1);
+		RenderTexture obj = (RenderTexture)LuaScriptMgr.GetUnityObject(L, 1, typeof(RenderTexture));
 		bool o = obj.IsCreated();
 		LuaScriptMgr.Push(L, o);
 		return 1;
@@ -865,13 +868,13 @@ public class RenderTextureWrap
 		int count = LuaDLL.lua_gettop(L);
 		if (count == 1)
 		{
-			RenderTexture obj = LuaScriptMgr.GetUnityObject<RenderTexture>(L, 1);
+			RenderTexture obj = (RenderTexture)LuaScriptMgr.GetUnityObject(L, 1, typeof(RenderTexture));
 			obj.DiscardContents();
 			return 0;
 		}
 		else if (count == 3)
 		{
-			RenderTexture obj = LuaScriptMgr.GetUnityObject<RenderTexture>(L, 1);
+			RenderTexture obj = (RenderTexture)LuaScriptMgr.GetUnityObject(L, 1, typeof(RenderTexture));
 			bool arg0 = LuaScriptMgr.GetBoolean(L, 2);
 			bool arg1 = LuaScriptMgr.GetBoolean(L, 3);
 			obj.DiscardContents(arg0,arg1);
@@ -889,7 +892,7 @@ public class RenderTextureWrap
 	static int MarkRestoreExpected(IntPtr L)
 	{
 		LuaScriptMgr.CheckArgsCount(L, 1);
-		RenderTexture obj = LuaScriptMgr.GetUnityObject<RenderTexture>(L, 1);
+		RenderTexture obj = (RenderTexture)LuaScriptMgr.GetUnityObject(L, 1, typeof(RenderTexture));
 		obj.MarkRestoreExpected();
 		return 0;
 	}
@@ -898,7 +901,7 @@ public class RenderTextureWrap
 	static int SetGlobalShaderProperty(IntPtr L)
 	{
 		LuaScriptMgr.CheckArgsCount(L, 2);
-		RenderTexture obj = LuaScriptMgr.GetUnityObject<RenderTexture>(L, 1);
+		RenderTexture obj = (RenderTexture)LuaScriptMgr.GetUnityObject(L, 1, typeof(RenderTexture));
 		string arg0 = LuaScriptMgr.GetLuaString(L, 2);
 		obj.SetGlobalShaderProperty(arg0);
 		return 0;
@@ -908,7 +911,7 @@ public class RenderTextureWrap
 	static int GetTexelOffset(IntPtr L)
 	{
 		LuaScriptMgr.CheckArgsCount(L, 1);
-		RenderTexture obj = LuaScriptMgr.GetUnityObject<RenderTexture>(L, 1);
+		RenderTexture obj = (RenderTexture)LuaScriptMgr.GetUnityObject(L, 1, typeof(RenderTexture));
 		Vector2 o = obj.GetTexelOffset();
 		LuaScriptMgr.Push(L, o);
 		return 1;
@@ -918,7 +921,7 @@ public class RenderTextureWrap
 	static int SupportsStencil(IntPtr L)
 	{
 		LuaScriptMgr.CheckArgsCount(L, 1);
-		RenderTexture arg0 = LuaScriptMgr.GetUnityObject<RenderTexture>(L, 1);
+		RenderTexture arg0 = (RenderTexture)LuaScriptMgr.GetUnityObject(L, 1, typeof(RenderTexture));
 		bool o = RenderTexture.SupportsStencil(arg0);
 		LuaScriptMgr.Push(L, o);
 		return 1;
@@ -928,8 +931,8 @@ public class RenderTextureWrap
 	static int Lua_Eq(IntPtr L)
 	{
 		LuaScriptMgr.CheckArgsCount(L, 2);
-		Object arg0 = LuaScriptMgr.GetVarObject(L, 1) as Object;
-		Object arg1 = LuaScriptMgr.GetVarObject(L, 2) as Object;
+		Object arg0 = LuaScriptMgr.GetLuaObject(L, 1) as Object;
+		Object arg1 = LuaScriptMgr.GetLuaObject(L, 2) as Object;
 		bool o = arg0 == arg1;
 		LuaScriptMgr.Push(L, o);
 		return 1;

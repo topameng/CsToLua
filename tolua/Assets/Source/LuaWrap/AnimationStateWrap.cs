@@ -48,16 +48,19 @@ public class AnimationStateWrap
 		return 0;
 	}
 
+	static Type classType = typeof(AnimationState);
+
 	[MonoPInvokeCallbackAttribute(typeof(LuaCSFunction))]
 	static int GetClassType(IntPtr L)
 	{
-		LuaScriptMgr.Push(L, typeof(AnimationState));
+		LuaScriptMgr.Push(L, classType);
+
 		return 1;
 	}
 
 	public static void Register(IntPtr L)
 	{
-		LuaScriptMgr.RegisterLib(L, "UnityEngine.AnimationState", typeof(AnimationState), regs, fields, typeof(UnityEngine.TrackedReference));
+		LuaScriptMgr.RegisterLib(L, "UnityEngine.AnimationState", typeof(AnimationState), regs, fields, typeof(TrackedReference));
 	}
 
 	[MonoPInvokeCallbackAttribute(typeof(LuaCSFunction))]
@@ -416,7 +419,7 @@ public class AnimationStateWrap
 			}
 		}
 
-		obj.wrapMode = LuaScriptMgr.GetNetObject<WrapMode>(L, 3);
+		obj.wrapMode = (WrapMode)LuaScriptMgr.GetNetObject(L, 3, typeof(WrapMode));
 		return 0;
 	}
 
@@ -584,7 +587,7 @@ public class AnimationStateWrap
 			}
 		}
 
-		obj.blendMode = LuaScriptMgr.GetNetObject<AnimationBlendMode>(L, 3);
+		obj.blendMode = (AnimationBlendMode)LuaScriptMgr.GetNetObject(L, 3, typeof(AnimationBlendMode));
 		return 0;
 	}
 
@@ -594,15 +597,15 @@ public class AnimationStateWrap
 		int count = LuaDLL.lua_gettop(L);
 		if (count == 2)
 		{
-			AnimationState obj = LuaScriptMgr.GetTrackedObject<AnimationState>(L, 1);
-			Transform arg0 = LuaScriptMgr.GetUnityObject<Transform>(L, 2);
+			AnimationState obj = (AnimationState)LuaScriptMgr.GetTrackedObject(L, 1, typeof(AnimationState));
+			Transform arg0 = (Transform)LuaScriptMgr.GetUnityObject(L, 2, typeof(Transform));
 			obj.AddMixingTransform(arg0);
 			return 0;
 		}
 		else if (count == 3)
 		{
-			AnimationState obj = LuaScriptMgr.GetTrackedObject<AnimationState>(L, 1);
-			Transform arg0 = LuaScriptMgr.GetUnityObject<Transform>(L, 2);
+			AnimationState obj = (AnimationState)LuaScriptMgr.GetTrackedObject(L, 1, typeof(AnimationState));
+			Transform arg0 = (Transform)LuaScriptMgr.GetUnityObject(L, 2, typeof(Transform));
 			bool arg1 = LuaScriptMgr.GetBoolean(L, 3);
 			obj.AddMixingTransform(arg0,arg1);
 			return 0;
@@ -619,8 +622,8 @@ public class AnimationStateWrap
 	static int RemoveMixingTransform(IntPtr L)
 	{
 		LuaScriptMgr.CheckArgsCount(L, 2);
-		AnimationState obj = LuaScriptMgr.GetTrackedObject<AnimationState>(L, 1);
-		Transform arg0 = LuaScriptMgr.GetUnityObject<Transform>(L, 2);
+		AnimationState obj = (AnimationState)LuaScriptMgr.GetTrackedObject(L, 1, typeof(AnimationState));
+		Transform arg0 = (Transform)LuaScriptMgr.GetUnityObject(L, 2, typeof(Transform));
 		obj.RemoveMixingTransform(arg0);
 		return 0;
 	}
@@ -629,8 +632,8 @@ public class AnimationStateWrap
 	static int Lua_Eq(IntPtr L)
 	{
 		LuaScriptMgr.CheckArgsCount(L, 2);
-		TrackedReference arg0 = LuaScriptMgr.GetVarObject(L, 1) as TrackedReference;
-		TrackedReference arg1 = LuaScriptMgr.GetVarObject(L, 2) as TrackedReference;
+		TrackedReference arg0 = LuaScriptMgr.GetLuaObject(L, 1) as TrackedReference;
+		TrackedReference arg1 = LuaScriptMgr.GetLuaObject(L, 2) as TrackedReference;
 		bool o = arg0 == arg1;
 		LuaScriptMgr.Push(L, o);
 		return 1;

@@ -37,16 +37,19 @@ public class AsyncOperationWrap
 		return 0;
 	}
 
+	static Type classType = typeof(AsyncOperation);
+
 	[MonoPInvokeCallbackAttribute(typeof(LuaCSFunction))]
 	static int GetClassType(IntPtr L)
 	{
-		LuaScriptMgr.Push(L, typeof(AsyncOperation));
+		LuaScriptMgr.Push(L, classType);
+
 		return 1;
 	}
 
 	public static void Register(IntPtr L)
 	{
-		LuaScriptMgr.RegisterLib(L, "UnityEngine.AsyncOperation", typeof(AsyncOperation), regs, fields, typeof(UnityEngine.YieldInstruction));
+		LuaScriptMgr.RegisterLib(L, "UnityEngine.AsyncOperation", typeof(AsyncOperation), regs, fields, typeof(YieldInstruction));
 	}
 
 	[MonoPInvokeCallbackAttribute(typeof(LuaCSFunction))]
