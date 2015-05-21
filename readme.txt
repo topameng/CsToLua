@@ -6,6 +6,16 @@
 		end
 使用注释掉的代码替换上面几行
 
+2015.5.21 1.9.5（包括1.9.4内容） 同步中
+加入了Bounds值类型
+优化了LuaInterface创建userdata速度
+部分函数写入c中包括index，newindex函数等，可提升手机上效率（pc由于jit非凡表现差距不大）
+优化了PushTouch效率。
+优化了枚举效率，枚举在lua唯一性（不是与int值区别，这个早有了）。
+加入了委托变量可以赋值 LuaFunction，并且没有gc alloc (如果需要支持委托 + 操作，需要另外导出委托)感谢kingowl提供
+修改了Quaternion.Lerp 的bug
+修正一个了ios反射编译问题 
+
 2015.4.13 1.9.3
 修正Vector2.lua 和 Vectoe4.lua 部分bug
 Object 和object Equals判断支持null对象
