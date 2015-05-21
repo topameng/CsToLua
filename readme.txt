@@ -14,7 +14,7 @@
 优化了枚举效率，枚举在lua唯一性（不是与int值区别，这个早有了）。
 加入了委托变量可以赋值 LuaFunction，并且没有gc alloc (如果需要支持委托 + 操作，需要另外导出委托)感谢kingowl提供
 修改了Quaternion.Lerp 的bug
-修正一个了ios反射编译问题 
+修正一个了ios反射编译问题, 感谢Quon
 协同出错时，stack信息更详细
 
 2015.4.13 1.9.3
