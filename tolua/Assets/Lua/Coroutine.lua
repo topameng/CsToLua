@@ -5,15 +5,13 @@
 --      Use, modification and distribution are subject to the "New BSD License"
 --      as listed at <url: http://www.opensource.org/licenses/bsd-license.php >.
 --------------------------------------------------------------------------------
--- 扩展lua协同为c#协同形式
 
 local create = coroutine.create
 local running = coroutine.running
 local resume = coroutine.resume
 local yield = coroutine.yield
-local error = error
 
-function coroutine.start(f, ...)		
+function coroutine.start(f, ...)	
 	local co = create(f)
 	
 	if running() == nil then
@@ -21,7 +19,7 @@ function coroutine.start(f, ...)
 	
 		if not flag then		
 			error(msg)
-		end		
+		end					
 	else
 		local args = {...}
 		
@@ -34,19 +32,21 @@ function coroutine.start(f, ...)
 		end
 			
 		local timer = FrameTimer.New(action, 0, 1)
-		timer:Start()
+		timer:Start()		
 	end
 end
 
-function coroutine.wait(t, ...)
+function coroutine.wait(t, co, ...)
 	local args = {...}
-	local co = running()
-	
+	co = co or running()		
+		
 	local action = function()		
 		local flag, msg = resume(co, unpack(args))
 		
-		if not flag then
-			error(msg)			
+		if not flag then	
+			msg = debug.traceback(co, msg)				
+			Debugger.LogError("coroutine error:{0}", msg)		
+			return
 		end
 	end
 	
@@ -55,15 +55,17 @@ function coroutine.wait(t, ...)
 	return yield()
 end
 
-function coroutine.step(t, ...)
+function coroutine.step(t, co, ...)
 	local args = {...}
-	local co = running()		
+	co = co or running()		
 	
 	local action = function()							
 		local flag, msg = resume(co, unpack(args))
 	
-		if not flag then
-			error(msg)		
+		if not flag then				
+			msg = debug.traceback(co, msg)				
+			Debugger.LogError("coroutine error:{0}", msg)		
+			return	
 		end		
 	end
 			
@@ -71,4 +73,3 @@ function coroutine.step(t, ...)
 	timer:Start()
 	return yield()
 end
-

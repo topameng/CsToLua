@@ -1,32 +1,21 @@
 ﻿using UnityEngine;
 using System.Collections.Generic;
 
-//忘了原来的设计了，不重复造轮子了. 用这个不能即时删除 Object 了
+//忘了原来的设计了，还是用系统的吧
 public class LuaObjectMap
 {    
     private List<object> list;
-    private Stack<int> pool;
+    private Queue<int> pool;
 
     public LuaObjectMap()
     {
         list = new List<object>(1024);
-        pool = new Stack<int>(1024);
+        pool = new Queue<int>(1024);
     }
 
     public object this[int i]
     {
-        get 
-        {
-            return list[i]; 
-        }
-
-        set
-        {
-            if (list[i] != null)
-            {
-                list[i] = value;
-            }
-        }
+        get { return list[i]; }        
     }
 
     public int Add(object obj)
@@ -35,7 +24,7 @@ public class LuaObjectMap
 
         if (pool.Count > 0)
         {
-            index = pool.Pop();
+            index = pool.Dequeue();
             list[index] = obj;
         }
         else
@@ -59,7 +48,7 @@ public class LuaObjectMap
         return false;
     }
 
-    public void Remove(int index)
+    public object Remove(int index)
     {
         if (index >= 0 && index < list.Count)
         {
@@ -67,10 +56,14 @@ public class LuaObjectMap
 
             if (o != null)
             {
-                pool.Push(index);
+                pool.Enqueue(index);
             }
 
-            list[index] = null;            
-        }        
+            list[index] = null;
+
+            return o;
+        }
+
+        return null;
     }
 }

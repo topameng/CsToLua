@@ -20,7 +20,7 @@ local rad2Deg = math.rad2Deg
 local deg2Rad = math.deg2Rad
 
 Vector3 = 
-{
+{	
 	x = 0,
 	y = 0,
 	z = 0,
@@ -51,26 +51,23 @@ Vector3.__call = function(t,x,y,z)
 end
 
 function Vector3.New(x, y, z)
-	local v = {}
-	setmetatable(v, Vector3)
-	v:Set(x,y,z)
+	local v = {x = 0, y = 0, z = 0}	
+	v.x = x or 0
+	v.y = y or 0
+	v.z = z or 0
+	setmetatable(v, Vector3)	
+	--v:Set(x, y, z)
 	return v
 end
-
-function Vector3:Set(tableOrX,y,z)
-	if tableOrX == nil or type(tableOrX) == "number" then
-		self.x = tableOrX or 0
-		self.y = y or 0
-		self.z = z or 0
-	else
-		self.x = tableOrX.x
-		self.y = tableOrX.y
-		self.z = tableOrX.z
-	end
+	
+function Vector3:Set(x,y,z)	
+	self.x = x or 0
+	self.y = y or 0
+	self.z = z or 0
 end
 
-function Vector3:Get()
-	return self.x, self.y, self.z
+function Vector3:Get()	
+	return self.x, self.y, self.z	
 end
 
 function Vector3:Clone()

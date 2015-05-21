@@ -16,58 +16,20 @@ public static class LuaBinding
 {
     public class BindType
     {
-        public string name;
+        public string name;                 //类名称
         public Type type;
         public bool IsStatic;
-        public string baseName = null;
-        public string wrapName = "";
-        public string libName = "";
+        public string baseName = null;      //继承的类名字
+        public string wrapName = "";        //产生的wrap文件名字
+        public string libName = "";         //注册到lua的名字
 
-        string GetTypeStr(string str)
+        string GetTypeStr(Type t)
         {
-            if (str.Contains("`"))
+            string str = t.ToString();
+
+            if (t.IsGenericType)
             {
-                string regStr = @"^(?<s0>.*?)\.?(?<s1>\w*)`[1-9]\[(?<s2>.*?)\]$";
-                Regex r = new Regex(regStr, RegexOptions.None);
-                Match mc = r.Match(str);
-                bool beMember = false;
-
-                if (!mc.Success)
-                {
-                    regStr = @"^(?<s0>.*?)\.?(?<s1>\w*)`[1-9]\+(?<s3>.*?)\[(?<s2>.*?)\]$";
-                    r = new Regex(regStr, RegexOptions.None);
-                    mc = r.Match(str);
-                    beMember = true;
-                }
-
-                string s0 = mc.Groups["s0"].Value;
-                string s1 = mc.Groups["s1"].Value;
-                string s2 = mc.Groups["s2"].Value;
-                string[] ss = s2.Split(new char[] { ',' }, System.StringSplitOptions.RemoveEmptyEntries);
-                s2 = string.Empty;
-
-                for (int i = 0; i < ss.Length; i++)
-                {
-                    ss[i] = ToLua._TC(ss[i]);
-                }
-
-                for (int i = 0; i < ss.Length - 1; i++)
-                {
-                    s2 += ss[i];
-                    s2 += ",";
-                }
-
-                s2 += ss[ss.Length - 1];
-
-                string s4 = string.Format("{0}<{1}>", s1, s2);
-
-                if (beMember)
-                {
-                    s4 += ".";
-                    s4 += mc.Groups["s3"].Value;
-                }
-
-                str = s0 + "." + s4;
+                str = GetGenericName(t);
             }
             else if (str.Contains("+"))
             {
@@ -77,50 +39,70 @@ public static class LuaBinding
             return str;
         }
 
-		private static string[] getGenericName(Type[] _types)
-		{
-			string[] results = new string[_types.Length];
-			for (int i = 0; i < _types.Length; i++)
-			{
-				if (_types[i].IsGenericType)
-					results[i] = getGenericName(_types[i]);
-				else
-					results[i] = _types[i].ToString();
+        private static string[] GetGenericName(Type[] types)
+        {
+            string[] results = new string[types.Length];
 
-			}
+            for (int i = 0; i < types.Length; i++)
+            {
+                if (types[i].IsGenericType)
+                {
+                    results[i] = GetGenericName(types[i]);
+                }
+                else
+                {
+                    results[i] = ToLua.GetTypeStr(types[i]);
+                }
 
-			return results;
-		}
+            }
 
-		private static string getGenericName(Type _type)
-		{
-			if (_type.GetGenericArguments().Length == 0)
-				return _type.Name;
+            return results;
+        }
 
-			var gArgs = _type.GetGenericArguments();
-			var typeName = _type.Name;
-			var pureTypeName = typeName.Substring(0, typeName.IndexOf('`'));
-			return pureTypeName + "<" + string.Join(",", getGenericName(gArgs)) + ">";
-		}
+        private static string GetGenericName(Type type)
+        {
+            if (type.GetGenericArguments().Length == 0)
+            {
+                return type.Name;
+            }
+
+            Type[] gArgs = type.GetGenericArguments();
+            string typeName = type.Name;
+            string pureTypeName = typeName.Substring(0, typeName.IndexOf('`'));
+
+            return pureTypeName + "<" + string.Join(",", GetGenericName(gArgs)) + ">";
+        }
+
         public BindType(Type t)
         {
-            string str = t.ToString();
-            //str = GetTypeStr(str);            
-            libName = GetTypeStr(str);
             type = t;
 
-            if (t.IsGenericType) str = libName;
+            name = ToLua.GetTypeStr(t);
+
+            if (t.IsGenericType)
+            {
+                libName = ToLua.GetGenericLibName(t);
+                wrapName = ToLua.GetGenericLibName(t);
+            }
+            else
+            {
+                if (t.Namespace != null && t.Namespace != string.Empty)
+                {
+                    libName = t.Namespace + "." + name;
+                }
+                else
+                {
+                    libName = name;
+                }
+
+                wrapName = name.Replace(".", "");
+            }
 
             if (t.BaseType != null)
             {
-				if (t.BaseType.IsGenericType)
-				{
-					baseName = getGenericName(t.BaseType);
-				}
-				else
-					baseName = t.BaseType.ToString();
+                baseName = ToLua.GetTypeStr(t.BaseType);
 
-                if (baseName == "System.ValueType")
+                if (baseName == "ValueType")
                 {
                     baseName = null;
                 }
@@ -131,32 +113,11 @@ public static class LuaBinding
                 baseName = null;
                 IsStatic = true;
             }
-
-            int index = str.LastIndexOf('.');
-
-            if (index > 0)
-            {
-                name = str.Substring(index + 1);
-                name = name.Replace('+', '.');
-                wrapName = name.Replace(".", "");
-            }
-            else
-            {
-                name = str.Replace('+', '.');
-                wrapName = name.Replace(".", "");
-            }
         }
 
         public BindType SetBaseName(string str)
         {
             baseName = str;
-            return this;
-        }
-
-        public BindType SetClassName(string str)
-        {
-            name = str;
-            wrapName = GetWrapName();
             return this;
         }
 
@@ -170,19 +131,6 @@ public static class LuaBinding
         {
             libName = str;
             return this;
-        }
-
-        string GetWrapName()
-        {
-            string[] ss = name.Split(new char[] { '.' });
-            StringBuilder sb = new StringBuilder();
-
-            for (int i = 0; i < ss.Length; i++)
-            {
-                sb.Append(ss[i]);
-            }
-
-            return sb.ToString();
         }
     }
 
@@ -198,7 +146,7 @@ public static class LuaBinding
         ////_GT(typeof(Dictionary<int,string>)).SetWrapName("DictInt2Str").SetLibName("DictInt2Str"),
         
         //custom    
-        _GT(typeof(Debugger)),
+        //_GT(typeof(Debugger)),
         //_GT(typeof(SocketClient)),        
         //_GT(typeof(UIBase)),        
         //_GT(typeof(LuaHelper)),                           
@@ -301,7 +249,7 @@ public static class LuaBinding
     };
 
 
-    [MenuItem("Thinky/Gen Lua Wrap Files", false, 11)]
+    [MenuItem("Lua/Gen Lua Wrap Files", false, 11)]
     public static void Binding()
     {
         if (!Application.isPlaying)
@@ -343,7 +291,7 @@ public static class LuaBinding
         AssetDatabase.Refresh();        
     }
 
-    [MenuItem("Thinky/Gen LuaBinder File", false, 12)]
+    [MenuItem("Lua/Gen LuaBinder File", false, 12)]
     static void GenLuaBinder()
     {
         StringBuilder sb = new StringBuilder();
@@ -386,7 +334,7 @@ public static class LuaBinding
         }
     }
 
-    [MenuItem("Thinky/Clear LuaBinder File", false, 13)]
+    [MenuItem("Lua/Clear LuaBinder File", false, 13)]
     static void ClearLuaBinder()
     {
         StringBuilder sb = new StringBuilder();
@@ -411,7 +359,28 @@ public static class LuaBinding
         AssetDatabase.Refresh();
     }
 
-    [MenuItem("Thinky/Gen u3d Wrap Files", false, 11)]
+    static DelegateType _DT(Type t)
+    {
+        return new DelegateType(t);
+    }
+
+    [MenuItem("Thinky/Gen Lua Delegates", false, 14)]
+    static void GenLuaDelegates()
+    {
+        DelegateType[] list = new DelegateType[]
+        {
+            _DT(typeof(Action<GameObject>)),
+            _DT(typeof(Action<GameObject, int, string>)),
+            _DT(typeof(Action<int, int, int, List<int>>)),
+            //_DT(typeof(UIEventListener.VoidDelegate)).SetName("VoidDelegate"),            
+        };
+
+        ToLua.GenDelegates(list);
+
+        Debug.Log("Create lua delegate over");
+    }
+
+    [MenuItem("Lua/Gen u3d Wrap Files", false, 15)]
     public static void U3dBinding()
     {
         List<string> dropList = new List<string>

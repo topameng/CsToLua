@@ -1,4 +1,5 @@
 ﻿local beginTime = os.clock()
+local unscaledTime = tolua.gettime()
 
 Time = 
 {
@@ -7,13 +8,15 @@ Time =
 	frameCount 		= 1,
 	timeScale		= 1,
 	timeSinceLevelLoad 	= 0,
-	unscaledDeltaTime	= 0,	
+	unscaledDeltaTime	= 0,		
 }
 
 local mt = {}
 mt.__index = function(obj, name)
 	if name == "time" or name == "realtimeSinceStartup" then
 		return os.clock() - beginTime
+	elseif name == "unscaledTime" then
+		return tolua.gettime() - unscaledTime
 	else
 		return rawget(obj, name)		
 	end
@@ -23,7 +26,7 @@ function Time:Init()
 	self.frameCount	= UnityEngine.Time.frameCount
 	self.fixedTime	= UnityEngine.Time.fixedTime 
 	self.timeScale	= UnityEngine.Time.timeScale
-	self.deltaTime = 0
+	self.deltaTime = 0	
 	setmetatable(self, mt)
 end
 

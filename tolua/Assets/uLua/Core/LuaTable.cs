@@ -66,8 +66,8 @@ namespace LuaInterface
         {
             get
             {
-                push(_Interpreter.L);
-                LuaDLL.lua_objlen(_Interpreter.L, -1);
+                //push(_Interpreter.L);
+                //LuaDLL.lua_objlen(_Interpreter.L, -1);
                 return _Interpreter.GetTableDict(this).Count;
             }
         }
@@ -154,7 +154,7 @@ namespace LuaInterface
         internal void push(IntPtr luaState)
         {
             LuaDLL.lua_getref(luaState, _Reference);
-        }
+        }     
 
         public override string ToString()
         {

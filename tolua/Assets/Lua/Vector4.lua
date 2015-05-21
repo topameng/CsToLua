@@ -40,7 +40,7 @@ Vector4.__index = function(t,k)
 end
 
 function Vector4.New(x, y, z, w)
-	local v = {}
+	local v = {x = 0, y = 0, z = 0, w = 0}
 	setmetatable(v, Vector4)
 	v:Set(x,y,z,w)
 	return v

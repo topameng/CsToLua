@@ -25,7 +25,7 @@ Vector2.__index = function(t,k)
 		var = rawget(fields, k)
 		
 		if var ~= nil then
-			return var(t)	
+			return var(t)
 		end
 	end
 	
@@ -33,7 +33,7 @@ Vector2.__index = function(t,k)
 end
 
 function Vector2.New(x, y)
-	local v = {}
+	local v = {x = 0, y = 0}
 	setmetatable(v, Vector2)
 	v:Set(x,y)
 	return v
@@ -52,9 +52,13 @@ function Vector2:SqrMagnitude()
 	return self.x * self.x + self.y * self.y
 end
 
+function Vector2:Clone()
+	return Vector2.New(self.x, self.y)
+end
+
 function Vector2:Normalize()
-	local v2 = vector2.New(self.x, self.y)
-	return v2:SetNormalize()
+	local v = self:Clone()
+	return v:SetNormalize()	
 end
 
 function Vector2:SetNormalize()

@@ -27,9 +27,12 @@ Color.__index = function(t,k)
 end
 
 function Color.New(r, g, b, a)
-	local v = {}
+	local v = {r = 0, g = 0, b = 0, a = 0}
+	v.r = r
+	v.g = g
+	v.b = b
+	v.a = a or 1
 	setmetatable(v, Color)
-	v:Set(r, g, b, a)
 	return v
 end
 

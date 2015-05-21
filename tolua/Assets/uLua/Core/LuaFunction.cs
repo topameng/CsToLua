@@ -42,8 +42,8 @@ namespace LuaInterface
          */
         internal object[] call(object[] args, Type[] returnTypes)
         {            
-            int nArgs = 0;
-            LuaDLL.lua_getglobal(L, "traceback");            
+            int nArgs = 0;                   
+            LuaScriptMgr.PushTraceBack(L);
             int oldTop = LuaDLL.lua_gettop(L);
 
             if (!LuaDLL.lua_checkstack(L, args.Length + 6))

@@ -75,9 +75,9 @@ public class objectWrap
     static int Equals(IntPtr L)
     {
         LuaScriptMgr.CheckArgsCount(L, 2);
-        object obj = (object)LuaScriptMgr.GetVarObject(L, 1);
-        object arg0 = (object)LuaScriptMgr.GetVarObject(L, 2);
-        bool o = obj.Equals(arg0);
+        object obj = LuaScriptMgr.GetVarObject(L, 1);
+        object arg0 = LuaScriptMgr.GetVarObject(L, 2);
+        bool o = obj != null ? obj.Equals(arg0) : arg0 == null;
         LuaScriptMgr.Push(L, o);
         return 1;
     }
@@ -136,8 +136,8 @@ public class objectWrap
     [MonoPInvokeCallbackAttribute(typeof(LuaCSFunction))]
     static int Destroy(IntPtr L)
     {
-        LuaScriptMgr.CheckArgsCount(L, 1);                
-        LuaScriptMgr.__gc(L);          
+        LuaScriptMgr.CheckArgsCount(L, 1);
+        LuaScriptMgr.__gc(L);
         return 0;
     }
 }

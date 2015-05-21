@@ -36,10 +36,13 @@ public class EnumWrap
 		return 0;
 	}
 
+	static Type classType = typeof(Enum);
+
 	[MonoPInvokeCallbackAttribute(typeof(LuaCSFunction))]
 	static int GetClassType(IntPtr L)
 	{
-		LuaScriptMgr.Push(L, typeof(Enum));
+		LuaScriptMgr.Push(L, classType);
+
 		return 1;
 	}
 
@@ -68,7 +71,7 @@ public class EnumWrap
 	static int GetTypeCode(IntPtr L)
 	{
 		LuaScriptMgr.CheckArgsCount(L, 1);
-		Enum obj = LuaScriptMgr.GetNetObject<Enum>(L, 1);
+		Enum obj = (Enum)LuaScriptMgr.GetNetObject(L, 1, typeof(Enum));
 		TypeCode o = obj.GetTypeCode();
 		LuaScriptMgr.Push(L, o);
 		return 1;
@@ -159,7 +162,7 @@ public class EnumWrap
 	static int CompareTo(IntPtr L)
 	{
 		LuaScriptMgr.CheckArgsCount(L, 2);
-		Enum obj = LuaScriptMgr.GetNetObject<Enum>(L, 1);
+		Enum obj = (Enum)LuaScriptMgr.GetNetObject(L, 1, typeof(Enum));
 		object arg0 = LuaScriptMgr.GetVarObject(L, 2);
 		int o = obj.CompareTo(arg0);
 		LuaScriptMgr.Push(L, o);
@@ -172,14 +175,14 @@ public class EnumWrap
 		int count = LuaDLL.lua_gettop(L);
 		if (count == 1)
 		{
-			Enum obj = LuaScriptMgr.GetNetObject<Enum>(L, 1);
+			Enum obj = (Enum)LuaScriptMgr.GetNetObject(L, 1, typeof(Enum));
 			string o = obj.ToString();
 			LuaScriptMgr.Push(L, o);
 			return 1;
 		}
 		else if (count == 2)
 		{
-			Enum obj = LuaScriptMgr.GetNetObject<Enum>(L, 1);
+			Enum obj = (Enum)LuaScriptMgr.GetNetObject(L, 1, typeof(Enum));
 			string arg0 = LuaScriptMgr.GetLuaString(L, 2);
 			string o = obj.ToString(arg0);
 			LuaScriptMgr.Push(L, o);
@@ -226,9 +229,9 @@ public class EnumWrap
 	static int Equals(IntPtr L)
 	{
 		LuaScriptMgr.CheckArgsCount(L, 2);
-		Enum obj = LuaScriptMgr.GetNetObject<Enum>(L, 1);
+		Enum obj = LuaScriptMgr.GetVarObject(L, 1) as Enum;
 		object arg0 = LuaScriptMgr.GetVarObject(L, 2);
-		bool o = obj.Equals(arg0);
+		bool o = obj != null ? obj.Equals(arg0) : arg0 == null;
 		LuaScriptMgr.Push(L, o);
 		return 1;
 	}
@@ -237,7 +240,7 @@ public class EnumWrap
 	static int GetHashCode(IntPtr L)
 	{
 		LuaScriptMgr.CheckArgsCount(L, 1);
-		Enum obj = LuaScriptMgr.GetNetObject<Enum>(L, 1);
+		Enum obj = (Enum)LuaScriptMgr.GetNetObject(L, 1, typeof(Enum));
 		int o = obj.GetHashCode();
 		LuaScriptMgr.Push(L, o);
 		return 1;

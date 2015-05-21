@@ -49,6 +49,7 @@ namespace LuaInterface
             extractValues.Add(typeof(Color).TypeHandle.Value.ToInt64(), new ExtractValue(getAsColor));
             extractValues.Add(typeof(Vector4).TypeHandle.Value.ToInt64(), new ExtractValue(getAsVector4));
             extractValues.Add(typeof(Ray).TypeHandle.Value.ToInt64(), new ExtractValue(getAsRay));
+            extractValues.Add(typeof(Bounds).TypeHandle.Value.ToInt64(), new ExtractValue(getAsBounds));
                     
 
             extractNetObject = new ExtractValue(getAsNetObject);
@@ -407,6 +408,11 @@ namespace LuaInterface
         public object getAsRay(IntPtr L, int stackPos)
         {
             return LuaScriptMgr.GetRay(L, stackPos);
+        }
+
+        public object getAsBounds(IntPtr L, int stackPos)
+        {
+            return LuaScriptMgr.GetBounds(L, stackPos);
         }
     }
 }

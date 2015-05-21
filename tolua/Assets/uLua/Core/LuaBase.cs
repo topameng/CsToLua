@@ -98,10 +98,11 @@ namespace LuaInterface
         {
             if (o is LuaBase)
             {
-                LuaBase l = (LuaBase)o;
+                LuaBase l = (LuaBase)o;                
                 return _Interpreter.compareRef(l._Reference, _Reference);
             }
-            else return false;
+            
+            return false;
         }
 
         public override int GetHashCode()

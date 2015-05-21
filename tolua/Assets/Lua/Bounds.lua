@@ -1,7 +1,9 @@
-﻿Bounds = 
+﻿local zero = Vector3.zero
+
+Bounds = 
 {
-	center = nil,
-	extents = nil,
+	center = zero,
+	extents = zero,
 }
 
 setmetatable(Bounds, Bounds)
@@ -25,10 +27,10 @@ end
 
 
 function Bounds.New(center, size)
-	local bd = {}
-	setmetatable(bd, Bounds)
+	local bd = {center = zero, extents = zero}
 	bd.center = center
 	bd.extents = size * 0.5
+	setmetatable(bd, Bounds)	
 	return bd
 end
 

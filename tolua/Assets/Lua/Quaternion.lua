@@ -57,8 +57,8 @@ Quaternion.__newindex = function(t, name, k)
 	end	
 end
 
-function Quaternion.New(x, y, z, w)
-	local quat = {}	
+function Quaternion.New(x, y, z, w)	
+	local quat = {x = 0, y = 0, z = 0, w = 0}
 	setmetatable(quat, Quaternion)
 	quat:Set(x,y,z,w)
 	return quat
@@ -115,7 +115,7 @@ function Quaternion:SetEuler(x, y, z)
 	if y == nil and z == nil then
 		x = x.x
 		y = x.y
-		z = z.z	
+		z = x.z	
 	end
 		
 	x = x * halfDegToRad
@@ -173,6 +173,8 @@ function Quaternion:SetFromToRotation(from, to)
 		local invs = 1 / s
 		local c = Vector3.Cross(v0, v1) * invs
 		self:Set(c.x, c.y, c.z, s * 0.5)	
+	elseif d > 1 - 1e-6 then
+		return Quaternion.New(0, 0, 0, 1)
 	else
 		local axis = Vector3.Cross(Vector3.right, v0)
 		
@@ -198,9 +200,24 @@ function Quaternion:Inverse()
 	return quat
 end
 
-function Quaternion.Lerp(from, to, t)
+function Quaternion.Lerp(q1, q2, t)
 	t = clamp(t, 0, 1)
-	return Quaternion.New(from.x + ((to.x - from.x) * t), from.y + ((to.y - from.y) * t), from.z + ((to.z - from.z) * t), from.w + ((to.w - from.w) * t))
+	local q = Quaternion.New()	
+	
+	if Quaternion.Dot(q1, q2) < 0 then
+		q.x = q1.x + t * (-q2.x -q1.x)
+		q.y = q1.y + t * (-q2.y -q1.y)
+		q.z = q1.z + t * (-q2.z -q1.z)
+		q.w = q1.w + t * (-q2.w -q1.w)
+	else
+		q.x = q1.x + (q2.x - q1.x) * t
+		q.y = q1.y + (q2.y - q1.y) * t
+		q.z = q1.z + (q2.z - q1.z) * t
+		q.w = q1.w + (q2.w - q1.w) * t
+	end	
+	
+	q:SetNormalize()
+	return q
 end
 
 local vUp = Vector3.up
@@ -225,31 +242,28 @@ function Quaternion.LookRotation(forward, up)
 	return ret, forward, up
 end
 
-function Quaternion.Slerp(from, to, t)
-	t = clamp(t, 0, 1)	
+function Quaternion.Slerp(from, to, t)	
+	t = clamp(t, 0, 1)
 	local cosAngle = Quaternion.Dot(from, to)
 	
     if cosAngle < 0 then    
         cosAngle = -cosAngle
-        to = -to
+        to = Quaternion.New(-to.x, -to.y, -to.z, -to.w)
     end
     
     local t1, t2
     
-    if cosAngle < 0.9999 then    
+    if cosAngle < 0.95 then    
 	    local angle 	= acos(cosAngle)
 		local sinAngle 	= sin(angle)
         local invSinAngle = 1 / sinAngle
         t1 = sin((1 - t) * angle) * invSinAngle
         t2 = sin(t * angle) * invSinAngle    
+		local quat = Quaternion.New(from.x * t1 + to.x * t2, from.y * t1 + to.y * t2, from.z * t1 + to.z * t2, from.w * t1 + to.w * t2)
+		return quat
     else    
-        t1 = 1 - t
-        t2 = t
-    end
-    
-	local quat = Quaternion.New(from.x * t1 + to.x * t2, from.y * t1 + to.y * t2, from.z * t1 + to.z * t2, from.w * t1 + to.w * t2)
-	quat:SetNormalize()
-	return quat
+		return Quaternion.Lerp(from, to, t)
+    end   	
 end
 
 function Quaternion:SetIdentity()
@@ -292,19 +306,19 @@ function Quaternion.RotateTowards(from, to, maxDegreesDelta)
 	return quat
 end
 
-function Quaternion:ToAngleAxis()	
-	local scale = sqrt(self.x * self.x + self.y * self.y + self.z * self.z)
-	local w = clamp(self.w / scale, -1, 1)
+local function Approximately(f0, f1)
+	return abs(f0 - f1) < 1e-6	
+end
+
+function Quaternion:ToAngleAxis()		
+	local angle = 2 * acos(self.w)
 	
-	--怀疑u3d这里写错了 w < -1 也应该在这里
-	if scale < 1e-6 and w > 1 then		
-		return 0, Vector3.New(1, 0, 0)		
+	if Approximately(angle, 0) then
+		return angle * 57.29578, Vector3.New(1, 0, 0)
 	end
 	
-	scale = 1/scale
-	local angle = 2 * rad2Deg * acos(w)
-	local axis = Vector3.New(self.x * scale, self.y * scale, self.z * scale)		
-	return angle, axis
+	local div = 1 / sqrt(1 - sqrt(self.w))
+	return angle * 57.29578, Vector3.New(q.x * div, q.y * div, q.z * div)
 end
 
 function Quaternion:ToEulerAngles()			

@@ -24,10 +24,13 @@ public class IEnumeratorWrap
 		return 0;
 	}
 
+	static Type classType = typeof(IEnumerator);
+
 	[MonoPInvokeCallbackAttribute(typeof(LuaCSFunction))]
 	static int GetClassType(IntPtr L)
 	{
-		LuaScriptMgr.Push(L, typeof(IEnumerator));
+		LuaScriptMgr.Push(L, classType);
+
 		return 1;
 	}
 
@@ -64,7 +67,7 @@ public class IEnumeratorWrap
 	static int MoveNext(IntPtr L)
 	{
 		LuaScriptMgr.CheckArgsCount(L, 1);
-		IEnumerator obj = LuaScriptMgr.GetNetObject<IEnumerator>(L, 1);
+		IEnumerator obj = (IEnumerator)LuaScriptMgr.GetNetObject(L, 1, typeof(IEnumerator));
 		bool o = obj.MoveNext();
 		LuaScriptMgr.Push(L, o);
 		return 1;
@@ -74,7 +77,7 @@ public class IEnumeratorWrap
 	static int Reset(IntPtr L)
 	{
 		LuaScriptMgr.CheckArgsCount(L, 1);
-		IEnumerator obj = LuaScriptMgr.GetNetObject<IEnumerator>(L, 1);
+		IEnumerator obj = (IEnumerator)LuaScriptMgr.GetNetObject(L, 1, typeof(IEnumerator));
 		obj.Reset();
 		return 0;
 	}
