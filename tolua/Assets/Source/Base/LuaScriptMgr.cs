@@ -51,7 +51,9 @@ public class LuaScriptMgr
     int arrayMetaRef = 0;
 
     public static LockFreeQueue<LuaRef> refGCList = new LockFreeQueue<LuaRef>(1024);    
-    static ObjectTranslator _translator = null;    
+    static ObjectTranslator _translator = null;
+
+    static HashSet<Type> checkBaseType = new HashSet<Type>();
 
 #if MULTI_STATE
     static List<LuaScriptMgr> mgrList = new List<LuaScriptMgr>();
@@ -265,7 +267,14 @@ public class LuaScriptMgr
     {
         IntPtr L = lua.L;
         BindArray(L);
-        LuaBinder.Bind(L);        
+        LuaBinder.Bind(L);
+
+        foreach (Type t in checkBaseType)
+        {
+            Debugger.LogWarning("BaseType {0} not register to lua", t.FullName);
+        }
+
+        checkBaseType.Clear();
     }
 
     void BindArray(IntPtr L)
@@ -939,6 +948,11 @@ public class LuaScriptMgr
             {
                 LuaDLL.lua_pop(L, 1);
                 LuaDLL.luaL_newmetatable(L, baseType.AssemblyQualifiedName);
+                checkBaseType.Add(baseType);
+            }
+            else
+            {
+                checkBaseType.Remove(baseType);
             }
 
             LuaDLL.lua_setmetatable(L, -2);
@@ -999,6 +1013,8 @@ public class LuaScriptMgr
 
         LuaDLL.lua_setmetatable(L, -2);
         LuaDLL.lua_settop(L, 0);
+
+        checkBaseType.Remove(t);
     }
 
     public static double GetNumber(IntPtr L, int stackPos)

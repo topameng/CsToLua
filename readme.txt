@@ -19,6 +19,7 @@
 协同出错时，stack信息更详细
 
 以前关于LuaStringBuffer一部分内容丢失了，补上（感谢端火锅的猫提醒）
+加入了检测基类是否wrap的提醒
 
 2015.4.13 1.9.3
 修正Vector2.lua 和 Vectoe4.lua 部分bug
