@@ -1297,6 +1297,11 @@ public class LuaScriptMgr
                 string str = (string)o;
                 LuaDLL.lua_pushstring(L, str);
             }
+            else if (t == typeof(LuaStringBuffer))
+            {
+                LuaStringBuffer lsb = (LuaStringBuffer)o;
+                LuaDLL.lua_pushlstring(L, lsb.buffer, lsb.buffer.Length);
+            }
             else if (t.IsSubclassOf(typeof(UnityEngine.Object)))
             {
                 UnityEngine.Object obj = (UnityEngine.Object)o;
@@ -1494,6 +1499,18 @@ public class LuaScriptMgr
     public static void Push(IntPtr L, IntPtr p)
     {
         LuaDLL.lua_pushlightuserdata(L, p);
+    }
+
+    public static void Push(IntPtr L, LuaStringBuffer lsb)
+    {
+        if (lsb.buffer != null)
+        {
+            LuaDLL.lua_pushlstring(L, lsb.buffer, lsb.buffer.Length);
+        }
+        else
+        {
+            LuaDLL.lua_pushnil(L);
+        }
     }
 
     public static void Push(IntPtr L, ILuaGeneratedType o)

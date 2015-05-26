@@ -602,17 +602,14 @@ public static class ToLua
         {
             return "Push";
         }
-        else if (t == typeof(bool) || t.IsPrimitive || t == typeof(string) || t == typeof(LuaTable) || t == typeof(LuaCSFunction) || t == typeof(LuaFunction) || 
+        else if (t == typeof(bool) || t.IsPrimitive || t == typeof(string) || t == typeof(LuaTable) || t == typeof(LuaCSFunction) || t == typeof(LuaFunction) ||
             typeof(UnityEngine.Object).IsAssignableFrom(t) || t == typeof(Type) || t == typeof(IntPtr) || typeof(Delegate).IsAssignableFrom(t) ||
-            typeof(UnityEngine.TrackedReference).IsAssignableFrom(t) || typeof(IEnumerator).IsAssignableFrom(t))
+            t == typeof(LuaStringBuffer) || typeof(UnityEngine.TrackedReference).IsAssignableFrom(t) || typeof(IEnumerator).IsAssignableFrom(t))
         {
             return "Push";
         }
-        else if (t == typeof(Vector3) || t == typeof(Vector2) || t == typeof(Vector4) || t == typeof(Quaternion) || t == typeof(Color))
-        {
-            return "Push";
-        }
-        else if (t == typeof(RaycastHit) || t == typeof(Ray) || t == typeof(Touch) || t == typeof(Bounds))
+        else if (t == typeof(Vector3) || t == typeof(Vector2) || t == typeof(Vector4) || t == typeof(Quaternion) || t == typeof(Color) || t == typeof(RaycastHit) ||
+            t == typeof(Ray) || t == typeof(Touch) || t == typeof(Bounds))
         {
             return "Push";
         }
@@ -2342,6 +2339,10 @@ public static class ToLua
         else if (t == typeof(Bounds))
         {
             sb.AppendFormat("\t\t{0}.{1} = LuaScriptMgr.GetBounds(L, 3);\r\n", o, name);
+        }
+        else if (t == typeof(LuaStringBuffer))
+        {
+            sb.AppendFormat("\t\t{0}.{1} = LuaScriptMgr.GetStringBuffer(L, 3);\r\n", o, name);
         }
         else if (typeof(UnityEngine.TrackedReference).IsAssignableFrom(t))
         {

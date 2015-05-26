@@ -5,7 +5,6 @@ public class MsgPacketWrap
 {
 	public static LuaMethod[] regs = new LuaMethod[]
 	{
-		new LuaMethod("PushLuaString", PushLuaString),
 		new LuaMethod("New", _CreateMsgPacket),
 		new LuaMethod("GetClassType", GetClassType),
 	};
@@ -37,16 +36,19 @@ public class MsgPacketWrap
 		return 0;
 	}
 
+	static Type classType = typeof(MsgPacket);
+
 	[MonoPInvokeCallbackAttribute(typeof(LuaCSFunction))]
 	static int GetClassType(IntPtr L)
 	{
-		LuaScriptMgr.Push(L, typeof(MsgPacket));
+		LuaScriptMgr.Push(L, classType);
+
 		return 1;
 	}
 
 	public static void Register(IntPtr L)
 	{
-		LuaScriptMgr.RegisterLib(L, "MsgPacket", typeof(MsgPacket), regs, fields, typeof(System.Object));
+		LuaScriptMgr.RegisterLib(L, "MsgPacket", typeof(MsgPacket), regs, fields, typeof(object));
 	}
 
 	[MonoPInvokeCallbackAttribute(typeof(LuaCSFunction))]
@@ -141,7 +143,7 @@ public class MsgPacketWrap
 			}
 		}
 
-		LuaScriptMgr.PushArray(L, obj.data);
+		LuaScriptMgr.Push(L, obj.data);
 		return 1;
 	}
 
@@ -237,16 +239,8 @@ public class MsgPacketWrap
 			}
 		}
 
-		obj.data = LuaScriptMgr.GetNetObject<Byte[]>(L, 3);
+		obj.data = LuaScriptMgr.GetStringBuffer(L, 3);
 		return 0;
-	}
-
-	[MonoPInvokeCallbackAttribute(typeof(LuaCSFunction))]
-	static int PushLuaString(IntPtr L)
-	{
-	        MsgPacket obj = LuaScriptMgr.GetNetObject<MsgPacket>(L, 1);
-        	obj.PushLuaString(L);
-		return 1;
 	}
 }
 

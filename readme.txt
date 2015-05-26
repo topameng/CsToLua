@@ -6,7 +6,8 @@
 		end
 使用注释掉的代码替换上面几行
 
-2015.5.21 1.9.5（包括1.9.4内容）
+
+2015.5.21 1.9.5
 加入了Bounds值类型
 优化了LuaInterface创建userdata速度
 部分函数写入c中包括index，newindex函数等，可提升手机上效率（pc由于jit非凡表现差距不大）
@@ -16,6 +17,8 @@
 修改了Quaternion.Lerp 的bug
 修正一个了ios反射编译问题, 感谢Quon
 协同出错时，stack信息更详细
+
+以前关于LuaStringBuffer一部分内容丢失了，补上（感谢端火锅的猫提醒）
 
 2015.4.13 1.9.3
 修正Vector2.lua 和 Vectoe4.lua 部分bug
