@@ -40,15 +40,15 @@ ParticleAnimator= UnityEngine.ParticleAnimator
 TouchPhase 		= UnityEngine.TouchPhase
 AnimationBlendMode = UnityEngine.AnimationBlendMode
 
-function print(...)
-	local str = ""	
-	local arg = {...}
-	local n = select('#', ...)
-
-	for i = 1, n do
-		str = string.format("%s%s", str, tostring(arg[i]))
+function print(...)	
+	local arg = {...}	
+	local t = {}	
+	
+	for i,k in ipairs(arg) do
+		table.insert(t, tostring(k))
 	end
 	
+	local str = table.concat(t)	
 	Debugger.Log(str)
 end
 
@@ -272,9 +272,4 @@ function PrintLua(name, lib)
 
 	Debugger.Log("-----------------Dump meta Over-----------------")
 	Debugger.Log("-----------------Dump Table Over-----------------")
-end
-
-function stringToTable(str)
-   local ret = loadstring("return "..str)()
-   return ret
 end
