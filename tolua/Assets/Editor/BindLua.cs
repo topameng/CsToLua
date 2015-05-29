@@ -86,16 +86,15 @@ public static class LuaBinding
             }
             else
             {
-                if (t.Namespace != null && t.Namespace != string.Empty)
+                libName = name;                
+                int index = name.LastIndexOf(".");
+
+                if (index > 0)
                 {
-                    libName = t.Namespace + "." + name;
-                }
-                else
-                {
-                    libName = name;
+                    name = name.Substring(index + 1);
                 }
 
-                wrapName = name.Replace(".", "");
+                wrapName = name;
             }
 
             if (t.BaseType != null)
