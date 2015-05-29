@@ -112,10 +112,10 @@ function Quaternion.Euler(x, y, z)
 end
 
 function Quaternion:SetEuler(x, y, z)		
-	if y == nil and z == nil then
-		x = x.x
+	if y == nil and z == nil then		
 		y = x.y
 		z = x.z	
+		x = x.x
 	end
 		
 	x = x * halfDegToRad
