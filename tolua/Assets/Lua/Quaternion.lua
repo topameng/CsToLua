@@ -21,6 +21,9 @@ local abs	= math.abs
 local rad2Deg = math.rad2Deg
 local halfDegToRad = 0.5 * math.deg2Rad
 
+local _up = Vector3.up
+local _next = { 2, 3, 1 }
+
 Quaternion = 
 {
 	x = 0,
@@ -84,19 +87,20 @@ function Quaternion.Dot(a, b)
 end
 
 function Quaternion.Angle(a, b)
-	return acos(min(abs(Quaternion.Dot(a, b)), 1)) * 2 * 57.29578	
+	local dot = Quaternion.Dot(a, b)
+	if dot < 0 then dot = -dot end
+	return acos(min(dot, 1)) * 2 * 57.29578	
 end
 
 function Quaternion.AngleAxis(angle, axis)
 	local normAxis = axis:Normalize()
     angle = angle * halfDegToRad
-    local sinAngle = sin(angle)
-    local cosAngle = cos(angle)
+    local s = sin(angle)    
     
-    local w = cosAngle
-    local x = normAxis.x * sinAngle
-    local y = normAxis.y * sinAngle
-    local z = normAxis.z * sinAngle
+    local w = cos(angle)
+    local x = normAxis.x * s
+    local y = normAxis.y * s
+    local z = normAxis.z * s
 	
 	return Quaternion.New(x,y,z,w)
 end
@@ -163,7 +167,7 @@ function Quaternion.FromToRotation(from, to)
 end
 
 --设置当前四元数为 from 到 to的旋转, 注意from和to同 forward平行会同unity不一致
-function Quaternion:SetFromToRotation(from, to)
+function Quaternion:SetFromToRotation1(from, to)
 	local v0 = from:Normalize()
 	local v1 = to:Normalize()
 	local d = Vector3.Dot(v0, v1)
@@ -187,6 +191,125 @@ function Quaternion:SetFromToRotation(from, to)
 	end
 	
 	return self
+end
+
+function MatrixToQuaternion(rot, quat)
+	local trace = rot[1][1] + rot[2][2] + rot[3][3]
+	
+	if trace > 0 then		
+		local s = sqrt(trace + 1)
+		quat.w = 0.5 * s
+		s = 0.5 / s
+		quat.x = (rot[3][2] - rot[2][3]) * s
+		quat.y = (rot[1][3] - rot[3][1]) * s
+		quat.z = (rot[2][1] - rot[1][2]) * s--]]
+		quat:SetNormalize()
+	else
+		local i = 1		
+		local q = {0, 0, 0}
+		
+		if rot[2][2] > rot[1][1] then			
+			i = 2			
+		end
+		
+		if rot[3][3] > rot[i][i] then
+			i = 3			
+		end
+		
+		local j = _next[i]
+		local k = _next[j]
+		
+		local t = rot[i][i] - rot[j][j] - rot[k][k] + 1
+		local s = 0.5 / sqrt(t)
+		q[i] = s * t
+		local w = (rot[k][j] - rot[j][k]) * s
+		q[j] = (rot[j][i] + rot[i][j]) * s
+		q[k] = (rot[k][i] + rot[i][k]) * s
+		
+		quat:Set(q[1], q[2], q[3], w)			
+		quat:SetNormalize()		
+	end
+end
+
+function Quaternion:SetFromToRotation(from, to)
+	from = from:Normalize()
+	to = to:Normalize()
+	
+	local e = Vector3.Dot(from, to)
+	
+	if e > 1 - 1e-6 then
+		self:Set(0, 0, 0, 1)
+	elseif e < -1 + 1e-6 then		
+		local left = {0, from.z, from.y}	
+		local mag = left[2] * left[2] + left[3] * left[3]  --+ left[1] * left[1] = 0
+		
+		if mag < 1e-6 then		
+			left[1] = -from.z
+			left[2] = 0
+			left[3] = from.x
+			mag = left[1] * left[1] + left[3] * left[3]
+		end
+				
+		local invlen = 1/sqrt(mag)
+		left[1] = left[1] * invlen
+		left[2] = left[2] * invlen
+		left[3] = left[3] * invlen
+		
+		local up = {0, 0, 0}
+		up[1] = left[2] * from.z - left[3] * from.y
+		up[2] = left[3] * from.x - left[1] * from.z
+		up[3] = left[1] * from.y - left[2] * from.x
+				
+
+		local fxx = -from.x * from.x
+		local fyy = -from.y * from.y
+		local fzz = -from.z * from.z
+		
+		local fxy = -from.x * from.y
+		local fxz = -from.x * from.z
+		local fyz = -from.y * from.z
+
+		local uxx = up[1] * up[1]
+		local uyy = up[2] * up[2]
+		local uzz = up[3] * up[3]
+		local uxy = up[1] * up[2]
+		local uxz = up[1] * up[3]
+		local uyz = up[2] * up[3]
+
+		local lxx = -left[1] * left[1]
+		local lyy = -left[2] * left[2]
+		local lzz = -left[3] * left[3]
+		local lxy = -left[1] * left[2]
+		local lxz = -left[1] * left[3]
+		local lyz = -left[2] * left[3]
+		
+		local rot = 
+		{
+			{fxx + uxx + lxx, fxy + uxy + lxy, fxz + uxz + lxz},
+			{fxy + uxy + lxy, fyy + uyy + lyy, fyz + uyz + lyz},
+			{fxz + uxz + lxz, fyz + uyz + lyz, fzz + uzz + lzz},
+		}
+		
+		MatrixToQuaternion(rot, self)		
+	else
+		local v = Vector3.Cross(from, to)
+		local h = (1 - e) / Vector3.Dot(v, v) 
+		
+		local hx = h * v.x
+		local hz = h * v.z
+		local hxy = hx * v.y
+		local hxz = hx * v.z
+		local hyz = hz * v.y
+		
+		local rot = 
+		{ 					
+			{e + hx*v.x, 	hxy - v.z, 		hxz + v.y},
+			{hxy + v.z,  	e + h*v.y*v.y, 	hyz-v.x},
+			{hxz - v.y,  	hyz + v.x,    	e + hz*v.z},
+		}
+		
+		MatrixToQuaternion(rot, self)
+	end
 end
 
 function Quaternion:Inverse()
@@ -220,26 +343,75 @@ function Quaternion.Lerp(q1, q2, t)
 	return q
 end
 
-local vUp = Vector3.up
 
 function Quaternion.LookRotation(forward, up)
-	up = up or vUp			
-	forward = forward:Normalize()
+	local mag = forward:Magnitude()
+	if mag < 1e-6 then
+		error("error input forward to Quaternion.LookRotation" + tostring(forward))
+		return nil
+	end
+	
+	forward = forward:Div(mag)  
+	up = up or _up				
 	local right = Vector3.Cross(up, forward)
 	right:SetNormalize()    
     up = Vector3.Cross(forward, right)
-    right = Vector3.Cross(up, forward)
+    right = Vector3.Cross(up, forward)	
+		
+	local t = right.x + up.y + forward.z
     
-	local w = sqrt(max(0, 1 + right.x + up.y + forward.z)) / 2
-	local x = sqrt(max(0, 1 + right.x - up.y - forward.z)) / 2
-	local y = sqrt(max(0, 1 - right.x + up.y - forward.z)) / 2
-	local z = sqrt(max(0, 1 - right.x - up.y + forward.z)) / 2
-	x = x * sign(x * (up.z - forward.y))
-	y = y * sign(y * (forward.x - right.z))
-	z = z * sign(z * (right.y - up.x))
+	if t > 0 then		
+		local x, y, z, w
+		t = t + 1
+		local s = 0.5 / sqrt(t)		
+		w = s * t
+		x = (up.z - forward.y) * s		
+		y = (forward.x - right.z) * s
+		z = (right.y - up.x) * s
+		
+		local ret = Quaternion.New(x, y, z, w)	
+		ret:SetNormalize()
+		return ret
+	else
+		local rot = 
+		{ 					
+			{right.x, up.x, forward.x},
+			{right.y, up.y, forward.y},
+			{right.z, up.z, forward.z},
+		}
 	
-	local ret = Quaternion.New(x, y, z, w)			
-	return ret, forward, up
+		local q = {0, 0, 0}
+		local i = 1		
+		
+		if up.y > right.x then			
+			i = 2			
+		end
+		
+		if forward.z > rot[i][i] then
+			i = 3			
+		end
+		
+		local j = _next[i]
+		local k = _next[j]
+		
+		local t = rot[i][i] - rot[j][j] - rot[k][k] + 1
+		local s = 0.5 / sqrt(t)
+		q[i] = s * t
+		local w = (rot[k][j] - rot[j][k]) * s
+		q[j] = (rot[j][i] + rot[i][j]) * s
+		q[k] = (rot[k][i] + rot[i][k]) * s
+		
+		local ret = Quaternion.New(q[1], q[2], q[3], w)			
+		ret:SetNormalize()
+		return ret
+	end
+end
+
+function Quaternion:SetIdentity()
+	self.x = 0
+	self.y = 0
+	self.z = 0
+	self.w = 1
 end
 
 function Quaternion.Slerp(from, to, t)	
@@ -266,44 +438,15 @@ function Quaternion.Slerp(from, to, t)
     end   	
 end
 
-function Quaternion:SetIdentity()
-	self.x = 0
-	self.y = 0
-	self.z = 0
-	self.w = 1
-end
-
 function Quaternion.RotateTowards(from, to, maxDegreesDelta)   	
-	local cosAngle = Quaternion.Dot(from, to)
-	local num = acos(abs(cosAngle)) * 2 * 57.29578
+	local angle = Quaternion.Angle(from, to)
 	
-	if num == 0 then
+	if angle == 0 then
 		return to
 	end
-				
-    if cosAngle < 0 then    
-        cosAngle = -cosAngle
-        to = -to
-    end
-    
-	local t 		= min(1, maxDegreesDelta / num)	
-    local angle 	= acos(cosAngle)
-    local sinAngle 	= sin(angle)
-    local t1, t2
-    
-    if sinAngle > 0.001 then    
-        local invSinAngle = 1 / sinAngle
-        t1 = sin((1 - t) * angle) * invSinAngle
-        t2 = sin(t * angle) * invSinAngle    
-    else    
-        t1 = 1 - t
-        t2 = t
-    end
-    
-	local quat = Quaternion.New(from.x * t1 + to.x * t2, from.y * t1 + to.y * t2, from.z * t1 + to.z * t2, from.w * t1 + to.w * t2)
-	quat:SetNormalize()
 	
-	return quat
+	local t = min(1, maxDegreesDelta / num)
+	return Quaternion.Slerp(from, to, t)
 end
 
 local function Approximately(f0, f1)
@@ -321,26 +464,68 @@ function Quaternion:ToAngleAxis()
 	return angle * 57.29578, Vector3.New(q.x * div, q.y * div, q.z * div)
 end
 
-function Quaternion:ToEulerAngles()			
-	local n = self.x * self.x + self.y * self.y + self.z * self.z + self.w * self.w
-	n = 1 / sqrt(n)
-		
-	local x = self.x * n
-	local y = self.y * n
-	local z = self.z * n
-	local w = self.w * n
+local pi = math.pi
+local half_pi = pi * 0.5
+local two_pi = 2 * pi
+local negativeFlip = -0.0001
+local positiveFlip = two_pi - 0.0001
 	
-	local check = 2 * (-y * z + w * x)
-    	
-    if check < -0.999999 then    
-        return Vector3.New(-90, -atan2(2 * (x * z - w * y), 1 - 2 * (y * y + z * z)) * rad2Deg, 0)    
-    elseif (check > 0.999999) then    
-        return Vector3.New(90, -atan2(2 * (x * z - w * y), 1 - 2 * (y * y + z * z)) * rad2Deg, 0)    
-    else    
-        return Vector3.New(asin(check) * rad2Deg,
-            atan2(2 * (x * z + w * y), 1 - 2 * (x * x + y * y)) * rad2Deg,
-            atan2(2 * (x * y + w * z), 1 - 2 * (x * x + z * z)) * rad2Deg)
-    end
+local function SanitizeEuler(euler)	
+	if euler.x < negativeFlip then
+		euler.x = euler.x + two_pi
+	elseif euler.x > positiveFlip then
+		euler.x = euler.x - two_pi
+	end
+
+	if euler.y < negativeFlip then
+		euler.y = euler.y + two_pi
+	elseif euler.y > positiveFlip then
+		euler.y = euler.y - two_pi
+	end
+
+	if euler.z < negativeFlip then
+		euler.z = euler.z + two_pi
+	elseif euler.z > positiveFlip then
+		euler.z = euler.z + two_pi
+	end
+end
+
+--from http://www.geometrictools.com/Documentation/EulerAngles.pdf
+--Order of rotations: YXZ
+function Quaternion:ToEulerAngles()
+	local x = self.x
+	local y = self.y
+	local z = self.z
+	local w = self.w
+		
+	local check = 2 * (y * z - w * x)
+	
+	if check < 0.999 then
+		if check > -0.999 then
+			local v = Vector3.New( -asin(check), 
+						atan2(2 * (x * z + w * y), 1 - 2 * (x * x + y * y)), 
+						atan2(2 * (x * y + w * z), 1 - 2 * (x * x + z * z)))
+			SanitizeEuler(v)
+			v:Mul(rad2Deg)
+			return v
+		else
+			local v = Vector3.New(half_pi, atan2(2 * (x * y - w * z), 1 - 2 * (y * y + z * z)), 0)
+			SanitizeEuler(v)
+			v:Mul(rad2Deg)
+			return v
+		end
+	else
+		local v = Vector3.New(-half_pi, atan2(-2 * (x * y - w * z), 1 - 2 * (y * y + z * z)), 0)
+		SanitizeEuler(v)
+		v:Mul(rad2Deg)
+		return v		
+	end
+end
+
+local _forward = Vector3.forward
+
+function Quaternion:Forward()
+	return self:MulVec3(_forward)
 end
 
 
@@ -368,7 +553,7 @@ function Quaternion.MulVec3(self, point)
 end
 
 Quaternion.__mul = function(lhs, rhs)
-	if rhs.class == Quaternion.class then
+	if Quaternion.class == rhs.class then
 		return Quaternion.New((((lhs.w * rhs.x) + (lhs.x * rhs.w)) + (lhs.y * rhs.z)) - (lhs.z * rhs.y), (((lhs.w * rhs.y) + (lhs.y * rhs.w)) + (lhs.z * rhs.x)) - (lhs.x * rhs.z), (((lhs.w * rhs.z) + (lhs.z * rhs.w)) + (lhs.x * rhs.y)) - (lhs.y * rhs.x), (((lhs.w * rhs.w) - (lhs.x * rhs.x)) - (lhs.y * rhs.y)) - (lhs.z * rhs.z))	
 	elseif rhs.class == Vector3.class then
 		return lhs:MulVec3(rhs)
