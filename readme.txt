@@ -7,6 +7,9 @@
 使用注释掉的代码替换上面几行
 
 2015.5.26 1.9.6 todo
+修正bindlua名称空间bug.
+Vector3, Quaternion 功能修正.
+
 减少注册占用的内存
 checktype 后不再进行类型检查, 是否可以缓存 lua_type
 加快反射速度，是否支持混用
