@@ -11,6 +11,7 @@
 Vector3, Quaternion 功能修正，行为同unity3d一致。
 (修正Vector3 RotateTowards, MoveToward, Quaternion.SetEuler, ToEulerAngles, SetFromToRotation, LookRotation等).
 Quaternion 加入Forward 函数，知道Tranform.rotation, 可从旋转直接取forward而不是从Transform提取。减少一次跨语言交互
+优化print函数
 
 
 2015.5.21 1.9.5
@@ -22,7 +23,7 @@ Quaternion 加入Forward 函数，知道Tranform.rotation, 可从旋转直接取
 加入了委托变量可以赋值 LuaFunction，并且没有gc alloc (如果需要支持委托 + 操作，需要另外导出委托)感谢kingowl提供
 修改了Quaternion.Lerp 的bug
 修正一个了ios反射编译问题, 感谢Quon
-协同出错时，stack信息更详细
+协同出错时，stack信息更详细, 感谢最后的骄傲提醒
 
 以前关于LuaStringBuffer一部分内容丢失了，补上（感谢端火锅的猫提醒）
 加入了检测基类是否wrap的提醒
