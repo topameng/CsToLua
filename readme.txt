@@ -6,16 +6,12 @@
 		end
 使用注释掉的代码替换上面几行
 
-2015.5.26 1.9.6 todo
+2015.5.29 1.9.6
 修正bindlua名称空间bug.
-Vector3, Quaternion 功能修正.
+Vector3, Quaternion 功能修正，行为同unity3d一致。
+(修正Vector3 RotateTowards, MoveToward, Quaternion.SetEuler, ToEulerAngles, SetFromToRotation, LookRotation等).
+Quaternion 加入Forward 函数，知道Tranform.rotation, 可从旋转直接取forward而不是从Transform提取。减少一次跨语言交互
 
-减少注册占用的内存
-checktype 后不再进行类型检查, 是否可以缓存 lua_type
-加快反射速度，是否支持混用
-全局函数名做构造函数，让两边兼容
-泛型类型支持加强
-可以修改内部类型导出函数
 
 2015.5.21 1.9.5
 加入了Bounds值类型
