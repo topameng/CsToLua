@@ -86,15 +86,13 @@ public static class LuaBinding
             }
             else
             {
-                libName = name;                
-                int index = name.LastIndexOf(".");
+                libName = t.FullName.Replace("+", ".");
+                wrapName = name.Replace('.', '_');
 
-                if (index > 0)
+                if (name == "object")
                 {
-                    name = name.Substring(index + 1);
+                    wrapName = "System_Object";
                 }
-
-                wrapName = name;
             }
 
             if (t.BaseType != null)
