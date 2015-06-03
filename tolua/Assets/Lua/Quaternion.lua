@@ -17,6 +17,9 @@ local sign	= math.sign
 local atan2 = math.atan2
 local clamp = math.clamp
 local abs	= math.abs
+local setmetatable = setmetatable
+local rawset = rawset
+local rawget = rawget
 
 local rad2Deg = math.rad2Deg
 local halfDegToRad = 0.5 * math.deg2Rad

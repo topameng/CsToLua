@@ -10,7 +10,8 @@
 修正bindlua名称空间bug.
 Vector3, Quaternion 功能修正，行为同unity3d一致。
 (修正Vector3 RotateTowards, MoveToward, Quaternion.SetEuler, ToEulerAngles, SetFromToRotation, LookRotation等).
-Quaternion 加入Forward 函数，知道Tranform.rotation, 可从旋转直接取forward而不是从Transform提取。减少一次跨语言交互
+Quaternion 加入Forward 函数，如果提取了Tranform.rotation, 可从旋转直接取forward， 而不需要跨语言从Transform提取。
+减少一次跨语言交互
 优化print函数
 
 
@@ -83,7 +84,7 @@ local flag, hit = Physics.Raycast(self.transform.position, self.dir, nil, 1, sel
 
 2014.12.22
 通过扫描wrap文件名，自动产生LuaBinder.cs文件
-CheckType 优化
+CheckType 优化(感谢晚餐的提醒)
 u3d Object 类转 system Object. null 变量问题
 
 感谢晚餐同学发现的2个Bug

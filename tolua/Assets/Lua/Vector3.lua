@@ -18,6 +18,9 @@ local sign	= math.sign
 
 local rad2Deg = math.rad2Deg
 local deg2Rad = math.deg2Rad
+local setmetatable = setmetatable
+local rawset = rawset
+local rawget = rawget
 
 Vector3 = 
 {	
