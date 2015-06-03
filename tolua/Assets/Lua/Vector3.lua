@@ -24,7 +24,7 @@ local deg2Rad = math.deg2Rad
 
 Vector3 = 
 {	
-	--class = "Vector3",
+	class = "Vector3",
 }
 
 local fields = {}

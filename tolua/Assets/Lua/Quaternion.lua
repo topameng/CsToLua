@@ -30,7 +30,7 @@ local _next = { 2, 3, 1 }
 
 Quaternion = 
 {
-	--class = "Quaternion", --其实没啥用
+	class = "Quaternion", 
 }
 
 setmetatable(Quaternion, Quaternion)
