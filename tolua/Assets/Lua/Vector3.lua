@@ -15,20 +15,16 @@ local cos	= math.cos
 local sin	= math.sin
 local abs	= math.abs
 local sign	= math.sign
-
-local rad2Deg = math.rad2Deg
-local deg2Rad = math.deg2Rad
 local setmetatable = setmetatable
 local rawset = rawset
 local rawget = rawget
 
+local rad2Deg = math.rad2Deg
+local deg2Rad = math.deg2Rad
+
 Vector3 = 
 {	
-	x = 0,
-	y = 0,
-	z = 0,
-		
-	class = "Vector3",
+	--class = "Vector3",
 }
 
 local fields = {}
@@ -54,12 +50,8 @@ Vector3.__call = function(t,x,y,z)
 end
 
 function Vector3.New(x, y, z)
-	local v = {x = 0, y = 0, z = 0}	
-	v.x = x or 0
-	v.y = y or 0
-	v.z = z or 0
-	setmetatable(v, Vector3)	
-	--v:Set(x, y, z)
+	local v = {x = x or 0, y = y or 0, z = z or 0}		
+	setmetatable(v, Vector3)		
 	return v
 end
 	
@@ -306,7 +298,7 @@ function Vector3.RotateTowards(current, target, maxRadiansDelta, maxMagnitudeDel
 		end
 	end
 		
-	return Vector3.MoveTowards (current, target, maxMagnitudeDelta)
+	return Vector3.MoveTowards(current, target, maxMagnitudeDelta)
 end
 	
 function Vector3.SmoothDamp(current, target, currentVelocity, smoothTime)
@@ -516,7 +508,7 @@ end
 
 
 Vector3.__tostring = function(self)
-	return string.format("[%f,%f,%f]", self.x, self.y, self.z)
+	return "["..self.x..","..self.y..","..self.z.."]"
 end
 
 Vector3.__div = function(va, d)

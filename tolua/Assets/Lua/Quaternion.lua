@@ -18,23 +18,19 @@ local atan2 = math.atan2
 local clamp = math.clamp
 local abs	= math.abs
 local setmetatable = setmetatable
-local rawset = rawset
+local getmetatable = getmetatable
 local rawget = rawget
+local rawset = rawset
 
 local rad2Deg = math.rad2Deg
 local halfDegToRad = 0.5 * math.deg2Rad
-
+local _forward = Vector3.forward
 local _up = Vector3.up
 local _next = { 2, 3, 1 }
 
 Quaternion = 
 {
-	x = 0,
-	y = 0,
-	z = 0,
-	w = 0,	
-
-	class = "Quaternion",
+	--class = "Quaternion", --其实没啥用
 }
 
 setmetatable(Quaternion, Quaternion)
@@ -64,9 +60,8 @@ Quaternion.__newindex = function(t, name, k)
 end
 
 function Quaternion.New(x, y, z, w)	
-	local quat = {x = 0, y = 0, z = 0, w = 0}
-	setmetatable(quat, Quaternion)
-	quat:Set(x,y,z,w)
+	local quat = {x = x or 0, y = y or 0, z = z or 0, w = w or 0}
+	setmetatable(quat, Quaternion)	
 	return quat
 end
 
@@ -196,7 +191,7 @@ function Quaternion:SetFromToRotation1(from, to)
 	return self
 end
 
-function MatrixToQuaternion(rot, quat)
+local function MatrixToQuaternion(rot, quat)
 	local trace = rot[1][1] + rot[2][2] + rot[3][3]
 	
 	if trace > 0 then		
@@ -360,6 +355,17 @@ function Quaternion.LookRotation(forward, up)
 	right:SetNormalize()    
     up = Vector3.Cross(forward, right)
     right = Vector3.Cross(up, forward)	
+	
+--[[	local quat = Quaternion.New(0,0,0,1)
+	local rot = 
+	{ 					
+		{right.x, up.x, forward.x},
+		{right.y, up.y, forward.y},
+		{right.z, up.z, forward.z},
+	}
+	
+	MatrixToQuaternion(rot, quat)
+	return quat--]]
 		
 	local t = right.x + up.y + forward.z
     
@@ -494,7 +500,7 @@ local function SanitizeEuler(euler)
 end
 
 --from http://www.geometrictools.com/Documentation/EulerAngles.pdf
---Order of rotations: YXZ
+--Order of rotations: YXZ, 原来的ZXY顺序
 function Quaternion:ToEulerAngles()
 	local x = self.x
 	local y = self.y
@@ -525,8 +531,6 @@ function Quaternion:ToEulerAngles()
 	end
 end
 
-local _forward = Vector3.forward
-
 function Quaternion:Forward()
 	return self:MulVec3(_forward)
 end
@@ -556,9 +560,9 @@ function Quaternion.MulVec3(self, point)
 end
 
 Quaternion.__mul = function(lhs, rhs)
-	if Quaternion.class == rhs.class then
+	if Quaternion == getmetatable(rhs) then
 		return Quaternion.New((((lhs.w * rhs.x) + (lhs.x * rhs.w)) + (lhs.y * rhs.z)) - (lhs.z * rhs.y), (((lhs.w * rhs.y) + (lhs.y * rhs.w)) + (lhs.z * rhs.x)) - (lhs.x * rhs.z), (((lhs.w * rhs.z) + (lhs.z * rhs.w)) + (lhs.x * rhs.y)) - (lhs.y * rhs.x), (((lhs.w * rhs.w) - (lhs.x * rhs.x)) - (lhs.y * rhs.y)) - (lhs.z * rhs.z))	
-	elseif rhs.class == Vector3.class then
+	elseif Vector3 == getmetatable(rhs) then
 		return lhs:MulVec3(rhs)
 	end
 end
@@ -572,5 +576,5 @@ Quaternion.__eq = function(lhs,rhs)
 end
 
 Quaternion.__tostring = function(self)
-	return string.format("[%f,%f,%f,%f]", self.x, self.y, self.z, self.w)
+	return "["..self.x..","..self.y..","..self.z..","..self.w.."]"
 end
