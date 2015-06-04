@@ -5,17 +5,17 @@ using System.Text;
 namespace LuaInterface
 {
     public class LuaFunction : LuaBase
-    {        
-        internal LuaCSFunction function;                
-        IntPtr L;        
-       
+    {
+        internal LuaCSFunction function;
+        IntPtr L;
+
         public LuaFunction(int reference, LuaState interpreter)
-        {            
+        {
             _Reference = reference;
             this.function = null;
             _Interpreter = interpreter;
             L = _Interpreter.L;
-            translator = _Interpreter.translator;            
+            translator = _Interpreter.translator;
         }
 
         public LuaFunction(LuaCSFunction function, LuaState interpreter)
@@ -24,16 +24,16 @@ namespace LuaInterface
             this.function = function;
             _Interpreter = interpreter;
             L = _Interpreter.L;
-            translator = _Interpreter.translator;            
+            translator = _Interpreter.translator;
         }
 
         public LuaFunction(int reference, IntPtr l)
-        {            
+        {
             _Reference = reference;
-            this.function = null;             
+            this.function = null;
             L = l;
             translator = ObjectTranslator.FromState(L);
-            _Interpreter = translator.interpreter;            
+            _Interpreter = translator.interpreter;
         }
 
         /*
@@ -41,8 +41,8 @@ namespace LuaInterface
          * in returnTypes
          */
         internal object[] call(object[] args, Type[] returnTypes)
-        {            
-            int nArgs = 0;                   
+        {
+            int nArgs = 0;
             LuaScriptMgr.PushTraceBack(L);
             int oldTop = LuaDLL.lua_gettop(L);
 
@@ -51,7 +51,7 @@ namespace LuaInterface
                 LuaDLL.lua_pop(L, 1);
                 throw new LuaException("Lua stack overflow");
             }
-               
+
             push(L);
 
             if (args != null)
@@ -59,26 +59,26 @@ namespace LuaInterface
                 nArgs = args.Length;
 
                 for (int i = 0; i < args.Length; i++)
-                {                    
+                {
                     PushArgs(L, args[i]);
                 }
             }
 
-            int error = LuaDLL.lua_pcall(L, nArgs, -1, -nArgs-2);            
+            int error = LuaDLL.lua_pcall(L, nArgs, -1, -nArgs - 2);
 
             if (error != 0)
             {
                 string err = LuaDLL.lua_tostring(L, -1);
-                LuaDLL.lua_settop(L, oldTop);                
+                LuaDLL.lua_settop(L, oldTop);
                 LuaDLL.lua_pop(L, 1);
                 if (err == null) err = "Unknown Lua Error";
-                throw new LuaScriptException(err.ToString(), "");                              
+                throw new LuaScriptException(err.ToString(), "");
             }
 
             object[] ret = returnTypes != null ? translator.popValues(L, oldTop, returnTypes) : translator.popValues(L, oldTop);
-            LuaDLL.lua_pop(L, 1);            
+            LuaDLL.lua_settop(L, oldTop);
             return ret;
-        }       
+        }
 
         /*
          * Calls the function and returns its return values inside
@@ -95,9 +95,12 @@ namespace LuaInterface
 
             if (PCall(oldTop, 0))
             {
-                return EndPCall(oldTop);
+                object[] objs = PopValues(oldTop);
+                EndPCall(oldTop);
+                return objs;
             }
 
+            LuaDLL.lua_settop(L, oldTop);
             return null;
         }
 
@@ -108,18 +111,23 @@ namespace LuaInterface
 
             if (PCall(oldTop, 1))
             {
-                return EndPCall(oldTop);
+                object[] objs = PopValues(oldTop);
+                EndPCall(oldTop);
+                return objs;
             }
 
+            LuaDLL.lua_settop(L, oldTop);
             return null;
         }
 
+        int beginPos = -1;
+
         public int BeginPCall()
-        {            
+        {
             LuaScriptMgr.PushTraceBack(L);
-            int oldTop = LuaDLL.lua_gettop(L);
+            beginPos = LuaDLL.lua_gettop(L);
             push(L);
-            return oldTop;
+            return beginPos;
         }
 
         public bool PCall(int oldTop, int args)
@@ -136,23 +144,21 @@ namespace LuaInterface
             return true;
         }
 
-        public object[] EndPCall(int oldTop)
+        public object[] PopValues(int oldTop)
         {
             object[] ret = translator.popValues(L, oldTop);
-            LuaDLL.lua_pop(L, 1);
             return ret;
         }
 
-        public void EndPCall()
+        public void EndPCall(int oldTop)
         {
-            LuaDLL.lua_pop(L, 1);
+            LuaDLL.lua_settop(L, oldTop);
         }
-        
+
         public IntPtr GetLuaState()
         {
             return L;
         }
-
 
         //public object[] Call<T1>(T1 t1)
         //{
@@ -224,7 +230,7 @@ namespace LuaInterface
          * Pushes the function into the Lua stack
          */
         internal void push(IntPtr luaState)
-        {            
+        {
             if (_Reference != 0)
             {
                 LuaDLL.lua_getref(luaState, _Reference);

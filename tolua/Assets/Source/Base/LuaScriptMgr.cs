@@ -420,7 +420,7 @@ public class LuaScriptMgr
             LuaScriptMgr.Push(L, Time.deltaTime);
             LuaScriptMgr.Push(L, Time.unscaledDeltaTime);
             updateFunc.PCall(top, 2);
-            updateFunc.EndPCall();   
+            updateFunc.EndPCall(top);   
         }
         
         while (!refGCList.IsEmpty())

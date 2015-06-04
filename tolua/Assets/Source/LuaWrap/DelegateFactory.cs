@@ -14,7 +14,6 @@ public static class DelegateFactory
 		dict.Add(typeof(Action<GameObject>), new DelegateValue(Action_GameObject));
 		dict.Add(typeof(Action<GameObject,int,string>), new DelegateValue(Action_GameObject_int_string));
 		dict.Add(typeof(Action<int,int,int,List<int>>), new DelegateValue(Action_int_int_int_List_int));
-		//dict.Add(typeof(UIEventListener.VoidDelegate), new DelegateValue(VoidDelegate));
 	}
 
 	public static Delegate CreateDelegate(Type t, LuaFunction func)
@@ -37,7 +36,7 @@ public static class DelegateFactory
 			IntPtr L = func.GetLuaState();
 			LuaScriptMgr.Push(L, arg0);
 			func.PCall(top, 1);
-			func.EndPCall();
+			func.EndPCall(top);
 		};
 		return d;
 	}
@@ -52,7 +51,7 @@ public static class DelegateFactory
 			LuaScriptMgr.Push(L, arg1);
 			LuaScriptMgr.Push(L, arg2);
 			func.PCall(top, 3);
-			func.EndPCall();
+			func.EndPCall(top);
 		};
 		return d;
 	}
@@ -68,22 +67,9 @@ public static class DelegateFactory
 			LuaScriptMgr.Push(L, arg2);
 			LuaScriptMgr.PushObject(L, arg3);
 			func.PCall(top, 4);
-			func.EndPCall();
+			func.EndPCall(top);
 		};
 		return d;
 	}
-
-    //public static Delegate VoidDelegate(LuaFunction func)
-    //{
-    //    UIEventListener.VoidDelegate d = (arg0) =>
-    //    {
-    //        int top = func.BeginPCall();
-    //        IntPtr L = func.GetLuaState();
-    //        LuaScriptMgr.Push(L, arg0);
-    //        func.PCall(top, 1);
-    //        func.EndPCall();
-    //    };
-    //    return d;
-    //}
 
 }
