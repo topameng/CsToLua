@@ -349,7 +349,7 @@ function Quaternion.LookRotation(forward, up)
 		return nil
 	end
 	
-	forward = forward:Div(mag)  
+	forward = forward / mag
 	up = up or _up				
 	local right = Vector3.Cross(up, forward)
 	right:SetNormalize()    
