@@ -3,15 +3,19 @@ using LuaInterface;
 
 public class DebuggerWrap
 {
-	public static LuaMethod[] regs = new LuaMethod[]
+	public static void Register(IntPtr L)
 	{
-		new LuaMethod("Log", Log),
-		new LuaMethod("LogWarning", LogWarning),
-		new LuaMethod("LogError", LogError),
-		new LuaMethod("New", _CreateDebugger),
-		new LuaMethod("GetClassType", GetClassType),
-	};
+		LuaMethod[] regs = new LuaMethod[]
+		{
+			new LuaMethod("Log", Log),
+			new LuaMethod("LogWarning", LogWarning),
+			new LuaMethod("LogError", LogError),
+			new LuaMethod("New", _CreateDebugger),
+			new LuaMethod("GetClassType", GetClassType),
+		};
 
+		LuaScriptMgr.RegisterLib(L, "Debugger", regs);
+	}
 
 	[MonoPInvokeCallbackAttribute(typeof(LuaCSFunction))]
 	static int _CreateDebugger(IntPtr L)
@@ -20,16 +24,13 @@ public class DebuggerWrap
 		return 0;
 	}
 
+	static Type classType = typeof(Debugger);
+
 	[MonoPInvokeCallbackAttribute(typeof(LuaCSFunction))]
 	static int GetClassType(IntPtr L)
 	{
-		LuaScriptMgr.Push(L, typeof(Debugger));
+		LuaScriptMgr.Push(L, classType);
 		return 1;
-	}
-
-	public static void Register(IntPtr L)
-	{
-		LuaScriptMgr.RegisterLib(L, "Debugger", regs);
 	}
 
 	[MonoPInvokeCallbackAttribute(typeof(LuaCSFunction))]
