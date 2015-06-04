@@ -7,7 +7,6 @@ public class stringWrap
 	{
 		LuaMethod[] regs = new LuaMethod[]
 		{
-			new LuaMethod("Equals", Equals),
 			new LuaMethod("Clone", Clone),
 			new LuaMethod("GetTypeCode", GetTypeCode),
 			new LuaMethod("CopyTo", CopyTo),
@@ -48,6 +47,7 @@ public class stringWrap
 			new LuaMethod("Join", Join),
 			new LuaMethod("GetEnumerator", GetEnumerator),
 			new LuaMethod("GetHashCode", GetHashCode),
+			new LuaMethod("Equals", Equals),
 			new LuaMethod("New", _Createstring),
 			new LuaMethod("GetClassType", GetClassType),
 			new LuaMethod("__tostring", Lua_ToString),
@@ -137,44 +137,6 @@ public class stringWrap
 		}
 
 		return 1;
-	}
-
-	[MonoPInvokeCallbackAttribute(typeof(LuaCSFunction))]
-	static int Equals(IntPtr L)
-	{
-		int count = LuaDLL.lua_gettop(L);
-
-		if (count == 2 && LuaScriptMgr.CheckTypes(L, 2, typeof(string)))
-		{
-			string obj = LuaScriptMgr.GetVarObject(L, 1) as string;
-			string arg0 = LuaScriptMgr.GetString(L, 2);
-			bool o = obj != null ? obj.Equals(arg0) : arg0 == null;
-			LuaScriptMgr.Push(L, o);
-			return 1;
-		}
-		else if (count == 2 && LuaScriptMgr.CheckTypes(L, 2, typeof(object)))
-		{
-			string obj = LuaScriptMgr.GetVarObject(L, 1) as string;
-			object arg0 = LuaScriptMgr.GetVarObject(L, 2);
-			bool o = obj != null ? obj.Equals(arg0) : arg0 == null;
-			LuaScriptMgr.Push(L, o);
-			return 1;
-		}
-		else if (count == 3)
-		{
-			string obj = LuaScriptMgr.GetVarObject(L, 1) as string;
-			string arg0 = LuaScriptMgr.GetLuaString(L, 2);
-			StringComparison arg1 = (StringComparison)LuaScriptMgr.GetNetObject(L, 3, typeof(StringComparison));
-			bool o = obj != null ? obj.Equals(arg0, arg1) : arg0 == null;
-			LuaScriptMgr.Push(L, o);
-			return 1;
-		}
-		else
-		{
-			LuaDLL.luaL_error(L, "invalid arguments to method: string.Equals");
-		}
-
-		return 0;
 	}
 
 	[MonoPInvokeCallbackAttribute(typeof(LuaCSFunction))]
@@ -1471,6 +1433,44 @@ public class stringWrap
 		bool o = arg0 == arg1;
 		LuaScriptMgr.Push(L, o);
 		return 1;
+	}
+
+	[MonoPInvokeCallbackAttribute(typeof(LuaCSFunction))]
+	static int Equals(IntPtr L)
+	{
+		int count = LuaDLL.lua_gettop(L);
+
+		if (count == 2 && LuaScriptMgr.CheckTypes(L, 2, typeof(string)))
+		{
+			string obj = LuaScriptMgr.GetVarObject(L, 1) as string;
+			string arg0 = LuaScriptMgr.GetString(L, 2);
+			bool o = obj != null ? obj.Equals(arg0) : arg0 == null;
+			LuaScriptMgr.Push(L, o);
+			return 1;
+		}
+		else if (count == 2 && LuaScriptMgr.CheckTypes(L, 2, typeof(object)))
+		{
+			string obj = LuaScriptMgr.GetVarObject(L, 1) as string;
+			object arg0 = LuaScriptMgr.GetVarObject(L, 2);
+			bool o = obj != null ? obj.Equals(arg0) : arg0 == null;
+			LuaScriptMgr.Push(L, o);
+			return 1;
+		}
+		else if (count == 3)
+		{
+			string obj = LuaScriptMgr.GetVarObject(L, 1) as string;
+			string arg0 = LuaScriptMgr.GetLuaString(L, 2);
+			StringComparison arg1 = (StringComparison)LuaScriptMgr.GetNetObject(L, 3, typeof(StringComparison));
+			bool o = obj != null ? obj.Equals(arg0, arg1) : arg0 == null;
+			LuaScriptMgr.Push(L, o);
+			return 1;
+		}
+		else
+		{
+			LuaDLL.luaL_error(L, "invalid arguments to method: string.Equals");
+		}
+
+		return 0;
 	}
 }
 
