@@ -150,7 +150,7 @@ public static class LuaBinding
         ////_GT(typeof(Dictionary<int,string>)).SetWrapName("DictInt2Str").SetLibName("DictInt2Str"),
         
         //custom    
-        //_GT(typeof(Debugger)),
+        _GT(typeof(Debugger)),
         //_GT(typeof(SocketClient)),        
         //_GT(typeof(UIBase)),        
         //_GT(typeof(LuaHelper)),                           
@@ -193,7 +193,7 @@ public static class LuaBinding
         _GT(typeof(CharacterController)),
 
         _GT(typeof(Animation)),             
-        _GT(typeof(AnimationClip)),
+        _GT(typeof(AnimationClip)).SetBaseName("UnityEngine.Object"),
         _GT(typeof(TrackedReference)),
         _GT(typeof(AnimationState)),  
         _GT(typeof(QueueMode)),  
@@ -211,11 +211,12 @@ public static class LuaBinding
         _GT(typeof(RenderSettings)),
         _GT(typeof(SleepTimeout)),        
 
-        _GT(typeof(AsyncOperation)),
+        _GT(typeof(AsyncOperation)).SetBaseName("System.Object"),
         _GT(typeof(AssetBundle)),   
         _GT(typeof(BlendWeights)),   
         _GT(typeof(QualitySettings)),          
         _GT(typeof(AnimationBlendMode)),    
+        _GT(typeof(Texture)),
         _GT(typeof(RenderTexture)),
         
 
