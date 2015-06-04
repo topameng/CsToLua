@@ -64,7 +64,6 @@ namespace LuaInterface
 		public bool finished;
 	}
 
-//#if UNITY_STANDALONE_WIN || UNITY_EDITOR_WIN
 #if !UNITY_IPHONE
     [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
 #endif
@@ -99,11 +98,6 @@ namespace LuaInterface
 
         [DllImport(LUADLL, CallingConvention = CallingConvention.Cdecl)]
         public static extern int tolua_openlibs(IntPtr L);        
-
-#if UNITY_EDITOR
-        [DllImport(LUADLL, CallingConvention = CallingConvention.Cdecl)]
-        public static extern void PrintCmd(string str);
-#endif
 
         public static int lua_upvalueindex(int i)	
         {
@@ -232,7 +226,7 @@ namespace LuaInterface
 		public static void lua_getglobal(IntPtr luaState, string name)
 		{
 			LuaDLL.lua_pushstring(luaState,name);
-			LuaDLL.lua_gettable(luaState,LuaIndexes.LUA_GLOBALSINDEX);            
+			LuaDLL.lua_gettable(luaState,LuaIndexes.LUA_GLOBALSINDEX);
 		}
 		public static void lua_setglobal(IntPtr luaState, string name)
 		{
@@ -240,6 +234,12 @@ namespace LuaInterface
 			LuaDLL.lua_insert(luaState,-2);
 			LuaDLL.lua_settable(luaState,LuaIndexes.LUA_GLOBALSINDEX);
 		}
+        public static void lua_rawglobal(IntPtr luaState, string name)
+        {
+            LuaDLL.lua_pushstring(luaState, name);
+            LuaDLL.lua_rawget(luaState, LuaIndexes.LUA_GLOBALSINDEX);
+        }
+
 		[DllImport(LUADLL,CallingConvention=CallingConvention.Cdecl)]
 		public static extern void lua_settop(IntPtr luaState, int newTop);
 		public static void lua_pop(IntPtr luaState, int amount)
@@ -337,14 +337,30 @@ namespace LuaInterface
 		[DllImport(LUADLL,CallingConvention = CallingConvention.Cdecl)]
 		public static extern IntPtr lua_tolstring(IntPtr luaState, int index, out int strLen);
 
+        static string AnsiToUnicode(IntPtr source, int strlen)
+        {
+            byte[] buffer = new byte[strlen];
+            Marshal.Copy(source, buffer, 0, strlen);            
+            string str = Encoding.UTF8.GetString(buffer);
+            return str;    
+        }
+
 		public static string lua_tostring(IntPtr luaState, int index)
 		{
             int strlen;
-            IntPtr str = lua_tolstring(luaState, index, out strlen);
+            IntPtr str = lua_tolstring(luaState, index, out strlen);   
 
             if (str != IntPtr.Zero)
 			{
-                return Marshal.PtrToStringAnsi(str, strlen);
+                string ss = Marshal.PtrToStringAnsi(str, strlen);
+
+                //当从c传出中文时会转换失败， topameng
+                if (ss == null)
+                {
+                    return AnsiToUnicode(str, strlen);
+                }
+
+                return ss;
 			}
             else
 			{
