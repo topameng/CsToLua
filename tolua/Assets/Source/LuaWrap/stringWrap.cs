@@ -165,7 +165,7 @@ public class stringWrap
 			string obj = LuaScriptMgr.GetVarObject(L, 1) as string;
 			string arg0 = LuaScriptMgr.GetLuaString(L, 2);
 			StringComparison arg1 = (StringComparison)LuaScriptMgr.GetNetObject(L, 3, typeof(StringComparison));
-			bool o = obj != null ? obj.Equals(arg0) : arg0 == null;
+			bool o = obj != null ? obj.Equals(arg0, arg1) : arg0 == null;
 			LuaScriptMgr.Push(L, o);
 			return 1;
 		}

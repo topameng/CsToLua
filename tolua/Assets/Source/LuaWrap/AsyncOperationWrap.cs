@@ -20,7 +20,7 @@ public class AsyncOperationWrap
 			new LuaField("allowSceneActivation", get_allowSceneActivation, set_allowSceneActivation),
 		};
 
-		LuaScriptMgr.RegisterLib(L, "UnityEngine.AsyncOperation", typeof(UnityEngine.AsyncOperation), regs, fields, typeof(YieldInstruction));
+		LuaScriptMgr.RegisterLib(L, "UnityEngine.AsyncOperation", typeof(UnityEngine.AsyncOperation), regs, fields, typeof(System.Object));
 	}
 
 	[MonoPInvokeCallbackAttribute(typeof(LuaCSFunction))]

@@ -26,7 +26,7 @@ public class AnimationClipWrap
 			new LuaField("localBounds", get_localBounds, set_localBounds),
 		};
 
-		LuaScriptMgr.RegisterLib(L, "UnityEngine.AnimationClip", typeof(UnityEngine.AnimationClip), regs, fields, typeof(Motion));
+		LuaScriptMgr.RegisterLib(L, "UnityEngine.AnimationClip", typeof(UnityEngine.AnimationClip), regs, fields, typeof(UnityEngine.Object));
 	}
 
 	[MonoPInvokeCallbackAttribute(typeof(LuaCSFunction))]

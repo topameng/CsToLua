@@ -39,7 +39,7 @@ public static class LuaBinder
 		ParticleAnimatorWrap.Register(L);
 		ParticleEmitterWrap.Register(L);
 		ParticleRendererWrap.Register(L);
-		PhysicsWrap.Register(L);		
+		PhysicsWrap.Register(L);
 		PlayModeWrap.Register(L);
 		QualitySettingsWrap.Register(L);
 		QueueModeWrap.Register(L);
@@ -53,6 +53,7 @@ public static class LuaBinder
 		SphereColliderWrap.Register(L);
 		stringWrap.Register(L);
 		System_ObjectWrap.Register(L);
+		TextureWrap.Register(L);
 		TimeWrap.Register(L);
 		TouchPhaseWrap.Register(L);
 		TrackedReferenceWrap.Register(L);
