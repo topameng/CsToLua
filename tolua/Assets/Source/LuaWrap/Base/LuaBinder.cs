@@ -39,8 +39,7 @@ public static class LuaBinder
 		ParticleAnimatorWrap.Register(L);
 		ParticleEmitterWrap.Register(L);
 		ParticleRendererWrap.Register(L);
-		PhysicsWrap.Register(L);
-		PlaneWrap.Register(L);
+		PhysicsWrap.Register(L);		
 		PlayModeWrap.Register(L);
 		QualitySettingsWrap.Register(L);
 		QueueModeWrap.Register(L);

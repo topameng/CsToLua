@@ -699,7 +699,31 @@ public static class ToLuaExport
             return;
         }
 
-        ConstructorInfo[] constructors = type.GetConstructors(BindingFlags.Instance | binding);
+        ConstructorInfo[] constructors = type.GetConstructors(BindingFlags.Instance | binding);;
+
+        if (extendType != null)
+        {
+            ConstructorInfo[] ctorExtends = extendType.GetConstructors(BindingFlags.Instance | binding);
+
+            if (ctorExtends != null && ctorExtends.Length > 0)
+            {
+                if (HasAttribute(ctorExtends[0], typeof(UseDefinedAttribute)))
+                {
+                    sb.AppendLine("\r\n\t[MonoPInvokeCallbackAttribute(typeof(LuaCSFunction))]");
+                    sb.AppendFormat("\tstatic int _Create{0}(IntPtr L)\r\n", wrapClassName);
+                    sb.AppendLine("\t{");
+
+                    if (HasAttribute(ctorExtends[0], typeof(UseDefinedAttribute)))
+                    {
+                        FieldInfo field = extendType.GetField(extendName + "Defined");
+                        string strfun = field.GetValue(null) as string;
+                        sb.AppendLine(strfun);
+                        sb.AppendLine("\t}");
+                        return;
+                    } 
+                }
+            }
+        }        
 
         if (constructors.Length == 0)
         {
@@ -819,6 +843,7 @@ public static class ToLuaExport
         }
 
         sb.AppendLine("\t\t{");
+
         int rc = ProcessParams(md, 3, true, list.Count > 1);
         sb.AppendFormat("\t\t\treturn {0};\r\n", rc);
         sb.AppendLine("\t\t}");
