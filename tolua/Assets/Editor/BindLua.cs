@@ -214,8 +214,7 @@ public static class LuaBinding
         _GT(typeof(AsyncOperation)),
         _GT(typeof(AssetBundle)),   
         _GT(typeof(BlendWeights)),   
-        _GT(typeof(QualitySettings)),  
-        _GT(typeof(Plane)), 
+        _GT(typeof(QualitySettings)),          
         _GT(typeof(AnimationBlendMode)),    
         _GT(typeof(RenderTexture)),
         
