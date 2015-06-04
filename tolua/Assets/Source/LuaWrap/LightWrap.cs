@@ -5,33 +5,38 @@ using Object = UnityEngine.Object;
 
 public class LightWrap
 {
-	public static LuaMethod[] regs = new LuaMethod[]
+	public static void Register(IntPtr L)
 	{
-		new LuaMethod("GetLights", GetLights),
-		new LuaMethod("New", _CreateLight),
-		new LuaMethod("GetClassType", GetClassType),
-		new LuaMethod("__eq", Lua_Eq),
-	};
+		LuaMethod[] regs = new LuaMethod[]
+		{
+			new LuaMethod("GetLights", GetLights),
+			new LuaMethod("New", _CreateLight),
+			new LuaMethod("GetClassType", GetClassType),
+			new LuaMethod("__eq", Lua_Eq),
+		};
 
-	static LuaField[] fields = new LuaField[]
-	{
-		new LuaField("type", get_type, set_type),
-		new LuaField("color", get_color, set_color),
-		new LuaField("intensity", get_intensity, set_intensity),
-		new LuaField("shadows", get_shadows, set_shadows),
-		new LuaField("shadowStrength", get_shadowStrength, set_shadowStrength),
-		new LuaField("shadowBias", get_shadowBias, set_shadowBias),
-		new LuaField("shadowSoftness", get_shadowSoftness, set_shadowSoftness),
-		new LuaField("shadowSoftnessFade", get_shadowSoftnessFade, set_shadowSoftnessFade),
-		new LuaField("range", get_range, set_range),
-		new LuaField("spotAngle", get_spotAngle, set_spotAngle),
-		new LuaField("cookieSize", get_cookieSize, set_cookieSize),
-		new LuaField("cookie", get_cookie, set_cookie),
-		new LuaField("flare", get_flare, set_flare),
-		new LuaField("renderMode", get_renderMode, set_renderMode),
-		new LuaField("alreadyLightmapped", get_alreadyLightmapped, set_alreadyLightmapped),
-		new LuaField("cullingMask", get_cullingMask, set_cullingMask),
-	};
+		LuaField[] fields = new LuaField[]
+		{
+			new LuaField("type", get_type, set_type),
+			new LuaField("color", get_color, set_color),
+			new LuaField("intensity", get_intensity, set_intensity),
+			new LuaField("shadows", get_shadows, set_shadows),
+			new LuaField("shadowStrength", get_shadowStrength, set_shadowStrength),
+			new LuaField("shadowBias", get_shadowBias, set_shadowBias),
+			new LuaField("shadowSoftness", get_shadowSoftness, set_shadowSoftness),
+			new LuaField("shadowSoftnessFade", get_shadowSoftnessFade, set_shadowSoftnessFade),
+			new LuaField("range", get_range, set_range),
+			new LuaField("spotAngle", get_spotAngle, set_spotAngle),
+			new LuaField("cookieSize", get_cookieSize, set_cookieSize),
+			new LuaField("cookie", get_cookie, set_cookie),
+			new LuaField("flare", get_flare, set_flare),
+			new LuaField("renderMode", get_renderMode, set_renderMode),
+			new LuaField("alreadyLightmapped", get_alreadyLightmapped, set_alreadyLightmapped),
+			new LuaField("cullingMask", get_cullingMask, set_cullingMask),
+		};
+
+		LuaScriptMgr.RegisterLib(L, "UnityEngine.Light", typeof(UnityEngine.Light), regs, fields, typeof(Behaviour));
+	}
 
 	[MonoPInvokeCallbackAttribute(typeof(LuaCSFunction))]
 	static int _CreateLight(IntPtr L)
@@ -58,13 +63,7 @@ public class LightWrap
 	static int GetClassType(IntPtr L)
 	{
 		LuaScriptMgr.Push(L, classType);
-
 		return 1;
-	}
-
-	public static void Register(IntPtr L)
-	{
-		LuaScriptMgr.RegisterLib(L, "UnityEngine.Light", typeof(Light), regs, fields, typeof(Behaviour));
 	}
 
 	[MonoPInvokeCallbackAttribute(typeof(LuaCSFunction))]

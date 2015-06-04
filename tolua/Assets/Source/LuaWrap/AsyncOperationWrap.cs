@@ -4,19 +4,24 @@ using LuaInterface;
 
 public class AsyncOperationWrap
 {
-	public static LuaMethod[] regs = new LuaMethod[]
+	public static void Register(IntPtr L)
 	{
-		new LuaMethod("New", _CreateAsyncOperation),
-		new LuaMethod("GetClassType", GetClassType),
-	};
+		LuaMethod[] regs = new LuaMethod[]
+		{
+			new LuaMethod("New", _CreateAsyncOperation),
+			new LuaMethod("GetClassType", GetClassType),
+		};
 
-	static LuaField[] fields = new LuaField[]
-	{
-		new LuaField("isDone", get_isDone, null),
-		new LuaField("progress", get_progress, null),
-		new LuaField("priority", get_priority, set_priority),
-		new LuaField("allowSceneActivation", get_allowSceneActivation, set_allowSceneActivation),
-	};
+		LuaField[] fields = new LuaField[]
+		{
+			new LuaField("isDone", get_isDone, null),
+			new LuaField("progress", get_progress, null),
+			new LuaField("priority", get_priority, set_priority),
+			new LuaField("allowSceneActivation", get_allowSceneActivation, set_allowSceneActivation),
+		};
+
+		LuaScriptMgr.RegisterLib(L, "UnityEngine.AsyncOperation", typeof(UnityEngine.AsyncOperation), regs, fields, typeof(YieldInstruction));
+	}
 
 	[MonoPInvokeCallbackAttribute(typeof(LuaCSFunction))]
 	static int _CreateAsyncOperation(IntPtr L)
@@ -43,13 +48,7 @@ public class AsyncOperationWrap
 	static int GetClassType(IntPtr L)
 	{
 		LuaScriptMgr.Push(L, classType);
-
 		return 1;
-	}
-
-	public static void Register(IntPtr L)
-	{
-		LuaScriptMgr.RegisterLib(L, "UnityEngine.AsyncOperation", typeof(AsyncOperation), regs, fields, typeof(YieldInstruction));
 	}
 
 	[MonoPInvokeCallbackAttribute(typeof(LuaCSFunction))]

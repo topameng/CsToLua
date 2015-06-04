@@ -5,38 +5,43 @@ using Object = UnityEngine.Object;
 
 public class RendererWrap
 {
-	public static LuaMethod[] regs = new LuaMethod[]
+	public static void Register(IntPtr L)
 	{
-		new LuaMethod("SetPropertyBlock", SetPropertyBlock),
-		new LuaMethod("GetPropertyBlock", GetPropertyBlock),
-		new LuaMethod("Render", Render),
-		new LuaMethod("New", _CreateRenderer),
-		new LuaMethod("GetClassType", GetClassType),
-		new LuaMethod("__eq", Lua_Eq),
-	};
+		LuaMethod[] regs = new LuaMethod[]
+		{
+			new LuaMethod("SetPropertyBlock", SetPropertyBlock),
+			new LuaMethod("GetPropertyBlock", GetPropertyBlock),
+			new LuaMethod("Render", Render),
+			new LuaMethod("New", _CreateRenderer),
+			new LuaMethod("GetClassType", GetClassType),
+			new LuaMethod("__eq", Lua_Eq),
+		};
 
-	static LuaField[] fields = new LuaField[]
-	{
-		new LuaField("isPartOfStaticBatch", get_isPartOfStaticBatch, null),
-		new LuaField("worldToLocalMatrix", get_worldToLocalMatrix, null),
-		new LuaField("localToWorldMatrix", get_localToWorldMatrix, null),
-		new LuaField("enabled", get_enabled, set_enabled),
-		new LuaField("castShadows", get_castShadows, set_castShadows),
-		new LuaField("receiveShadows", get_receiveShadows, set_receiveShadows),
-		new LuaField("material", get_material, set_material),
-		new LuaField("sharedMaterial", get_sharedMaterial, set_sharedMaterial),
-		new LuaField("sharedMaterials", get_sharedMaterials, set_sharedMaterials),
-		new LuaField("materials", get_materials, set_materials),
-		new LuaField("bounds", get_bounds, null),
-		new LuaField("lightmapIndex", get_lightmapIndex, set_lightmapIndex),
-		new LuaField("lightmapTilingOffset", get_lightmapTilingOffset, set_lightmapTilingOffset),
-		new LuaField("isVisible", get_isVisible, null),
-		new LuaField("useLightProbes", get_useLightProbes, set_useLightProbes),
-		new LuaField("lightProbeAnchor", get_lightProbeAnchor, set_lightProbeAnchor),
-		new LuaField("sortingLayerName", get_sortingLayerName, set_sortingLayerName),
-		new LuaField("sortingLayerID", get_sortingLayerID, set_sortingLayerID),
-		new LuaField("sortingOrder", get_sortingOrder, set_sortingOrder),
-	};
+		LuaField[] fields = new LuaField[]
+		{
+			new LuaField("isPartOfStaticBatch", get_isPartOfStaticBatch, null),
+			new LuaField("worldToLocalMatrix", get_worldToLocalMatrix, null),
+			new LuaField("localToWorldMatrix", get_localToWorldMatrix, null),
+			new LuaField("enabled", get_enabled, set_enabled),
+			new LuaField("castShadows", get_castShadows, set_castShadows),
+			new LuaField("receiveShadows", get_receiveShadows, set_receiveShadows),
+			new LuaField("material", get_material, set_material),
+			new LuaField("sharedMaterial", get_sharedMaterial, set_sharedMaterial),
+			new LuaField("sharedMaterials", get_sharedMaterials, set_sharedMaterials),
+			new LuaField("materials", get_materials, set_materials),
+			new LuaField("bounds", get_bounds, null),
+			new LuaField("lightmapIndex", get_lightmapIndex, set_lightmapIndex),
+			new LuaField("lightmapTilingOffset", get_lightmapTilingOffset, set_lightmapTilingOffset),
+			new LuaField("isVisible", get_isVisible, null),
+			new LuaField("useLightProbes", get_useLightProbes, set_useLightProbes),
+			new LuaField("lightProbeAnchor", get_lightProbeAnchor, set_lightProbeAnchor),
+			new LuaField("sortingLayerName", get_sortingLayerName, set_sortingLayerName),
+			new LuaField("sortingLayerID", get_sortingLayerID, set_sortingLayerID),
+			new LuaField("sortingOrder", get_sortingOrder, set_sortingOrder),
+		};
+
+		LuaScriptMgr.RegisterLib(L, "UnityEngine.Renderer", typeof(UnityEngine.Renderer), regs, fields, typeof(Component));
+	}
 
 	[MonoPInvokeCallbackAttribute(typeof(LuaCSFunction))]
 	static int _CreateRenderer(IntPtr L)
@@ -63,13 +68,7 @@ public class RendererWrap
 	static int GetClassType(IntPtr L)
 	{
 		LuaScriptMgr.Push(L, classType);
-
 		return 1;
-	}
-
-	public static void Register(IntPtr L)
-	{
-		LuaScriptMgr.RegisterLib(L, "UnityEngine.Renderer", typeof(Renderer), regs, fields, typeof(Component));
 	}
 
 	[MonoPInvokeCallbackAttribute(typeof(LuaCSFunction))]
@@ -868,7 +867,7 @@ public class RendererWrap
 	static int SetPropertyBlock(IntPtr L)
 	{
 		LuaScriptMgr.CheckArgsCount(L, 2);
-		Renderer obj = (Renderer)LuaScriptMgr.GetUnityObject(L, 1, typeof(Renderer));
+		Renderer obj = (Renderer)LuaScriptMgr.GetUnityObjectSelf(L, 1, "Renderer");
 		MaterialPropertyBlock arg0 = (MaterialPropertyBlock)LuaScriptMgr.GetNetObject(L, 2, typeof(MaterialPropertyBlock));
 		obj.SetPropertyBlock(arg0);
 		return 0;
@@ -878,7 +877,7 @@ public class RendererWrap
 	static int GetPropertyBlock(IntPtr L)
 	{
 		LuaScriptMgr.CheckArgsCount(L, 2);
-		Renderer obj = (Renderer)LuaScriptMgr.GetUnityObject(L, 1, typeof(Renderer));
+		Renderer obj = (Renderer)LuaScriptMgr.GetUnityObjectSelf(L, 1, "Renderer");
 		MaterialPropertyBlock arg0 = (MaterialPropertyBlock)LuaScriptMgr.GetNetObject(L, 2, typeof(MaterialPropertyBlock));
 		obj.GetPropertyBlock(arg0);
 		return 0;
@@ -888,7 +887,7 @@ public class RendererWrap
 	static int Render(IntPtr L)
 	{
 		LuaScriptMgr.CheckArgsCount(L, 2);
-		Renderer obj = (Renderer)LuaScriptMgr.GetUnityObject(L, 1, typeof(Renderer));
+		Renderer obj = (Renderer)LuaScriptMgr.GetUnityObjectSelf(L, 1, "Renderer");
 		int arg0 = (int)LuaScriptMgr.GetNumber(L, 2);
 		obj.Render(arg0);
 		return 0;

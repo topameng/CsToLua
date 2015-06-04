@@ -5,16 +5,21 @@ using Object = UnityEngine.Object;
 
 public class MeshRendererWrap
 {
-	public static LuaMethod[] regs = new LuaMethod[]
+	public static void Register(IntPtr L)
 	{
-		new LuaMethod("New", _CreateMeshRenderer),
-		new LuaMethod("GetClassType", GetClassType),
-		new LuaMethod("__eq", Lua_Eq),
-	};
+		LuaMethod[] regs = new LuaMethod[]
+		{
+			new LuaMethod("New", _CreateMeshRenderer),
+			new LuaMethod("GetClassType", GetClassType),
+			new LuaMethod("__eq", Lua_Eq),
+		};
 
-	static LuaField[] fields = new LuaField[]
-	{
-	};
+		LuaField[] fields = new LuaField[]
+		{
+		};
+
+		LuaScriptMgr.RegisterLib(L, "UnityEngine.MeshRenderer", typeof(UnityEngine.MeshRenderer), regs, fields, typeof(Renderer));
+	}
 
 	[MonoPInvokeCallbackAttribute(typeof(LuaCSFunction))]
 	static int _CreateMeshRenderer(IntPtr L)
@@ -41,13 +46,7 @@ public class MeshRendererWrap
 	static int GetClassType(IntPtr L)
 	{
 		LuaScriptMgr.Push(L, classType);
-
 		return 1;
-	}
-
-	public static void Register(IntPtr L)
-	{
-		LuaScriptMgr.RegisterLib(L, "UnityEngine.MeshRenderer", typeof(MeshRenderer), regs, fields, typeof(Renderer));
 	}
 
 	[MonoPInvokeCallbackAttribute(typeof(LuaCSFunction))]

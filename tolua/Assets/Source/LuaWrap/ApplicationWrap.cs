@@ -4,58 +4,63 @@ using LuaInterface;
 
 public class ApplicationWrap
 {
-	public static LuaMethod[] regs = new LuaMethod[]
+	public static void Register(IntPtr L)
 	{
-		new LuaMethod("Quit", Quit),
-		new LuaMethod("CancelQuit", CancelQuit),
-		new LuaMethod("LoadLevel", LoadLevel),
-		new LuaMethod("LoadLevelAsync", LoadLevelAsync),
-		new LuaMethod("LoadLevelAdditiveAsync", LoadLevelAdditiveAsync),
-		new LuaMethod("LoadLevelAdditive", LoadLevelAdditive),
-		new LuaMethod("GetStreamProgressForLevel", GetStreamProgressForLevel),
-		new LuaMethod("CanStreamedLevelBeLoaded", CanStreamedLevelBeLoaded),
-		new LuaMethod("CaptureScreenshot", CaptureScreenshot),
-		new LuaMethod("HasProLicense", HasProLicense),
-		new LuaMethod("ExternalCall", ExternalCall),
-		new LuaMethod("OpenURL", OpenURL),
-		new LuaMethod("RegisterLogCallback", RegisterLogCallback),
-		new LuaMethod("RegisterLogCallbackThreaded", RegisterLogCallbackThreaded),
-		new LuaMethod("RequestUserAuthorization", RequestUserAuthorization),
-		new LuaMethod("HasUserAuthorization", HasUserAuthorization),
-		new LuaMethod("New", _CreateApplication),
-		new LuaMethod("GetClassType", GetClassType),
-	};
+		LuaMethod[] regs = new LuaMethod[]
+		{
+			new LuaMethod("Quit", Quit),
+			new LuaMethod("CancelQuit", CancelQuit),
+			new LuaMethod("LoadLevel", LoadLevel),
+			new LuaMethod("LoadLevelAsync", LoadLevelAsync),
+			new LuaMethod("LoadLevelAdditiveAsync", LoadLevelAdditiveAsync),
+			new LuaMethod("LoadLevelAdditive", LoadLevelAdditive),
+			new LuaMethod("GetStreamProgressForLevel", GetStreamProgressForLevel),
+			new LuaMethod("CanStreamedLevelBeLoaded", CanStreamedLevelBeLoaded),
+			new LuaMethod("CaptureScreenshot", CaptureScreenshot),
+			new LuaMethod("HasProLicense", HasProLicense),
+			new LuaMethod("ExternalCall", ExternalCall),
+			new LuaMethod("OpenURL", OpenURL),
+			new LuaMethod("RegisterLogCallback", RegisterLogCallback),
+			new LuaMethod("RegisterLogCallbackThreaded", RegisterLogCallbackThreaded),
+			new LuaMethod("RequestUserAuthorization", RequestUserAuthorization),
+			new LuaMethod("HasUserAuthorization", HasUserAuthorization),
+			new LuaMethod("New", _CreateApplication),
+			new LuaMethod("GetClassType", GetClassType),
+		};
 
-	static LuaField[] fields = new LuaField[]
-	{
-		new LuaField("loadedLevel", get_loadedLevel, null),
-		new LuaField("loadedLevelName", get_loadedLevelName, null),
-		new LuaField("isLoadingLevel", get_isLoadingLevel, null),
-		new LuaField("levelCount", get_levelCount, null),
-		new LuaField("streamedBytes", get_streamedBytes, null),
-		new LuaField("isPlaying", get_isPlaying, null),
-		new LuaField("isEditor", get_isEditor, null),
-		new LuaField("isWebPlayer", get_isWebPlayer, null),
-		new LuaField("platform", get_platform, null),
-		new LuaField("isMobilePlatform", get_isMobilePlatform, null),
-		new LuaField("isConsolePlatform", get_isConsolePlatform, null),
-		new LuaField("runInBackground", get_runInBackground, set_runInBackground),
-		new LuaField("dataPath", get_dataPath, null),
-		new LuaField("streamingAssetsPath", get_streamingAssetsPath, null),
-		new LuaField("persistentDataPath", get_persistentDataPath, null),
-		new LuaField("temporaryCachePath", get_temporaryCachePath, null),
-		new LuaField("srcValue", get_srcValue, null),
-		new LuaField("absoluteURL", get_absoluteURL, null),
-		new LuaField("unityVersion", get_unityVersion, null),
-		new LuaField("webSecurityEnabled", get_webSecurityEnabled, null),
-		new LuaField("webSecurityHostUrl", get_webSecurityHostUrl, null),
-		new LuaField("targetFrameRate", get_targetFrameRate, set_targetFrameRate),
-		new LuaField("systemLanguage", get_systemLanguage, null),
-		new LuaField("backgroundLoadingPriority", get_backgroundLoadingPriority, set_backgroundLoadingPriority),
-		new LuaField("internetReachability", get_internetReachability, null),
-		new LuaField("genuine", get_genuine, null),
-		new LuaField("genuineCheckAvailable", get_genuineCheckAvailable, null),
-	};
+		LuaField[] fields = new LuaField[]
+		{
+			new LuaField("loadedLevel", get_loadedLevel, null),
+			new LuaField("loadedLevelName", get_loadedLevelName, null),
+			new LuaField("isLoadingLevel", get_isLoadingLevel, null),
+			new LuaField("levelCount", get_levelCount, null),
+			new LuaField("streamedBytes", get_streamedBytes, null),
+			new LuaField("isPlaying", get_isPlaying, null),
+			new LuaField("isEditor", get_isEditor, null),
+			new LuaField("isWebPlayer", get_isWebPlayer, null),
+			new LuaField("platform", get_platform, null),
+			new LuaField("isMobilePlatform", get_isMobilePlatform, null),
+			new LuaField("isConsolePlatform", get_isConsolePlatform, null),
+			new LuaField("runInBackground", get_runInBackground, set_runInBackground),
+			new LuaField("dataPath", get_dataPath, null),
+			new LuaField("streamingAssetsPath", get_streamingAssetsPath, null),
+			new LuaField("persistentDataPath", get_persistentDataPath, null),
+			new LuaField("temporaryCachePath", get_temporaryCachePath, null),
+			new LuaField("srcValue", get_srcValue, null),
+			new LuaField("absoluteURL", get_absoluteURL, null),
+			new LuaField("unityVersion", get_unityVersion, null),
+			new LuaField("webSecurityEnabled", get_webSecurityEnabled, null),
+			new LuaField("webSecurityHostUrl", get_webSecurityHostUrl, null),
+			new LuaField("targetFrameRate", get_targetFrameRate, set_targetFrameRate),
+			new LuaField("systemLanguage", get_systemLanguage, null),
+			new LuaField("backgroundLoadingPriority", get_backgroundLoadingPriority, set_backgroundLoadingPriority),
+			new LuaField("internetReachability", get_internetReachability, null),
+			new LuaField("genuine", get_genuine, null),
+			new LuaField("genuineCheckAvailable", get_genuineCheckAvailable, null),
+		};
+
+		LuaScriptMgr.RegisterLib(L, "UnityEngine.Application", typeof(UnityEngine.Application), regs, fields, typeof(object));
+	}
 
 	[MonoPInvokeCallbackAttribute(typeof(LuaCSFunction))]
 	static int _CreateApplication(IntPtr L)
@@ -82,13 +87,7 @@ public class ApplicationWrap
 	static int GetClassType(IntPtr L)
 	{
 		LuaScriptMgr.Push(L, classType);
-
 		return 1;
-	}
-
-	public static void Register(IntPtr L)
-	{
-		LuaScriptMgr.RegisterLib(L, "UnityEngine.Application", typeof(Application), regs, fields, typeof(object));
 	}
 
 	[MonoPInvokeCallbackAttribute(typeof(LuaCSFunction))]
@@ -330,7 +329,7 @@ public class ApplicationWrap
 		}
 		else if (count == 1 && LuaScriptMgr.CheckTypes(L, 1, typeof(int)))
 		{
-			int arg0 = (int)LuaScriptMgr.GetNumber(L, 1);
+			int arg0 = (int)LuaDLL.lua_tonumber(L, 1);
 			Application.LoadLevel(arg0);
 			return 0;
 		}
@@ -356,7 +355,7 @@ public class ApplicationWrap
 		}
 		else if (count == 1 && LuaScriptMgr.CheckTypes(L, 1, typeof(int)))
 		{
-			int arg0 = (int)LuaScriptMgr.GetNumber(L, 1);
+			int arg0 = (int)LuaDLL.lua_tonumber(L, 1);
 			AsyncOperation o = Application.LoadLevelAsync(arg0);
 			LuaScriptMgr.PushObject(L, o);
 			return 1;
@@ -383,7 +382,7 @@ public class ApplicationWrap
 		}
 		else if (count == 1 && LuaScriptMgr.CheckTypes(L, 1, typeof(int)))
 		{
-			int arg0 = (int)LuaScriptMgr.GetNumber(L, 1);
+			int arg0 = (int)LuaDLL.lua_tonumber(L, 1);
 			AsyncOperation o = Application.LoadLevelAdditiveAsync(arg0);
 			LuaScriptMgr.PushObject(L, o);
 			return 1;
@@ -409,7 +408,7 @@ public class ApplicationWrap
 		}
 		else if (count == 1 && LuaScriptMgr.CheckTypes(L, 1, typeof(int)))
 		{
-			int arg0 = (int)LuaScriptMgr.GetNumber(L, 1);
+			int arg0 = (int)LuaDLL.lua_tonumber(L, 1);
 			Application.LoadLevelAdditive(arg0);
 			return 0;
 		}
@@ -435,7 +434,7 @@ public class ApplicationWrap
 		}
 		else if (count == 1 && LuaScriptMgr.CheckTypes(L, 1, typeof(int)))
 		{
-			int arg0 = (int)LuaScriptMgr.GetNumber(L, 1);
+			int arg0 = (int)LuaDLL.lua_tonumber(L, 1);
 			float o = Application.GetStreamProgressForLevel(arg0);
 			LuaScriptMgr.Push(L, o);
 			return 1;
@@ -462,7 +461,7 @@ public class ApplicationWrap
 		}
 		else if (count == 1 && LuaScriptMgr.CheckTypes(L, 1, typeof(int)))
 		{
-			int arg0 = (int)LuaScriptMgr.GetNumber(L, 1);
+			int arg0 = (int)LuaDLL.lua_tonumber(L, 1);
 			bool o = Application.CanStreamedLevelBeLoaded(arg0);
 			LuaScriptMgr.Push(L, o);
 			return 1;
@@ -479,6 +478,7 @@ public class ApplicationWrap
 	static int CaptureScreenshot(IntPtr L)
 	{
 		int count = LuaDLL.lua_gettop(L);
+
 		if (count == 1)
 		{
 			string arg0 = LuaScriptMgr.GetLuaString(L, 1);
@@ -532,7 +532,7 @@ public class ApplicationWrap
 	static int RegisterLogCallback(IntPtr L)
 	{
 		LuaScriptMgr.CheckArgsCount(L, 1);
-		UnityEngine.Application.LogCallback arg0 = (UnityEngine.Application.LogCallback)LuaScriptMgr.GetNetObject(L, 1, typeof(UnityEngine.Application.LogCallback));
+		Application.LogCallback arg0 = (Application.LogCallback)LuaScriptMgr.GetNetObject(L, 1, typeof(Application.LogCallback));
 		Application.RegisterLogCallback(arg0);
 		return 0;
 	}
@@ -541,7 +541,7 @@ public class ApplicationWrap
 	static int RegisterLogCallbackThreaded(IntPtr L)
 	{
 		LuaScriptMgr.CheckArgsCount(L, 1);
-		UnityEngine.Application.LogCallback arg0 = (UnityEngine.Application.LogCallback)LuaScriptMgr.GetNetObject(L, 1, typeof(UnityEngine.Application.LogCallback));
+		Application.LogCallback arg0 = (Application.LogCallback)LuaScriptMgr.GetNetObject(L, 1, typeof(Application.LogCallback));
 		Application.RegisterLogCallbackThreaded(arg0);
 		return 0;
 	}

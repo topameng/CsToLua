@@ -5,42 +5,47 @@ using Object = UnityEngine.Object;
 
 public class RenderTextureWrap
 {
-	public static LuaMethod[] regs = new LuaMethod[]
+	public static void Register(IntPtr L)
 	{
-		new LuaMethod("GetTemporary", GetTemporary),
-		new LuaMethod("ReleaseTemporary", ReleaseTemporary),
-		new LuaMethod("Create", Create),
-		new LuaMethod("Release", Release),
-		new LuaMethod("IsCreated", IsCreated),
-		new LuaMethod("DiscardContents", DiscardContents),
-		new LuaMethod("MarkRestoreExpected", MarkRestoreExpected),
-		new LuaMethod("SetGlobalShaderProperty", SetGlobalShaderProperty),
-		new LuaMethod("GetTexelOffset", GetTexelOffset),
-		new LuaMethod("SupportsStencil", SupportsStencil),
-		new LuaMethod("New", _CreateRenderTexture),
-		new LuaMethod("GetClassType", GetClassType),
-		new LuaMethod("__eq", Lua_Eq),
-	};
+		LuaMethod[] regs = new LuaMethod[]
+		{
+			new LuaMethod("GetTemporary", GetTemporary),
+			new LuaMethod("ReleaseTemporary", ReleaseTemporary),
+			new LuaMethod("Create", Create),
+			new LuaMethod("Release", Release),
+			new LuaMethod("IsCreated", IsCreated),
+			new LuaMethod("DiscardContents", DiscardContents),
+			new LuaMethod("MarkRestoreExpected", MarkRestoreExpected),
+			new LuaMethod("SetGlobalShaderProperty", SetGlobalShaderProperty),
+			new LuaMethod("GetTexelOffset", GetTexelOffset),
+			new LuaMethod("SupportsStencil", SupportsStencil),
+			new LuaMethod("New", _CreateRenderTexture),
+			new LuaMethod("GetClassType", GetClassType),
+			new LuaMethod("__eq", Lua_Eq),
+		};
 
-	static LuaField[] fields = new LuaField[]
-	{
-		new LuaField("width", get_width, set_width),
-		new LuaField("height", get_height, set_height),
-		new LuaField("depth", get_depth, set_depth),
-		new LuaField("isPowerOfTwo", get_isPowerOfTwo, set_isPowerOfTwo),
-		new LuaField("sRGB", get_sRGB, null),
-		new LuaField("format", get_format, set_format),
-		new LuaField("useMipMap", get_useMipMap, set_useMipMap),
-		new LuaField("generateMips", get_generateMips, set_generateMips),
-		new LuaField("isCubemap", get_isCubemap, set_isCubemap),
-		new LuaField("isVolume", get_isVolume, set_isVolume),
-		new LuaField("volumeDepth", get_volumeDepth, set_volumeDepth),
-		new LuaField("antiAliasing", get_antiAliasing, set_antiAliasing),
-		new LuaField("enableRandomWrite", get_enableRandomWrite, set_enableRandomWrite),
-		new LuaField("colorBuffer", get_colorBuffer, null),
-		new LuaField("depthBuffer", get_depthBuffer, null),
-		new LuaField("active", get_active, set_active),
-	};
+		LuaField[] fields = new LuaField[]
+		{
+			new LuaField("width", get_width, set_width),
+			new LuaField("height", get_height, set_height),
+			new LuaField("depth", get_depth, set_depth),
+			new LuaField("isPowerOfTwo", get_isPowerOfTwo, set_isPowerOfTwo),
+			new LuaField("sRGB", get_sRGB, null),
+			new LuaField("format", get_format, set_format),
+			new LuaField("useMipMap", get_useMipMap, set_useMipMap),
+			new LuaField("generateMips", get_generateMips, set_generateMips),
+			new LuaField("isCubemap", get_isCubemap, set_isCubemap),
+			new LuaField("isVolume", get_isVolume, set_isVolume),
+			new LuaField("volumeDepth", get_volumeDepth, set_volumeDepth),
+			new LuaField("antiAliasing", get_antiAliasing, set_antiAliasing),
+			new LuaField("enableRandomWrite", get_enableRandomWrite, set_enableRandomWrite),
+			new LuaField("colorBuffer", get_colorBuffer, null),
+			new LuaField("depthBuffer", get_depthBuffer, null),
+			new LuaField("active", get_active, set_active),
+		};
+
+		LuaScriptMgr.RegisterLib(L, "UnityEngine.RenderTexture", typeof(UnityEngine.RenderTexture), regs, fields, typeof(Texture));
+	}
 
 	[MonoPInvokeCallbackAttribute(typeof(LuaCSFunction))]
 	static int _CreateRenderTexture(IntPtr L)
@@ -91,13 +96,7 @@ public class RenderTextureWrap
 	static int GetClassType(IntPtr L)
 	{
 		LuaScriptMgr.Push(L, classType);
-
 		return 1;
-	}
-
-	public static void Register(IntPtr L)
-	{
-		LuaScriptMgr.RegisterLib(L, "UnityEngine.RenderTexture", typeof(RenderTexture), regs, fields, typeof(Texture));
 	}
 
 	[MonoPInvokeCallbackAttribute(typeof(LuaCSFunction))]
@@ -766,6 +765,7 @@ public class RenderTextureWrap
 	static int GetTemporary(IntPtr L)
 	{
 		int count = LuaDLL.lua_gettop(L);
+
 		if (count == 2)
 		{
 			int arg0 = (int)LuaScriptMgr.GetNumber(L, 1);
@@ -837,7 +837,7 @@ public class RenderTextureWrap
 	static int Create(IntPtr L)
 	{
 		LuaScriptMgr.CheckArgsCount(L, 1);
-		RenderTexture obj = (RenderTexture)LuaScriptMgr.GetUnityObject(L, 1, typeof(RenderTexture));
+		RenderTexture obj = (RenderTexture)LuaScriptMgr.GetUnityObjectSelf(L, 1, "RenderTexture");
 		bool o = obj.Create();
 		LuaScriptMgr.Push(L, o);
 		return 1;
@@ -847,7 +847,7 @@ public class RenderTextureWrap
 	static int Release(IntPtr L)
 	{
 		LuaScriptMgr.CheckArgsCount(L, 1);
-		RenderTexture obj = (RenderTexture)LuaScriptMgr.GetUnityObject(L, 1, typeof(RenderTexture));
+		RenderTexture obj = (RenderTexture)LuaScriptMgr.GetUnityObjectSelf(L, 1, "RenderTexture");
 		obj.Release();
 		return 0;
 	}
@@ -856,7 +856,7 @@ public class RenderTextureWrap
 	static int IsCreated(IntPtr L)
 	{
 		LuaScriptMgr.CheckArgsCount(L, 1);
-		RenderTexture obj = (RenderTexture)LuaScriptMgr.GetUnityObject(L, 1, typeof(RenderTexture));
+		RenderTexture obj = (RenderTexture)LuaScriptMgr.GetUnityObjectSelf(L, 1, "RenderTexture");
 		bool o = obj.IsCreated();
 		LuaScriptMgr.Push(L, o);
 		return 1;
@@ -866,15 +866,16 @@ public class RenderTextureWrap
 	static int DiscardContents(IntPtr L)
 	{
 		int count = LuaDLL.lua_gettop(L);
+
 		if (count == 1)
 		{
-			RenderTexture obj = (RenderTexture)LuaScriptMgr.GetUnityObject(L, 1, typeof(RenderTexture));
+			RenderTexture obj = (RenderTexture)LuaScriptMgr.GetUnityObjectSelf(L, 1, "RenderTexture");
 			obj.DiscardContents();
 			return 0;
 		}
 		else if (count == 3)
 		{
-			RenderTexture obj = (RenderTexture)LuaScriptMgr.GetUnityObject(L, 1, typeof(RenderTexture));
+			RenderTexture obj = (RenderTexture)LuaScriptMgr.GetUnityObjectSelf(L, 1, "RenderTexture");
 			bool arg0 = LuaScriptMgr.GetBoolean(L, 2);
 			bool arg1 = LuaScriptMgr.GetBoolean(L, 3);
 			obj.DiscardContents(arg0,arg1);
@@ -892,7 +893,7 @@ public class RenderTextureWrap
 	static int MarkRestoreExpected(IntPtr L)
 	{
 		LuaScriptMgr.CheckArgsCount(L, 1);
-		RenderTexture obj = (RenderTexture)LuaScriptMgr.GetUnityObject(L, 1, typeof(RenderTexture));
+		RenderTexture obj = (RenderTexture)LuaScriptMgr.GetUnityObjectSelf(L, 1, "RenderTexture");
 		obj.MarkRestoreExpected();
 		return 0;
 	}
@@ -901,7 +902,7 @@ public class RenderTextureWrap
 	static int SetGlobalShaderProperty(IntPtr L)
 	{
 		LuaScriptMgr.CheckArgsCount(L, 2);
-		RenderTexture obj = (RenderTexture)LuaScriptMgr.GetUnityObject(L, 1, typeof(RenderTexture));
+		RenderTexture obj = (RenderTexture)LuaScriptMgr.GetUnityObjectSelf(L, 1, "RenderTexture");
 		string arg0 = LuaScriptMgr.GetLuaString(L, 2);
 		obj.SetGlobalShaderProperty(arg0);
 		return 0;
@@ -911,7 +912,7 @@ public class RenderTextureWrap
 	static int GetTexelOffset(IntPtr L)
 	{
 		LuaScriptMgr.CheckArgsCount(L, 1);
-		RenderTexture obj = (RenderTexture)LuaScriptMgr.GetUnityObject(L, 1, typeof(RenderTexture));
+		RenderTexture obj = (RenderTexture)LuaScriptMgr.GetUnityObjectSelf(L, 1, "RenderTexture");
 		Vector2 o = obj.GetTexelOffset();
 		LuaScriptMgr.Push(L, o);
 		return 1;

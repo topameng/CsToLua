@@ -5,37 +5,42 @@ using Object = UnityEngine.Object;
 
 public class QualitySettingsWrap
 {
-	public static LuaMethod[] regs = new LuaMethod[]
+	public static void Register(IntPtr L)
 	{
-		new LuaMethod("GetQualityLevel", GetQualityLevel),
-		new LuaMethod("SetQualityLevel", SetQualityLevel),
-		new LuaMethod("IncreaseLevel", IncreaseLevel),
-		new LuaMethod("DecreaseLevel", DecreaseLevel),
-		new LuaMethod("New", _CreateQualitySettings),
-		new LuaMethod("GetClassType", GetClassType),
-		new LuaMethod("__eq", Lua_Eq),
-	};
+		LuaMethod[] regs = new LuaMethod[]
+		{
+			new LuaMethod("GetQualityLevel", GetQualityLevel),
+			new LuaMethod("SetQualityLevel", SetQualityLevel),
+			new LuaMethod("IncreaseLevel", IncreaseLevel),
+			new LuaMethod("DecreaseLevel", DecreaseLevel),
+			new LuaMethod("New", _CreateQualitySettings),
+			new LuaMethod("GetClassType", GetClassType),
+			new LuaMethod("__eq", Lua_Eq),
+		};
 
-	static LuaField[] fields = new LuaField[]
-	{
-		new LuaField("names", get_names, null),
-		new LuaField("pixelLightCount", get_pixelLightCount, set_pixelLightCount),
-		new LuaField("shadowProjection", get_shadowProjection, set_shadowProjection),
-		new LuaField("shadowCascades", get_shadowCascades, set_shadowCascades),
-		new LuaField("shadowDistance", get_shadowDistance, set_shadowDistance),
-		new LuaField("masterTextureLimit", get_masterTextureLimit, set_masterTextureLimit),
-		new LuaField("anisotropicFiltering", get_anisotropicFiltering, set_anisotropicFiltering),
-		new LuaField("lodBias", get_lodBias, set_lodBias),
-		new LuaField("maximumLODLevel", get_maximumLODLevel, set_maximumLODLevel),
-		new LuaField("particleRaycastBudget", get_particleRaycastBudget, set_particleRaycastBudget),
-		new LuaField("softVegetation", get_softVegetation, set_softVegetation),
-		new LuaField("maxQueuedFrames", get_maxQueuedFrames, set_maxQueuedFrames),
-		new LuaField("vSyncCount", get_vSyncCount, set_vSyncCount),
-		new LuaField("antiAliasing", get_antiAliasing, set_antiAliasing),
-		new LuaField("desiredColorSpace", get_desiredColorSpace, null),
-		new LuaField("activeColorSpace", get_activeColorSpace, null),
-		new LuaField("blendWeights", get_blendWeights, set_blendWeights),
-	};
+		LuaField[] fields = new LuaField[]
+		{
+			new LuaField("names", get_names, null),
+			new LuaField("pixelLightCount", get_pixelLightCount, set_pixelLightCount),
+			new LuaField("shadowProjection", get_shadowProjection, set_shadowProjection),
+			new LuaField("shadowCascades", get_shadowCascades, set_shadowCascades),
+			new LuaField("shadowDistance", get_shadowDistance, set_shadowDistance),
+			new LuaField("masterTextureLimit", get_masterTextureLimit, set_masterTextureLimit),
+			new LuaField("anisotropicFiltering", get_anisotropicFiltering, set_anisotropicFiltering),
+			new LuaField("lodBias", get_lodBias, set_lodBias),
+			new LuaField("maximumLODLevel", get_maximumLODLevel, set_maximumLODLevel),
+			new LuaField("particleRaycastBudget", get_particleRaycastBudget, set_particleRaycastBudget),
+			new LuaField("softVegetation", get_softVegetation, set_softVegetation),
+			new LuaField("maxQueuedFrames", get_maxQueuedFrames, set_maxQueuedFrames),
+			new LuaField("vSyncCount", get_vSyncCount, set_vSyncCount),
+			new LuaField("antiAliasing", get_antiAliasing, set_antiAliasing),
+			new LuaField("desiredColorSpace", get_desiredColorSpace, null),
+			new LuaField("activeColorSpace", get_activeColorSpace, null),
+			new LuaField("blendWeights", get_blendWeights, set_blendWeights),
+		};
+
+		LuaScriptMgr.RegisterLib(L, "UnityEngine.QualitySettings", typeof(UnityEngine.QualitySettings), regs, fields, typeof(Object));
+	}
 
 	[MonoPInvokeCallbackAttribute(typeof(LuaCSFunction))]
 	static int _CreateQualitySettings(IntPtr L)
@@ -62,13 +67,7 @@ public class QualitySettingsWrap
 	static int GetClassType(IntPtr L)
 	{
 		LuaScriptMgr.Push(L, classType);
-
 		return 1;
-	}
-
-	public static void Register(IntPtr L)
-	{
-		LuaScriptMgr.RegisterLib(L, "UnityEngine.QualitySettings", typeof(QualitySettings), regs, fields, typeof(Object));
 	}
 
 	[MonoPInvokeCallbackAttribute(typeof(LuaCSFunction))]
@@ -301,6 +300,7 @@ public class QualitySettingsWrap
 	static int SetQualityLevel(IntPtr L)
 	{
 		int count = LuaDLL.lua_gettop(L);
+
 		if (count == 1)
 		{
 			int arg0 = (int)LuaScriptMgr.GetNumber(L, 1);
@@ -326,6 +326,7 @@ public class QualitySettingsWrap
 	static int IncreaseLevel(IntPtr L)
 	{
 		int count = LuaDLL.lua_gettop(L);
+
 		if (count == 0)
 		{
 			QualitySettings.IncreaseLevel();
@@ -349,6 +350,7 @@ public class QualitySettingsWrap
 	static int DecreaseLevel(IntPtr L)
 	{
 		int count = LuaDLL.lua_gettop(L);
+
 		if (count == 0)
 		{
 			QualitySettings.DecreaseLevel();

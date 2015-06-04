@@ -4,17 +4,22 @@ using LuaInterface;
 
 public class SleepTimeoutWrap
 {
-	public static LuaMethod[] regs = new LuaMethod[]
+	public static void Register(IntPtr L)
 	{
-		new LuaMethod("New", _CreateSleepTimeout),
-		new LuaMethod("GetClassType", GetClassType),
-	};
+		LuaMethod[] regs = new LuaMethod[]
+		{
+			new LuaMethod("New", _CreateSleepTimeout),
+			new LuaMethod("GetClassType", GetClassType),
+		};
 
-	static LuaField[] fields = new LuaField[]
-	{
-		new LuaField("NeverSleep", get_NeverSleep, null),
-		new LuaField("SystemSetting", get_SystemSetting, null),
-	};
+		LuaField[] fields = new LuaField[]
+		{
+			new LuaField("NeverSleep", get_NeverSleep, null),
+			new LuaField("SystemSetting", get_SystemSetting, null),
+		};
+
+		LuaScriptMgr.RegisterLib(L, "UnityEngine.SleepTimeout", typeof(UnityEngine.SleepTimeout), regs, fields, typeof(object));
+	}
 
 	[MonoPInvokeCallbackAttribute(typeof(LuaCSFunction))]
 	static int _CreateSleepTimeout(IntPtr L)
@@ -41,13 +46,7 @@ public class SleepTimeoutWrap
 	static int GetClassType(IntPtr L)
 	{
 		LuaScriptMgr.Push(L, classType);
-
 		return 1;
-	}
-
-	public static void Register(IntPtr L)
-	{
-		LuaScriptMgr.RegisterLib(L, "UnityEngine.SleepTimeout", typeof(SleepTimeout), regs, fields, typeof(object));
 	}
 
 	[MonoPInvokeCallbackAttribute(typeof(LuaCSFunction))]

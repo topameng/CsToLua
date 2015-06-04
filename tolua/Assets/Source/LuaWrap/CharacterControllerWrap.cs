@@ -5,27 +5,32 @@ using Object = UnityEngine.Object;
 
 public class CharacterControllerWrap
 {
-	public static LuaMethod[] regs = new LuaMethod[]
+	public static void Register(IntPtr L)
 	{
-		new LuaMethod("SimpleMove", SimpleMove),
-		new LuaMethod("Move", Move),
-		new LuaMethod("New", _CreateCharacterController),
-		new LuaMethod("GetClassType", GetClassType),
-		new LuaMethod("__eq", Lua_Eq),
-	};
+		LuaMethod[] regs = new LuaMethod[]
+		{
+			new LuaMethod("SimpleMove", SimpleMove),
+			new LuaMethod("Move", Move),
+			new LuaMethod("New", _CreateCharacterController),
+			new LuaMethod("GetClassType", GetClassType),
+			new LuaMethod("__eq", Lua_Eq),
+		};
 
-	static LuaField[] fields = new LuaField[]
-	{
-		new LuaField("isGrounded", get_isGrounded, null),
-		new LuaField("velocity", get_velocity, null),
-		new LuaField("collisionFlags", get_collisionFlags, null),
-		new LuaField("radius", get_radius, set_radius),
-		new LuaField("height", get_height, set_height),
-		new LuaField("center", get_center, set_center),
-		new LuaField("slopeLimit", get_slopeLimit, set_slopeLimit),
-		new LuaField("stepOffset", get_stepOffset, set_stepOffset),
-		new LuaField("detectCollisions", get_detectCollisions, set_detectCollisions),
-	};
+		LuaField[] fields = new LuaField[]
+		{
+			new LuaField("isGrounded", get_isGrounded, null),
+			new LuaField("velocity", get_velocity, null),
+			new LuaField("collisionFlags", get_collisionFlags, null),
+			new LuaField("radius", get_radius, set_radius),
+			new LuaField("height", get_height, set_height),
+			new LuaField("center", get_center, set_center),
+			new LuaField("slopeLimit", get_slopeLimit, set_slopeLimit),
+			new LuaField("stepOffset", get_stepOffset, set_stepOffset),
+			new LuaField("detectCollisions", get_detectCollisions, set_detectCollisions),
+		};
+
+		LuaScriptMgr.RegisterLib(L, "UnityEngine.CharacterController", typeof(UnityEngine.CharacterController), regs, fields, typeof(Collider));
+	}
 
 	[MonoPInvokeCallbackAttribute(typeof(LuaCSFunction))]
 	static int _CreateCharacterController(IntPtr L)
@@ -52,13 +57,7 @@ public class CharacterControllerWrap
 	static int GetClassType(IntPtr L)
 	{
 		LuaScriptMgr.Push(L, classType);
-
 		return 1;
-	}
-
-	public static void Register(IntPtr L)
-	{
-		LuaScriptMgr.RegisterLib(L, "UnityEngine.CharacterController", typeof(CharacterController), regs, fields, typeof(Collider));
 	}
 
 	[MonoPInvokeCallbackAttribute(typeof(LuaCSFunction))]
@@ -425,7 +424,7 @@ public class CharacterControllerWrap
 	static int SimpleMove(IntPtr L)
 	{
 		LuaScriptMgr.CheckArgsCount(L, 2);
-		CharacterController obj = (CharacterController)LuaScriptMgr.GetUnityObject(L, 1, typeof(CharacterController));
+		CharacterController obj = (CharacterController)LuaScriptMgr.GetUnityObjectSelf(L, 1, "CharacterController");
 		Vector3 arg0 = LuaScriptMgr.GetVector3(L, 2);
 		bool o = obj.SimpleMove(arg0);
 		LuaScriptMgr.Push(L, o);
@@ -436,7 +435,7 @@ public class CharacterControllerWrap
 	static int Move(IntPtr L)
 	{
 		LuaScriptMgr.CheckArgsCount(L, 2);
-		CharacterController obj = (CharacterController)LuaScriptMgr.GetUnityObject(L, 1, typeof(CharacterController));
+		CharacterController obj = (CharacterController)LuaScriptMgr.GetUnityObjectSelf(L, 1, "CharacterController");
 		Vector3 arg0 = LuaScriptMgr.GetVector3(L, 2);
 		CollisionFlags o = obj.Move(arg0);
 		LuaScriptMgr.Push(L, o);

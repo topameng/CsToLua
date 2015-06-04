@@ -13,7 +13,7 @@ public class QueueModeWrap
 
 	public static void Register(IntPtr L)
 	{
-		LuaScriptMgr.RegisterLib(L, "UnityEngine.QueueMode", typeof(QueueMode), enums);
+		LuaScriptMgr.RegisterLib(L, "UnityEngine.QueueMode", typeof(UnityEngine.QueueMode), enums);
 	}
 
 	[MonoPInvokeCallbackAttribute(typeof(LuaCSFunction))]

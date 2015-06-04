@@ -5,26 +5,31 @@ using Object = UnityEngine.Object;
 
 public class ParticleRendererWrap
 {
-	public static LuaMethod[] regs = new LuaMethod[]
+	public static void Register(IntPtr L)
 	{
-		new LuaMethod("New", _CreateParticleRenderer),
-		new LuaMethod("GetClassType", GetClassType),
-		new LuaMethod("__eq", Lua_Eq),
-	};
+		LuaMethod[] regs = new LuaMethod[]
+		{
+			new LuaMethod("New", _CreateParticleRenderer),
+			new LuaMethod("GetClassType", GetClassType),
+			new LuaMethod("__eq", Lua_Eq),
+		};
 
-	static LuaField[] fields = new LuaField[]
-	{
-		new LuaField("particleRenderMode", get_particleRenderMode, set_particleRenderMode),
-		new LuaField("lengthScale", get_lengthScale, set_lengthScale),
-		new LuaField("velocityScale", get_velocityScale, set_velocityScale),
-		new LuaField("cameraVelocityScale", get_cameraVelocityScale, set_cameraVelocityScale),
-		new LuaField("maxParticleSize", get_maxParticleSize, set_maxParticleSize),
-		new LuaField("uvAnimationXTile", get_uvAnimationXTile, set_uvAnimationXTile),
-		new LuaField("uvAnimationYTile", get_uvAnimationYTile, set_uvAnimationYTile),
-		new LuaField("uvAnimationCycles", get_uvAnimationCycles, set_uvAnimationCycles),
-		new LuaField("maxPartileSize", get_maxPartileSize, set_maxPartileSize),
-		new LuaField("uvTiles", get_uvTiles, set_uvTiles),
-	};
+		LuaField[] fields = new LuaField[]
+		{
+			new LuaField("particleRenderMode", get_particleRenderMode, set_particleRenderMode),
+			new LuaField("lengthScale", get_lengthScale, set_lengthScale),
+			new LuaField("velocityScale", get_velocityScale, set_velocityScale),
+			new LuaField("cameraVelocityScale", get_cameraVelocityScale, set_cameraVelocityScale),
+			new LuaField("maxParticleSize", get_maxParticleSize, set_maxParticleSize),
+			new LuaField("uvAnimationXTile", get_uvAnimationXTile, set_uvAnimationXTile),
+			new LuaField("uvAnimationYTile", get_uvAnimationYTile, set_uvAnimationYTile),
+			new LuaField("uvAnimationCycles", get_uvAnimationCycles, set_uvAnimationCycles),
+			new LuaField("maxPartileSize", get_maxPartileSize, set_maxPartileSize),
+			new LuaField("uvTiles", get_uvTiles, set_uvTiles),
+		};
+
+		LuaScriptMgr.RegisterLib(L, "UnityEngine.ParticleRenderer", typeof(UnityEngine.ParticleRenderer), regs, fields, typeof(Renderer));
+	}
 
 	[MonoPInvokeCallbackAttribute(typeof(LuaCSFunction))]
 	static int _CreateParticleRenderer(IntPtr L)
@@ -51,13 +56,7 @@ public class ParticleRendererWrap
 	static int GetClassType(IntPtr L)
 	{
 		LuaScriptMgr.Push(L, classType);
-
 		return 1;
-	}
-
-	public static void Register(IntPtr L)
-	{
-		LuaScriptMgr.RegisterLib(L, "UnityEngine.ParticleRenderer", typeof(ParticleRenderer), regs, fields, typeof(Renderer));
 	}
 
 	[MonoPInvokeCallbackAttribute(typeof(LuaCSFunction))]

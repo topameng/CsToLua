@@ -5,17 +5,22 @@ using Object = UnityEngine.Object;
 
 public class BehaviourWrap
 {
-	public static LuaMethod[] regs = new LuaMethod[]
+	public static void Register(IntPtr L)
 	{
-		new LuaMethod("New", _CreateBehaviour),
-		new LuaMethod("GetClassType", GetClassType),
-		new LuaMethod("__eq", Lua_Eq),
-	};
+		LuaMethod[] regs = new LuaMethod[]
+		{
+			new LuaMethod("New", _CreateBehaviour),
+			new LuaMethod("GetClassType", GetClassType),
+			new LuaMethod("__eq", Lua_Eq),
+		};
 
-	static LuaField[] fields = new LuaField[]
-	{
-		new LuaField("enabled", get_enabled, set_enabled),
-	};
+		LuaField[] fields = new LuaField[]
+		{
+			new LuaField("enabled", get_enabled, set_enabled),
+		};
+
+		LuaScriptMgr.RegisterLib(L, "UnityEngine.Behaviour", typeof(UnityEngine.Behaviour), regs, fields, typeof(Component));
+	}
 
 	[MonoPInvokeCallbackAttribute(typeof(LuaCSFunction))]
 	static int _CreateBehaviour(IntPtr L)
@@ -42,13 +47,7 @@ public class BehaviourWrap
 	static int GetClassType(IntPtr L)
 	{
 		LuaScriptMgr.Push(L, classType);
-
 		return 1;
-	}
-
-	public static void Register(IntPtr L)
-	{
-		LuaScriptMgr.RegisterLib(L, "UnityEngine.Behaviour", typeof(Behaviour), regs, fields, typeof(Component));
 	}
 
 	[MonoPInvokeCallbackAttribute(typeof(LuaCSFunction))]

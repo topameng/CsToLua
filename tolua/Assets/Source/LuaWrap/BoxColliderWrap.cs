@@ -5,18 +5,23 @@ using Object = UnityEngine.Object;
 
 public class BoxColliderWrap
 {
-	public static LuaMethod[] regs = new LuaMethod[]
+	public static void Register(IntPtr L)
 	{
-		new LuaMethod("New", _CreateBoxCollider),
-		new LuaMethod("GetClassType", GetClassType),
-		new LuaMethod("__eq", Lua_Eq),
-	};
+		LuaMethod[] regs = new LuaMethod[]
+		{
+			new LuaMethod("New", _CreateBoxCollider),
+			new LuaMethod("GetClassType", GetClassType),
+			new LuaMethod("__eq", Lua_Eq),
+		};
 
-	static LuaField[] fields = new LuaField[]
-	{
-		new LuaField("center", get_center, set_center),
-		new LuaField("size", get_size, set_size),
-	};
+		LuaField[] fields = new LuaField[]
+		{
+			new LuaField("center", get_center, set_center),
+			new LuaField("size", get_size, set_size),
+		};
+
+		LuaScriptMgr.RegisterLib(L, "UnityEngine.BoxCollider", typeof(UnityEngine.BoxCollider), regs, fields, typeof(Collider));
+	}
 
 	[MonoPInvokeCallbackAttribute(typeof(LuaCSFunction))]
 	static int _CreateBoxCollider(IntPtr L)
@@ -43,13 +48,7 @@ public class BoxColliderWrap
 	static int GetClassType(IntPtr L)
 	{
 		LuaScriptMgr.Push(L, classType);
-
 		return 1;
-	}
-
-	public static void Register(IntPtr L)
-	{
-		LuaScriptMgr.RegisterLib(L, "UnityEngine.BoxCollider", typeof(BoxCollider), regs, fields, typeof(Collider));
 	}
 
 	[MonoPInvokeCallbackAttribute(typeof(LuaCSFunction))]

@@ -5,25 +5,30 @@ using Object = UnityEngine.Object;
 
 public class SkinnedMeshRendererWrap
 {
-	public static LuaMethod[] regs = new LuaMethod[]
+	public static void Register(IntPtr L)
 	{
-		new LuaMethod("BakeMesh", BakeMesh),
-		new LuaMethod("GetBlendShapeWeight", GetBlendShapeWeight),
-		new LuaMethod("SetBlendShapeWeight", SetBlendShapeWeight),
-		new LuaMethod("New", _CreateSkinnedMeshRenderer),
-		new LuaMethod("GetClassType", GetClassType),
-		new LuaMethod("__eq", Lua_Eq),
-	};
+		LuaMethod[] regs = new LuaMethod[]
+		{
+			new LuaMethod("BakeMesh", BakeMesh),
+			new LuaMethod("GetBlendShapeWeight", GetBlendShapeWeight),
+			new LuaMethod("SetBlendShapeWeight", SetBlendShapeWeight),
+			new LuaMethod("New", _CreateSkinnedMeshRenderer),
+			new LuaMethod("GetClassType", GetClassType),
+			new LuaMethod("__eq", Lua_Eq),
+		};
 
-	static LuaField[] fields = new LuaField[]
-	{
-		new LuaField("bones", get_bones, set_bones),
-		new LuaField("rootBone", get_rootBone, set_rootBone),
-		new LuaField("quality", get_quality, set_quality),
-		new LuaField("sharedMesh", get_sharedMesh, set_sharedMesh),
-		new LuaField("updateWhenOffscreen", get_updateWhenOffscreen, set_updateWhenOffscreen),
-		new LuaField("localBounds", get_localBounds, set_localBounds),
-	};
+		LuaField[] fields = new LuaField[]
+		{
+			new LuaField("bones", get_bones, set_bones),
+			new LuaField("rootBone", get_rootBone, set_rootBone),
+			new LuaField("quality", get_quality, set_quality),
+			new LuaField("sharedMesh", get_sharedMesh, set_sharedMesh),
+			new LuaField("updateWhenOffscreen", get_updateWhenOffscreen, set_updateWhenOffscreen),
+			new LuaField("localBounds", get_localBounds, set_localBounds),
+		};
+
+		LuaScriptMgr.RegisterLib(L, "UnityEngine.SkinnedMeshRenderer", typeof(UnityEngine.SkinnedMeshRenderer), regs, fields, typeof(Renderer));
+	}
 
 	[MonoPInvokeCallbackAttribute(typeof(LuaCSFunction))]
 	static int _CreateSkinnedMeshRenderer(IntPtr L)
@@ -50,13 +55,7 @@ public class SkinnedMeshRendererWrap
 	static int GetClassType(IntPtr L)
 	{
 		LuaScriptMgr.Push(L, classType);
-
 		return 1;
-	}
-
-	public static void Register(IntPtr L)
-	{
-		LuaScriptMgr.RegisterLib(L, "UnityEngine.SkinnedMeshRenderer", typeof(SkinnedMeshRenderer), regs, fields, typeof(Renderer));
 	}
 
 	[MonoPInvokeCallbackAttribute(typeof(LuaCSFunction))]
@@ -351,7 +350,7 @@ public class SkinnedMeshRendererWrap
 	static int BakeMesh(IntPtr L)
 	{
 		LuaScriptMgr.CheckArgsCount(L, 2);
-		SkinnedMeshRenderer obj = (SkinnedMeshRenderer)LuaScriptMgr.GetUnityObject(L, 1, typeof(SkinnedMeshRenderer));
+		SkinnedMeshRenderer obj = (SkinnedMeshRenderer)LuaScriptMgr.GetUnityObjectSelf(L, 1, "SkinnedMeshRenderer");
 		Mesh arg0 = (Mesh)LuaScriptMgr.GetUnityObject(L, 2, typeof(Mesh));
 		obj.BakeMesh(arg0);
 		return 0;
@@ -361,7 +360,7 @@ public class SkinnedMeshRendererWrap
 	static int GetBlendShapeWeight(IntPtr L)
 	{
 		LuaScriptMgr.CheckArgsCount(L, 2);
-		SkinnedMeshRenderer obj = (SkinnedMeshRenderer)LuaScriptMgr.GetUnityObject(L, 1, typeof(SkinnedMeshRenderer));
+		SkinnedMeshRenderer obj = (SkinnedMeshRenderer)LuaScriptMgr.GetUnityObjectSelf(L, 1, "SkinnedMeshRenderer");
 		int arg0 = (int)LuaScriptMgr.GetNumber(L, 2);
 		float o = obj.GetBlendShapeWeight(arg0);
 		LuaScriptMgr.Push(L, o);
@@ -372,7 +371,7 @@ public class SkinnedMeshRendererWrap
 	static int SetBlendShapeWeight(IntPtr L)
 	{
 		LuaScriptMgr.CheckArgsCount(L, 3);
-		SkinnedMeshRenderer obj = (SkinnedMeshRenderer)LuaScriptMgr.GetUnityObject(L, 1, typeof(SkinnedMeshRenderer));
+		SkinnedMeshRenderer obj = (SkinnedMeshRenderer)LuaScriptMgr.GetUnityObjectSelf(L, 1, "SkinnedMeshRenderer");
 		int arg0 = (int)LuaScriptMgr.GetNumber(L, 2);
 		float arg1 = (float)LuaScriptMgr.GetNumber(L, 3);
 		obj.SetBlendShapeWeight(arg0,arg1);

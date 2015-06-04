@@ -16,7 +16,7 @@ public class TouchPhaseWrap
 
 	public static void Register(IntPtr L)
 	{
-		LuaScriptMgr.RegisterLib(L, "UnityEngine.TouchPhase", typeof(TouchPhase), enums);
+		LuaScriptMgr.RegisterLib(L, "UnityEngine.TouchPhase", typeof(UnityEngine.TouchPhase), enums);
 	}
 
 	[MonoPInvokeCallbackAttribute(typeof(LuaCSFunction))]

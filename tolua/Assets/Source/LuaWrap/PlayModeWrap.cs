@@ -13,7 +13,7 @@ public class PlayModeWrap
 
 	public static void Register(IntPtr L)
 	{
-		LuaScriptMgr.RegisterLib(L, "UnityEngine.PlayMode", typeof(PlayMode), enums);
+		LuaScriptMgr.RegisterLib(L, "UnityEngine.PlayMode", typeof(UnityEngine.PlayMode), enums);
 	}
 
 	[MonoPInvokeCallbackAttribute(typeof(LuaCSFunction))]

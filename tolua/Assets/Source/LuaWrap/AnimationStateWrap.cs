@@ -4,30 +4,35 @@ using LuaInterface;
 
 public class AnimationStateWrap
 {
-	public static LuaMethod[] regs = new LuaMethod[]
+	public static void Register(IntPtr L)
 	{
-		new LuaMethod("AddMixingTransform", AddMixingTransform),
-		new LuaMethod("RemoveMixingTransform", RemoveMixingTransform),
-		new LuaMethod("New", _CreateAnimationState),
-		new LuaMethod("GetClassType", GetClassType),
-		new LuaMethod("__eq", Lua_Eq),
-	};
+		LuaMethod[] regs = new LuaMethod[]
+		{
+			new LuaMethod("AddMixingTransform", AddMixingTransform),
+			new LuaMethod("RemoveMixingTransform", RemoveMixingTransform),
+			new LuaMethod("New", _CreateAnimationState),
+			new LuaMethod("GetClassType", GetClassType),
+			new LuaMethod("__eq", Lua_Eq),
+		};
 
-	static LuaField[] fields = new LuaField[]
-	{
-		new LuaField("enabled", get_enabled, set_enabled),
-		new LuaField("weight", get_weight, set_weight),
-		new LuaField("wrapMode", get_wrapMode, set_wrapMode),
-		new LuaField("time", get_time, set_time),
-		new LuaField("normalizedTime", get_normalizedTime, set_normalizedTime),
-		new LuaField("speed", get_speed, set_speed),
-		new LuaField("normalizedSpeed", get_normalizedSpeed, set_normalizedSpeed),
-		new LuaField("length", get_length, null),
-		new LuaField("layer", get_layer, set_layer),
-		new LuaField("clip", get_clip, null),
-		new LuaField("name", get_name, set_name),
-		new LuaField("blendMode", get_blendMode, set_blendMode),
-	};
+		LuaField[] fields = new LuaField[]
+		{
+			new LuaField("enabled", get_enabled, set_enabled),
+			new LuaField("weight", get_weight, set_weight),
+			new LuaField("wrapMode", get_wrapMode, set_wrapMode),
+			new LuaField("time", get_time, set_time),
+			new LuaField("normalizedTime", get_normalizedTime, set_normalizedTime),
+			new LuaField("speed", get_speed, set_speed),
+			new LuaField("normalizedSpeed", get_normalizedSpeed, set_normalizedSpeed),
+			new LuaField("length", get_length, null),
+			new LuaField("layer", get_layer, set_layer),
+			new LuaField("clip", get_clip, null),
+			new LuaField("name", get_name, set_name),
+			new LuaField("blendMode", get_blendMode, set_blendMode),
+		};
+
+		LuaScriptMgr.RegisterLib(L, "UnityEngine.AnimationState", typeof(UnityEngine.AnimationState), regs, fields, typeof(TrackedReference));
+	}
 
 	[MonoPInvokeCallbackAttribute(typeof(LuaCSFunction))]
 	static int _CreateAnimationState(IntPtr L)
@@ -54,13 +59,7 @@ public class AnimationStateWrap
 	static int GetClassType(IntPtr L)
 	{
 		LuaScriptMgr.Push(L, classType);
-
 		return 1;
-	}
-
-	public static void Register(IntPtr L)
-	{
-		LuaScriptMgr.RegisterLib(L, "UnityEngine.AnimationState", typeof(AnimationState), regs, fields, typeof(TrackedReference));
 	}
 
 	[MonoPInvokeCallbackAttribute(typeof(LuaCSFunction))]
@@ -595,16 +594,17 @@ public class AnimationStateWrap
 	static int AddMixingTransform(IntPtr L)
 	{
 		int count = LuaDLL.lua_gettop(L);
+
 		if (count == 2)
 		{
-			AnimationState obj = (AnimationState)LuaScriptMgr.GetTrackedObject(L, 1, typeof(AnimationState));
+			AnimationState obj = (AnimationState)LuaScriptMgr.GetTrackedObjectSelf(L, 1, "AnimationState");
 			Transform arg0 = (Transform)LuaScriptMgr.GetUnityObject(L, 2, typeof(Transform));
 			obj.AddMixingTransform(arg0);
 			return 0;
 		}
 		else if (count == 3)
 		{
-			AnimationState obj = (AnimationState)LuaScriptMgr.GetTrackedObject(L, 1, typeof(AnimationState));
+			AnimationState obj = (AnimationState)LuaScriptMgr.GetTrackedObjectSelf(L, 1, "AnimationState");
 			Transform arg0 = (Transform)LuaScriptMgr.GetUnityObject(L, 2, typeof(Transform));
 			bool arg1 = LuaScriptMgr.GetBoolean(L, 3);
 			obj.AddMixingTransform(arg0,arg1);
@@ -622,7 +622,7 @@ public class AnimationStateWrap
 	static int RemoveMixingTransform(IntPtr L)
 	{
 		LuaScriptMgr.CheckArgsCount(L, 2);
-		AnimationState obj = (AnimationState)LuaScriptMgr.GetTrackedObject(L, 1, typeof(AnimationState));
+		AnimationState obj = (AnimationState)LuaScriptMgr.GetTrackedObjectSelf(L, 1, "AnimationState");
 		Transform arg0 = (Transform)LuaScriptMgr.GetUnityObject(L, 2, typeof(Transform));
 		obj.RemoveMixingTransform(arg0);
 		return 0;

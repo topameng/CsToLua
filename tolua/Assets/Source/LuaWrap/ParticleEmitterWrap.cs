@@ -5,37 +5,42 @@ using Object = UnityEngine.Object;
 
 public class ParticleEmitterWrap
 {
-	public static LuaMethod[] regs = new LuaMethod[]
+	public static void Register(IntPtr L)
 	{
-		new LuaMethod("ClearParticles", ClearParticles),
-		new LuaMethod("Emit", Emit),
-		new LuaMethod("Simulate", Simulate),
-		new LuaMethod("New", _CreateParticleEmitter),
-		new LuaMethod("GetClassType", GetClassType),
-		new LuaMethod("__eq", Lua_Eq),
-	};
+		LuaMethod[] regs = new LuaMethod[]
+		{
+			new LuaMethod("ClearParticles", ClearParticles),
+			new LuaMethod("Emit", Emit),
+			new LuaMethod("Simulate", Simulate),
+			new LuaMethod("New", _CreateParticleEmitter),
+			new LuaMethod("GetClassType", GetClassType),
+			new LuaMethod("__eq", Lua_Eq),
+		};
 
-	static LuaField[] fields = new LuaField[]
-	{
-		new LuaField("emit", get_emit, set_emit),
-		new LuaField("minSize", get_minSize, set_minSize),
-		new LuaField("maxSize", get_maxSize, set_maxSize),
-		new LuaField("minEnergy", get_minEnergy, set_minEnergy),
-		new LuaField("maxEnergy", get_maxEnergy, set_maxEnergy),
-		new LuaField("minEmission", get_minEmission, set_minEmission),
-		new LuaField("maxEmission", get_maxEmission, set_maxEmission),
-		new LuaField("emitterVelocityScale", get_emitterVelocityScale, set_emitterVelocityScale),
-		new LuaField("worldVelocity", get_worldVelocity, set_worldVelocity),
-		new LuaField("localVelocity", get_localVelocity, set_localVelocity),
-		new LuaField("rndVelocity", get_rndVelocity, set_rndVelocity),
-		new LuaField("useWorldSpace", get_useWorldSpace, set_useWorldSpace),
-		new LuaField("rndRotation", get_rndRotation, set_rndRotation),
-		new LuaField("angularVelocity", get_angularVelocity, set_angularVelocity),
-		new LuaField("rndAngularVelocity", get_rndAngularVelocity, set_rndAngularVelocity),
-		new LuaField("particles", get_particles, set_particles),
-		new LuaField("particleCount", get_particleCount, null),
-		new LuaField("enabled", get_enabled, set_enabled),
-	};
+		LuaField[] fields = new LuaField[]
+		{
+			new LuaField("emit", get_emit, set_emit),
+			new LuaField("minSize", get_minSize, set_minSize),
+			new LuaField("maxSize", get_maxSize, set_maxSize),
+			new LuaField("minEnergy", get_minEnergy, set_minEnergy),
+			new LuaField("maxEnergy", get_maxEnergy, set_maxEnergy),
+			new LuaField("minEmission", get_minEmission, set_minEmission),
+			new LuaField("maxEmission", get_maxEmission, set_maxEmission),
+			new LuaField("emitterVelocityScale", get_emitterVelocityScale, set_emitterVelocityScale),
+			new LuaField("worldVelocity", get_worldVelocity, set_worldVelocity),
+			new LuaField("localVelocity", get_localVelocity, set_localVelocity),
+			new LuaField("rndVelocity", get_rndVelocity, set_rndVelocity),
+			new LuaField("useWorldSpace", get_useWorldSpace, set_useWorldSpace),
+			new LuaField("rndRotation", get_rndRotation, set_rndRotation),
+			new LuaField("angularVelocity", get_angularVelocity, set_angularVelocity),
+			new LuaField("rndAngularVelocity", get_rndAngularVelocity, set_rndAngularVelocity),
+			new LuaField("particles", get_particles, set_particles),
+			new LuaField("particleCount", get_particleCount, null),
+			new LuaField("enabled", get_enabled, set_enabled),
+		};
+
+		LuaScriptMgr.RegisterLib(L, "UnityEngine.ParticleEmitter", typeof(UnityEngine.ParticleEmitter), regs, fields, typeof(Component));
+	}
 
 	[MonoPInvokeCallbackAttribute(typeof(LuaCSFunction))]
 	static int _CreateParticleEmitter(IntPtr L)
@@ -62,13 +67,7 @@ public class ParticleEmitterWrap
 	static int GetClassType(IntPtr L)
 	{
 		LuaScriptMgr.Push(L, classType);
-
 		return 1;
-	}
-
-	public static void Register(IntPtr L)
-	{
-		LuaScriptMgr.RegisterLib(L, "UnityEngine.ParticleEmitter", typeof(ParticleEmitter), regs, fields, typeof(Component));
 	}
 
 	[MonoPInvokeCallbackAttribute(typeof(LuaCSFunction))]
@@ -915,7 +914,7 @@ public class ParticleEmitterWrap
 	static int ClearParticles(IntPtr L)
 	{
 		LuaScriptMgr.CheckArgsCount(L, 1);
-		ParticleEmitter obj = (ParticleEmitter)LuaScriptMgr.GetUnityObject(L, 1, typeof(ParticleEmitter));
+		ParticleEmitter obj = (ParticleEmitter)LuaScriptMgr.GetUnityObjectSelf(L, 1, "ParticleEmitter");
 		obj.ClearParticles();
 		return 0;
 	}
@@ -924,22 +923,23 @@ public class ParticleEmitterWrap
 	static int Emit(IntPtr L)
 	{
 		int count = LuaDLL.lua_gettop(L);
+
 		if (count == 1)
 		{
-			ParticleEmitter obj = (ParticleEmitter)LuaScriptMgr.GetUnityObject(L, 1, typeof(ParticleEmitter));
+			ParticleEmitter obj = (ParticleEmitter)LuaScriptMgr.GetUnityObjectSelf(L, 1, "ParticleEmitter");
 			obj.Emit();
 			return 0;
 		}
 		else if (count == 2)
 		{
-			ParticleEmitter obj = (ParticleEmitter)LuaScriptMgr.GetUnityObject(L, 1, typeof(ParticleEmitter));
+			ParticleEmitter obj = (ParticleEmitter)LuaScriptMgr.GetUnityObjectSelf(L, 1, "ParticleEmitter");
 			int arg0 = (int)LuaScriptMgr.GetNumber(L, 2);
 			obj.Emit(arg0);
 			return 0;
 		}
 		else if (count == 6)
 		{
-			ParticleEmitter obj = (ParticleEmitter)LuaScriptMgr.GetUnityObject(L, 1, typeof(ParticleEmitter));
+			ParticleEmitter obj = (ParticleEmitter)LuaScriptMgr.GetUnityObjectSelf(L, 1, "ParticleEmitter");
 			Vector3 arg0 = LuaScriptMgr.GetVector3(L, 2);
 			Vector3 arg1 = LuaScriptMgr.GetVector3(L, 3);
 			float arg2 = (float)LuaScriptMgr.GetNumber(L, 4);
@@ -950,7 +950,7 @@ public class ParticleEmitterWrap
 		}
 		else if (count == 8)
 		{
-			ParticleEmitter obj = (ParticleEmitter)LuaScriptMgr.GetUnityObject(L, 1, typeof(ParticleEmitter));
+			ParticleEmitter obj = (ParticleEmitter)LuaScriptMgr.GetUnityObjectSelf(L, 1, "ParticleEmitter");
 			Vector3 arg0 = LuaScriptMgr.GetVector3(L, 2);
 			Vector3 arg1 = LuaScriptMgr.GetVector3(L, 3);
 			float arg2 = (float)LuaScriptMgr.GetNumber(L, 4);
@@ -973,7 +973,7 @@ public class ParticleEmitterWrap
 	static int Simulate(IntPtr L)
 	{
 		LuaScriptMgr.CheckArgsCount(L, 2);
-		ParticleEmitter obj = (ParticleEmitter)LuaScriptMgr.GetUnityObject(L, 1, typeof(ParticleEmitter));
+		ParticleEmitter obj = (ParticleEmitter)LuaScriptMgr.GetUnityObjectSelf(L, 1, "ParticleEmitter");
 		float arg0 = (float)LuaScriptMgr.GetNumber(L, 2);
 		obj.Simulate(arg0);
 		return 0;

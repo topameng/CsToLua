@@ -4,31 +4,36 @@ using LuaInterface;
 
 public class ScreenWrap
 {
-	public static LuaMethod[] regs = new LuaMethod[]
+	public static void Register(IntPtr L)
 	{
-		new LuaMethod("SetResolution", SetResolution),
-		new LuaMethod("New", _CreateScreen),
-		new LuaMethod("GetClassType", GetClassType),
-	};
+		LuaMethod[] regs = new LuaMethod[]
+		{
+			new LuaMethod("SetResolution", SetResolution),
+			new LuaMethod("New", _CreateScreen),
+			new LuaMethod("GetClassType", GetClassType),
+		};
 
-	static LuaField[] fields = new LuaField[]
-	{
-		new LuaField("resolutions", get_resolutions, null),
-		new LuaField("GetResolution", get_GetResolution, null),
-		new LuaField("currentResolution", get_currentResolution, null),
-		new LuaField("showCursor", get_showCursor, set_showCursor),
-		new LuaField("lockCursor", get_lockCursor, set_lockCursor),
-		new LuaField("width", get_width, null),
-		new LuaField("height", get_height, null),
-		new LuaField("dpi", get_dpi, null),
-		new LuaField("fullScreen", get_fullScreen, set_fullScreen),
-		new LuaField("autorotateToPortrait", get_autorotateToPortrait, set_autorotateToPortrait),
-		new LuaField("autorotateToPortraitUpsideDown", get_autorotateToPortraitUpsideDown, set_autorotateToPortraitUpsideDown),
-		new LuaField("autorotateToLandscapeLeft", get_autorotateToLandscapeLeft, set_autorotateToLandscapeLeft),
-		new LuaField("autorotateToLandscapeRight", get_autorotateToLandscapeRight, set_autorotateToLandscapeRight),
-		new LuaField("orientation", get_orientation, set_orientation),
-		new LuaField("sleepTimeout", get_sleepTimeout, set_sleepTimeout),
-	};
+		LuaField[] fields = new LuaField[]
+		{
+			new LuaField("resolutions", get_resolutions, null),
+			new LuaField("GetResolution", get_GetResolution, null),
+			new LuaField("currentResolution", get_currentResolution, null),
+			new LuaField("showCursor", get_showCursor, set_showCursor),
+			new LuaField("lockCursor", get_lockCursor, set_lockCursor),
+			new LuaField("width", get_width, null),
+			new LuaField("height", get_height, null),
+			new LuaField("dpi", get_dpi, null),
+			new LuaField("fullScreen", get_fullScreen, set_fullScreen),
+			new LuaField("autorotateToPortrait", get_autorotateToPortrait, set_autorotateToPortrait),
+			new LuaField("autorotateToPortraitUpsideDown", get_autorotateToPortraitUpsideDown, set_autorotateToPortraitUpsideDown),
+			new LuaField("autorotateToLandscapeLeft", get_autorotateToLandscapeLeft, set_autorotateToLandscapeLeft),
+			new LuaField("autorotateToLandscapeRight", get_autorotateToLandscapeRight, set_autorotateToLandscapeRight),
+			new LuaField("orientation", get_orientation, set_orientation),
+			new LuaField("sleepTimeout", get_sleepTimeout, set_sleepTimeout),
+		};
+
+		LuaScriptMgr.RegisterLib(L, "UnityEngine.Screen", typeof(UnityEngine.Screen), regs, fields, typeof(object));
+	}
 
 	[MonoPInvokeCallbackAttribute(typeof(LuaCSFunction))]
 	static int _CreateScreen(IntPtr L)
@@ -55,13 +60,7 @@ public class ScreenWrap
 	static int GetClassType(IntPtr L)
 	{
 		LuaScriptMgr.Push(L, classType);
-
 		return 1;
-	}
-
-	public static void Register(IntPtr L)
-	{
-		LuaScriptMgr.RegisterLib(L, "UnityEngine.Screen", typeof(Screen), regs, fields, typeof(object));
 	}
 
 	[MonoPInvokeCallbackAttribute(typeof(LuaCSFunction))]
@@ -236,6 +235,7 @@ public class ScreenWrap
 	static int SetResolution(IntPtr L)
 	{
 		int count = LuaDLL.lua_gettop(L);
+
 		if (count == 3)
 		{
 			int arg0 = (int)LuaScriptMgr.GetNumber(L, 1);

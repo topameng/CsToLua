@@ -5,18 +5,23 @@ using Object = UnityEngine.Object;
 
 public class SphereColliderWrap
 {
-	public static LuaMethod[] regs = new LuaMethod[]
+	public static void Register(IntPtr L)
 	{
-		new LuaMethod("New", _CreateSphereCollider),
-		new LuaMethod("GetClassType", GetClassType),
-		new LuaMethod("__eq", Lua_Eq),
-	};
+		LuaMethod[] regs = new LuaMethod[]
+		{
+			new LuaMethod("New", _CreateSphereCollider),
+			new LuaMethod("GetClassType", GetClassType),
+			new LuaMethod("__eq", Lua_Eq),
+		};
 
-	static LuaField[] fields = new LuaField[]
-	{
-		new LuaField("center", get_center, set_center),
-		new LuaField("radius", get_radius, set_radius),
-	};
+		LuaField[] fields = new LuaField[]
+		{
+			new LuaField("center", get_center, set_center),
+			new LuaField("radius", get_radius, set_radius),
+		};
+
+		LuaScriptMgr.RegisterLib(L, "UnityEngine.SphereCollider", typeof(UnityEngine.SphereCollider), regs, fields, typeof(Collider));
+	}
 
 	[MonoPInvokeCallbackAttribute(typeof(LuaCSFunction))]
 	static int _CreateSphereCollider(IntPtr L)
@@ -43,13 +48,7 @@ public class SphereColliderWrap
 	static int GetClassType(IntPtr L)
 	{
 		LuaScriptMgr.Push(L, classType);
-
 		return 1;
-	}
-
-	public static void Register(IntPtr L)
-	{
-		LuaScriptMgr.RegisterLib(L, "UnityEngine.SphereCollider", typeof(SphereCollider), regs, fields, typeof(Collider));
 	}
 
 	[MonoPInvokeCallbackAttribute(typeof(LuaCSFunction))]

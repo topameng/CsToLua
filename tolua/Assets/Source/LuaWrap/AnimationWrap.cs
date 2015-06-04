@@ -6,39 +6,44 @@ using Object = UnityEngine.Object;
 
 public class AnimationWrap
 {
-	public static LuaMethod[] regs = new LuaMethod[]
+	public static void Register(IntPtr L)
 	{
-		new LuaMethod("Stop", Stop),
-		new LuaMethod("Rewind", Rewind),
-		new LuaMethod("Sample", Sample),
-		new LuaMethod("IsPlaying", IsPlaying),
-		new LuaMethod("get_Item", get_Item),
-		new LuaMethod("Play", Play),
-		new LuaMethod("CrossFade", CrossFade),
-		new LuaMethod("Blend", Blend),
-		new LuaMethod("CrossFadeQueued", CrossFadeQueued),
-		new LuaMethod("PlayQueued", PlayQueued),
-		new LuaMethod("AddClip", AddClip),
-		new LuaMethod("RemoveClip", RemoveClip),
-		new LuaMethod("GetClipCount", GetClipCount),
-		new LuaMethod("SyncLayer", SyncLayer),
-		new LuaMethod("GetEnumerator", GetEnumerator),
-		new LuaMethod("GetClip", GetClip),
-		new LuaMethod("New", _CreateAnimation),
-		new LuaMethod("GetClassType", GetClassType),
-		new LuaMethod("__eq", Lua_Eq),
-	};
+		LuaMethod[] regs = new LuaMethod[]
+		{
+			new LuaMethod("Stop", Stop),
+			new LuaMethod("Rewind", Rewind),
+			new LuaMethod("Sample", Sample),
+			new LuaMethod("IsPlaying", IsPlaying),
+			new LuaMethod("get_Item", get_Item),
+			new LuaMethod("Play", Play),
+			new LuaMethod("CrossFade", CrossFade),
+			new LuaMethod("Blend", Blend),
+			new LuaMethod("CrossFadeQueued", CrossFadeQueued),
+			new LuaMethod("PlayQueued", PlayQueued),
+			new LuaMethod("AddClip", AddClip),
+			new LuaMethod("RemoveClip", RemoveClip),
+			new LuaMethod("GetClipCount", GetClipCount),
+			new LuaMethod("SyncLayer", SyncLayer),
+			new LuaMethod("GetEnumerator", GetEnumerator),
+			new LuaMethod("GetClip", GetClip),
+			new LuaMethod("New", _CreateAnimation),
+			new LuaMethod("GetClassType", GetClassType),
+			new LuaMethod("__eq", Lua_Eq),
+		};
 
-	static LuaField[] fields = new LuaField[]
-	{
-		new LuaField("clip", get_clip, set_clip),
-		new LuaField("playAutomatically", get_playAutomatically, set_playAutomatically),
-		new LuaField("wrapMode", get_wrapMode, set_wrapMode),
-		new LuaField("isPlaying", get_isPlaying, null),
-		new LuaField("animatePhysics", get_animatePhysics, set_animatePhysics),
-		new LuaField("cullingType", get_cullingType, set_cullingType),
-		new LuaField("localBounds", get_localBounds, set_localBounds),
-	};
+		LuaField[] fields = new LuaField[]
+		{
+			new LuaField("clip", get_clip, set_clip),
+			new LuaField("playAutomatically", get_playAutomatically, set_playAutomatically),
+			new LuaField("wrapMode", get_wrapMode, set_wrapMode),
+			new LuaField("isPlaying", get_isPlaying, null),
+			new LuaField("animatePhysics", get_animatePhysics, set_animatePhysics),
+			new LuaField("cullingType", get_cullingType, set_cullingType),
+			new LuaField("localBounds", get_localBounds, set_localBounds),
+		};
+
+		LuaScriptMgr.RegisterLib(L, "UnityEngine.Animation", typeof(UnityEngine.Animation), regs, fields, typeof(Behaviour));
+	}
 
 	[MonoPInvokeCallbackAttribute(typeof(LuaCSFunction))]
 	static int _CreateAnimation(IntPtr L)
@@ -65,13 +70,7 @@ public class AnimationWrap
 	static int GetClassType(IntPtr L)
 	{
 		LuaScriptMgr.Push(L, classType);
-
 		return 1;
-	}
-
-	public static void Register(IntPtr L)
-	{
-		LuaScriptMgr.RegisterLib(L, "UnityEngine.Animation", typeof(Animation), regs, fields, typeof(Behaviour));
 	}
 
 	[MonoPInvokeCallbackAttribute(typeof(LuaCSFunction))]
@@ -390,15 +389,16 @@ public class AnimationWrap
 	static int Stop(IntPtr L)
 	{
 		int count = LuaDLL.lua_gettop(L);
+
 		if (count == 1)
 		{
-			Animation obj = (Animation)LuaScriptMgr.GetUnityObject(L, 1, typeof(Animation));
+			Animation obj = (Animation)LuaScriptMgr.GetUnityObjectSelf(L, 1, "Animation");
 			obj.Stop();
 			return 0;
 		}
 		else if (count == 2)
 		{
-			Animation obj = (Animation)LuaScriptMgr.GetUnityObject(L, 1, typeof(Animation));
+			Animation obj = (Animation)LuaScriptMgr.GetUnityObjectSelf(L, 1, "Animation");
 			string arg0 = LuaScriptMgr.GetLuaString(L, 2);
 			obj.Stop(arg0);
 			return 0;
@@ -415,15 +415,16 @@ public class AnimationWrap
 	static int Rewind(IntPtr L)
 	{
 		int count = LuaDLL.lua_gettop(L);
+
 		if (count == 1)
 		{
-			Animation obj = (Animation)LuaScriptMgr.GetUnityObject(L, 1, typeof(Animation));
+			Animation obj = (Animation)LuaScriptMgr.GetUnityObjectSelf(L, 1, "Animation");
 			obj.Rewind();
 			return 0;
 		}
 		else if (count == 2)
 		{
-			Animation obj = (Animation)LuaScriptMgr.GetUnityObject(L, 1, typeof(Animation));
+			Animation obj = (Animation)LuaScriptMgr.GetUnityObjectSelf(L, 1, "Animation");
 			string arg0 = LuaScriptMgr.GetLuaString(L, 2);
 			obj.Rewind(arg0);
 			return 0;
@@ -440,7 +441,7 @@ public class AnimationWrap
 	static int Sample(IntPtr L)
 	{
 		LuaScriptMgr.CheckArgsCount(L, 1);
-		Animation obj = (Animation)LuaScriptMgr.GetUnityObject(L, 1, typeof(Animation));
+		Animation obj = (Animation)LuaScriptMgr.GetUnityObjectSelf(L, 1, "Animation");
 		obj.Sample();
 		return 0;
 	}
@@ -449,7 +450,7 @@ public class AnimationWrap
 	static int IsPlaying(IntPtr L)
 	{
 		LuaScriptMgr.CheckArgsCount(L, 2);
-		Animation obj = (Animation)LuaScriptMgr.GetUnityObject(L, 1, typeof(Animation));
+		Animation obj = (Animation)LuaScriptMgr.GetUnityObjectSelf(L, 1, "Animation");
 		string arg0 = LuaScriptMgr.GetLuaString(L, 2);
 		bool o = obj.IsPlaying(arg0);
 		LuaScriptMgr.Push(L, o);
@@ -460,7 +461,7 @@ public class AnimationWrap
 	static int get_Item(IntPtr L)
 	{
 		LuaScriptMgr.CheckArgsCount(L, 2);
-		Animation obj = (Animation)LuaScriptMgr.GetUnityObject(L, 1, typeof(Animation));
+		Animation obj = (Animation)LuaScriptMgr.GetUnityObjectSelf(L, 1, "Animation");
 		string arg0 = LuaScriptMgr.GetLuaString(L, 2);
 		AnimationState o = obj[arg0];
 		LuaScriptMgr.Push(L, o);
@@ -474,30 +475,30 @@ public class AnimationWrap
 
 		if (count == 1)
 		{
-			Animation obj = (Animation)LuaScriptMgr.GetUnityObject(L, 1, typeof(Animation));
+			Animation obj = (Animation)LuaScriptMgr.GetUnityObjectSelf(L, 1, "Animation");
 			bool o = obj.Play();
 			LuaScriptMgr.Push(L, o);
 			return 1;
 		}
-		else if (count == 2 && LuaScriptMgr.CheckTypes(L, 1, typeof(Animation), typeof(string)))
+		else if (count == 2 && LuaScriptMgr.CheckTypes(L, 2, typeof(string)))
 		{
-			Animation obj = (Animation)LuaScriptMgr.GetUnityObject(L, 1, typeof(Animation));
+			Animation obj = (Animation)LuaScriptMgr.GetUnityObjectSelf(L, 1, "Animation");
 			string arg0 = LuaScriptMgr.GetString(L, 2);
 			bool o = obj.Play(arg0);
 			LuaScriptMgr.Push(L, o);
 			return 1;
 		}
-		else if (count == 2 && LuaScriptMgr.CheckTypes(L, 1, typeof(Animation), typeof(PlayMode)))
+		else if (count == 2 && LuaScriptMgr.CheckTypes(L, 2, typeof(PlayMode)))
 		{
-			Animation obj = (Animation)LuaScriptMgr.GetUnityObject(L, 1, typeof(Animation));
-			PlayMode arg0 = (PlayMode)LuaScriptMgr.GetNetObject(L, 2, typeof(PlayMode));
+			Animation obj = (Animation)LuaScriptMgr.GetUnityObjectSelf(L, 1, "Animation");
+			PlayMode arg0 = (PlayMode)LuaScriptMgr.GetLuaObject(L, 2);
 			bool o = obj.Play(arg0);
 			LuaScriptMgr.Push(L, o);
 			return 1;
 		}
 		else if (count == 3)
 		{
-			Animation obj = (Animation)LuaScriptMgr.GetUnityObject(L, 1, typeof(Animation));
+			Animation obj = (Animation)LuaScriptMgr.GetUnityObjectSelf(L, 1, "Animation");
 			string arg0 = LuaScriptMgr.GetLuaString(L, 2);
 			PlayMode arg1 = (PlayMode)LuaScriptMgr.GetNetObject(L, 3, typeof(PlayMode));
 			bool o = obj.Play(arg0,arg1);
@@ -516,16 +517,17 @@ public class AnimationWrap
 	static int CrossFade(IntPtr L)
 	{
 		int count = LuaDLL.lua_gettop(L);
+
 		if (count == 2)
 		{
-			Animation obj = (Animation)LuaScriptMgr.GetUnityObject(L, 1, typeof(Animation));
+			Animation obj = (Animation)LuaScriptMgr.GetUnityObjectSelf(L, 1, "Animation");
 			string arg0 = LuaScriptMgr.GetLuaString(L, 2);
 			obj.CrossFade(arg0);
 			return 0;
 		}
 		else if (count == 3)
 		{
-			Animation obj = (Animation)LuaScriptMgr.GetUnityObject(L, 1, typeof(Animation));
+			Animation obj = (Animation)LuaScriptMgr.GetUnityObjectSelf(L, 1, "Animation");
 			string arg0 = LuaScriptMgr.GetLuaString(L, 2);
 			float arg1 = (float)LuaScriptMgr.GetNumber(L, 3);
 			obj.CrossFade(arg0,arg1);
@@ -533,7 +535,7 @@ public class AnimationWrap
 		}
 		else if (count == 4)
 		{
-			Animation obj = (Animation)LuaScriptMgr.GetUnityObject(L, 1, typeof(Animation));
+			Animation obj = (Animation)LuaScriptMgr.GetUnityObjectSelf(L, 1, "Animation");
 			string arg0 = LuaScriptMgr.GetLuaString(L, 2);
 			float arg1 = (float)LuaScriptMgr.GetNumber(L, 3);
 			PlayMode arg2 = (PlayMode)LuaScriptMgr.GetNetObject(L, 4, typeof(PlayMode));
@@ -552,16 +554,17 @@ public class AnimationWrap
 	static int Blend(IntPtr L)
 	{
 		int count = LuaDLL.lua_gettop(L);
+
 		if (count == 2)
 		{
-			Animation obj = (Animation)LuaScriptMgr.GetUnityObject(L, 1, typeof(Animation));
+			Animation obj = (Animation)LuaScriptMgr.GetUnityObjectSelf(L, 1, "Animation");
 			string arg0 = LuaScriptMgr.GetLuaString(L, 2);
 			obj.Blend(arg0);
 			return 0;
 		}
 		else if (count == 3)
 		{
-			Animation obj = (Animation)LuaScriptMgr.GetUnityObject(L, 1, typeof(Animation));
+			Animation obj = (Animation)LuaScriptMgr.GetUnityObjectSelf(L, 1, "Animation");
 			string arg0 = LuaScriptMgr.GetLuaString(L, 2);
 			float arg1 = (float)LuaScriptMgr.GetNumber(L, 3);
 			obj.Blend(arg0,arg1);
@@ -569,7 +572,7 @@ public class AnimationWrap
 		}
 		else if (count == 4)
 		{
-			Animation obj = (Animation)LuaScriptMgr.GetUnityObject(L, 1, typeof(Animation));
+			Animation obj = (Animation)LuaScriptMgr.GetUnityObjectSelf(L, 1, "Animation");
 			string arg0 = LuaScriptMgr.GetLuaString(L, 2);
 			float arg1 = (float)LuaScriptMgr.GetNumber(L, 3);
 			float arg2 = (float)LuaScriptMgr.GetNumber(L, 4);
@@ -588,9 +591,10 @@ public class AnimationWrap
 	static int CrossFadeQueued(IntPtr L)
 	{
 		int count = LuaDLL.lua_gettop(L);
+
 		if (count == 2)
 		{
-			Animation obj = (Animation)LuaScriptMgr.GetUnityObject(L, 1, typeof(Animation));
+			Animation obj = (Animation)LuaScriptMgr.GetUnityObjectSelf(L, 1, "Animation");
 			string arg0 = LuaScriptMgr.GetLuaString(L, 2);
 			AnimationState o = obj.CrossFadeQueued(arg0);
 			LuaScriptMgr.Push(L, o);
@@ -598,7 +602,7 @@ public class AnimationWrap
 		}
 		else if (count == 3)
 		{
-			Animation obj = (Animation)LuaScriptMgr.GetUnityObject(L, 1, typeof(Animation));
+			Animation obj = (Animation)LuaScriptMgr.GetUnityObjectSelf(L, 1, "Animation");
 			string arg0 = LuaScriptMgr.GetLuaString(L, 2);
 			float arg1 = (float)LuaScriptMgr.GetNumber(L, 3);
 			AnimationState o = obj.CrossFadeQueued(arg0,arg1);
@@ -607,7 +611,7 @@ public class AnimationWrap
 		}
 		else if (count == 4)
 		{
-			Animation obj = (Animation)LuaScriptMgr.GetUnityObject(L, 1, typeof(Animation));
+			Animation obj = (Animation)LuaScriptMgr.GetUnityObjectSelf(L, 1, "Animation");
 			string arg0 = LuaScriptMgr.GetLuaString(L, 2);
 			float arg1 = (float)LuaScriptMgr.GetNumber(L, 3);
 			QueueMode arg2 = (QueueMode)LuaScriptMgr.GetNetObject(L, 4, typeof(QueueMode));
@@ -617,7 +621,7 @@ public class AnimationWrap
 		}
 		else if (count == 5)
 		{
-			Animation obj = (Animation)LuaScriptMgr.GetUnityObject(L, 1, typeof(Animation));
+			Animation obj = (Animation)LuaScriptMgr.GetUnityObjectSelf(L, 1, "Animation");
 			string arg0 = LuaScriptMgr.GetLuaString(L, 2);
 			float arg1 = (float)LuaScriptMgr.GetNumber(L, 3);
 			QueueMode arg2 = (QueueMode)LuaScriptMgr.GetNetObject(L, 4, typeof(QueueMode));
@@ -638,9 +642,10 @@ public class AnimationWrap
 	static int PlayQueued(IntPtr L)
 	{
 		int count = LuaDLL.lua_gettop(L);
+
 		if (count == 2)
 		{
-			Animation obj = (Animation)LuaScriptMgr.GetUnityObject(L, 1, typeof(Animation));
+			Animation obj = (Animation)LuaScriptMgr.GetUnityObjectSelf(L, 1, "Animation");
 			string arg0 = LuaScriptMgr.GetLuaString(L, 2);
 			AnimationState o = obj.PlayQueued(arg0);
 			LuaScriptMgr.Push(L, o);
@@ -648,7 +653,7 @@ public class AnimationWrap
 		}
 		else if (count == 3)
 		{
-			Animation obj = (Animation)LuaScriptMgr.GetUnityObject(L, 1, typeof(Animation));
+			Animation obj = (Animation)LuaScriptMgr.GetUnityObjectSelf(L, 1, "Animation");
 			string arg0 = LuaScriptMgr.GetLuaString(L, 2);
 			QueueMode arg1 = (QueueMode)LuaScriptMgr.GetNetObject(L, 3, typeof(QueueMode));
 			AnimationState o = obj.PlayQueued(arg0,arg1);
@@ -657,7 +662,7 @@ public class AnimationWrap
 		}
 		else if (count == 4)
 		{
-			Animation obj = (Animation)LuaScriptMgr.GetUnityObject(L, 1, typeof(Animation));
+			Animation obj = (Animation)LuaScriptMgr.GetUnityObjectSelf(L, 1, "Animation");
 			string arg0 = LuaScriptMgr.GetLuaString(L, 2);
 			QueueMode arg1 = (QueueMode)LuaScriptMgr.GetNetObject(L, 3, typeof(QueueMode));
 			PlayMode arg2 = (PlayMode)LuaScriptMgr.GetNetObject(L, 4, typeof(PlayMode));
@@ -677,9 +682,10 @@ public class AnimationWrap
 	static int AddClip(IntPtr L)
 	{
 		int count = LuaDLL.lua_gettop(L);
+
 		if (count == 3)
 		{
-			Animation obj = (Animation)LuaScriptMgr.GetUnityObject(L, 1, typeof(Animation));
+			Animation obj = (Animation)LuaScriptMgr.GetUnityObjectSelf(L, 1, "Animation");
 			AnimationClip arg0 = (AnimationClip)LuaScriptMgr.GetUnityObject(L, 2, typeof(AnimationClip));
 			string arg1 = LuaScriptMgr.GetLuaString(L, 3);
 			obj.AddClip(arg0,arg1);
@@ -687,7 +693,7 @@ public class AnimationWrap
 		}
 		else if (count == 5)
 		{
-			Animation obj = (Animation)LuaScriptMgr.GetUnityObject(L, 1, typeof(Animation));
+			Animation obj = (Animation)LuaScriptMgr.GetUnityObjectSelf(L, 1, "Animation");
 			AnimationClip arg0 = (AnimationClip)LuaScriptMgr.GetUnityObject(L, 2, typeof(AnimationClip));
 			string arg1 = LuaScriptMgr.GetLuaString(L, 3);
 			int arg2 = (int)LuaScriptMgr.GetNumber(L, 4);
@@ -697,7 +703,7 @@ public class AnimationWrap
 		}
 		else if (count == 6)
 		{
-			Animation obj = (Animation)LuaScriptMgr.GetUnityObject(L, 1, typeof(Animation));
+			Animation obj = (Animation)LuaScriptMgr.GetUnityObjectSelf(L, 1, "Animation");
 			AnimationClip arg0 = (AnimationClip)LuaScriptMgr.GetUnityObject(L, 2, typeof(AnimationClip));
 			string arg1 = LuaScriptMgr.GetLuaString(L, 3);
 			int arg2 = (int)LuaScriptMgr.GetNumber(L, 4);
@@ -719,17 +725,17 @@ public class AnimationWrap
 	{
 		int count = LuaDLL.lua_gettop(L);
 
-		if (count == 2 && LuaScriptMgr.CheckTypes(L, 1, typeof(Animation), typeof(string)))
+		if (count == 2 && LuaScriptMgr.CheckTypes(L, 2, typeof(string)))
 		{
-			Animation obj = (Animation)LuaScriptMgr.GetUnityObject(L, 1, typeof(Animation));
+			Animation obj = (Animation)LuaScriptMgr.GetUnityObjectSelf(L, 1, "Animation");
 			string arg0 = LuaScriptMgr.GetString(L, 2);
 			obj.RemoveClip(arg0);
 			return 0;
 		}
-		else if (count == 2 && LuaScriptMgr.CheckTypes(L, 1, typeof(Animation), typeof(AnimationClip)))
+		else if (count == 2 && LuaScriptMgr.CheckTypes(L, 2, typeof(AnimationClip)))
 		{
-			Animation obj = (Animation)LuaScriptMgr.GetUnityObject(L, 1, typeof(Animation));
-			AnimationClip arg0 = (AnimationClip)LuaScriptMgr.GetUnityObject(L, 2, typeof(AnimationClip));
+			Animation obj = (Animation)LuaScriptMgr.GetUnityObjectSelf(L, 1, "Animation");
+			AnimationClip arg0 = (AnimationClip)LuaScriptMgr.GetLuaObject(L, 2);
 			obj.RemoveClip(arg0);
 			return 0;
 		}
@@ -745,7 +751,7 @@ public class AnimationWrap
 	static int GetClipCount(IntPtr L)
 	{
 		LuaScriptMgr.CheckArgsCount(L, 1);
-		Animation obj = (Animation)LuaScriptMgr.GetUnityObject(L, 1, typeof(Animation));
+		Animation obj = (Animation)LuaScriptMgr.GetUnityObjectSelf(L, 1, "Animation");
 		int o = obj.GetClipCount();
 		LuaScriptMgr.Push(L, o);
 		return 1;
@@ -755,7 +761,7 @@ public class AnimationWrap
 	static int SyncLayer(IntPtr L)
 	{
 		LuaScriptMgr.CheckArgsCount(L, 2);
-		Animation obj = (Animation)LuaScriptMgr.GetUnityObject(L, 1, typeof(Animation));
+		Animation obj = (Animation)LuaScriptMgr.GetUnityObjectSelf(L, 1, "Animation");
 		int arg0 = (int)LuaScriptMgr.GetNumber(L, 2);
 		obj.SyncLayer(arg0);
 		return 0;
@@ -765,7 +771,7 @@ public class AnimationWrap
 	static int GetEnumerator(IntPtr L)
 	{
 		LuaScriptMgr.CheckArgsCount(L, 1);
-		Animation obj = (Animation)LuaScriptMgr.GetUnityObject(L, 1, typeof(Animation));
+		Animation obj = (Animation)LuaScriptMgr.GetUnityObjectSelf(L, 1, "Animation");
 		IEnumerator o = obj.GetEnumerator();
 		LuaScriptMgr.Push(L, o);
 		return 1;
@@ -775,7 +781,7 @@ public class AnimationWrap
 	static int GetClip(IntPtr L)
 	{
 		LuaScriptMgr.CheckArgsCount(L, 2);
-		Animation obj = (Animation)LuaScriptMgr.GetUnityObject(L, 1, typeof(Animation));
+		Animation obj = (Animation)LuaScriptMgr.GetUnityObjectSelf(L, 1, "Animation");
 		string arg0 = LuaScriptMgr.GetLuaString(L, 2);
 		AnimationClip o = obj.GetClip(arg0);
 		LuaScriptMgr.Push(L, o);

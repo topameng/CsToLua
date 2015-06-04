@@ -4,18 +4,23 @@ using LuaInterface;
 
 public class TrackedReferenceWrap
 {
-	public static LuaMethod[] regs = new LuaMethod[]
+	public static void Register(IntPtr L)
 	{
-		new LuaMethod("Equals", Equals),
-		new LuaMethod("GetHashCode", GetHashCode),
-		new LuaMethod("New", _CreateTrackedReference),
-		new LuaMethod("GetClassType", GetClassType),
-		new LuaMethod("__eq", Lua_Eq),
-	};
+		LuaMethod[] regs = new LuaMethod[]
+		{
+			new LuaMethod("Equals", Equals),
+			new LuaMethod("GetHashCode", GetHashCode),
+			new LuaMethod("New", _CreateTrackedReference),
+			new LuaMethod("GetClassType", GetClassType),
+			new LuaMethod("__eq", Lua_Eq),
+		};
 
-	static LuaField[] fields = new LuaField[]
-	{
-	};
+		LuaField[] fields = new LuaField[]
+		{
+		};
+
+		LuaScriptMgr.RegisterLib(L, "UnityEngine.TrackedReference", typeof(UnityEngine.TrackedReference), regs, fields, typeof(object));
+	}
 
 	[MonoPInvokeCallbackAttribute(typeof(LuaCSFunction))]
 	static int _CreateTrackedReference(IntPtr L)
@@ -30,13 +35,7 @@ public class TrackedReferenceWrap
 	static int GetClassType(IntPtr L)
 	{
 		LuaScriptMgr.Push(L, classType);
-
 		return 1;
-	}
-
-	public static void Register(IntPtr L)
-	{
-		LuaScriptMgr.RegisterLib(L, "UnityEngine.TrackedReference", typeof(TrackedReference), regs, fields, typeof(object));
 	}
 
 	[MonoPInvokeCallbackAttribute(typeof(LuaCSFunction))]
@@ -54,7 +53,7 @@ public class TrackedReferenceWrap
 	static int GetHashCode(IntPtr L)
 	{
 		LuaScriptMgr.CheckArgsCount(L, 1);
-		TrackedReference obj = (TrackedReference)LuaScriptMgr.GetTrackedObject(L, 1, typeof(TrackedReference));
+		TrackedReference obj = (TrackedReference)LuaScriptMgr.GetTrackedObjectSelf(L, 1, "TrackedReference");
 		int o = obj.GetHashCode();
 		LuaScriptMgr.Push(L, o);
 		return 1;

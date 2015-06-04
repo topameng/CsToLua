@@ -4,41 +4,46 @@ using LuaInterface;
 
 public class PhysicsWrap
 {
-	public static LuaMethod[] regs = new LuaMethod[]
+	public static void Register(IntPtr L)
 	{
-		new LuaMethod("Raycast", Raycast),
-		new LuaMethod("RaycastAll", RaycastAll),
-		new LuaMethod("Linecast", Linecast),
-		new LuaMethod("OverlapSphere", OverlapSphere),
-		new LuaMethod("CapsuleCast", CapsuleCast),
-		new LuaMethod("SphereCast", SphereCast),
-		new LuaMethod("CapsuleCastAll", CapsuleCastAll),
-		new LuaMethod("SphereCastAll", SphereCastAll),
-		new LuaMethod("CheckSphere", CheckSphere),
-		new LuaMethod("CheckCapsule", CheckCapsule),
-		new LuaMethod("IgnoreCollision", IgnoreCollision),
-		new LuaMethod("IgnoreLayerCollision", IgnoreLayerCollision),
-		new LuaMethod("GetIgnoreLayerCollision", GetIgnoreLayerCollision),
-		new LuaMethod("New", _CreatePhysics),
-		new LuaMethod("GetClassType", GetClassType),
-	};
+		LuaMethod[] regs = new LuaMethod[]
+		{
+			new LuaMethod("Raycast", Raycast),
+			new LuaMethod("RaycastAll", RaycastAll),
+			new LuaMethod("Linecast", Linecast),
+			new LuaMethod("OverlapSphere", OverlapSphere),
+			new LuaMethod("CapsuleCast", CapsuleCast),
+			new LuaMethod("SphereCast", SphereCast),
+			new LuaMethod("CapsuleCastAll", CapsuleCastAll),
+			new LuaMethod("SphereCastAll", SphereCastAll),
+			new LuaMethod("CheckSphere", CheckSphere),
+			new LuaMethod("CheckCapsule", CheckCapsule),
+			new LuaMethod("IgnoreCollision", IgnoreCollision),
+			new LuaMethod("IgnoreLayerCollision", IgnoreLayerCollision),
+			new LuaMethod("GetIgnoreLayerCollision", GetIgnoreLayerCollision),
+			new LuaMethod("New", _CreatePhysics),
+			new LuaMethod("GetClassType", GetClassType),
+		};
 
-	static LuaField[] fields = new LuaField[]
-	{
-		new LuaField("kIgnoreRaycastLayer", get_kIgnoreRaycastLayer, null),
-		new LuaField("kDefaultRaycastLayers", get_kDefaultRaycastLayers, null),
-		new LuaField("kAllLayers", get_kAllLayers, null),
-		new LuaField("IgnoreRaycastLayer", get_IgnoreRaycastLayer, null),
-		new LuaField("DefaultRaycastLayers", get_DefaultRaycastLayers, null),
-		new LuaField("AllLayers", get_AllLayers, null),
-		new LuaField("gravity", get_gravity, set_gravity),
-		new LuaField("minPenetrationForPenalty", get_minPenetrationForPenalty, set_minPenetrationForPenalty),
-		new LuaField("bounceThreshold", get_bounceThreshold, set_bounceThreshold),
-		new LuaField("sleepVelocity", get_sleepVelocity, set_sleepVelocity),
-		new LuaField("sleepAngularVelocity", get_sleepAngularVelocity, set_sleepAngularVelocity),
-		new LuaField("maxAngularVelocity", get_maxAngularVelocity, set_maxAngularVelocity),
-		new LuaField("solverIterationCount", get_solverIterationCount, set_solverIterationCount),
-	};
+		LuaField[] fields = new LuaField[]
+		{
+			new LuaField("kIgnoreRaycastLayer", get_kIgnoreRaycastLayer, null),
+			new LuaField("kDefaultRaycastLayers", get_kDefaultRaycastLayers, null),
+			new LuaField("kAllLayers", get_kAllLayers, null),
+			new LuaField("IgnoreRaycastLayer", get_IgnoreRaycastLayer, null),
+			new LuaField("DefaultRaycastLayers", get_DefaultRaycastLayers, null),
+			new LuaField("AllLayers", get_AllLayers, null),
+			new LuaField("gravity", get_gravity, set_gravity),
+			new LuaField("minPenetrationForPenalty", get_minPenetrationForPenalty, set_minPenetrationForPenalty),
+			new LuaField("bounceThreshold", get_bounceThreshold, set_bounceThreshold),
+			new LuaField("sleepVelocity", get_sleepVelocity, set_sleepVelocity),
+			new LuaField("sleepAngularVelocity", get_sleepAngularVelocity, set_sleepAngularVelocity),
+			new LuaField("maxAngularVelocity", get_maxAngularVelocity, set_maxAngularVelocity),
+			new LuaField("solverIterationCount", get_solverIterationCount, set_solverIterationCount),
+		};
+
+		LuaScriptMgr.RegisterLib(L, "UnityEngine.Physics", typeof(UnityEngine.Physics), regs, fields, typeof(object));
+	}
 
 	[MonoPInvokeCallbackAttribute(typeof(LuaCSFunction))]
 	static int _CreatePhysics(IntPtr L)
@@ -65,13 +70,7 @@ public class PhysicsWrap
 	static int GetClassType(IntPtr L)
 	{
 		LuaScriptMgr.Push(L, classType);
-
 		return 1;
-	}
-
-	public static void Register(IntPtr L)
-	{
-		LuaScriptMgr.RegisterLib(L, "UnityEngine.Physics", typeof(Physics), regs, fields, typeof(object));
 	}
 
 	[MonoPInvokeCallbackAttribute(typeof(LuaCSFunction))]
@@ -229,7 +228,7 @@ public class PhysicsWrap
 		else if (count == 2 && LuaScriptMgr.CheckTypes(L, 1, typeof(LuaTable), typeof(float)))
 		{
 			Ray arg0 = LuaScriptMgr.GetRay(L, 1);
-			float arg1 = (float)LuaScriptMgr.GetNumber(L, 2);
+			float arg1 = (float)LuaDLL.lua_tonumber(L, 2);
 			bool o = Physics.Raycast(arg0,arg1);
 			LuaScriptMgr.Push(L, o);
 			return 1;
@@ -254,8 +253,8 @@ public class PhysicsWrap
 		else if (count == 3 && LuaScriptMgr.CheckTypes(L, 1, typeof(LuaTable), typeof(float), typeof(int)))
 		{
 			Ray arg0 = LuaScriptMgr.GetRay(L, 1);
-			float arg1 = (float)LuaScriptMgr.GetNumber(L, 2);
-			int arg2 = (int)LuaScriptMgr.GetNumber(L, 3);
+			float arg1 = (float)LuaDLL.lua_tonumber(L, 2);
+			int arg2 = (int)LuaDLL.lua_tonumber(L, 3);
 			bool o = Physics.Raycast(arg0,arg1,arg2);
 			LuaScriptMgr.Push(L, o);
 			return 1;
@@ -264,7 +263,7 @@ public class PhysicsWrap
 		{
 			Vector3 arg0 = LuaScriptMgr.GetVector3(L, 1);
 			Vector3 arg1 = LuaScriptMgr.GetVector3(L, 2);
-			float arg2 = (float)LuaScriptMgr.GetNumber(L, 3);
+			float arg2 = (float)LuaDLL.lua_tonumber(L, 3);
 			bool o = Physics.Raycast(arg0,arg1,arg2);
 			LuaScriptMgr.Push(L, o);
 			return 1;
@@ -273,7 +272,7 @@ public class PhysicsWrap
 		{
 			Ray arg0 = LuaScriptMgr.GetRay(L, 1);
 			RaycastHit arg1;
-			float arg2 = (float)LuaScriptMgr.GetNumber(L, 3);
+			float arg2 = (float)LuaDLL.lua_tonumber(L, 3);
 			bool o = Physics.Raycast(arg0,out arg1,arg2);
 			LuaScriptMgr.Push(L, o);
 			LuaScriptMgr.Push(L, arg1);
@@ -293,8 +292,8 @@ public class PhysicsWrap
 		{
 			Vector3 arg0 = LuaScriptMgr.GetVector3(L, 1);
 			Vector3 arg1 = LuaScriptMgr.GetVector3(L, 2);
-			float arg2 = (float)LuaScriptMgr.GetNumber(L, 3);
-			int arg3 = (int)LuaScriptMgr.GetNumber(L, 4);
+			float arg2 = (float)LuaDLL.lua_tonumber(L, 3);
+			int arg3 = (int)LuaDLL.lua_tonumber(L, 4);
 			bool o = Physics.Raycast(arg0,arg1,arg2,arg3);
 			LuaScriptMgr.Push(L, o);
 			return 1;
@@ -304,7 +303,7 @@ public class PhysicsWrap
 			Vector3 arg0 = LuaScriptMgr.GetVector3(L, 1);
 			Vector3 arg1 = LuaScriptMgr.GetVector3(L, 2);
 			RaycastHit arg2;
-			float arg3 = (float)LuaScriptMgr.GetNumber(L, 4);
+			float arg3 = (float)LuaDLL.lua_tonumber(L, 4);
 			bool o = Physics.Raycast(arg0,arg1,out arg2,arg3);
 			LuaScriptMgr.Push(L, o);
 			LuaScriptMgr.Push(L, arg2);
@@ -314,8 +313,8 @@ public class PhysicsWrap
 		{
 			Ray arg0 = LuaScriptMgr.GetRay(L, 1);
 			RaycastHit arg1;
-			float arg2 = (float)LuaScriptMgr.GetNumber(L, 3);
-			int arg3 = (int)LuaScriptMgr.GetNumber(L, 4);
+			float arg2 = (float)LuaDLL.lua_tonumber(L, 3);
+			int arg3 = (int)LuaDLL.lua_tonumber(L, 4);
 			bool o = Physics.Raycast(arg0,out arg1,arg2,arg3);
 			LuaScriptMgr.Push(L, o);
 			LuaScriptMgr.Push(L, arg1);
@@ -364,7 +363,7 @@ public class PhysicsWrap
 		else if (count == 2 && LuaScriptMgr.CheckTypes(L, 1, typeof(LuaTable), typeof(float)))
 		{
 			Ray arg0 = LuaScriptMgr.GetRay(L, 1);
-			float arg1 = (float)LuaScriptMgr.GetNumber(L, 2);
+			float arg1 = (float)LuaDLL.lua_tonumber(L, 2);
 			RaycastHit[] o = Physics.RaycastAll(arg0,arg1);
 			LuaScriptMgr.PushArray(L, o);
 			return 1;
@@ -373,7 +372,7 @@ public class PhysicsWrap
 		{
 			Vector3 arg0 = LuaScriptMgr.GetVector3(L, 1);
 			Vector3 arg1 = LuaScriptMgr.GetVector3(L, 2);
-			float arg2 = (float)LuaScriptMgr.GetNumber(L, 3);
+			float arg2 = (float)LuaDLL.lua_tonumber(L, 3);
 			RaycastHit[] o = Physics.RaycastAll(arg0,arg1,arg2);
 			LuaScriptMgr.PushArray(L, o);
 			return 1;
@@ -381,8 +380,8 @@ public class PhysicsWrap
 		else if (count == 3 && LuaScriptMgr.CheckTypes(L, 1, typeof(LuaTable), typeof(float), typeof(int)))
 		{
 			Ray arg0 = LuaScriptMgr.GetRay(L, 1);
-			float arg1 = (float)LuaScriptMgr.GetNumber(L, 2);
-			int arg2 = (int)LuaScriptMgr.GetNumber(L, 3);
+			float arg1 = (float)LuaDLL.lua_tonumber(L, 2);
+			int arg2 = (int)LuaDLL.lua_tonumber(L, 3);
 			RaycastHit[] o = Physics.RaycastAll(arg0,arg1,arg2);
 			LuaScriptMgr.PushArray(L, o);
 			return 1;
@@ -432,7 +431,7 @@ public class PhysicsWrap
 		{
 			Vector3 arg0 = LuaScriptMgr.GetVector3(L, 1);
 			Vector3 arg1 = LuaScriptMgr.GetVector3(L, 2);
-			int arg2 = (int)LuaScriptMgr.GetNumber(L, 3);
+			int arg2 = (int)LuaDLL.lua_tonumber(L, 3);
 			bool o = Physics.Linecast(arg0,arg1,arg2);
 			LuaScriptMgr.Push(L, o);
 			return 1;
@@ -460,6 +459,7 @@ public class PhysicsWrap
 	static int OverlapSphere(IntPtr L)
 	{
 		int count = LuaDLL.lua_gettop(L);
+
 		if (count == 2)
 		{
 			Vector3 arg0 = LuaScriptMgr.GetVector3(L, 1);
@@ -504,7 +504,7 @@ public class PhysicsWrap
 		{
 			Vector3 arg0 = LuaScriptMgr.GetVector3(L, 1);
 			Vector3 arg1 = LuaScriptMgr.GetVector3(L, 2);
-			float arg2 = (float)LuaScriptMgr.GetNumber(L, 3);
+			float arg2 = (float)LuaDLL.lua_tonumber(L, 3);
 			Vector3 arg3 = LuaScriptMgr.GetVector3(L, 4);
 			RaycastHit arg4;
 			bool o = Physics.CapsuleCast(arg0,arg1,arg2,arg3,out arg4);
@@ -516,9 +516,9 @@ public class PhysicsWrap
 		{
 			Vector3 arg0 = LuaScriptMgr.GetVector3(L, 1);
 			Vector3 arg1 = LuaScriptMgr.GetVector3(L, 2);
-			float arg2 = (float)LuaScriptMgr.GetNumber(L, 3);
+			float arg2 = (float)LuaDLL.lua_tonumber(L, 3);
 			Vector3 arg3 = LuaScriptMgr.GetVector3(L, 4);
-			float arg4 = (float)LuaScriptMgr.GetNumber(L, 5);
+			float arg4 = (float)LuaDLL.lua_tonumber(L, 5);
 			bool o = Physics.CapsuleCast(arg0,arg1,arg2,arg3,arg4);
 			LuaScriptMgr.Push(L, o);
 			return 1;
@@ -527,10 +527,10 @@ public class PhysicsWrap
 		{
 			Vector3 arg0 = LuaScriptMgr.GetVector3(L, 1);
 			Vector3 arg1 = LuaScriptMgr.GetVector3(L, 2);
-			float arg2 = (float)LuaScriptMgr.GetNumber(L, 3);
+			float arg2 = (float)LuaDLL.lua_tonumber(L, 3);
 			Vector3 arg3 = LuaScriptMgr.GetVector3(L, 4);
 			RaycastHit arg4;
-			float arg5 = (float)LuaScriptMgr.GetNumber(L, 6);
+			float arg5 = (float)LuaDLL.lua_tonumber(L, 6);
 			bool o = Physics.CapsuleCast(arg0,arg1,arg2,arg3,out arg4,arg5);
 			LuaScriptMgr.Push(L, o);
 			LuaScriptMgr.Push(L, arg4);
@@ -540,10 +540,10 @@ public class PhysicsWrap
 		{
 			Vector3 arg0 = LuaScriptMgr.GetVector3(L, 1);
 			Vector3 arg1 = LuaScriptMgr.GetVector3(L, 2);
-			float arg2 = (float)LuaScriptMgr.GetNumber(L, 3);
+			float arg2 = (float)LuaDLL.lua_tonumber(L, 3);
 			Vector3 arg3 = LuaScriptMgr.GetVector3(L, 4);
-			float arg4 = (float)LuaScriptMgr.GetNumber(L, 5);
-			int arg5 = (int)LuaScriptMgr.GetNumber(L, 6);
+			float arg4 = (float)LuaDLL.lua_tonumber(L, 5);
+			int arg5 = (int)LuaDLL.lua_tonumber(L, 6);
 			bool o = Physics.CapsuleCast(arg0,arg1,arg2,arg3,arg4,arg5);
 			LuaScriptMgr.Push(L, o);
 			return 1;
@@ -586,8 +586,8 @@ public class PhysicsWrap
 		else if (count == 3 && LuaScriptMgr.CheckTypes(L, 1, typeof(LuaTable), typeof(float), typeof(float)))
 		{
 			Ray arg0 = LuaScriptMgr.GetRay(L, 1);
-			float arg1 = (float)LuaScriptMgr.GetNumber(L, 2);
-			float arg2 = (float)LuaScriptMgr.GetNumber(L, 3);
+			float arg1 = (float)LuaDLL.lua_tonumber(L, 2);
+			float arg2 = (float)LuaDLL.lua_tonumber(L, 3);
 			bool o = Physics.SphereCast(arg0,arg1,arg2);
 			LuaScriptMgr.Push(L, o);
 			return 1;
@@ -595,7 +595,7 @@ public class PhysicsWrap
 		else if (count == 3 && LuaScriptMgr.CheckTypes(L, 1, typeof(LuaTable), typeof(float), null))
 		{
 			Ray arg0 = LuaScriptMgr.GetRay(L, 1);
-			float arg1 = (float)LuaScriptMgr.GetNumber(L, 2);
+			float arg1 = (float)LuaDLL.lua_tonumber(L, 2);
 			RaycastHit arg2;
 			bool o = Physics.SphereCast(arg0,arg1,out arg2);
 			LuaScriptMgr.Push(L, o);
@@ -605,9 +605,9 @@ public class PhysicsWrap
 		else if (count == 4 && LuaScriptMgr.CheckTypes(L, 1, typeof(LuaTable), typeof(float), typeof(float), typeof(int)))
 		{
 			Ray arg0 = LuaScriptMgr.GetRay(L, 1);
-			float arg1 = (float)LuaScriptMgr.GetNumber(L, 2);
-			float arg2 = (float)LuaScriptMgr.GetNumber(L, 3);
-			int arg3 = (int)LuaScriptMgr.GetNumber(L, 4);
+			float arg1 = (float)LuaDLL.lua_tonumber(L, 2);
+			float arg2 = (float)LuaDLL.lua_tonumber(L, 3);
+			int arg3 = (int)LuaDLL.lua_tonumber(L, 4);
 			bool o = Physics.SphereCast(arg0,arg1,arg2,arg3);
 			LuaScriptMgr.Push(L, o);
 			return 1;
@@ -615,9 +615,9 @@ public class PhysicsWrap
 		else if (count == 4 && LuaScriptMgr.CheckTypes(L, 1, typeof(LuaTable), typeof(float), null, typeof(float)))
 		{
 			Ray arg0 = LuaScriptMgr.GetRay(L, 1);
-			float arg1 = (float)LuaScriptMgr.GetNumber(L, 2);
+			float arg1 = (float)LuaDLL.lua_tonumber(L, 2);
 			RaycastHit arg2;
-			float arg3 = (float)LuaScriptMgr.GetNumber(L, 4);
+			float arg3 = (float)LuaDLL.lua_tonumber(L, 4);
 			bool o = Physics.SphereCast(arg0,arg1,out arg2,arg3);
 			LuaScriptMgr.Push(L, o);
 			LuaScriptMgr.Push(L, arg2);
@@ -626,7 +626,7 @@ public class PhysicsWrap
 		else if (count == 4 && LuaScriptMgr.CheckTypes(L, 1, typeof(LuaTable), typeof(float), typeof(LuaTable), null))
 		{
 			Vector3 arg0 = LuaScriptMgr.GetVector3(L, 1);
-			float arg1 = (float)LuaScriptMgr.GetNumber(L, 2);
+			float arg1 = (float)LuaDLL.lua_tonumber(L, 2);
 			Vector3 arg2 = LuaScriptMgr.GetVector3(L, 3);
 			RaycastHit arg3;
 			bool o = Physics.SphereCast(arg0,arg1,arg2,out arg3);
@@ -637,10 +637,10 @@ public class PhysicsWrap
 		else if (count == 5 && LuaScriptMgr.CheckTypes(L, 1, typeof(LuaTable), typeof(float), null, typeof(float), typeof(int)))
 		{
 			Ray arg0 = LuaScriptMgr.GetRay(L, 1);
-			float arg1 = (float)LuaScriptMgr.GetNumber(L, 2);
+			float arg1 = (float)LuaDLL.lua_tonumber(L, 2);
 			RaycastHit arg2;
-			float arg3 = (float)LuaScriptMgr.GetNumber(L, 4);
-			int arg4 = (int)LuaScriptMgr.GetNumber(L, 5);
+			float arg3 = (float)LuaDLL.lua_tonumber(L, 4);
+			int arg4 = (int)LuaDLL.lua_tonumber(L, 5);
 			bool o = Physics.SphereCast(arg0,arg1,out arg2,arg3,arg4);
 			LuaScriptMgr.Push(L, o);
 			LuaScriptMgr.Push(L, arg2);
@@ -649,10 +649,10 @@ public class PhysicsWrap
 		else if (count == 5 && LuaScriptMgr.CheckTypes(L, 1, typeof(LuaTable), typeof(float), typeof(LuaTable), null, typeof(float)))
 		{
 			Vector3 arg0 = LuaScriptMgr.GetVector3(L, 1);
-			float arg1 = (float)LuaScriptMgr.GetNumber(L, 2);
+			float arg1 = (float)LuaDLL.lua_tonumber(L, 2);
 			Vector3 arg2 = LuaScriptMgr.GetVector3(L, 3);
 			RaycastHit arg3;
-			float arg4 = (float)LuaScriptMgr.GetNumber(L, 5);
+			float arg4 = (float)LuaDLL.lua_tonumber(L, 5);
 			bool o = Physics.SphereCast(arg0,arg1,arg2,out arg3,arg4);
 			LuaScriptMgr.Push(L, o);
 			LuaScriptMgr.Push(L, arg3);
@@ -683,6 +683,7 @@ public class PhysicsWrap
 	static int CapsuleCastAll(IntPtr L)
 	{
 		int count = LuaDLL.lua_gettop(L);
+
 		if (count == 4)
 		{
 			Vector3 arg0 = LuaScriptMgr.GetVector3(L, 1);
@@ -740,8 +741,8 @@ public class PhysicsWrap
 		else if (count == 3 && LuaScriptMgr.CheckTypes(L, 1, typeof(LuaTable), typeof(float), typeof(float)))
 		{
 			Ray arg0 = LuaScriptMgr.GetRay(L, 1);
-			float arg1 = (float)LuaScriptMgr.GetNumber(L, 2);
-			float arg2 = (float)LuaScriptMgr.GetNumber(L, 3);
+			float arg1 = (float)LuaDLL.lua_tonumber(L, 2);
+			float arg2 = (float)LuaDLL.lua_tonumber(L, 3);
 			RaycastHit[] o = Physics.SphereCastAll(arg0,arg1,arg2);
 			LuaScriptMgr.PushArray(L, o);
 			return 1;
@@ -749,7 +750,7 @@ public class PhysicsWrap
 		else if (count == 3 && LuaScriptMgr.CheckTypes(L, 1, typeof(LuaTable), typeof(float), typeof(LuaTable)))
 		{
 			Vector3 arg0 = LuaScriptMgr.GetVector3(L, 1);
-			float arg1 = (float)LuaScriptMgr.GetNumber(L, 2);
+			float arg1 = (float)LuaDLL.lua_tonumber(L, 2);
 			Vector3 arg2 = LuaScriptMgr.GetVector3(L, 3);
 			RaycastHit[] o = Physics.SphereCastAll(arg0,arg1,arg2);
 			LuaScriptMgr.PushArray(L, o);
@@ -758,9 +759,9 @@ public class PhysicsWrap
 		else if (count == 4 && LuaScriptMgr.CheckTypes(L, 1, typeof(LuaTable), typeof(float), typeof(LuaTable), typeof(float)))
 		{
 			Vector3 arg0 = LuaScriptMgr.GetVector3(L, 1);
-			float arg1 = (float)LuaScriptMgr.GetNumber(L, 2);
+			float arg1 = (float)LuaDLL.lua_tonumber(L, 2);
 			Vector3 arg2 = LuaScriptMgr.GetVector3(L, 3);
-			float arg3 = (float)LuaScriptMgr.GetNumber(L, 4);
+			float arg3 = (float)LuaDLL.lua_tonumber(L, 4);
 			RaycastHit[] o = Physics.SphereCastAll(arg0,arg1,arg2,arg3);
 			LuaScriptMgr.PushArray(L, o);
 			return 1;
@@ -768,9 +769,9 @@ public class PhysicsWrap
 		else if (count == 4 && LuaScriptMgr.CheckTypes(L, 1, typeof(LuaTable), typeof(float), typeof(float), typeof(int)))
 		{
 			Ray arg0 = LuaScriptMgr.GetRay(L, 1);
-			float arg1 = (float)LuaScriptMgr.GetNumber(L, 2);
-			float arg2 = (float)LuaScriptMgr.GetNumber(L, 3);
-			int arg3 = (int)LuaScriptMgr.GetNumber(L, 4);
+			float arg1 = (float)LuaDLL.lua_tonumber(L, 2);
+			float arg2 = (float)LuaDLL.lua_tonumber(L, 3);
+			int arg3 = (int)LuaDLL.lua_tonumber(L, 4);
 			RaycastHit[] o = Physics.SphereCastAll(arg0,arg1,arg2,arg3);
 			LuaScriptMgr.PushArray(L, o);
 			return 1;
@@ -798,6 +799,7 @@ public class PhysicsWrap
 	static int CheckSphere(IntPtr L)
 	{
 		int count = LuaDLL.lua_gettop(L);
+
 		if (count == 2)
 		{
 			Vector3 arg0 = LuaScriptMgr.GetVector3(L, 1);
@@ -827,6 +829,7 @@ public class PhysicsWrap
 	static int CheckCapsule(IntPtr L)
 	{
 		int count = LuaDLL.lua_gettop(L);
+
 		if (count == 3)
 		{
 			Vector3 arg0 = LuaScriptMgr.GetVector3(L, 1);
@@ -858,6 +861,7 @@ public class PhysicsWrap
 	static int IgnoreCollision(IntPtr L)
 	{
 		int count = LuaDLL.lua_gettop(L);
+
 		if (count == 2)
 		{
 			Collider arg0 = (Collider)LuaScriptMgr.GetUnityObject(L, 1, typeof(Collider));
@@ -885,6 +889,7 @@ public class PhysicsWrap
 	static int IgnoreLayerCollision(IntPtr L)
 	{
 		int count = LuaDLL.lua_gettop(L);
+
 		if (count == 2)
 		{
 			int arg0 = (int)LuaScriptMgr.GetNumber(L, 1);

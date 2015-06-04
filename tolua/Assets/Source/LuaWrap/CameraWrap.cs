@@ -5,75 +5,80 @@ using Object = UnityEngine.Object;
 
 public class CameraWrap
 {
-	public static LuaMethod[] regs = new LuaMethod[]
+	public static void Register(IntPtr L)
 	{
-		new LuaMethod("SetTargetBuffers", SetTargetBuffers),
-		new LuaMethod("ResetWorldToCameraMatrix", ResetWorldToCameraMatrix),
-		new LuaMethod("ResetProjectionMatrix", ResetProjectionMatrix),
-		new LuaMethod("ResetAspect", ResetAspect),
-		new LuaMethod("WorldToScreenPoint", WorldToScreenPoint),
-		new LuaMethod("WorldToViewportPoint", WorldToViewportPoint),
-		new LuaMethod("ViewportToWorldPoint", ViewportToWorldPoint),
-		new LuaMethod("ScreenToWorldPoint", ScreenToWorldPoint),
-		new LuaMethod("ScreenToViewportPoint", ScreenToViewportPoint),
-		new LuaMethod("ViewportToScreenPoint", ViewportToScreenPoint),
-		new LuaMethod("ViewportPointToRay", ViewportPointToRay),
-		new LuaMethod("ScreenPointToRay", ScreenPointToRay),
-		new LuaMethod("GetAllCameras", GetAllCameras),
-		new LuaMethod("Render", Render),
-		new LuaMethod("RenderWithShader", RenderWithShader),
-		new LuaMethod("SetReplacementShader", SetReplacementShader),
-		new LuaMethod("ResetReplacementShader", ResetReplacementShader),
-		new LuaMethod("RenderDontRestore", RenderDontRestore),
-		new LuaMethod("SetupCurrent", SetupCurrent),
-		new LuaMethod("RenderToCubemap", RenderToCubemap),
-		new LuaMethod("CopyFrom", CopyFrom),
-		new LuaMethod("CalculateObliqueMatrix", CalculateObliqueMatrix),
-		new LuaMethod("New", _CreateCamera),
-		new LuaMethod("GetClassType", GetClassType),
-		new LuaMethod("__eq", Lua_Eq),
-	};
+		LuaMethod[] regs = new LuaMethod[]
+		{
+			new LuaMethod("SetTargetBuffers", SetTargetBuffers),
+			new LuaMethod("ResetWorldToCameraMatrix", ResetWorldToCameraMatrix),
+			new LuaMethod("ResetProjectionMatrix", ResetProjectionMatrix),
+			new LuaMethod("ResetAspect", ResetAspect),
+			new LuaMethod("WorldToScreenPoint", WorldToScreenPoint),
+			new LuaMethod("WorldToViewportPoint", WorldToViewportPoint),
+			new LuaMethod("ViewportToWorldPoint", ViewportToWorldPoint),
+			new LuaMethod("ScreenToWorldPoint", ScreenToWorldPoint),
+			new LuaMethod("ScreenToViewportPoint", ScreenToViewportPoint),
+			new LuaMethod("ViewportToScreenPoint", ViewportToScreenPoint),
+			new LuaMethod("ViewportPointToRay", ViewportPointToRay),
+			new LuaMethod("ScreenPointToRay", ScreenPointToRay),
+			new LuaMethod("GetAllCameras", GetAllCameras),
+			new LuaMethod("Render", Render),
+			new LuaMethod("RenderWithShader", RenderWithShader),
+			new LuaMethod("SetReplacementShader", SetReplacementShader),
+			new LuaMethod("ResetReplacementShader", ResetReplacementShader),
+			new LuaMethod("RenderDontRestore", RenderDontRestore),
+			new LuaMethod("SetupCurrent", SetupCurrent),
+			new LuaMethod("RenderToCubemap", RenderToCubemap),
+			new LuaMethod("CopyFrom", CopyFrom),
+			new LuaMethod("CalculateObliqueMatrix", CalculateObliqueMatrix),
+			new LuaMethod("New", _CreateCamera),
+			new LuaMethod("GetClassType", GetClassType),
+			new LuaMethod("__eq", Lua_Eq),
+		};
 
-	static LuaField[] fields = new LuaField[]
-	{
-		new LuaField("fieldOfView", get_fieldOfView, set_fieldOfView),
-		new LuaField("nearClipPlane", get_nearClipPlane, set_nearClipPlane),
-		new LuaField("farClipPlane", get_farClipPlane, set_farClipPlane),
-		new LuaField("renderingPath", get_renderingPath, set_renderingPath),
-		new LuaField("actualRenderingPath", get_actualRenderingPath, null),
-		new LuaField("hdr", get_hdr, set_hdr),
-		new LuaField("orthographicSize", get_orthographicSize, set_orthographicSize),
-		new LuaField("orthographic", get_orthographic, set_orthographic),
-		new LuaField("transparencySortMode", get_transparencySortMode, set_transparencySortMode),
-		new LuaField("isOrthoGraphic", get_isOrthoGraphic, set_isOrthoGraphic),
-		new LuaField("depth", get_depth, set_depth),
-		new LuaField("aspect", get_aspect, set_aspect),
-		new LuaField("cullingMask", get_cullingMask, set_cullingMask),
-		new LuaField("eventMask", get_eventMask, set_eventMask),
-		new LuaField("backgroundColor", get_backgroundColor, set_backgroundColor),
-		new LuaField("rect", get_rect, set_rect),
-		new LuaField("pixelRect", get_pixelRect, set_pixelRect),
-		new LuaField("targetTexture", get_targetTexture, set_targetTexture),
-		new LuaField("pixelWidth", get_pixelWidth, null),
-		new LuaField("pixelHeight", get_pixelHeight, null),
-		new LuaField("cameraToWorldMatrix", get_cameraToWorldMatrix, null),
-		new LuaField("worldToCameraMatrix", get_worldToCameraMatrix, set_worldToCameraMatrix),
-		new LuaField("projectionMatrix", get_projectionMatrix, set_projectionMatrix),
-		new LuaField("velocity", get_velocity, null),
-		new LuaField("clearFlags", get_clearFlags, set_clearFlags),
-		new LuaField("stereoEnabled", get_stereoEnabled, null),
-		new LuaField("stereoSeparation", get_stereoSeparation, set_stereoSeparation),
-		new LuaField("stereoConvergence", get_stereoConvergence, set_stereoConvergence),
-		new LuaField("main", get_main, null),
-		new LuaField("current", get_current, null),
-		new LuaField("allCameras", get_allCameras, null),
-		new LuaField("allCamerasCount", get_allCamerasCount, null),
-		new LuaField("useOcclusionCulling", get_useOcclusionCulling, set_useOcclusionCulling),
-		new LuaField("layerCullDistances", get_layerCullDistances, set_layerCullDistances),
-		new LuaField("layerCullSpherical", get_layerCullSpherical, set_layerCullSpherical),
-		new LuaField("depthTextureMode", get_depthTextureMode, set_depthTextureMode),
-		new LuaField("clearStencilAfterLightingPass", get_clearStencilAfterLightingPass, set_clearStencilAfterLightingPass),
-	};
+		LuaField[] fields = new LuaField[]
+		{
+			new LuaField("fieldOfView", get_fieldOfView, set_fieldOfView),
+			new LuaField("nearClipPlane", get_nearClipPlane, set_nearClipPlane),
+			new LuaField("farClipPlane", get_farClipPlane, set_farClipPlane),
+			new LuaField("renderingPath", get_renderingPath, set_renderingPath),
+			new LuaField("actualRenderingPath", get_actualRenderingPath, null),
+			new LuaField("hdr", get_hdr, set_hdr),
+			new LuaField("orthographicSize", get_orthographicSize, set_orthographicSize),
+			new LuaField("orthographic", get_orthographic, set_orthographic),
+			new LuaField("transparencySortMode", get_transparencySortMode, set_transparencySortMode),
+			new LuaField("isOrthoGraphic", get_isOrthoGraphic, set_isOrthoGraphic),
+			new LuaField("depth", get_depth, set_depth),
+			new LuaField("aspect", get_aspect, set_aspect),
+			new LuaField("cullingMask", get_cullingMask, set_cullingMask),
+			new LuaField("eventMask", get_eventMask, set_eventMask),
+			new LuaField("backgroundColor", get_backgroundColor, set_backgroundColor),
+			new LuaField("rect", get_rect, set_rect),
+			new LuaField("pixelRect", get_pixelRect, set_pixelRect),
+			new LuaField("targetTexture", get_targetTexture, set_targetTexture),
+			new LuaField("pixelWidth", get_pixelWidth, null),
+			new LuaField("pixelHeight", get_pixelHeight, null),
+			new LuaField("cameraToWorldMatrix", get_cameraToWorldMatrix, null),
+			new LuaField("worldToCameraMatrix", get_worldToCameraMatrix, set_worldToCameraMatrix),
+			new LuaField("projectionMatrix", get_projectionMatrix, set_projectionMatrix),
+			new LuaField("velocity", get_velocity, null),
+			new LuaField("clearFlags", get_clearFlags, set_clearFlags),
+			new LuaField("stereoEnabled", get_stereoEnabled, null),
+			new LuaField("stereoSeparation", get_stereoSeparation, set_stereoSeparation),
+			new LuaField("stereoConvergence", get_stereoConvergence, set_stereoConvergence),
+			new LuaField("main", get_main, null),
+			new LuaField("current", get_current, null),
+			new LuaField("allCameras", get_allCameras, null),
+			new LuaField("allCamerasCount", get_allCamerasCount, null),
+			new LuaField("useOcclusionCulling", get_useOcclusionCulling, set_useOcclusionCulling),
+			new LuaField("layerCullDistances", get_layerCullDistances, set_layerCullDistances),
+			new LuaField("layerCullSpherical", get_layerCullSpherical, set_layerCullSpherical),
+			new LuaField("depthTextureMode", get_depthTextureMode, set_depthTextureMode),
+			new LuaField("clearStencilAfterLightingPass", get_clearStencilAfterLightingPass, set_clearStencilAfterLightingPass),
+		};
+
+		LuaScriptMgr.RegisterLib(L, "UnityEngine.Camera", typeof(UnityEngine.Camera), regs, fields, typeof(Behaviour));
+	}
 
 	[MonoPInvokeCallbackAttribute(typeof(LuaCSFunction))]
 	static int _CreateCamera(IntPtr L)
@@ -100,13 +105,7 @@ public class CameraWrap
 	static int GetClassType(IntPtr L)
 	{
 		LuaScriptMgr.Push(L, classType);
-
 		return 1;
-	}
-
-	public static void Register(IntPtr L)
-	{
-		LuaScriptMgr.RegisterLib(L, "UnityEngine.Camera", typeof(Camera), regs, fields, typeof(Behaviour));
 	}
 
 	[MonoPInvokeCallbackAttribute(typeof(LuaCSFunction))]
@@ -1501,7 +1500,7 @@ public class CameraWrap
 			}
 		}
 
-		obj.layerCullDistances = (Single[])LuaScriptMgr.GetNetObject(L, 3, typeof(Single[]));
+		obj.layerCullDistances = (float[])LuaScriptMgr.GetNetObject(L, 3, typeof(float[]));
 		return 0;
 	}
 
@@ -1582,19 +1581,19 @@ public class CameraWrap
 	{
 		int count = LuaDLL.lua_gettop(L);
 
-		if (count == 3 && LuaScriptMgr.CheckTypes(L, 1, typeof(Camera), typeof(RenderBuffer[]), typeof(RenderBuffer)))
+		if (count == 3 && LuaScriptMgr.CheckTypes(L, 2, typeof(RenderBuffer[]), typeof(RenderBuffer)))
 		{
-			Camera obj = (Camera)LuaScriptMgr.GetUnityObject(L, 1, typeof(Camera));
+			Camera obj = (Camera)LuaScriptMgr.GetUnityObjectSelf(L, 1, "Camera");
 			RenderBuffer[] objs0 = LuaScriptMgr.GetArrayObject<RenderBuffer>(L, 2);
-			RenderBuffer arg1 = (RenderBuffer)LuaScriptMgr.GetNetObject(L, 3, typeof(RenderBuffer));
+			RenderBuffer arg1 = (RenderBuffer)LuaScriptMgr.GetLuaObject(L, 3);
 			obj.SetTargetBuffers(objs0,arg1);
 			return 0;
 		}
-		else if (count == 3 && LuaScriptMgr.CheckTypes(L, 1, typeof(Camera), typeof(RenderBuffer), typeof(RenderBuffer)))
+		else if (count == 3 && LuaScriptMgr.CheckTypes(L, 2, typeof(RenderBuffer), typeof(RenderBuffer)))
 		{
-			Camera obj = (Camera)LuaScriptMgr.GetUnityObject(L, 1, typeof(Camera));
-			RenderBuffer arg0 = (RenderBuffer)LuaScriptMgr.GetNetObject(L, 2, typeof(RenderBuffer));
-			RenderBuffer arg1 = (RenderBuffer)LuaScriptMgr.GetNetObject(L, 3, typeof(RenderBuffer));
+			Camera obj = (Camera)LuaScriptMgr.GetUnityObjectSelf(L, 1, "Camera");
+			RenderBuffer arg0 = (RenderBuffer)LuaScriptMgr.GetLuaObject(L, 2);
+			RenderBuffer arg1 = (RenderBuffer)LuaScriptMgr.GetLuaObject(L, 3);
 			obj.SetTargetBuffers(arg0,arg1);
 			return 0;
 		}
@@ -1610,7 +1609,7 @@ public class CameraWrap
 	static int ResetWorldToCameraMatrix(IntPtr L)
 	{
 		LuaScriptMgr.CheckArgsCount(L, 1);
-		Camera obj = (Camera)LuaScriptMgr.GetUnityObject(L, 1, typeof(Camera));
+		Camera obj = (Camera)LuaScriptMgr.GetUnityObjectSelf(L, 1, "Camera");
 		obj.ResetWorldToCameraMatrix();
 		return 0;
 	}
@@ -1619,7 +1618,7 @@ public class CameraWrap
 	static int ResetProjectionMatrix(IntPtr L)
 	{
 		LuaScriptMgr.CheckArgsCount(L, 1);
-		Camera obj = (Camera)LuaScriptMgr.GetUnityObject(L, 1, typeof(Camera));
+		Camera obj = (Camera)LuaScriptMgr.GetUnityObjectSelf(L, 1, "Camera");
 		obj.ResetProjectionMatrix();
 		return 0;
 	}
@@ -1628,7 +1627,7 @@ public class CameraWrap
 	static int ResetAspect(IntPtr L)
 	{
 		LuaScriptMgr.CheckArgsCount(L, 1);
-		Camera obj = (Camera)LuaScriptMgr.GetUnityObject(L, 1, typeof(Camera));
+		Camera obj = (Camera)LuaScriptMgr.GetUnityObjectSelf(L, 1, "Camera");
 		obj.ResetAspect();
 		return 0;
 	}
@@ -1637,7 +1636,7 @@ public class CameraWrap
 	static int WorldToScreenPoint(IntPtr L)
 	{
 		LuaScriptMgr.CheckArgsCount(L, 2);
-		Camera obj = (Camera)LuaScriptMgr.GetUnityObject(L, 1, typeof(Camera));
+		Camera obj = (Camera)LuaScriptMgr.GetUnityObjectSelf(L, 1, "Camera");
 		Vector3 arg0 = LuaScriptMgr.GetVector3(L, 2);
 		Vector3 o = obj.WorldToScreenPoint(arg0);
 		LuaScriptMgr.Push(L, o);
@@ -1648,7 +1647,7 @@ public class CameraWrap
 	static int WorldToViewportPoint(IntPtr L)
 	{
 		LuaScriptMgr.CheckArgsCount(L, 2);
-		Camera obj = (Camera)LuaScriptMgr.GetUnityObject(L, 1, typeof(Camera));
+		Camera obj = (Camera)LuaScriptMgr.GetUnityObjectSelf(L, 1, "Camera");
 		Vector3 arg0 = LuaScriptMgr.GetVector3(L, 2);
 		Vector3 o = obj.WorldToViewportPoint(arg0);
 		LuaScriptMgr.Push(L, o);
@@ -1659,7 +1658,7 @@ public class CameraWrap
 	static int ViewportToWorldPoint(IntPtr L)
 	{
 		LuaScriptMgr.CheckArgsCount(L, 2);
-		Camera obj = (Camera)LuaScriptMgr.GetUnityObject(L, 1, typeof(Camera));
+		Camera obj = (Camera)LuaScriptMgr.GetUnityObjectSelf(L, 1, "Camera");
 		Vector3 arg0 = LuaScriptMgr.GetVector3(L, 2);
 		Vector3 o = obj.ViewportToWorldPoint(arg0);
 		LuaScriptMgr.Push(L, o);
@@ -1670,7 +1669,7 @@ public class CameraWrap
 	static int ScreenToWorldPoint(IntPtr L)
 	{
 		LuaScriptMgr.CheckArgsCount(L, 2);
-		Camera obj = (Camera)LuaScriptMgr.GetUnityObject(L, 1, typeof(Camera));
+		Camera obj = (Camera)LuaScriptMgr.GetUnityObjectSelf(L, 1, "Camera");
 		Vector3 arg0 = LuaScriptMgr.GetVector3(L, 2);
 		Vector3 o = obj.ScreenToWorldPoint(arg0);
 		LuaScriptMgr.Push(L, o);
@@ -1681,7 +1680,7 @@ public class CameraWrap
 	static int ScreenToViewportPoint(IntPtr L)
 	{
 		LuaScriptMgr.CheckArgsCount(L, 2);
-		Camera obj = (Camera)LuaScriptMgr.GetUnityObject(L, 1, typeof(Camera));
+		Camera obj = (Camera)LuaScriptMgr.GetUnityObjectSelf(L, 1, "Camera");
 		Vector3 arg0 = LuaScriptMgr.GetVector3(L, 2);
 		Vector3 o = obj.ScreenToViewportPoint(arg0);
 		LuaScriptMgr.Push(L, o);
@@ -1692,7 +1691,7 @@ public class CameraWrap
 	static int ViewportToScreenPoint(IntPtr L)
 	{
 		LuaScriptMgr.CheckArgsCount(L, 2);
-		Camera obj = (Camera)LuaScriptMgr.GetUnityObject(L, 1, typeof(Camera));
+		Camera obj = (Camera)LuaScriptMgr.GetUnityObjectSelf(L, 1, "Camera");
 		Vector3 arg0 = LuaScriptMgr.GetVector3(L, 2);
 		Vector3 o = obj.ViewportToScreenPoint(arg0);
 		LuaScriptMgr.Push(L, o);
@@ -1703,7 +1702,7 @@ public class CameraWrap
 	static int ViewportPointToRay(IntPtr L)
 	{
 		LuaScriptMgr.CheckArgsCount(L, 2);
-		Camera obj = (Camera)LuaScriptMgr.GetUnityObject(L, 1, typeof(Camera));
+		Camera obj = (Camera)LuaScriptMgr.GetUnityObjectSelf(L, 1, "Camera");
 		Vector3 arg0 = LuaScriptMgr.GetVector3(L, 2);
 		Ray o = obj.ViewportPointToRay(arg0);
 		LuaScriptMgr.Push(L, o);
@@ -1714,7 +1713,7 @@ public class CameraWrap
 	static int ScreenPointToRay(IntPtr L)
 	{
 		LuaScriptMgr.CheckArgsCount(L, 2);
-		Camera obj = (Camera)LuaScriptMgr.GetUnityObject(L, 1, typeof(Camera));
+		Camera obj = (Camera)LuaScriptMgr.GetUnityObjectSelf(L, 1, "Camera");
 		Vector3 arg0 = LuaScriptMgr.GetVector3(L, 2);
 		Ray o = obj.ScreenPointToRay(arg0);
 		LuaScriptMgr.Push(L, o);
@@ -1735,7 +1734,7 @@ public class CameraWrap
 	static int Render(IntPtr L)
 	{
 		LuaScriptMgr.CheckArgsCount(L, 1);
-		Camera obj = (Camera)LuaScriptMgr.GetUnityObject(L, 1, typeof(Camera));
+		Camera obj = (Camera)LuaScriptMgr.GetUnityObjectSelf(L, 1, "Camera");
 		obj.Render();
 		return 0;
 	}
@@ -1744,7 +1743,7 @@ public class CameraWrap
 	static int RenderWithShader(IntPtr L)
 	{
 		LuaScriptMgr.CheckArgsCount(L, 3);
-		Camera obj = (Camera)LuaScriptMgr.GetUnityObject(L, 1, typeof(Camera));
+		Camera obj = (Camera)LuaScriptMgr.GetUnityObjectSelf(L, 1, "Camera");
 		Shader arg0 = (Shader)LuaScriptMgr.GetUnityObject(L, 2, typeof(Shader));
 		string arg1 = LuaScriptMgr.GetLuaString(L, 3);
 		obj.RenderWithShader(arg0,arg1);
@@ -1755,7 +1754,7 @@ public class CameraWrap
 	static int SetReplacementShader(IntPtr L)
 	{
 		LuaScriptMgr.CheckArgsCount(L, 3);
-		Camera obj = (Camera)LuaScriptMgr.GetUnityObject(L, 1, typeof(Camera));
+		Camera obj = (Camera)LuaScriptMgr.GetUnityObjectSelf(L, 1, "Camera");
 		Shader arg0 = (Shader)LuaScriptMgr.GetUnityObject(L, 2, typeof(Shader));
 		string arg1 = LuaScriptMgr.GetLuaString(L, 3);
 		obj.SetReplacementShader(arg0,arg1);
@@ -1766,7 +1765,7 @@ public class CameraWrap
 	static int ResetReplacementShader(IntPtr L)
 	{
 		LuaScriptMgr.CheckArgsCount(L, 1);
-		Camera obj = (Camera)LuaScriptMgr.GetUnityObject(L, 1, typeof(Camera));
+		Camera obj = (Camera)LuaScriptMgr.GetUnityObjectSelf(L, 1, "Camera");
 		obj.ResetReplacementShader();
 		return 0;
 	}
@@ -1775,7 +1774,7 @@ public class CameraWrap
 	static int RenderDontRestore(IntPtr L)
 	{
 		LuaScriptMgr.CheckArgsCount(L, 1);
-		Camera obj = (Camera)LuaScriptMgr.GetUnityObject(L, 1, typeof(Camera));
+		Camera obj = (Camera)LuaScriptMgr.GetUnityObjectSelf(L, 1, "Camera");
 		obj.RenderDontRestore();
 		return 0;
 	}
@@ -1794,36 +1793,36 @@ public class CameraWrap
 	{
 		int count = LuaDLL.lua_gettop(L);
 
-		if (count == 2 && LuaScriptMgr.CheckTypes(L, 1, typeof(Camera), typeof(RenderTexture)))
+		if (count == 2 && LuaScriptMgr.CheckTypes(L, 2, typeof(RenderTexture)))
 		{
-			Camera obj = (Camera)LuaScriptMgr.GetUnityObject(L, 1, typeof(Camera));
-			RenderTexture arg0 = (RenderTexture)LuaScriptMgr.GetUnityObject(L, 2, typeof(RenderTexture));
+			Camera obj = (Camera)LuaScriptMgr.GetUnityObjectSelf(L, 1, "Camera");
+			RenderTexture arg0 = (RenderTexture)LuaScriptMgr.GetLuaObject(L, 2);
 			bool o = obj.RenderToCubemap(arg0);
 			LuaScriptMgr.Push(L, o);
 			return 1;
 		}
-		else if (count == 2 && LuaScriptMgr.CheckTypes(L, 1, typeof(Camera), typeof(Cubemap)))
+		else if (count == 2 && LuaScriptMgr.CheckTypes(L, 2, typeof(Cubemap)))
 		{
-			Camera obj = (Camera)LuaScriptMgr.GetUnityObject(L, 1, typeof(Camera));
-			Cubemap arg0 = (Cubemap)LuaScriptMgr.GetUnityObject(L, 2, typeof(Cubemap));
+			Camera obj = (Camera)LuaScriptMgr.GetUnityObjectSelf(L, 1, "Camera");
+			Cubemap arg0 = (Cubemap)LuaScriptMgr.GetLuaObject(L, 2);
 			bool o = obj.RenderToCubemap(arg0);
 			LuaScriptMgr.Push(L, o);
 			return 1;
 		}
-		else if (count == 3 && LuaScriptMgr.CheckTypes(L, 1, typeof(Camera), typeof(RenderTexture), typeof(int)))
+		else if (count == 3 && LuaScriptMgr.CheckTypes(L, 2, typeof(RenderTexture), typeof(int)))
 		{
-			Camera obj = (Camera)LuaScriptMgr.GetUnityObject(L, 1, typeof(Camera));
-			RenderTexture arg0 = (RenderTexture)LuaScriptMgr.GetUnityObject(L, 2, typeof(RenderTexture));
-			int arg1 = (int)LuaScriptMgr.GetNumber(L, 3);
+			Camera obj = (Camera)LuaScriptMgr.GetUnityObjectSelf(L, 1, "Camera");
+			RenderTexture arg0 = (RenderTexture)LuaScriptMgr.GetLuaObject(L, 2);
+			int arg1 = (int)LuaDLL.lua_tonumber(L, 3);
 			bool o = obj.RenderToCubemap(arg0,arg1);
 			LuaScriptMgr.Push(L, o);
 			return 1;
 		}
-		else if (count == 3 && LuaScriptMgr.CheckTypes(L, 1, typeof(Camera), typeof(Cubemap), typeof(int)))
+		else if (count == 3 && LuaScriptMgr.CheckTypes(L, 2, typeof(Cubemap), typeof(int)))
 		{
-			Camera obj = (Camera)LuaScriptMgr.GetUnityObject(L, 1, typeof(Camera));
-			Cubemap arg0 = (Cubemap)LuaScriptMgr.GetUnityObject(L, 2, typeof(Cubemap));
-			int arg1 = (int)LuaScriptMgr.GetNumber(L, 3);
+			Camera obj = (Camera)LuaScriptMgr.GetUnityObjectSelf(L, 1, "Camera");
+			Cubemap arg0 = (Cubemap)LuaScriptMgr.GetLuaObject(L, 2);
+			int arg1 = (int)LuaDLL.lua_tonumber(L, 3);
 			bool o = obj.RenderToCubemap(arg0,arg1);
 			LuaScriptMgr.Push(L, o);
 			return 1;
@@ -1840,7 +1839,7 @@ public class CameraWrap
 	static int CopyFrom(IntPtr L)
 	{
 		LuaScriptMgr.CheckArgsCount(L, 2);
-		Camera obj = (Camera)LuaScriptMgr.GetUnityObject(L, 1, typeof(Camera));
+		Camera obj = (Camera)LuaScriptMgr.GetUnityObjectSelf(L, 1, "Camera");
 		Camera arg0 = (Camera)LuaScriptMgr.GetUnityObject(L, 2, typeof(Camera));
 		obj.CopyFrom(arg0);
 		return 0;
@@ -1850,7 +1849,7 @@ public class CameraWrap
 	static int CalculateObliqueMatrix(IntPtr L)
 	{
 		LuaScriptMgr.CheckArgsCount(L, 2);
-		Camera obj = (Camera)LuaScriptMgr.GetUnityObject(L, 1, typeof(Camera));
+		Camera obj = (Camera)LuaScriptMgr.GetUnityObjectSelf(L, 1, "Camera");
 		Vector4 arg0 = LuaScriptMgr.GetVector4(L, 2);
 		Matrix4x4 o = obj.CalculateObliqueMatrix(arg0);
 		LuaScriptMgr.PushValue(L, o);

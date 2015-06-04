@@ -5,24 +5,29 @@ using Object = UnityEngine.Object;
 
 public class ColliderWrap
 {
-	public static LuaMethod[] regs = new LuaMethod[]
+	public static void Register(IntPtr L)
 	{
-		new LuaMethod("ClosestPointOnBounds", ClosestPointOnBounds),
-		new LuaMethod("Raycast", Raycast),
-		new LuaMethod("New", _CreateCollider),
-		new LuaMethod("GetClassType", GetClassType),
-		new LuaMethod("__eq", Lua_Eq),
-	};
+		LuaMethod[] regs = new LuaMethod[]
+		{
+			new LuaMethod("ClosestPointOnBounds", ClosestPointOnBounds),
+			new LuaMethod("Raycast", Raycast),
+			new LuaMethod("New", _CreateCollider),
+			new LuaMethod("GetClassType", GetClassType),
+			new LuaMethod("__eq", Lua_Eq),
+		};
 
-	static LuaField[] fields = new LuaField[]
-	{
-		new LuaField("enabled", get_enabled, set_enabled),
-		new LuaField("attachedRigidbody", get_attachedRigidbody, null),
-		new LuaField("isTrigger", get_isTrigger, set_isTrigger),
-		new LuaField("material", get_material, set_material),
-		new LuaField("sharedMaterial", get_sharedMaterial, set_sharedMaterial),
-		new LuaField("bounds", get_bounds, null),
-	};
+		LuaField[] fields = new LuaField[]
+		{
+			new LuaField("enabled", get_enabled, set_enabled),
+			new LuaField("attachedRigidbody", get_attachedRigidbody, null),
+			new LuaField("isTrigger", get_isTrigger, set_isTrigger),
+			new LuaField("material", get_material, set_material),
+			new LuaField("sharedMaterial", get_sharedMaterial, set_sharedMaterial),
+			new LuaField("bounds", get_bounds, null),
+		};
+
+		LuaScriptMgr.RegisterLib(L, "UnityEngine.Collider", typeof(UnityEngine.Collider), regs, fields, typeof(Component));
+	}
 
 	[MonoPInvokeCallbackAttribute(typeof(LuaCSFunction))]
 	static int _CreateCollider(IntPtr L)
@@ -49,13 +54,7 @@ public class ColliderWrap
 	static int GetClassType(IntPtr L)
 	{
 		LuaScriptMgr.Push(L, classType);
-
 		return 1;
-	}
-
-	public static void Register(IntPtr L)
-	{
-		LuaScriptMgr.RegisterLib(L, "UnityEngine.Collider", typeof(Collider), regs, fields, typeof(Component));
 	}
 
 	[MonoPInvokeCallbackAttribute(typeof(LuaCSFunction))]
@@ -302,7 +301,7 @@ public class ColliderWrap
 	static int ClosestPointOnBounds(IntPtr L)
 	{
 		LuaScriptMgr.CheckArgsCount(L, 2);
-		Collider obj = (Collider)LuaScriptMgr.GetUnityObject(L, 1, typeof(Collider));
+		Collider obj = (Collider)LuaScriptMgr.GetUnityObjectSelf(L, 1, "Collider");
 		Vector3 arg0 = LuaScriptMgr.GetVector3(L, 2);
 		Vector3 o = obj.ClosestPointOnBounds(arg0);
 		LuaScriptMgr.Push(L, o);
@@ -313,7 +312,7 @@ public class ColliderWrap
 	static int Raycast(IntPtr L)
 	{
 		LuaScriptMgr.CheckArgsCount(L, 4);
-		Collider obj = (Collider)LuaScriptMgr.GetUnityObject(L, 1, typeof(Collider));
+		Collider obj = (Collider)LuaScriptMgr.GetUnityObjectSelf(L, 1, "Collider");
 		Ray arg0 = LuaScriptMgr.GetRay(L, 2);
 		RaycastHit arg1;
 		float arg2 = (float)LuaScriptMgr.GetNumber(L, 4);

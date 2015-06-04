@@ -5,27 +5,32 @@ using Object = UnityEngine.Object;
 
 public class RenderSettingsWrap
 {
-	public static LuaMethod[] regs = new LuaMethod[]
+	public static void Register(IntPtr L)
 	{
-		new LuaMethod("New", _CreateRenderSettings),
-		new LuaMethod("GetClassType", GetClassType),
-		new LuaMethod("__eq", Lua_Eq),
-	};
+		LuaMethod[] regs = new LuaMethod[]
+		{
+			new LuaMethod("New", _CreateRenderSettings),
+			new LuaMethod("GetClassType", GetClassType),
+			new LuaMethod("__eq", Lua_Eq),
+		};
 
-	static LuaField[] fields = new LuaField[]
-	{
-		new LuaField("fog", get_fog, set_fog),
-		new LuaField("fogMode", get_fogMode, set_fogMode),
-		new LuaField("fogColor", get_fogColor, set_fogColor),
-		new LuaField("fogDensity", get_fogDensity, set_fogDensity),
-		new LuaField("fogStartDistance", get_fogStartDistance, set_fogStartDistance),
-		new LuaField("fogEndDistance", get_fogEndDistance, set_fogEndDistance),
-		new LuaField("ambientLight", get_ambientLight, set_ambientLight),
-		new LuaField("haloStrength", get_haloStrength, set_haloStrength),
-		new LuaField("flareStrength", get_flareStrength, set_flareStrength),
-		new LuaField("flareFadeSpeed", get_flareFadeSpeed, set_flareFadeSpeed),
-		new LuaField("skybox", get_skybox, set_skybox),
-	};
+		LuaField[] fields = new LuaField[]
+		{
+			new LuaField("fog", get_fog, set_fog),
+			new LuaField("fogMode", get_fogMode, set_fogMode),
+			new LuaField("fogColor", get_fogColor, set_fogColor),
+			new LuaField("fogDensity", get_fogDensity, set_fogDensity),
+			new LuaField("fogStartDistance", get_fogStartDistance, set_fogStartDistance),
+			new LuaField("fogEndDistance", get_fogEndDistance, set_fogEndDistance),
+			new LuaField("ambientLight", get_ambientLight, set_ambientLight),
+			new LuaField("haloStrength", get_haloStrength, set_haloStrength),
+			new LuaField("flareStrength", get_flareStrength, set_flareStrength),
+			new LuaField("flareFadeSpeed", get_flareFadeSpeed, set_flareFadeSpeed),
+			new LuaField("skybox", get_skybox, set_skybox),
+		};
+
+		LuaScriptMgr.RegisterLib(L, "UnityEngine.RenderSettings", typeof(UnityEngine.RenderSettings), regs, fields, typeof(Object));
+	}
 
 	[MonoPInvokeCallbackAttribute(typeof(LuaCSFunction))]
 	static int _CreateRenderSettings(IntPtr L)
@@ -52,13 +57,7 @@ public class RenderSettingsWrap
 	static int GetClassType(IntPtr L)
 	{
 		LuaScriptMgr.Push(L, classType);
-
 		return 1;
-	}
-
-	public static void Register(IntPtr L)
-	{
-		LuaScriptMgr.RegisterLib(L, "UnityEngine.RenderSettings", typeof(RenderSettings), regs, fields, typeof(Object));
 	}
 
 	[MonoPInvokeCallbackAttribute(typeof(LuaCSFunction))]

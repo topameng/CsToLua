@@ -13,7 +13,7 @@ public class AnimationBlendModeWrap
 
 	public static void Register(IntPtr L)
 	{
-		LuaScriptMgr.RegisterLib(L, "UnityEngine.AnimationBlendMode", typeof(AnimationBlendMode), enums);
+		LuaScriptMgr.RegisterLib(L, "UnityEngine.AnimationBlendMode", typeof(UnityEngine.AnimationBlendMode), enums);
 	}
 
 	[MonoPInvokeCallbackAttribute(typeof(LuaCSFunction))]

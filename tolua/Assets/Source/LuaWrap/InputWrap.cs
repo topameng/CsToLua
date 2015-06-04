@@ -4,53 +4,58 @@ using LuaInterface;
 
 public class InputWrap
 {
-	public static LuaMethod[] regs = new LuaMethod[]
+	public static void Register(IntPtr L)
 	{
-		new LuaMethod("GetAxis", GetAxis),
-		new LuaMethod("GetAxisRaw", GetAxisRaw),
-		new LuaMethod("GetButton", GetButton),
-		new LuaMethod("GetButtonDown", GetButtonDown),
-		new LuaMethod("GetButtonUp", GetButtonUp),
-		new LuaMethod("GetKey", GetKey),
-		new LuaMethod("GetKeyDown", GetKeyDown),
-		new LuaMethod("GetKeyUp", GetKeyUp),
-		new LuaMethod("GetJoystickNames", GetJoystickNames),
-		new LuaMethod("GetMouseButton", GetMouseButton),
-		new LuaMethod("GetMouseButtonDown", GetMouseButtonDown),
-		new LuaMethod("GetMouseButtonUp", GetMouseButtonUp),
-		new LuaMethod("ResetInputAxes", ResetInputAxes),
-		new LuaMethod("GetAccelerationEvent", GetAccelerationEvent),
-		new LuaMethod("GetTouch", GetTouch),
-		new LuaMethod("New", _CreateInput),
-		new LuaMethod("GetClassType", GetClassType),
-	};
+		LuaMethod[] regs = new LuaMethod[]
+		{
+			new LuaMethod("GetAxis", GetAxis),
+			new LuaMethod("GetAxisRaw", GetAxisRaw),
+			new LuaMethod("GetButton", GetButton),
+			new LuaMethod("GetButtonDown", GetButtonDown),
+			new LuaMethod("GetButtonUp", GetButtonUp),
+			new LuaMethod("GetKey", GetKey),
+			new LuaMethod("GetKeyDown", GetKeyDown),
+			new LuaMethod("GetKeyUp", GetKeyUp),
+			new LuaMethod("GetJoystickNames", GetJoystickNames),
+			new LuaMethod("GetMouseButton", GetMouseButton),
+			new LuaMethod("GetMouseButtonDown", GetMouseButtonDown),
+			new LuaMethod("GetMouseButtonUp", GetMouseButtonUp),
+			new LuaMethod("ResetInputAxes", ResetInputAxes),
+			new LuaMethod("GetAccelerationEvent", GetAccelerationEvent),
+			new LuaMethod("GetTouch", GetTouch),
+			new LuaMethod("New", _CreateInput),
+			new LuaMethod("GetClassType", GetClassType),
+		};
 
-	static LuaField[] fields = new LuaField[]
-	{
-		new LuaField("compensateSensors", get_compensateSensors, set_compensateSensors),
-		new LuaField("gyro", get_gyro, null),
-		new LuaField("mousePosition", get_mousePosition, null),
-		new LuaField("mouseScrollDelta", get_mouseScrollDelta, null),
-		new LuaField("mousePresent", get_mousePresent, null),
-		new LuaField("simulateMouseWithTouches", get_simulateMouseWithTouches, set_simulateMouseWithTouches),
-		new LuaField("anyKey", get_anyKey, null),
-		new LuaField("anyKeyDown", get_anyKeyDown, null),
-		new LuaField("inputString", get_inputString, null),
-		new LuaField("acceleration", get_acceleration, null),
-		new LuaField("accelerationEvents", get_accelerationEvents, null),
-		new LuaField("accelerationEventCount", get_accelerationEventCount, null),
-		new LuaField("touches", get_touches, null),
-		new LuaField("touchCount", get_touchCount, null),
-		new LuaField("touchSupported", get_touchSupported, null),
-		new LuaField("multiTouchEnabled", get_multiTouchEnabled, set_multiTouchEnabled),
-		new LuaField("location", get_location, null),
-		new LuaField("compass", get_compass, null),
-		new LuaField("deviceOrientation", get_deviceOrientation, null),
-		new LuaField("imeCompositionMode", get_imeCompositionMode, set_imeCompositionMode),
-		new LuaField("compositionString", get_compositionString, null),
-		new LuaField("imeIsSelected", get_imeIsSelected, null),
-		new LuaField("compositionCursorPos", get_compositionCursorPos, set_compositionCursorPos),
-	};
+		LuaField[] fields = new LuaField[]
+		{
+			new LuaField("compensateSensors", get_compensateSensors, set_compensateSensors),
+			new LuaField("gyro", get_gyro, null),
+			new LuaField("mousePosition", get_mousePosition, null),
+			new LuaField("mouseScrollDelta", get_mouseScrollDelta, null),
+			new LuaField("mousePresent", get_mousePresent, null),
+			new LuaField("simulateMouseWithTouches", get_simulateMouseWithTouches, set_simulateMouseWithTouches),
+			new LuaField("anyKey", get_anyKey, null),
+			new LuaField("anyKeyDown", get_anyKeyDown, null),
+			new LuaField("inputString", get_inputString, null),
+			new LuaField("acceleration", get_acceleration, null),
+			new LuaField("accelerationEvents", get_accelerationEvents, null),
+			new LuaField("accelerationEventCount", get_accelerationEventCount, null),
+			new LuaField("touches", get_touches, null),
+			new LuaField("touchCount", get_touchCount, null),
+			new LuaField("touchSupported", get_touchSupported, null),
+			new LuaField("multiTouchEnabled", get_multiTouchEnabled, set_multiTouchEnabled),
+			new LuaField("location", get_location, null),
+			new LuaField("compass", get_compass, null),
+			new LuaField("deviceOrientation", get_deviceOrientation, null),
+			new LuaField("imeCompositionMode", get_imeCompositionMode, set_imeCompositionMode),
+			new LuaField("compositionString", get_compositionString, null),
+			new LuaField("imeIsSelected", get_imeIsSelected, null),
+			new LuaField("compositionCursorPos", get_compositionCursorPos, set_compositionCursorPos),
+		};
+
+		LuaScriptMgr.RegisterLib(L, "UnityEngine.Input", typeof(UnityEngine.Input), regs, fields, typeof(object));
+	}
 
 	[MonoPInvokeCallbackAttribute(typeof(LuaCSFunction))]
 	static int _CreateInput(IntPtr L)
@@ -77,13 +82,7 @@ public class InputWrap
 	static int GetClassType(IntPtr L)
 	{
 		LuaScriptMgr.Push(L, classType);
-
 		return 1;
-	}
-
-	public static void Register(IntPtr L)
-	{
-		LuaScriptMgr.RegisterLib(L, "UnityEngine.Input", typeof(Input), regs, fields, typeof(object));
 	}
 
 	[MonoPInvokeCallbackAttribute(typeof(LuaCSFunction))]
@@ -339,7 +338,7 @@ public class InputWrap
 
 		if (count == 1 && LuaScriptMgr.CheckTypes(L, 1, typeof(KeyCode)))
 		{
-			KeyCode arg0 = (KeyCode)LuaScriptMgr.GetNetObject(L, 1, typeof(KeyCode));
+			KeyCode arg0 = (KeyCode)LuaScriptMgr.GetLuaObject(L, 1);
 			bool o = Input.GetKey(arg0);
 			LuaScriptMgr.Push(L, o);
 			return 1;
@@ -366,7 +365,7 @@ public class InputWrap
 
 		if (count == 1 && LuaScriptMgr.CheckTypes(L, 1, typeof(KeyCode)))
 		{
-			KeyCode arg0 = (KeyCode)LuaScriptMgr.GetNetObject(L, 1, typeof(KeyCode));
+			KeyCode arg0 = (KeyCode)LuaScriptMgr.GetLuaObject(L, 1);
 			bool o = Input.GetKeyDown(arg0);
 			LuaScriptMgr.Push(L, o);
 			return 1;
@@ -393,7 +392,7 @@ public class InputWrap
 
 		if (count == 1 && LuaScriptMgr.CheckTypes(L, 1, typeof(KeyCode)))
 		{
-			KeyCode arg0 = (KeyCode)LuaScriptMgr.GetNetObject(L, 1, typeof(KeyCode));
+			KeyCode arg0 = (KeyCode)LuaScriptMgr.GetLuaObject(L, 1);
 			bool o = Input.GetKeyUp(arg0);
 			LuaScriptMgr.Push(L, o);
 			return 1;

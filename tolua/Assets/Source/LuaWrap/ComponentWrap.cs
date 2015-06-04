@@ -6,45 +6,50 @@ using Object = UnityEngine.Object;
 
 public class ComponentWrap
 {
-	public static LuaMethod[] regs = new LuaMethod[]
+	public static void Register(IntPtr L)
 	{
-		new LuaMethod("GetComponent", GetComponent),
-		new LuaMethod("GetComponentInChildren", GetComponentInChildren),
-		new LuaMethod("GetComponentsInChildren", GetComponentsInChildren),
-		new LuaMethod("GetComponentInParent", GetComponentInParent),
-		new LuaMethod("GetComponentsInParent", GetComponentsInParent),
-		new LuaMethod("GetComponents", GetComponents),
-		new LuaMethod("CompareTag", CompareTag),
-		new LuaMethod("SendMessageUpwards", SendMessageUpwards),
-		new LuaMethod("SendMessage", SendMessage),
-		new LuaMethod("BroadcastMessage", BroadcastMessage),
-		new LuaMethod("New", _CreateComponent),
-		new LuaMethod("GetClassType", GetClassType),
-		new LuaMethod("__eq", Lua_Eq),
-	};
+		LuaMethod[] regs = new LuaMethod[]
+		{
+			new LuaMethod("GetComponent", GetComponent),
+			new LuaMethod("GetComponentInChildren", GetComponentInChildren),
+			new LuaMethod("GetComponentsInChildren", GetComponentsInChildren),
+			new LuaMethod("GetComponentInParent", GetComponentInParent),
+			new LuaMethod("GetComponentsInParent", GetComponentsInParent),
+			new LuaMethod("GetComponents", GetComponents),
+			new LuaMethod("CompareTag", CompareTag),
+			new LuaMethod("SendMessageUpwards", SendMessageUpwards),
+			new LuaMethod("SendMessage", SendMessage),
+			new LuaMethod("BroadcastMessage", BroadcastMessage),
+			new LuaMethod("New", _CreateComponent),
+			new LuaMethod("GetClassType", GetClassType),
+			new LuaMethod("__eq", Lua_Eq),
+		};
 
-	static LuaField[] fields = new LuaField[]
-	{
-		new LuaField("transform", get_transform, null),
-		new LuaField("rigidbody", get_rigidbody, null),
-		new LuaField("rigidbody2D", get_rigidbody2D, null),
-		new LuaField("camera", get_camera, null),
-		new LuaField("light", get_light, null),
-		new LuaField("animation", get_animation, null),
-		new LuaField("constantForce", get_constantForce, null),
-		new LuaField("renderer", get_renderer, null),
-		new LuaField("audio", get_audio, null),
-		new LuaField("guiText", get_guiText, null),
-		new LuaField("networkView", get_networkView, null),
-		new LuaField("guiTexture", get_guiTexture, null),
-		new LuaField("collider", get_collider, null),
-		new LuaField("collider2D", get_collider2D, null),
-		new LuaField("hingeJoint", get_hingeJoint, null),
-		new LuaField("particleEmitter", get_particleEmitter, null),
-		new LuaField("particleSystem", get_particleSystem, null),
-		new LuaField("gameObject", get_gameObject, null),
-		new LuaField("tag", get_tag, set_tag),
-	};
+		LuaField[] fields = new LuaField[]
+		{
+			new LuaField("transform", get_transform, null),
+			new LuaField("rigidbody", get_rigidbody, null),
+			new LuaField("rigidbody2D", get_rigidbody2D, null),
+			new LuaField("camera", get_camera, null),
+			new LuaField("light", get_light, null),
+			new LuaField("animation", get_animation, null),
+			new LuaField("constantForce", get_constantForce, null),
+			new LuaField("renderer", get_renderer, null),
+			new LuaField("audio", get_audio, null),
+			new LuaField("guiText", get_guiText, null),
+			new LuaField("networkView", get_networkView, null),
+			new LuaField("guiTexture", get_guiTexture, null),
+			new LuaField("collider", get_collider, null),
+			new LuaField("collider2D", get_collider2D, null),
+			new LuaField("hingeJoint", get_hingeJoint, null),
+			new LuaField("particleEmitter", get_particleEmitter, null),
+			new LuaField("particleSystem", get_particleSystem, null),
+			new LuaField("gameObject", get_gameObject, null),
+			new LuaField("tag", get_tag, set_tag),
+		};
+
+		LuaScriptMgr.RegisterLib(L, "UnityEngine.Component", typeof(UnityEngine.Component), regs, fields, typeof(Object));
+	}
 
 	[MonoPInvokeCallbackAttribute(typeof(LuaCSFunction))]
 	static int _CreateComponent(IntPtr L)
@@ -71,13 +76,7 @@ public class ComponentWrap
 	static int GetClassType(IntPtr L)
 	{
 		LuaScriptMgr.Push(L, classType);
-
 		return 1;
-	}
-
-	public static void Register(IntPtr L)
-	{
-		LuaScriptMgr.RegisterLib(L, "UnityEngine.Component", typeof(Component), regs, fields, typeof(Object));
 	}
 
 	[MonoPInvokeCallbackAttribute(typeof(LuaCSFunction))]
@@ -565,17 +564,17 @@ public class ComponentWrap
 	{
 		int count = LuaDLL.lua_gettop(L);
 
-		if (count == 2 && LuaScriptMgr.CheckTypes(L, 1, typeof(Component), typeof(string)))
+		if (count == 2 && LuaScriptMgr.CheckTypes(L, 2, typeof(string)))
 		{
-			Component obj = (Component)LuaScriptMgr.GetUnityObject(L, 1, typeof(Component));
+			Component obj = (Component)LuaScriptMgr.GetUnityObjectSelf(L, 1, "Component");
 			string arg0 = LuaScriptMgr.GetString(L, 2);
 			Component o = obj.GetComponent(arg0);
 			LuaScriptMgr.Push(L, o);
 			return 1;
 		}
-		else if (count == 2 && LuaScriptMgr.CheckTypes(L, 1, typeof(Component), typeof(Type)))
+		else if (count == 2 && LuaScriptMgr.CheckTypes(L, 2, typeof(Type)))
 		{
-			Component obj = (Component)LuaScriptMgr.GetUnityObject(L, 1, typeof(Component));
+			Component obj = (Component)LuaScriptMgr.GetUnityObjectSelf(L, 1, "Component");
 			Type arg0 = LuaScriptMgr.GetTypeObject(L, 2);
 			Component o = obj.GetComponent(arg0);
 			LuaScriptMgr.Push(L, o);
@@ -593,7 +592,7 @@ public class ComponentWrap
 	static int GetComponentInChildren(IntPtr L)
 	{
 		LuaScriptMgr.CheckArgsCount(L, 2);
-		Component obj = (Component)LuaScriptMgr.GetUnityObject(L, 1, typeof(Component));
+		Component obj = (Component)LuaScriptMgr.GetUnityObjectSelf(L, 1, "Component");
 		Type arg0 = LuaScriptMgr.GetTypeObject(L, 2);
 		Component o = obj.GetComponentInChildren(arg0);
 		LuaScriptMgr.Push(L, o);
@@ -604,9 +603,10 @@ public class ComponentWrap
 	static int GetComponentsInChildren(IntPtr L)
 	{
 		int count = LuaDLL.lua_gettop(L);
+
 		if (count == 2)
 		{
-			Component obj = (Component)LuaScriptMgr.GetUnityObject(L, 1, typeof(Component));
+			Component obj = (Component)LuaScriptMgr.GetUnityObjectSelf(L, 1, "Component");
 			Type arg0 = LuaScriptMgr.GetTypeObject(L, 2);
 			Component[] o = obj.GetComponentsInChildren(arg0);
 			LuaScriptMgr.PushArray(L, o);
@@ -614,7 +614,7 @@ public class ComponentWrap
 		}
 		else if (count == 3)
 		{
-			Component obj = (Component)LuaScriptMgr.GetUnityObject(L, 1, typeof(Component));
+			Component obj = (Component)LuaScriptMgr.GetUnityObjectSelf(L, 1, "Component");
 			Type arg0 = LuaScriptMgr.GetTypeObject(L, 2);
 			bool arg1 = LuaScriptMgr.GetBoolean(L, 3);
 			Component[] o = obj.GetComponentsInChildren(arg0,arg1);
@@ -633,7 +633,7 @@ public class ComponentWrap
 	static int GetComponentInParent(IntPtr L)
 	{
 		LuaScriptMgr.CheckArgsCount(L, 2);
-		Component obj = (Component)LuaScriptMgr.GetUnityObject(L, 1, typeof(Component));
+		Component obj = (Component)LuaScriptMgr.GetUnityObjectSelf(L, 1, "Component");
 		Type arg0 = LuaScriptMgr.GetTypeObject(L, 2);
 		Component o = obj.GetComponentInParent(arg0);
 		LuaScriptMgr.Push(L, o);
@@ -644,9 +644,10 @@ public class ComponentWrap
 	static int GetComponentsInParent(IntPtr L)
 	{
 		int count = LuaDLL.lua_gettop(L);
+
 		if (count == 2)
 		{
-			Component obj = (Component)LuaScriptMgr.GetUnityObject(L, 1, typeof(Component));
+			Component obj = (Component)LuaScriptMgr.GetUnityObjectSelf(L, 1, "Component");
 			Type arg0 = LuaScriptMgr.GetTypeObject(L, 2);
 			Component[] o = obj.GetComponentsInParent(arg0);
 			LuaScriptMgr.PushArray(L, o);
@@ -654,7 +655,7 @@ public class ComponentWrap
 		}
 		else if (count == 3)
 		{
-			Component obj = (Component)LuaScriptMgr.GetUnityObject(L, 1, typeof(Component));
+			Component obj = (Component)LuaScriptMgr.GetUnityObjectSelf(L, 1, "Component");
 			Type arg0 = LuaScriptMgr.GetTypeObject(L, 2);
 			bool arg1 = LuaScriptMgr.GetBoolean(L, 3);
 			Component[] o = obj.GetComponentsInParent(arg0,arg1);
@@ -673,9 +674,10 @@ public class ComponentWrap
 	static int GetComponents(IntPtr L)
 	{
 		int count = LuaDLL.lua_gettop(L);
+
 		if (count == 2)
 		{
-			Component obj = (Component)LuaScriptMgr.GetUnityObject(L, 1, typeof(Component));
+			Component obj = (Component)LuaScriptMgr.GetUnityObjectSelf(L, 1, "Component");
 			Type arg0 = LuaScriptMgr.GetTypeObject(L, 2);
 			Component[] o = obj.GetComponents(arg0);
 			LuaScriptMgr.PushArray(L, o);
@@ -683,7 +685,7 @@ public class ComponentWrap
 		}
 		else if (count == 3)
 		{
-			Component obj = (Component)LuaScriptMgr.GetUnityObject(L, 1, typeof(Component));
+			Component obj = (Component)LuaScriptMgr.GetUnityObjectSelf(L, 1, "Component");
 			Type arg0 = LuaScriptMgr.GetTypeObject(L, 2);
 			List<Component> arg1 = (List<Component>)LuaScriptMgr.GetNetObject(L, 3, typeof(List<Component>));
 			obj.GetComponents(arg0,arg1);
@@ -701,7 +703,7 @@ public class ComponentWrap
 	static int CompareTag(IntPtr L)
 	{
 		LuaScriptMgr.CheckArgsCount(L, 2);
-		Component obj = (Component)LuaScriptMgr.GetUnityObject(L, 1, typeof(Component));
+		Component obj = (Component)LuaScriptMgr.GetUnityObjectSelf(L, 1, "Component");
 		string arg0 = LuaScriptMgr.GetLuaString(L, 2);
 		bool o = obj.CompareTag(arg0);
 		LuaScriptMgr.Push(L, o);
@@ -715,22 +717,22 @@ public class ComponentWrap
 
 		if (count == 2)
 		{
-			Component obj = (Component)LuaScriptMgr.GetUnityObject(L, 1, typeof(Component));
+			Component obj = (Component)LuaScriptMgr.GetUnityObjectSelf(L, 1, "Component");
 			string arg0 = LuaScriptMgr.GetLuaString(L, 2);
 			obj.SendMessageUpwards(arg0);
 			return 0;
 		}
-		else if (count == 3 && LuaScriptMgr.CheckTypes(L, 1, typeof(Component), typeof(string), typeof(SendMessageOptions)))
+		else if (count == 3 && LuaScriptMgr.CheckTypes(L, 2, typeof(string), typeof(SendMessageOptions)))
 		{
-			Component obj = (Component)LuaScriptMgr.GetUnityObject(L, 1, typeof(Component));
+			Component obj = (Component)LuaScriptMgr.GetUnityObjectSelf(L, 1, "Component");
 			string arg0 = LuaScriptMgr.GetString(L, 2);
-			SendMessageOptions arg1 = (SendMessageOptions)LuaScriptMgr.GetNetObject(L, 3, typeof(SendMessageOptions));
+			SendMessageOptions arg1 = (SendMessageOptions)LuaScriptMgr.GetLuaObject(L, 3);
 			obj.SendMessageUpwards(arg0,arg1);
 			return 0;
 		}
-		else if (count == 3 && LuaScriptMgr.CheckTypes(L, 1, typeof(Component), typeof(string), typeof(object)))
+		else if (count == 3 && LuaScriptMgr.CheckTypes(L, 2, typeof(string), typeof(object)))
 		{
-			Component obj = (Component)LuaScriptMgr.GetUnityObject(L, 1, typeof(Component));
+			Component obj = (Component)LuaScriptMgr.GetUnityObjectSelf(L, 1, "Component");
 			string arg0 = LuaScriptMgr.GetString(L, 2);
 			object arg1 = LuaScriptMgr.GetVarObject(L, 3);
 			obj.SendMessageUpwards(arg0,arg1);
@@ -738,7 +740,7 @@ public class ComponentWrap
 		}
 		else if (count == 4)
 		{
-			Component obj = (Component)LuaScriptMgr.GetUnityObject(L, 1, typeof(Component));
+			Component obj = (Component)LuaScriptMgr.GetUnityObjectSelf(L, 1, "Component");
 			string arg0 = LuaScriptMgr.GetLuaString(L, 2);
 			object arg1 = LuaScriptMgr.GetVarObject(L, 3);
 			SendMessageOptions arg2 = (SendMessageOptions)LuaScriptMgr.GetNetObject(L, 4, typeof(SendMessageOptions));
@@ -760,22 +762,22 @@ public class ComponentWrap
 
 		if (count == 2)
 		{
-			Component obj = (Component)LuaScriptMgr.GetUnityObject(L, 1, typeof(Component));
+			Component obj = (Component)LuaScriptMgr.GetUnityObjectSelf(L, 1, "Component");
 			string arg0 = LuaScriptMgr.GetLuaString(L, 2);
 			obj.SendMessage(arg0);
 			return 0;
 		}
-		else if (count == 3 && LuaScriptMgr.CheckTypes(L, 1, typeof(Component), typeof(string), typeof(SendMessageOptions)))
+		else if (count == 3 && LuaScriptMgr.CheckTypes(L, 2, typeof(string), typeof(SendMessageOptions)))
 		{
-			Component obj = (Component)LuaScriptMgr.GetUnityObject(L, 1, typeof(Component));
+			Component obj = (Component)LuaScriptMgr.GetUnityObjectSelf(L, 1, "Component");
 			string arg0 = LuaScriptMgr.GetString(L, 2);
-			SendMessageOptions arg1 = (SendMessageOptions)LuaScriptMgr.GetNetObject(L, 3, typeof(SendMessageOptions));
+			SendMessageOptions arg1 = (SendMessageOptions)LuaScriptMgr.GetLuaObject(L, 3);
 			obj.SendMessage(arg0,arg1);
 			return 0;
 		}
-		else if (count == 3 && LuaScriptMgr.CheckTypes(L, 1, typeof(Component), typeof(string), typeof(object)))
+		else if (count == 3 && LuaScriptMgr.CheckTypes(L, 2, typeof(string), typeof(object)))
 		{
-			Component obj = (Component)LuaScriptMgr.GetUnityObject(L, 1, typeof(Component));
+			Component obj = (Component)LuaScriptMgr.GetUnityObjectSelf(L, 1, "Component");
 			string arg0 = LuaScriptMgr.GetString(L, 2);
 			object arg1 = LuaScriptMgr.GetVarObject(L, 3);
 			obj.SendMessage(arg0,arg1);
@@ -783,7 +785,7 @@ public class ComponentWrap
 		}
 		else if (count == 4)
 		{
-			Component obj = (Component)LuaScriptMgr.GetUnityObject(L, 1, typeof(Component));
+			Component obj = (Component)LuaScriptMgr.GetUnityObjectSelf(L, 1, "Component");
 			string arg0 = LuaScriptMgr.GetLuaString(L, 2);
 			object arg1 = LuaScriptMgr.GetVarObject(L, 3);
 			SendMessageOptions arg2 = (SendMessageOptions)LuaScriptMgr.GetNetObject(L, 4, typeof(SendMessageOptions));
@@ -805,22 +807,22 @@ public class ComponentWrap
 
 		if (count == 2)
 		{
-			Component obj = (Component)LuaScriptMgr.GetUnityObject(L, 1, typeof(Component));
+			Component obj = (Component)LuaScriptMgr.GetUnityObjectSelf(L, 1, "Component");
 			string arg0 = LuaScriptMgr.GetLuaString(L, 2);
 			obj.BroadcastMessage(arg0);
 			return 0;
 		}
-		else if (count == 3 && LuaScriptMgr.CheckTypes(L, 1, typeof(Component), typeof(string), typeof(SendMessageOptions)))
+		else if (count == 3 && LuaScriptMgr.CheckTypes(L, 2, typeof(string), typeof(SendMessageOptions)))
 		{
-			Component obj = (Component)LuaScriptMgr.GetUnityObject(L, 1, typeof(Component));
+			Component obj = (Component)LuaScriptMgr.GetUnityObjectSelf(L, 1, "Component");
 			string arg0 = LuaScriptMgr.GetString(L, 2);
-			SendMessageOptions arg1 = (SendMessageOptions)LuaScriptMgr.GetNetObject(L, 3, typeof(SendMessageOptions));
+			SendMessageOptions arg1 = (SendMessageOptions)LuaScriptMgr.GetLuaObject(L, 3);
 			obj.BroadcastMessage(arg0,arg1);
 			return 0;
 		}
-		else if (count == 3 && LuaScriptMgr.CheckTypes(L, 1, typeof(Component), typeof(string), typeof(object)))
+		else if (count == 3 && LuaScriptMgr.CheckTypes(L, 2, typeof(string), typeof(object)))
 		{
-			Component obj = (Component)LuaScriptMgr.GetUnityObject(L, 1, typeof(Component));
+			Component obj = (Component)LuaScriptMgr.GetUnityObjectSelf(L, 1, "Component");
 			string arg0 = LuaScriptMgr.GetString(L, 2);
 			object arg1 = LuaScriptMgr.GetVarObject(L, 3);
 			obj.BroadcastMessage(arg0,arg1);
@@ -828,7 +830,7 @@ public class ComponentWrap
 		}
 		else if (count == 4)
 		{
-			Component obj = (Component)LuaScriptMgr.GetUnityObject(L, 1, typeof(Component));
+			Component obj = (Component)LuaScriptMgr.GetUnityObjectSelf(L, 1, "Component");
 			string arg0 = LuaScriptMgr.GetLuaString(L, 2);
 			object arg1 = LuaScriptMgr.GetVarObject(L, 3);
 			SendMessageOptions arg2 = (SendMessageOptions)LuaScriptMgr.GetNetObject(L, 4, typeof(SendMessageOptions));

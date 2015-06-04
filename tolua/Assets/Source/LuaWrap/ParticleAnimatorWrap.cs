@@ -5,25 +5,30 @@ using Object = UnityEngine.Object;
 
 public class ParticleAnimatorWrap
 {
-	public static LuaMethod[] regs = new LuaMethod[]
+	public static void Register(IntPtr L)
 	{
-		new LuaMethod("New", _CreateParticleAnimator),
-		new LuaMethod("GetClassType", GetClassType),
-		new LuaMethod("__eq", Lua_Eq),
-	};
+		LuaMethod[] regs = new LuaMethod[]
+		{
+			new LuaMethod("New", _CreateParticleAnimator),
+			new LuaMethod("GetClassType", GetClassType),
+			new LuaMethod("__eq", Lua_Eq),
+		};
 
-	static LuaField[] fields = new LuaField[]
-	{
-		new LuaField("doesAnimateColor", get_doesAnimateColor, set_doesAnimateColor),
-		new LuaField("worldRotationAxis", get_worldRotationAxis, set_worldRotationAxis),
-		new LuaField("localRotationAxis", get_localRotationAxis, set_localRotationAxis),
-		new LuaField("sizeGrow", get_sizeGrow, set_sizeGrow),
-		new LuaField("rndForce", get_rndForce, set_rndForce),
-		new LuaField("force", get_force, set_force),
-		new LuaField("damping", get_damping, set_damping),
-		new LuaField("autodestruct", get_autodestruct, set_autodestruct),
-		new LuaField("colorAnimation", get_colorAnimation, set_colorAnimation),
-	};
+		LuaField[] fields = new LuaField[]
+		{
+			new LuaField("doesAnimateColor", get_doesAnimateColor, set_doesAnimateColor),
+			new LuaField("worldRotationAxis", get_worldRotationAxis, set_worldRotationAxis),
+			new LuaField("localRotationAxis", get_localRotationAxis, set_localRotationAxis),
+			new LuaField("sizeGrow", get_sizeGrow, set_sizeGrow),
+			new LuaField("rndForce", get_rndForce, set_rndForce),
+			new LuaField("force", get_force, set_force),
+			new LuaField("damping", get_damping, set_damping),
+			new LuaField("autodestruct", get_autodestruct, set_autodestruct),
+			new LuaField("colorAnimation", get_colorAnimation, set_colorAnimation),
+		};
+
+		LuaScriptMgr.RegisterLib(L, "UnityEngine.ParticleAnimator", typeof(UnityEngine.ParticleAnimator), regs, fields, typeof(Component));
+	}
 
 	[MonoPInvokeCallbackAttribute(typeof(LuaCSFunction))]
 	static int _CreateParticleAnimator(IntPtr L)
@@ -50,13 +55,7 @@ public class ParticleAnimatorWrap
 	static int GetClassType(IntPtr L)
 	{
 		LuaScriptMgr.Push(L, classType);
-
 		return 1;
-	}
-
-	public static void Register(IntPtr L)
-	{
-		LuaScriptMgr.RegisterLib(L, "UnityEngine.ParticleAnimator", typeof(ParticleAnimator), regs, fields, typeof(Component));
 	}
 
 	[MonoPInvokeCallbackAttribute(typeof(LuaCSFunction))]

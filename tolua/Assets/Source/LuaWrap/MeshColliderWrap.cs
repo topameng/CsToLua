@@ -5,19 +5,24 @@ using Object = UnityEngine.Object;
 
 public class MeshColliderWrap
 {
-	public static LuaMethod[] regs = new LuaMethod[]
+	public static void Register(IntPtr L)
 	{
-		new LuaMethod("New", _CreateMeshCollider),
-		new LuaMethod("GetClassType", GetClassType),
-		new LuaMethod("__eq", Lua_Eq),
-	};
+		LuaMethod[] regs = new LuaMethod[]
+		{
+			new LuaMethod("New", _CreateMeshCollider),
+			new LuaMethod("GetClassType", GetClassType),
+			new LuaMethod("__eq", Lua_Eq),
+		};
 
-	static LuaField[] fields = new LuaField[]
-	{
-		new LuaField("sharedMesh", get_sharedMesh, set_sharedMesh),
-		new LuaField("convex", get_convex, set_convex),
-		new LuaField("smoothSphereCollisions", get_smoothSphereCollisions, set_smoothSphereCollisions),
-	};
+		LuaField[] fields = new LuaField[]
+		{
+			new LuaField("sharedMesh", get_sharedMesh, set_sharedMesh),
+			new LuaField("convex", get_convex, set_convex),
+			new LuaField("smoothSphereCollisions", get_smoothSphereCollisions, set_smoothSphereCollisions),
+		};
+
+		LuaScriptMgr.RegisterLib(L, "UnityEngine.MeshCollider", typeof(UnityEngine.MeshCollider), regs, fields, typeof(Collider));
+	}
 
 	[MonoPInvokeCallbackAttribute(typeof(LuaCSFunction))]
 	static int _CreateMeshCollider(IntPtr L)
@@ -44,13 +49,7 @@ public class MeshColliderWrap
 	static int GetClassType(IntPtr L)
 	{
 		LuaScriptMgr.Push(L, classType);
-
 		return 1;
-	}
-
-	public static void Register(IntPtr L)
-	{
-		LuaScriptMgr.RegisterLib(L, "UnityEngine.MeshCollider", typeof(MeshCollider), regs, fields, typeof(Collider));
 	}
 
 	[MonoPInvokeCallbackAttribute(typeof(LuaCSFunction))]

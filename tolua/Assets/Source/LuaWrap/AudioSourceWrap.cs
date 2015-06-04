@@ -5,50 +5,55 @@ using Object = UnityEngine.Object;
 
 public class AudioSourceWrap
 {
-	public static LuaMethod[] regs = new LuaMethod[]
+	public static void Register(IntPtr L)
 	{
-		new LuaMethod("Play", Play),
-		new LuaMethod("PlayDelayed", PlayDelayed),
-		new LuaMethod("PlayScheduled", PlayScheduled),
-		new LuaMethod("SetScheduledStartTime", SetScheduledStartTime),
-		new LuaMethod("SetScheduledEndTime", SetScheduledEndTime),
-		new LuaMethod("Stop", Stop),
-		new LuaMethod("Pause", Pause),
-		new LuaMethod("PlayOneShot", PlayOneShot),
-		new LuaMethod("PlayClipAtPoint", PlayClipAtPoint),
-		new LuaMethod("GetOutputData", GetOutputData),
-		new LuaMethod("GetSpectrumData", GetSpectrumData),
-		new LuaMethod("New", _CreateAudioSource),
-		new LuaMethod("GetClassType", GetClassType),
-		new LuaMethod("__eq", Lua_Eq),
-	};
+		LuaMethod[] regs = new LuaMethod[]
+		{
+			new LuaMethod("Play", Play),
+			new LuaMethod("PlayDelayed", PlayDelayed),
+			new LuaMethod("PlayScheduled", PlayScheduled),
+			new LuaMethod("SetScheduledStartTime", SetScheduledStartTime),
+			new LuaMethod("SetScheduledEndTime", SetScheduledEndTime),
+			new LuaMethod("Stop", Stop),
+			new LuaMethod("Pause", Pause),
+			new LuaMethod("PlayOneShot", PlayOneShot),
+			new LuaMethod("PlayClipAtPoint", PlayClipAtPoint),
+			new LuaMethod("GetOutputData", GetOutputData),
+			new LuaMethod("GetSpectrumData", GetSpectrumData),
+			new LuaMethod("New", _CreateAudioSource),
+			new LuaMethod("GetClassType", GetClassType),
+			new LuaMethod("__eq", Lua_Eq),
+		};
 
-	static LuaField[] fields = new LuaField[]
-	{
-		new LuaField("volume", get_volume, set_volume),
-		new LuaField("pitch", get_pitch, set_pitch),
-		new LuaField("time", get_time, set_time),
-		new LuaField("timeSamples", get_timeSamples, set_timeSamples),
-		new LuaField("clip", get_clip, set_clip),
-		new LuaField("isPlaying", get_isPlaying, null),
-		new LuaField("loop", get_loop, set_loop),
-		new LuaField("ignoreListenerVolume", get_ignoreListenerVolume, set_ignoreListenerVolume),
-		new LuaField("playOnAwake", get_playOnAwake, set_playOnAwake),
-		new LuaField("ignoreListenerPause", get_ignoreListenerPause, set_ignoreListenerPause),
-		new LuaField("velocityUpdateMode", get_velocityUpdateMode, set_velocityUpdateMode),
-		new LuaField("panLevel", get_panLevel, set_panLevel),
-		new LuaField("bypassEffects", get_bypassEffects, set_bypassEffects),
-		new LuaField("bypassListenerEffects", get_bypassListenerEffects, set_bypassListenerEffects),
-		new LuaField("bypassReverbZones", get_bypassReverbZones, set_bypassReverbZones),
-		new LuaField("dopplerLevel", get_dopplerLevel, set_dopplerLevel),
-		new LuaField("spread", get_spread, set_spread),
-		new LuaField("priority", get_priority, set_priority),
-		new LuaField("mute", get_mute, set_mute),
-		new LuaField("minDistance", get_minDistance, set_minDistance),
-		new LuaField("maxDistance", get_maxDistance, set_maxDistance),
-		new LuaField("pan", get_pan, set_pan),
-		new LuaField("rolloffMode", get_rolloffMode, set_rolloffMode),
-	};
+		LuaField[] fields = new LuaField[]
+		{
+			new LuaField("volume", get_volume, set_volume),
+			new LuaField("pitch", get_pitch, set_pitch),
+			new LuaField("time", get_time, set_time),
+			new LuaField("timeSamples", get_timeSamples, set_timeSamples),
+			new LuaField("clip", get_clip, set_clip),
+			new LuaField("isPlaying", get_isPlaying, null),
+			new LuaField("loop", get_loop, set_loop),
+			new LuaField("ignoreListenerVolume", get_ignoreListenerVolume, set_ignoreListenerVolume),
+			new LuaField("playOnAwake", get_playOnAwake, set_playOnAwake),
+			new LuaField("ignoreListenerPause", get_ignoreListenerPause, set_ignoreListenerPause),
+			new LuaField("velocityUpdateMode", get_velocityUpdateMode, set_velocityUpdateMode),
+			new LuaField("panLevel", get_panLevel, set_panLevel),
+			new LuaField("bypassEffects", get_bypassEffects, set_bypassEffects),
+			new LuaField("bypassListenerEffects", get_bypassListenerEffects, set_bypassListenerEffects),
+			new LuaField("bypassReverbZones", get_bypassReverbZones, set_bypassReverbZones),
+			new LuaField("dopplerLevel", get_dopplerLevel, set_dopplerLevel),
+			new LuaField("spread", get_spread, set_spread),
+			new LuaField("priority", get_priority, set_priority),
+			new LuaField("mute", get_mute, set_mute),
+			new LuaField("minDistance", get_minDistance, set_minDistance),
+			new LuaField("maxDistance", get_maxDistance, set_maxDistance),
+			new LuaField("pan", get_pan, set_pan),
+			new LuaField("rolloffMode", get_rolloffMode, set_rolloffMode),
+		};
+
+		LuaScriptMgr.RegisterLib(L, "UnityEngine.AudioSource", typeof(UnityEngine.AudioSource), regs, fields, typeof(Behaviour));
+	}
 
 	[MonoPInvokeCallbackAttribute(typeof(LuaCSFunction))]
 	static int _CreateAudioSource(IntPtr L)
@@ -75,13 +80,7 @@ public class AudioSourceWrap
 	static int GetClassType(IntPtr L)
 	{
 		LuaScriptMgr.Push(L, classType);
-
 		return 1;
-	}
-
-	public static void Register(IntPtr L)
-	{
-		LuaScriptMgr.RegisterLib(L, "UnityEngine.AudioSource", typeof(AudioSource), regs, fields, typeof(Behaviour));
 	}
 
 	[MonoPInvokeCallbackAttribute(typeof(LuaCSFunction))]
@@ -1168,15 +1167,16 @@ public class AudioSourceWrap
 	static int Play(IntPtr L)
 	{
 		int count = LuaDLL.lua_gettop(L);
+
 		if (count == 1)
 		{
-			AudioSource obj = (AudioSource)LuaScriptMgr.GetUnityObject(L, 1, typeof(AudioSource));
+			AudioSource obj = (AudioSource)LuaScriptMgr.GetUnityObjectSelf(L, 1, "AudioSource");
 			obj.Play();
 			return 0;
 		}
 		else if (count == 2)
 		{
-			AudioSource obj = (AudioSource)LuaScriptMgr.GetUnityObject(L, 1, typeof(AudioSource));
+			AudioSource obj = (AudioSource)LuaScriptMgr.GetUnityObjectSelf(L, 1, "AudioSource");
 			ulong arg0 = (ulong)LuaScriptMgr.GetNumber(L, 2);
 			obj.Play(arg0);
 			return 0;
@@ -1193,7 +1193,7 @@ public class AudioSourceWrap
 	static int PlayDelayed(IntPtr L)
 	{
 		LuaScriptMgr.CheckArgsCount(L, 2);
-		AudioSource obj = (AudioSource)LuaScriptMgr.GetUnityObject(L, 1, typeof(AudioSource));
+		AudioSource obj = (AudioSource)LuaScriptMgr.GetUnityObjectSelf(L, 1, "AudioSource");
 		float arg0 = (float)LuaScriptMgr.GetNumber(L, 2);
 		obj.PlayDelayed(arg0);
 		return 0;
@@ -1203,7 +1203,7 @@ public class AudioSourceWrap
 	static int PlayScheduled(IntPtr L)
 	{
 		LuaScriptMgr.CheckArgsCount(L, 2);
-		AudioSource obj = (AudioSource)LuaScriptMgr.GetUnityObject(L, 1, typeof(AudioSource));
+		AudioSource obj = (AudioSource)LuaScriptMgr.GetUnityObjectSelf(L, 1, "AudioSource");
 		double arg0 = (double)LuaScriptMgr.GetNumber(L, 2);
 		obj.PlayScheduled(arg0);
 		return 0;
@@ -1213,7 +1213,7 @@ public class AudioSourceWrap
 	static int SetScheduledStartTime(IntPtr L)
 	{
 		LuaScriptMgr.CheckArgsCount(L, 2);
-		AudioSource obj = (AudioSource)LuaScriptMgr.GetUnityObject(L, 1, typeof(AudioSource));
+		AudioSource obj = (AudioSource)LuaScriptMgr.GetUnityObjectSelf(L, 1, "AudioSource");
 		double arg0 = (double)LuaScriptMgr.GetNumber(L, 2);
 		obj.SetScheduledStartTime(arg0);
 		return 0;
@@ -1223,7 +1223,7 @@ public class AudioSourceWrap
 	static int SetScheduledEndTime(IntPtr L)
 	{
 		LuaScriptMgr.CheckArgsCount(L, 2);
-		AudioSource obj = (AudioSource)LuaScriptMgr.GetUnityObject(L, 1, typeof(AudioSource));
+		AudioSource obj = (AudioSource)LuaScriptMgr.GetUnityObjectSelf(L, 1, "AudioSource");
 		double arg0 = (double)LuaScriptMgr.GetNumber(L, 2);
 		obj.SetScheduledEndTime(arg0);
 		return 0;
@@ -1233,7 +1233,7 @@ public class AudioSourceWrap
 	static int Stop(IntPtr L)
 	{
 		LuaScriptMgr.CheckArgsCount(L, 1);
-		AudioSource obj = (AudioSource)LuaScriptMgr.GetUnityObject(L, 1, typeof(AudioSource));
+		AudioSource obj = (AudioSource)LuaScriptMgr.GetUnityObjectSelf(L, 1, "AudioSource");
 		obj.Stop();
 		return 0;
 	}
@@ -1242,7 +1242,7 @@ public class AudioSourceWrap
 	static int Pause(IntPtr L)
 	{
 		LuaScriptMgr.CheckArgsCount(L, 1);
-		AudioSource obj = (AudioSource)LuaScriptMgr.GetUnityObject(L, 1, typeof(AudioSource));
+		AudioSource obj = (AudioSource)LuaScriptMgr.GetUnityObjectSelf(L, 1, "AudioSource");
 		obj.Pause();
 		return 0;
 	}
@@ -1251,16 +1251,17 @@ public class AudioSourceWrap
 	static int PlayOneShot(IntPtr L)
 	{
 		int count = LuaDLL.lua_gettop(L);
+
 		if (count == 2)
 		{
-			AudioSource obj = (AudioSource)LuaScriptMgr.GetUnityObject(L, 1, typeof(AudioSource));
+			AudioSource obj = (AudioSource)LuaScriptMgr.GetUnityObjectSelf(L, 1, "AudioSource");
 			AudioClip arg0 = (AudioClip)LuaScriptMgr.GetUnityObject(L, 2, typeof(AudioClip));
 			obj.PlayOneShot(arg0);
 			return 0;
 		}
 		else if (count == 3)
 		{
-			AudioSource obj = (AudioSource)LuaScriptMgr.GetUnityObject(L, 1, typeof(AudioSource));
+			AudioSource obj = (AudioSource)LuaScriptMgr.GetUnityObjectSelf(L, 1, "AudioSource");
 			AudioClip arg0 = (AudioClip)LuaScriptMgr.GetUnityObject(L, 2, typeof(AudioClip));
 			float arg1 = (float)LuaScriptMgr.GetNumber(L, 3);
 			obj.PlayOneShot(arg0,arg1);
@@ -1278,6 +1279,7 @@ public class AudioSourceWrap
 	static int PlayClipAtPoint(IntPtr L)
 	{
 		int count = LuaDLL.lua_gettop(L);
+
 		if (count == 2)
 		{
 			AudioClip arg0 = (AudioClip)LuaScriptMgr.GetUnityObject(L, 1, typeof(AudioClip));
@@ -1305,7 +1307,7 @@ public class AudioSourceWrap
 	static int GetOutputData(IntPtr L)
 	{
 		LuaScriptMgr.CheckArgsCount(L, 3);
-		AudioSource obj = (AudioSource)LuaScriptMgr.GetUnityObject(L, 1, typeof(AudioSource));
+		AudioSource obj = (AudioSource)LuaScriptMgr.GetUnityObjectSelf(L, 1, "AudioSource");
 		float[] objs0 = LuaScriptMgr.GetArrayNumber<float>(L, 2);
 		int arg1 = (int)LuaScriptMgr.GetNumber(L, 3);
 		obj.GetOutputData(objs0,arg1);
@@ -1316,7 +1318,7 @@ public class AudioSourceWrap
 	static int GetSpectrumData(IntPtr L)
 	{
 		LuaScriptMgr.CheckArgsCount(L, 4);
-		AudioSource obj = (AudioSource)LuaScriptMgr.GetUnityObject(L, 1, typeof(AudioSource));
+		AudioSource obj = (AudioSource)LuaScriptMgr.GetUnityObjectSelf(L, 1, "AudioSource");
 		float[] objs0 = LuaScriptMgr.GetArrayNumber<float>(L, 2);
 		int arg1 = (int)LuaScriptMgr.GetNumber(L, 3);
 		FFTWindow arg2 = (FFTWindow)LuaScriptMgr.GetNetObject(L, 4, typeof(FFTWindow));

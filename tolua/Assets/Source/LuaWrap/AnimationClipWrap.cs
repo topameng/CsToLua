@@ -5,24 +5,29 @@ using Object = UnityEngine.Object;
 
 public class AnimationClipWrap
 {
-	public static LuaMethod[] regs = new LuaMethod[]
+	public static void Register(IntPtr L)
 	{
-		new LuaMethod("SetCurve", SetCurve),
-		new LuaMethod("EnsureQuaternionContinuity", EnsureQuaternionContinuity),
-		new LuaMethod("ClearCurves", ClearCurves),
-		new LuaMethod("AddEvent", AddEvent),
-		new LuaMethod("New", _CreateAnimationClip),
-		new LuaMethod("GetClassType", GetClassType),
-		new LuaMethod("__eq", Lua_Eq),
-	};
+		LuaMethod[] regs = new LuaMethod[]
+		{
+			new LuaMethod("SetCurve", SetCurve),
+			new LuaMethod("EnsureQuaternionContinuity", EnsureQuaternionContinuity),
+			new LuaMethod("ClearCurves", ClearCurves),
+			new LuaMethod("AddEvent", AddEvent),
+			new LuaMethod("New", _CreateAnimationClip),
+			new LuaMethod("GetClassType", GetClassType),
+			new LuaMethod("__eq", Lua_Eq),
+		};
 
-	static LuaField[] fields = new LuaField[]
-	{
-		new LuaField("length", get_length, null),
-		new LuaField("frameRate", get_frameRate, set_frameRate),
-		new LuaField("wrapMode", get_wrapMode, set_wrapMode),
-		new LuaField("localBounds", get_localBounds, set_localBounds),
-	};
+		LuaField[] fields = new LuaField[]
+		{
+			new LuaField("length", get_length, null),
+			new LuaField("frameRate", get_frameRate, set_frameRate),
+			new LuaField("wrapMode", get_wrapMode, set_wrapMode),
+			new LuaField("localBounds", get_localBounds, set_localBounds),
+		};
+
+		LuaScriptMgr.RegisterLib(L, "UnityEngine.AnimationClip", typeof(UnityEngine.AnimationClip), regs, fields, typeof(Motion));
+	}
 
 	[MonoPInvokeCallbackAttribute(typeof(LuaCSFunction))]
 	static int _CreateAnimationClip(IntPtr L)
@@ -49,13 +54,7 @@ public class AnimationClipWrap
 	static int GetClassType(IntPtr L)
 	{
 		LuaScriptMgr.Push(L, classType);
-
 		return 1;
-	}
-
-	public static void Register(IntPtr L)
-	{
-		LuaScriptMgr.RegisterLib(L, "UnityEngine.AnimationClip", typeof(AnimationClip), regs, fields, typeof(Motion));
 	}
 
 	[MonoPInvokeCallbackAttribute(typeof(LuaCSFunction))]
@@ -230,7 +229,7 @@ public class AnimationClipWrap
 	static int SetCurve(IntPtr L)
 	{
 		LuaScriptMgr.CheckArgsCount(L, 5);
-		AnimationClip obj = (AnimationClip)LuaScriptMgr.GetUnityObject(L, 1, typeof(AnimationClip));
+		AnimationClip obj = (AnimationClip)LuaScriptMgr.GetUnityObjectSelf(L, 1, "AnimationClip");
 		string arg0 = LuaScriptMgr.GetLuaString(L, 2);
 		Type arg1 = LuaScriptMgr.GetTypeObject(L, 3);
 		string arg2 = LuaScriptMgr.GetLuaString(L, 4);
@@ -243,7 +242,7 @@ public class AnimationClipWrap
 	static int EnsureQuaternionContinuity(IntPtr L)
 	{
 		LuaScriptMgr.CheckArgsCount(L, 1);
-		AnimationClip obj = (AnimationClip)LuaScriptMgr.GetUnityObject(L, 1, typeof(AnimationClip));
+		AnimationClip obj = (AnimationClip)LuaScriptMgr.GetUnityObjectSelf(L, 1, "AnimationClip");
 		obj.EnsureQuaternionContinuity();
 		return 0;
 	}
@@ -252,7 +251,7 @@ public class AnimationClipWrap
 	static int ClearCurves(IntPtr L)
 	{
 		LuaScriptMgr.CheckArgsCount(L, 1);
-		AnimationClip obj = (AnimationClip)LuaScriptMgr.GetUnityObject(L, 1, typeof(AnimationClip));
+		AnimationClip obj = (AnimationClip)LuaScriptMgr.GetUnityObjectSelf(L, 1, "AnimationClip");
 		obj.ClearCurves();
 		return 0;
 	}
@@ -261,7 +260,7 @@ public class AnimationClipWrap
 	static int AddEvent(IntPtr L)
 	{
 		LuaScriptMgr.CheckArgsCount(L, 2);
-		AnimationClip obj = (AnimationClip)LuaScriptMgr.GetUnityObject(L, 1, typeof(AnimationClip));
+		AnimationClip obj = (AnimationClip)LuaScriptMgr.GetUnityObjectSelf(L, 1, "AnimationClip");
 		AnimationEvent arg0 = (AnimationEvent)LuaScriptMgr.GetNetObject(L, 2, typeof(AnimationEvent));
 		obj.AddEvent(arg0);
 		return 0;

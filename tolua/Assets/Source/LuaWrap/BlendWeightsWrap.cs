@@ -14,7 +14,7 @@ public class BlendWeightsWrap
 
 	public static void Register(IntPtr L)
 	{
-		LuaScriptMgr.RegisterLib(L, "UnityEngine.BlendWeights", typeof(BlendWeights), enums);
+		LuaScriptMgr.RegisterLib(L, "UnityEngine.BlendWeights", typeof(UnityEngine.BlendWeights), enums);
 	}
 
 	[MonoPInvokeCallbackAttribute(typeof(LuaCSFunction))]

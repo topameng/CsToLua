@@ -252,7 +252,7 @@ public class KeyCodeWrap
 
 	public static void Register(IntPtr L)
 	{
-		LuaScriptMgr.RegisterLib(L, "UnityEngine.KeyCode", typeof(KeyCode), enums);
+		LuaScriptMgr.RegisterLib(L, "UnityEngine.KeyCode", typeof(UnityEngine.KeyCode), enums);
 	}
 
 	[MonoPInvokeCallbackAttribute(typeof(LuaCSFunction))]

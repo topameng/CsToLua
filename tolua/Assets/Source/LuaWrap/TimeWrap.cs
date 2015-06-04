@@ -4,29 +4,34 @@ using LuaInterface;
 
 public class TimeWrap
 {
-	public static LuaMethod[] regs = new LuaMethod[]
+	public static void Register(IntPtr L)
 	{
-		new LuaMethod("New", _CreateTime),
-		new LuaMethod("GetClassType", GetClassType),
-	};
+		LuaMethod[] regs = new LuaMethod[]
+		{
+			new LuaMethod("New", _CreateTime),
+			new LuaMethod("GetClassType", GetClassType),
+		};
 
-	static LuaField[] fields = new LuaField[]
-	{
-		new LuaField("time", get_time, null),
-		new LuaField("timeSinceLevelLoad", get_timeSinceLevelLoad, null),
-		new LuaField("deltaTime", get_deltaTime, null),
-		new LuaField("fixedTime", get_fixedTime, null),
-		new LuaField("unscaledTime", get_unscaledTime, null),
-		new LuaField("unscaledDeltaTime", get_unscaledDeltaTime, null),
-		new LuaField("fixedDeltaTime", get_fixedDeltaTime, set_fixedDeltaTime),
-		new LuaField("maximumDeltaTime", get_maximumDeltaTime, set_maximumDeltaTime),
-		new LuaField("smoothDeltaTime", get_smoothDeltaTime, null),
-		new LuaField("timeScale", get_timeScale, set_timeScale),
-		new LuaField("frameCount", get_frameCount, null),
-		new LuaField("renderedFrameCount", get_renderedFrameCount, null),
-		new LuaField("realtimeSinceStartup", get_realtimeSinceStartup, null),
-		new LuaField("captureFramerate", get_captureFramerate, set_captureFramerate),
-	};
+		LuaField[] fields = new LuaField[]
+		{
+			new LuaField("time", get_time, null),
+			new LuaField("timeSinceLevelLoad", get_timeSinceLevelLoad, null),
+			new LuaField("deltaTime", get_deltaTime, null),
+			new LuaField("fixedTime", get_fixedTime, null),
+			new LuaField("unscaledTime", get_unscaledTime, null),
+			new LuaField("unscaledDeltaTime", get_unscaledDeltaTime, null),
+			new LuaField("fixedDeltaTime", get_fixedDeltaTime, set_fixedDeltaTime),
+			new LuaField("maximumDeltaTime", get_maximumDeltaTime, set_maximumDeltaTime),
+			new LuaField("smoothDeltaTime", get_smoothDeltaTime, null),
+			new LuaField("timeScale", get_timeScale, set_timeScale),
+			new LuaField("frameCount", get_frameCount, null),
+			new LuaField("renderedFrameCount", get_renderedFrameCount, null),
+			new LuaField("realtimeSinceStartup", get_realtimeSinceStartup, null),
+			new LuaField("captureFramerate", get_captureFramerate, set_captureFramerate),
+		};
+
+		LuaScriptMgr.RegisterLib(L, "UnityEngine.Time", typeof(UnityEngine.Time), regs, fields, typeof(object));
+	}
 
 	[MonoPInvokeCallbackAttribute(typeof(LuaCSFunction))]
 	static int _CreateTime(IntPtr L)
@@ -53,13 +58,7 @@ public class TimeWrap
 	static int GetClassType(IntPtr L)
 	{
 		LuaScriptMgr.Push(L, classType);
-
 		return 1;
-	}
-
-	public static void Register(IntPtr L)
-	{
-		LuaScriptMgr.RegisterLib(L, "UnityEngine.Time", typeof(Time), regs, fields, typeof(object));
 	}
 
 	[MonoPInvokeCallbackAttribute(typeof(LuaCSFunction))]

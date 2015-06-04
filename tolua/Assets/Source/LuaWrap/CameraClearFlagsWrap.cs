@@ -16,7 +16,7 @@ public class CameraClearFlagsWrap
 
 	public static void Register(IntPtr L)
 	{
-		LuaScriptMgr.RegisterLib(L, "UnityEngine.CameraClearFlags", typeof(CameraClearFlags), enums);
+		LuaScriptMgr.RegisterLib(L, "UnityEngine.CameraClearFlags", typeof(UnityEngine.CameraClearFlags), enums);
 	}
 
 	[MonoPInvokeCallbackAttribute(typeof(LuaCSFunction))]
