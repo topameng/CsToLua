@@ -6,14 +6,15 @@
 		end
 使用注释掉的代码替换上面几行
 
-2015.6.3 1.9.7 todo
+2015.6.3 1.9.7
 重载函数生成代码优化，减少不必要的类型检查。速度略有提升
 支持类型特殊化处理。可自己扩展导出函数，也可扔掉自己不想用的函数。暂时只支持函数。
 减少绑定文件占用的内存 （感谢钟纬测试反馈）
 启动时自动导出类型（感谢大C提醒，虽然加的晚了点）
 Base类型没有注册时将有警告提醒。
 可以扔掉毫无用处的类比如 Motion
-
+fix LuaFunction 返回值bug
+fix pb.c ios arm 边界对齐问题
 
 2015.5.29 1.9.6
 修正bindlua名称空间bug.
@@ -22,7 +23,6 @@ Vector3, Quaternion 功能修正，行为同unity3d一致。
 Quaternion 加入Forward 函数，如果提取了Tranform.rotation, 可从旋转直接取forward， 而不需要跨语言从Transform提取。
 减少一次跨语言交互
 优化print函数
-
 
 2015.5.21 1.9.5
 加入了Bounds值类型
