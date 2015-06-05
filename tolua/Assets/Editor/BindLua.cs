@@ -12,8 +12,22 @@ using System.Text.RegularExpressions;
 using System.Reflection;
 using UnityEngine.Rendering;
 
+[InitializeOnLoad]
 public static class LuaBinding
 {
+    static LuaBinding()
+    {
+        string[] files = Directory.GetFiles(Application.dataPath + "/Source/LuaWrap/");
+
+        if (files.Length <= 0)
+        {
+            GenLuaDelegates();
+            Binding();
+            GenLuaBinder();
+        }
+    }
+
+
     public class BindType
     {
         public string name;                 //类名称
