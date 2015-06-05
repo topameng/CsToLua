@@ -16,6 +16,9 @@ Base类型没有注册时将有警告提醒。
 fix LuaFunction 返回值bug
 fix pb.c ios arm 边界对齐问题
 
+因为支持了特化处理，不在需要手动修改几个基类导出代码了。
+so 启动会自动生成一部分常用代码。当然你还可以通过菜单来生成，或者把你天才的想法加入到特化处理里面
+
 2015.5.29 1.9.6
 修正bindlua名称空间bug.
 Vector3, Quaternion 功能修正，行为同unity3d一致。
