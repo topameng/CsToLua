@@ -31,16 +31,14 @@ namespace LuaInterface
         //    LuaDLL.lua_settop(L, oldTop);
         //}
 
-        static byte[] DefaultLoader(string name)
+        //默认函数不改路径， luamgr 再走统一目录
+        static byte[] DefaultLoader(string path)
         {
             byte[] str = null;
-            string path = Application.dataPath + "/Lua/" + name;
-
-            using (FileStream file = new FileStream(path, FileMode.Open))
+            
+            if (File.Exists(path))
             {
-                str = new byte[(int)file.Length];
-                file.Read(str, 0, str.Length);
-                file.Close();
+                str = File.ReadAllBytes(path);
             }
 
             return str;

@@ -241,7 +241,7 @@ namespace LuaInterface
         public object[] DoString(string chunk, string chunkName, LuaTable env)
         {
             int oldTop = LuaDLL.lua_gettop(L);            
-            byte[] bt = Encoding.Default.GetBytes(chunk);
+            byte[] bt = Encoding.UTF8.GetBytes(chunk);
 
             if (LuaDLL.luaL_loadbuffer(L, bt, bt.Length, chunkName) == 0)
             {
@@ -281,9 +281,10 @@ namespace LuaInterface
             byte[] text = LuaStatic.Load(fileName);
 
             if (text == null)
-            {
-                ThrowExceptionFromError(oldTop);
-                LuaDLL.lua_pop(L, 1);                
+            {                
+                Debugger.LogError("Loader lua file failed: {0}", fileName);      
+                LuaDLL.lua_pop(L, 1);
+                return null;
             }
 
             //Encoding.UTF8.GetByteCount(text)

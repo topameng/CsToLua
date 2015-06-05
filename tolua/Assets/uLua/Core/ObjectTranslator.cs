@@ -1002,7 +1002,7 @@ namespace LuaInterface
          * Pushes the object into the Lua stack according to its type.
          */
         internal void push(IntPtr luaState, object o)
-        {
+        {                        
             LuaScriptMgr.PushVarObject(luaState, o);
         }
 

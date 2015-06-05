@@ -628,22 +628,9 @@ public class LuaScriptMgr
 #if !LUA_ZIP
         string path = Application.dataPath + "/Lua/" + name;
 
-        try
+        if (File.Exists(path))
         {
-            //using (FileStream file = new FileStream(path, FileMode.Open))
-            //{
-            //    str = new byte[(int)file.Length];
-            //    file.Read(str, 0, str.Length);                
-            //    file.Close();
-            //}
-            if (File.Exists(path))
-            {
-                str = File.ReadAllBytes(path);
-            }
-        }
-        catch
-        {
-            LuaDLL.luaL_error(lua.L, "Loader file failed: " + name);            
+            str = File.ReadAllBytes(path);
         }
 #else
         IAssetFile zipFile = null;
@@ -664,7 +651,7 @@ public class LuaScriptMgr
         TextAsset luaCode = zipFile.Read<TextAsset>(name);
         str = luaCode.bytes;
         Resources.UnloadAsset(luaCode);
-#endif                
+#endif
         return str;
     }
 
@@ -1297,7 +1284,12 @@ public class LuaScriptMgr
     {
 #if MULTI_STATE
             return ObjectTranslator.FromState(L);
-#else
+#else            
+            if (_translator == null)
+            {
+                return ObjectTranslator.FromState(L);
+            }
+
             return _translator;
 #endif        
     }
@@ -2649,6 +2641,12 @@ public class LuaScriptMgr
     public static void PushTraceBack(IntPtr L)
     {
 #if !MULTI_STATE
+        if (traceback == null)
+        {
+            LuaDLL.lua_getglobal(L, "traceback");
+            return;
+        }
+
         traceback.push();
 #else
         LuaDLL.lua_getglobal(L, "traceback");

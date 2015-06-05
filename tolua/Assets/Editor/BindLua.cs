@@ -218,6 +218,7 @@ public static class LuaBinding
         _GT(typeof(AnimationBlendMode)),    
         _GT(typeof(Texture)),
         _GT(typeof(RenderTexture)),
+        _GT(typeof(ParticleSystem)),
         
 
         //ngui
@@ -319,7 +320,7 @@ public static class LuaBinding
         sb.AppendLine("\t}");
         sb.AppendLine("}");
 
-        string file = Application.dataPath + "/Source/LuaWrap/Base/LuaBinder.cs";
+        string file = Application.dataPath + "/Source/Base/LuaBinder.cs";
 
         using (StreamWriter textWriter = new StreamWriter(file, false, Encoding.UTF8))
         {
@@ -342,7 +343,7 @@ public static class LuaBinding
         sb.AppendLine("\t}");
         sb.AppendLine("}");
 
-        string file = Application.dataPath + "/Source/LuaWrap/Base/LuaBinder.cs";
+        string file = Application.dataPath + "/Source/Base/LuaBinder.cs";
 
         using (StreamWriter textWriter = new StreamWriter(file, false, Encoding.UTF8))
         {
