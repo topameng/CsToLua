@@ -16,11 +16,18 @@ using UnityEngine.Rendering;
 public static class LuaBinding
 {
     static LuaBinding()
-    {
-        string[] files = Directory.GetFiles(Application.dataPath + "/Source/LuaWrap/");
+    {        
+        string dir = Application.dataPath + "/Source/LuaWrap/";
+
+        if (!Directory.Exists(dir))
+        {
+            Directory.CreateDirectory(dir);
+        }
+        
+        string[] files = Directory.GetFiles(dir);
 
         if (files.Length <= 0)
-        {
+        {            
             GenLuaDelegates();
             Binding();
             GenLuaBinder();
