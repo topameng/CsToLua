@@ -2332,6 +2332,36 @@ public static class ToLuaExport
 
     static void NewIndexSetValue(Type t, string o, string name)
     {
+        if (t.IsArray)
+        {
+            Type et = t.GetElementType();
+            string atstr = GetTypeStr(et);            
+
+            if (et == typeof(bool))
+            {                
+                sb.AppendFormat("\t\t{0}.{1} = LuaScriptMgr.GetArrayBool(L, 3);\r\n", o, name);
+            }
+            else if (et.IsPrimitive)
+            {                                
+                sb.AppendFormat("\t\t{0}.{1} = LuaScriptMgr.GetArrayNumber<{2}>(L, 3);\r\n", o, name, atstr);
+            }
+            else if (et == typeof(string))
+            {                                
+                sb.AppendFormat("\t\t{0}.{1} = LuaScriptMgr.GetArrayString(L, 3);\r\n", o, name);
+            }
+            else
+            {                
+                if (et == typeof(UnityEngine.Object))
+                {
+                    ambig |= ObjAmbig.U3dObj;
+                }
+
+                sb.AppendFormat("\t\t{0}.{1} = LuaScriptMgr.GetArrayObject<{2}>(L, 3);\r\n", o, name, atstr);
+            }
+            
+            return;
+        }
+
         if (t == typeof(bool))
         {
             sb.AppendFormat("\t\t{0}.{1} = LuaScriptMgr.GetBoolean(L, 3);\r\n", o, name);
