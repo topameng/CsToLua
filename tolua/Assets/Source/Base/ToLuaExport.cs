@@ -517,13 +517,13 @@ public static class ToLuaExport
                 sb.AppendFormat("\t\tLuaScriptMgr.RegisterLib(L, \"{0}\", regs);\r\n", libClassName);
             }
             else
-            {
-                sb.AppendFormat("\t\tLuaScriptMgr.RegisterLib(L, \"{0}\", typeof({0}), regs, fields, null);\r\n", libClassName);
+            {                
+                sb.AppendFormat("\t\tLuaScriptMgr.RegisterLib(L, \"{0}\", typeof({1}), regs, fields, null);\r\n", libClassName, className);
             }
         }
         else
         {
-            sb.AppendFormat("\t\tLuaScriptMgr.RegisterLib(L, \"{0}\", typeof({0}), regs, fields, typeof({1}));\r\n", libClassName, baseClassName);
+            sb.AppendFormat("\t\tLuaScriptMgr.RegisterLib(L, \"{0}\", typeof({1}), regs, fields, typeof({2}));\r\n", libClassName, className, baseClassName);
         }
 
         sb.AppendLine("\t}");
@@ -699,7 +699,7 @@ public static class ToLuaExport
             return;
         }
 
-        ConstructorInfo[] constructors = type.GetConstructors(BindingFlags.Instance | binding);;
+        ConstructorInfo[] constructors = type.GetConstructors(BindingFlags.Instance | binding);        
 
         if (extendType != null)
         {
@@ -720,10 +720,11 @@ public static class ToLuaExport
                         sb.AppendLine(strfun);
                         sb.AppendLine("\t}");
                         return;
-                    } 
+                    }
                 }
             }
         }        
+
 
         if (constructors.Length == 0)
         {
@@ -843,7 +844,6 @@ public static class ToLuaExport
         }
 
         sb.AppendLine("\t\t{");
-
         int rc = ProcessParams(md, 3, true, list.Count > 1);
         sb.AppendFormat("\t\t\treturn {0};\r\n", rc);
         sb.AppendLine("\t\t}");
@@ -1786,7 +1786,18 @@ public static class ToLuaExport
         string pureTypeName = typeName.Substring(0, typeName.IndexOf('`'));
         pureTypeName = _C(pureTypeName);
 
-        return pureTypeName + "<" + string.Join(",", GetGenericName(gArgs)) + ">";
+        if (typeName.Contains("+"))
+        {
+            int pos1 = typeName.IndexOf("+");
+            int pos2 = typeName.IndexOf("[");
+
+            string add = typeName.Substring(pos1 + 1, pos2 - pos1 - 1);
+            return pureTypeName + "<" + string.Join(",", GetGenericName(gArgs)) + ">." + add;            
+        }
+        else
+        {
+            return pureTypeName + "<" + string.Join(",", GetGenericName(gArgs)) + ">";
+        }
     }
 
     //获取类型名字
@@ -2335,22 +2346,22 @@ public static class ToLuaExport
         if (t.IsArray)
         {
             Type et = t.GetElementType();
-            string atstr = GetTypeStr(et);            
+            string atstr = GetTypeStr(et);
 
             if (et == typeof(bool))
-            {                
+            {
                 sb.AppendFormat("\t\t{0}.{1} = LuaScriptMgr.GetArrayBool(L, 3);\r\n", o, name);
             }
             else if (et.IsPrimitive)
-            {                                
+            {
                 sb.AppendFormat("\t\t{0}.{1} = LuaScriptMgr.GetArrayNumber<{2}>(L, 3);\r\n", o, name, atstr);
             }
             else if (et == typeof(string))
-            {                                
+            {
                 sb.AppendFormat("\t\t{0}.{1} = LuaScriptMgr.GetArrayString(L, 3);\r\n", o, name);
             }
             else
-            {                
+            {
                 if (et == typeof(UnityEngine.Object))
                 {
                     ambig |= ObjAmbig.U3dObj;
@@ -2358,7 +2369,7 @@ public static class ToLuaExport
 
                 sb.AppendFormat("\t\t{0}.{1} = LuaScriptMgr.GetArrayObject<{2}>(L, 3);\r\n", o, name, atstr);
             }
-            
+
             return;
         }
 
@@ -2679,11 +2690,31 @@ public static class ToLuaExport
         {
             Type t = list[i].type;
 
+            //if (t.Namespace != null && t.Namespace != string.Empty)
+            //{
+            //    usingList.Add(t.Namespace);
+            //}
+
             if (!typeof(System.Delegate).IsAssignableFrom(t))
             {
                 Debug.LogError(t.FullName + " not a delegate type");
                 return;
-            }       
+            }
+
+            //MethodInfo mi = t.GetMethod("Invoke");
+            //ParameterInfo[] pi = mi.GetParameters();
+            //int n = pi.Length;
+
+            //for (int j = 0; j < n; j++)
+            //{
+            //    ParameterInfo param = pi[j];
+            //    t = param.ParameterType;
+
+            //    if (!t.IsPrimitive && t.Namespace != null && t.Namespace != string.Empty)
+            //    {
+            //        usingList.Add(t.Namespace);                 
+            //    }
+            //}            
         }
 
 
@@ -2706,6 +2737,7 @@ public static class ToLuaExport
 
         sb.AppendLine("\t}\r\n");
 
+        sb.AppendLine("\t[NoToLuaAttribute]");
         sb.AppendLine("\tpublic static Delegate CreateDelegate(Type t, LuaFunction func)");
         sb.AppendLine("\t{");        
         sb.AppendLine("\t\tDelegateValue create = null;\r\n");
@@ -2735,7 +2767,7 @@ public static class ToLuaExport
         }
 
         sb.AppendLine("}");        
-        SaveFile(Application.dataPath + "/Source/LuaWrap/DelegateFactory.cs");
+        SaveFile(Application.dataPath + "/Source/Base/DelegateFactory.cs");
 
         Clear();
     }
@@ -2795,7 +2827,8 @@ public static class ToLuaExport
                 if (list2[i].Name.Contains("op_") || list2[i].Name.Contains("add_") || list2[i].Name.Contains("remove_"))
                 {
                     if (!IsNeedOp(list2[i].Name))
-                    {                        
+                    {
+                        //list2.RemoveAt(i);
                         continue;
                     }                    
                 }
