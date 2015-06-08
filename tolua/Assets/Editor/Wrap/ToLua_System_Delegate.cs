@@ -23,8 +23,7 @@ public class ToLua_System_Delegate
             Delegate arg1 = DelegateFactory.CreateDelegate(arg0.GetType(), func);
             Delegate o = Delegate.Combine(arg0, arg1);
             LuaScriptMgr.Push(L, o);
-            LuaScriptMgr.Push(L, arg1);
-            return 2;
+            return 1;
         }                        
     ";
 
