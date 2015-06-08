@@ -34,7 +34,7 @@ public class ToLua_System_Delegate
 		Delegate arg0 = (Delegate)LuaScriptMgr.GetNetObject(L, 1, typeof(Delegate));
 		Delegate arg1 = (Delegate)LuaScriptMgr.GetNetObject(L, 2, typeof(Delegate));
         Delegate o = Delegate.Remove(arg0, arg1);
-		LuaScriptMgr.PushObject(L, o);
+		LuaScriptMgr.Push(L, o);
 		return 1;
     ";
 
