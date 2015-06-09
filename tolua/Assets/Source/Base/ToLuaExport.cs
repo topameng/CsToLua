@@ -1791,8 +1791,15 @@ public static class ToLuaExport
             int pos1 = typeName.IndexOf("+");
             int pos2 = typeName.IndexOf("[");
 
-            string add = typeName.Substring(pos1 + 1, pos2 - pos1 - 1);
-            return pureTypeName + "<" + string.Join(",", GetGenericName(gArgs)) + ">." + add;            
+            if (pos2 > pos1)
+            {
+                string add = typeName.Substring(pos1 + 1, pos2 - pos1 - 1);
+                return pureTypeName + "<" + string.Join(",", GetGenericName(gArgs)) + ">." + add;
+            }
+            else
+            {
+                return pureTypeName + "<" + string.Join(",", GetGenericName(gArgs)) + ">";
+            }         
         }
         else
         {
