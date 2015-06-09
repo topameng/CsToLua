@@ -187,7 +187,7 @@ public class LuaScriptMgr
         _translator = lua.GetTranslator();
 
         LuaDLL.luaopen_pb(lua.L);               
-        LuaDLL.luaopen_pack(lua.L);
+        //LuaDLL.luaopen_pack(lua.L);
         LuaDLL.luaopen_ffi(lua.L);
         LuaDLL.tolua_openlibs(lua.L);
         //OpenXml();        
