@@ -45,9 +45,10 @@ public class Client : MonoBehaviour
         }
     }
 		
-	void OnGUI() 
+	void OnGUI()
     {
-	    if (GUI.Button(new Rect(10,10,120,50), "Test"))
+#pragma warning disable 219        
+        if (GUI.Button(new Rect(10, 10, 120, 50), "Test"))
         {            
             float time = Time.realtimeSinceStartup;
             Vector3 v = Vector3.one;
@@ -94,8 +95,7 @@ public class Client : MonoBehaviour
 
         if (GUI.Button(new Rect(10, 190, 120, 50), "Test4"))
         {
-            float time = Time.realtimeSinceStartup;
-            Vector3 v = Vector3.one;
+            float time = Time.realtimeSinceStartup;            
 
             for (int i = 0; i < 200000; i++)
             {
@@ -108,8 +108,7 @@ public class Client : MonoBehaviour
 
         if (GUI.Button(new Rect(10, 250, 120, 50), "Test5"))
         {
-            float time = Time.realtimeSinceStartup;
-            Vector3 v = Vector3.one;
+            float time = Time.realtimeSinceStartup;            
 
             for (int i = 0; i < 20000; i++)
             {
@@ -123,5 +122,6 @@ public class Client : MonoBehaviour
             Debug.Log("c# cost time: " + (Time.realtimeSinceStartup - time));
             luaMgr.CallLuaFunction("Test5", transform);
         }
-	}
+#pragma warning restore 219
+    }
 }

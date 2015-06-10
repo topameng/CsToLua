@@ -274,8 +274,8 @@ public class LuaScriptMgr
         delegateMetaRef = GetTypeMetaRef(typeof(System.Delegate));
         iterMetaRef = GetTypeMetaRef(typeof(IEnumerator));
 
-        LuaDLL.luaL_getmetatable(lua.L, "luaNet_array");
-        arrayMetaRef = LuaDLL.luaL_ref(lua.L, LuaIndexes.LUA_REGISTRYINDEX);
+        //LuaDLL.luaL_getmetatable(lua.L, "luaNet_array");
+        //arrayMetaRef = LuaDLL.luaL_ref(lua.L, LuaIndexes.LUA_REGISTRYINDEX);
 
         foreach (Type t in checkBaseType)
         {
@@ -297,6 +297,7 @@ public class LuaScriptMgr
         LuaDLL.lua_pushstring(L, "__newindex");
         LuaDLL.lua_pushstdcallcfunction(L, NewIndexArray);
         LuaDLL.lua_rawset(L, -3);
+        arrayMetaRef = LuaDLL.luaL_ref(lua.L, LuaIndexes.LUA_REGISTRYINDEX);
         LuaDLL.lua_settop(L, 0);
     }
 
@@ -374,6 +375,9 @@ public class LuaScriptMgr
 
     void OnBundleLoaded()
     {
+#if UNITY_EDITOR && !LUA_ZIP
+        DoFile("strict.lua");
+#endif
         DoFile("Golbal.lua");
         unpackVec3 = GetLuaReference("Vector3.Get");
         unpackVec2 = GetLuaReference("Vector2.Get");
@@ -398,12 +402,12 @@ public class LuaScriptMgr
 #endif                       
 
         DoFile("Main.lua");
-
-        CallLuaFunction("Main");
+        
         updateFunc = GetLuaFunction("Update");
         lateUpdateFunc = GetLuaFunction("LateUpdate");
         fixedUpdateFunc = GetLuaFunction("FixedUpdate");
         levelLoaded = GetLuaFunction("OnLevelWasLoaded");
+        CallLuaFunction("Main");
     }
 
     public void OnLevelLoaded(int level)
