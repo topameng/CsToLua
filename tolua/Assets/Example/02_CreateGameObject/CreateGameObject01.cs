@@ -6,9 +6,10 @@ public class CreateGameObject01 : MonoBehaviour {
 
     private string script = @"
             luanet.load_assembly('UnityEngine')
-            GameObject = luanet.import_type('UnityEngine.GameObject')            
+            GameObject = luanet.import_type('UnityEngine.GameObject')        
+	    ParticleSystem = luanet.import_type('UnityEngine.ParticleSystem')            
             local newGameObj = GameObject('NewObj')
-            newGameObj:AddComponent('ParticleSystem')
+            newGameObj:AddComponent(luanet.ctype(ParticleSystem))
         ";
 
 	//反射调用
