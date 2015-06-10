@@ -9,14 +9,14 @@ public class ToLua_UnityEngine_Object
 
 		if (count == 1)
 		{
-			Object arg0 = (Object)LuaScriptMgr.GetUnityObject(L, 1, typeof(Object));
+			Object arg0 = (Object)LuaScriptMgr.GetLuaObject(L, 1);
             LuaScriptMgr.__gc(L);
 			Object.Destroy(arg0);
 			return 0;
 		}
 		else if (count == 2)
 		{
-			Object arg0 = (Object)LuaScriptMgr.GetUnityObject(L, 1, typeof(Object));
+			Object arg0 = (Object)LuaScriptMgr.GetLuaObject(L, 1);
 			float arg1 = (float)LuaScriptMgr.GetNumber(L, 2);
             LuaScriptMgr.__gc(L);
 			Object.Destroy(arg0,arg1);
@@ -35,14 +35,14 @@ public class ToLua_UnityEngine_Object
 
 		if (count == 1)
 		{
-			Object arg0 = (Object)LuaScriptMgr.GetUnityObject(L, 1, typeof(Object));
+			Object arg0 = (Object)LuaScriptMgr.GetLuaObject(L, 1);
             LuaScriptMgr.__gc(L);
 			Object.DestroyImmediate(arg0);
 			return 0;
 		}
 		else if (count == 2)
 		{
-			Object arg0 = (Object)LuaScriptMgr.GetUnityObject(L, 1, typeof(Object));
+			Object arg0 = (Object)LuaScriptMgr.GetLuaObject(L, 1);
 			bool arg1 = LuaScriptMgr.GetBoolean(L, 2);
             LuaScriptMgr.__gc(L);
 			Object.DestroyImmediate(arg0,arg1);
@@ -62,14 +62,14 @@ public class ToLua_UnityEngine_Object
 
 		if (count == 1)
 		{
-			Object arg0 = (Object)LuaScriptMgr.GetUnityObject(L, 1, typeof(Object));
+			Object arg0 = (Object)LuaScriptMgr.GetLuaObject(L, 1);
             LuaScriptMgr.__gc(L);
 			Object.DestroyObject(arg0);
 			return 0;
 		}
 		else if (count == 2)
 		{
-			Object arg0 = (Object)LuaScriptMgr.GetUnityObject(L, 1, typeof(Object));
+			Object arg0 = (Object)LuaScriptMgr.GetLuaObject(L, 1);
 			float arg1 = (float)LuaScriptMgr.GetNumber(L, 2);
             LuaScriptMgr.__gc(L);
 			Object.DestroyObject(arg0,arg1);
