@@ -2,12 +2,11 @@
 using System.Collections;
 using LuaInterface;
 
-public class AccessingLuaVariables02 : MonoBehaviour {
-
-    private string script = @"
-            luanet.load_assembly('UnityEngine')
-            GameObject = luanet.import_type('UnityEngine.GameObject')
-
+public class AccessingLuaVariables02 : MonoBehaviour 
+{
+    //cstolua要求必须要先定义变量才能使用
+    private string var = @"Objs2Spawn = 0";
+    private string script = @"            
             particles = {}
 
             for i = 1, Objs2Spawn, 1 do
@@ -24,8 +23,10 @@ public class AccessingLuaVariables02 : MonoBehaviour {
 	// Use this for initialization
 	void Start () {        
         LuaScriptMgr mgr = new LuaScriptMgr();
+        mgr.Start();
         // Assign to global scope variables as if they're keys in a dictionary (they are really)
         LuaState l = mgr.lua;
+        l.DoString(var);
         l["Objs2Spawn"] = 5;
         l.DoString(script);
 
