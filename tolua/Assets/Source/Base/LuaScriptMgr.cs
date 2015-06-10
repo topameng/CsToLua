@@ -269,6 +269,14 @@ public class LuaScriptMgr
         BindArray(L);
         LuaBinder.Bind(L);
 
+        enumMetaRef = GetTypeMetaRef(typeof(System.Enum));
+        typeMetaRef = GetTypeMetaRef(typeof(System.Type));
+        delegateMetaRef = GetTypeMetaRef(typeof(System.Delegate));
+        iterMetaRef = GetTypeMetaRef(typeof(IEnumerator));
+
+        LuaDLL.luaL_getmetatable(lua.L, "luaNet_array");
+        arrayMetaRef = LuaDLL.luaL_ref(lua.L, LuaIndexes.LUA_REGISTRYINDEX);
+
         foreach (Type t in checkBaseType)
         {
             Debugger.LogWarning("BaseType {0} not register to lua", t.FullName);
@@ -388,13 +396,6 @@ public class LuaScriptMgr
 #if !MULTI_STATE
         traceback = GetLuaFunction("traceback");
 #endif                       
-        enumMetaRef = GetTypeMetaRef(typeof(System.Enum));
-        typeMetaRef = GetTypeMetaRef(typeof(System.Type));
-        delegateMetaRef = GetTypeMetaRef(typeof(System.Delegate));
-        iterMetaRef = GetTypeMetaRef(typeof(IEnumerator));
-
-        LuaDLL.luaL_getmetatable(lua.L, "luaNet_array");
-        arrayMetaRef = LuaDLL.luaL_ref(lua.L, LuaIndexes.LUA_REGISTRYINDEX);
 
         DoFile("Main.lua");
 
@@ -2611,8 +2612,8 @@ public class LuaScriptMgr
 
     public static void Push(IntPtr L, Color clr)
     {
-        LuaScriptMgr luaMgr = GetMgrFromLuaState(L);
-        LuaDLL.tolua_pushfloat4(L, luaMgr.packColor, clr.r, clr.g, clr.b, clr.a);     
+        LuaScriptMgr luaMgr = GetMgrFromLuaState(L);               
+        LuaDLL.tolua_pushfloat4(L, luaMgr.packColor, clr.r, clr.g, clr.b, clr.a);
     }
 
     public static void Push(IntPtr L, Touch touch)

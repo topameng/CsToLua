@@ -57,7 +57,7 @@ function printf(format, ...)
 end
 
 
-require "strict"
+--require "strict"  -- luajit2.0.4 编码后有问题
 --require "memory"
 require "class"
 require "Math"
