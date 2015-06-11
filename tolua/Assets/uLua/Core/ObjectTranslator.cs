@@ -64,14 +64,6 @@ namespace LuaInterface
 
         public static ObjectTranslator FromState(IntPtr luaState)
         {
-            //LuaDLL.lua_getglobal(luaState, "_translator");
-            //IntPtr thisptr = LuaDLL.lua_touserdata(luaState, -1);
-
-            //GCHandle handle = GCHandle.FromIntPtr(thisptr);
-            //ObjectTranslator translator = (ObjectTranslator)handle.Target;
-            //LuaDLL.lua_pop(luaState, 1);
-            //return translator;
-
             LuaDLL.lua_getglobal(luaState, "_translator");
             int pos = (int)LuaDLL.lua_tonumber(luaState, -1);
             LuaDLL.lua_pop(luaState, 1);
