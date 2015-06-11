@@ -1,4 +1,4 @@
-namespace LuaInterface
+ï»¿namespace LuaInterface
 {
     using System;
     using System.IO;
@@ -16,7 +16,7 @@ namespace LuaInterface
      */
     public class ObjectTranslator
     {
-        //fix ÄäÃûÎ¯ÍĞ equals ÅĞ¶Ï³ö´íbug, by topameng
+        //fix åŒ¿åå§”æ‰˜ equals åˆ¤æ–­å‡ºé”™bug, by topameng
         private class CompareObject : IEqualityComparer<object>
         {
             public new bool Equals(object x, object y)

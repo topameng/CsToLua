@@ -1,4 +1,4 @@
-namespace LuaInterface
+Ôªønamespace LuaInterface
 {
 	using System;
 	using System.Runtime.InteropServices;
@@ -230,9 +230,10 @@ namespace LuaInterface
 		}
 		public static void lua_setglobal(IntPtr luaState, string name)
 		{
-			LuaDLL.lua_pushstring(luaState,name);
-			LuaDLL.lua_insert(luaState,-2);
-			LuaDLL.lua_settable(luaState,LuaIndexes.LUA_GLOBALSINDEX);
+			//LuaDLL.lua_pushstring(luaState,name);
+			//LuaDLL.lua_insert(luaState,-2);
+			//LuaDLL.lua_settable(luaState,LuaIndexes.LUA_GLOBALSINDEX);
+            LuaDLL.lua_setfield(luaState, LuaIndexes.LUA_GLOBALSINDEX, name);
 		}
         public static void lua_rawglobal(IntPtr luaState, string name)
         {
@@ -354,7 +355,7 @@ namespace LuaInterface
 			{
                 string ss = Marshal.PtrToStringAnsi(str, strlen);
 
-                //µ±¥”c¥´≥ˆ÷–Œƒ ±ª·◊™ªª ß∞‹£¨ topameng
+                //ÂΩì‰ªéc‰º†Âá∫‰∏≠ÊñáÊó∂‰ºöËΩ¨Êç¢Â§±Ë¥•Ôºå topameng
                 if (ss == null)
                 {
                     return AnsiToUnicode(str, strlen);

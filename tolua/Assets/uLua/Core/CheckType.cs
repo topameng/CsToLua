@@ -1,4 +1,4 @@
-#define __NOGEN__
+ï»¿#define __NOGEN__
 
 using System;
 using System.Collections.Generic;
@@ -216,7 +216,7 @@ namespace LuaInterface
             }
             else
             {
-                //object obj = translator.getNetObject(luaState, stackPos);  //topameng ĞŞ¸ÄÕâÀïÊ¹Ö§³Ö×¢²áµ½c#µÄluaÀà
+                //object obj = translator.getNetObject(luaState, stackPos);  //topameng ä¿®æ”¹è¿™é‡Œä½¿æ”¯æŒæ³¨å†Œåˆ°c#çš„luaç±»
                 object obj = translator.getRawNetObject(luaState, stackPos);
                 if (obj != null && paramType.IsAssignableFrom(obj.GetType()))
                     return extractNetObject;
@@ -359,7 +359,7 @@ namespace LuaInterface
 
         public object getAsNetObject(IntPtr luaState,int stackPos)
         {
-            //object obj=translator.getNetObject(luaState,stackPos);    //Í¬ÉÏ topameng
+            //object obj=translator.getNetObject(luaState,stackPos);    //åŒä¸Š topameng
             object obj = translator.getRawNetObject(luaState, stackPos);
             if(obj==null && LuaDLL.lua_type(luaState,stackPos)==LuaTypes.LUA_TTABLE)
             {
