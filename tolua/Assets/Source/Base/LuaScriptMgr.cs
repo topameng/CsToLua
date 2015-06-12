@@ -1412,7 +1412,7 @@ public class LuaScriptMgr
             {
                 GetTranslator(L).pushFunction(L, (LuaCSFunction)o);
             }
-            else if (t == typeof(Type))
+            else if (t == monoType)
             {
                 Push(L, (Type)o);
             }
