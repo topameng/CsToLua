@@ -22,6 +22,8 @@ public class LuaProtoBuffer01 : MonoBehaviour
         end
         ";
 
+    //实际应用如Socket.Send(LuaStringBuffer lsb)函数（功能发送lsb.buffer） , 在lua中调用Socket.Send(pb_data)
+    //读取协议 Socket.PeekMsgPacket() {return MsgPacket}; lua 中，取协议字节流 MsgPacket.data
     void Start()
     {
         LuaScriptMgr mgr = new LuaScriptMgr();
