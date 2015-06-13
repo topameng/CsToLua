@@ -375,9 +375,9 @@ public class LuaScriptMgr
 
     void OnBundleLoaded()
     {
-#if UNITY_EDITOR && !LUA_ZIP
-        DoFile("strict.lua");
-#endif
+//#if UNITY_EDITOR && !LUA_ZIP
+//        DoFile("strict.lua");
+//#endif
         DoFile("Golbal.lua");
         unpackVec3 = GetLuaReference("Vector3.Get");
         unpackVec2 = GetLuaReference("Vector2.Get");
@@ -1369,6 +1369,10 @@ public class LuaScriptMgr
             {
                 PushArray(L, (System.Array)o);
             }
+            else if (t == typeof(LuaCSFunction))
+            {
+                GetTranslator(L).pushFunction(L, (LuaCSFunction)o);
+            }
             else if (t.IsSubclassOf(typeof(Delegate)))
             {
                 Push(L, (Delegate)o);
@@ -1407,10 +1411,6 @@ public class LuaScriptMgr
             else if (t == typeof(LuaFunction))
             {
                 ((LuaFunction)o).push(L);
-            }
-            else if (t == typeof(LuaCSFunction))
-            {
-                GetTranslator(L).pushFunction(L, (LuaCSFunction)o);
             }
             else if (t == monoType)
             {
