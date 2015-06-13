@@ -1,4 +1,4 @@
-﻿--------------------------------------------------------------------------------
+--------------------------------------------------------------------------------
 --      Copyright (c) 2015 , 蒙占志(topameng) topameng@gmail.com
 --      All rights reserved.
 --
@@ -229,11 +229,11 @@ function Vector3.MoveTowards(current, target, maxDistanceDelta)
 			delta:Add(current)
 			return delta
 		else
-			return current
+			return current:Clone()
 		end
     end
 	
-    return target
+    return target:Clone()
 end
 
 function ClampedMove(lhs, rhs, clampedDelta)
