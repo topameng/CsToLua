@@ -5,7 +5,7 @@ using LuaInterface;
 
 public class LuaDelegate01 : MonoBehaviour
 {
-    private string script = 
+    private string script =
     @"                  
             function DoClick1(go)
                 print('click1 on ', go.name)
@@ -17,15 +17,14 @@ public class LuaDelegate01 : MonoBehaviour
             
             local click2 = nil
 
-            function AddDelegate(delegate)                     
-                delegate = delegate + DoClick1
+            function AddDelegate(listener)                     
+                listener.OnClick = DoClick1
                 click2 = DelegateFactory.Action_GameObject(DoClick2)                
-                delegate = delegate + click2     
-                return delegate                     
+                listener.OnClick = listener.OnClick + click2                                    
             end
 
-            function RemoveDelegate(delegate)
-                delegate = delegate - click2       
+            function RemoveDelegate(listener)                
+                listener.OnClick = listener.OnClick - click2       
                 return delegate         
             end
     ";
@@ -34,21 +33,20 @@ public class LuaDelegate01 : MonoBehaviour
     void Start()
     {
         LuaScriptMgr mgr = new LuaScriptMgr();
-        mgr.Start();                
+        mgr.Start();
+        TestEventListenerWrap.Register(mgr.GetL());
         mgr.DoString(script);
+        GameObject go = new GameObject("TestGo");
+        TestEventListener listener = (TestEventListener)go.AddComponent(typeof(TestEventListener));         
 
         LuaFunction func = mgr.GetLuaFunction("AddDelegate");
-        Action<GameObject> ActionGo = delegate { };
-        object[] objs = func.Call(ActionGo);
-        ActionGo = (Action<GameObject>)objs[0];
-        GameObject go = new GameObject("TestGo");
-        ActionGo(go);
-        Debug.Log("---------------------------------------------------------------------");        
-        LuaFunction func1 = mgr.GetLuaFunction("RemoveDelegate");
-        objs = func1.Call(ActionGo);
-        ActionGo = (Action<GameObject>)objs[0];
-        ActionGo(go);
+        object[] objs = func.Call(listener);                
+        listener.OnClick(go);
         func.Release();
-        func1.Release();
+        Debug.Log("---------------------------------------------------------------------");        
+        func = mgr.GetLuaFunction("RemoveDelegate");
+        func.Call(listener);
+        listener.OnClick(go);
+        func.Release();        
     }
 }
