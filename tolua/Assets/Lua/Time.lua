@@ -1,4 +1,4 @@
-﻿local beginTime = os.clock()
+local beginTime = os.clock()
 local unscaledTime = tolua.gettime()
 
 Time = 

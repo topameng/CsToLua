@@ -1,4 +1,4 @@
-﻿--
+--
 -- strict.lua
 -- checks uses of undeclared global variables
 -- All global variables must be 'declared' through a regular assignment

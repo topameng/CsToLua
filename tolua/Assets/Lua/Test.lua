@@ -1,4 +1,4 @@
-﻿--按namespace区分类型定义
+--按namespace区分类型定义
 require "Golbal"
 
 --测试极端条件性能

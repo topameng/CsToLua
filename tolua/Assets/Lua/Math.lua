@@ -1,4 +1,4 @@
-﻿local floor = math.floor
+local floor = math.floor
 local abs = math.abs
 
 function math.round(num)

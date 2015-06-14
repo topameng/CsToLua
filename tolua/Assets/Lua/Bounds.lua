@@ -1,4 +1,4 @@
-﻿local zero = Vector3.zero
+local zero = Vector3.zero
 
 Bounds = 
 {

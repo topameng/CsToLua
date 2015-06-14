@@ -1,4 +1,4 @@
-﻿Color = 
+Color = 
 {
 	r = 0,
 	g = 0,
