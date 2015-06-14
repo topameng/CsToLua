@@ -40,7 +40,7 @@ public class LuaDelegate01 : MonoBehaviour
         TestEventListener listener = (TestEventListener)go.AddComponent(typeof(TestEventListener));         
 
         LuaFunction func = mgr.GetLuaFunction("AddDelegate");
-        object[] objs = func.Call(listener);                
+        func.Call(listener);                
         listener.OnClick(go);
         func.Release();
         Debug.Log("---------------------------------------------------------------------");        
