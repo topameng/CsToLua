@@ -172,17 +172,10 @@ public static class LuaBinding
         
         //custom    
         _GT(typeof(Debugger)),
+        _GT(typeof(DelegateFactory)),
         //_GT(typeof(SocketClient)),        
-        //_GT(typeof(UIBase)),        
-        //_GT(typeof(LuaHelper)),                           
-        //_GT(typeof(UnGfx)),                                                            
-        //_GT(typeof(UIProxy)),
-        //_GT(typeof(SkinnedMeshBaker)),       
-        //_GT(typeof(AssetFileMgr.AssetFile)).SetWrapName("AssetFile"),      
-                 
-        //_GT(typeof(Pathfinding.Path)),
-        //_GT(typeof(Pathfinding.ABPath)),
-        //_GT(typeof(Seeker)),        
+        //_GT(typeof(UIBase)),                                   
+        //_GT(typeof(UnGfx)),                                                                                             
                                                                               
         
         //unity                        
@@ -267,11 +260,7 @@ public static class LuaBinding
         _GT(typeof(TweenPosition)),
         _GT(typeof(TweenScale)),
         _GT(typeof(UICenterOnChild)),    
-        _GT(typeof(UIAtlas)),*/ 
-   
-        //_GT(typeof(LeanTween)),
-        //_GT(typeof(LTDescr)),
-        
+        _GT(typeof(UIAtlas)),*/         
     };
 
 

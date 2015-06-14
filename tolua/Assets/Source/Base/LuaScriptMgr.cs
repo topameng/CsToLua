@@ -267,6 +267,7 @@ public class LuaScriptMgr
     {
         IntPtr L = lua.L;
         BindArray(L);
+        DelegateFactory.Register(L);
         LuaBinder.Bind(L);
 
         enumMetaRef = GetTypeMetaRef(typeof(System.Enum));
