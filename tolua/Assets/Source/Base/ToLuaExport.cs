@@ -1662,7 +1662,7 @@ public static class ToLuaExport
             if (paramInfos.Length > 1)
             {                
                 string strParams = GenParamTypes(paramInfos, md.IsStatic);                
-                sb.AppendFormat("\t\tif (LuaScriptMgr.CheckTypes(L, {0}, {1}) && LuaScriptMgr.CheckParamsType(L, typeof({2}), {3}, {4}))\r\n", beginPos, strParams, str, paramInfos.Length + offset, GetCountStr(paramInfos.Length + offset - 1));
+                sb.AppendFormat("\t\tif (LuaScriptMgr.CheckTypes(L, 1, {1}) && LuaScriptMgr.CheckParamsType(L, typeof({2}), {3}, {4}))\r\n", beginPos, strParams, str, paramInfos.Length + offset, GetCountStr(paramInfos.Length + offset - 1));
             }
             else
             {
@@ -1684,7 +1684,7 @@ public static class ToLuaExport
                 if (paramInfos.Length > 0)
                 {
                     string strParams = GenParamTypes(paramInfos, md.IsStatic);
-                    sb.AppendFormat("\t\tif (count == {0} && LuaScriptMgr.CheckTypes(L, {1}, {2}))\r\n", paramInfos.Length + offset, beginPos, strParams);
+                    sb.AppendFormat("\t\tif (count == {0} && LuaScriptMgr.CheckTypes(L, 1, {2}))\r\n", paramInfos.Length + offset, beginPos, strParams);
                 }
                 else
                 {
@@ -1715,7 +1715,7 @@ public static class ToLuaExport
                 if (countList.Contains(list[i]))
                 {                                    
                     string strParams = GenParamTypes(paramInfos, md.IsStatic);
-                    sb.AppendFormat("\t\telse if (count == {0} && LuaScriptMgr.CheckTypes(L, {1}, {2}))\r\n", paramInfos.Length + offset, beginPos, strParams);
+                    sb.AppendFormat("\t\telse if (count == {0} && LuaScriptMgr.CheckTypes(L, 1, {2}))\r\n", paramInfos.Length + offset, beginPos, strParams);
                 }
                 else
                 {
@@ -1733,7 +1733,7 @@ public static class ToLuaExport
                 if (paramInfos.Length > 1)
                 {                    
                     string strParams = GenParamTypes(paramInfos, md.IsStatic);
-                    sb.AppendFormat("\t\telse if (LuaScriptMgr.CheckTypes(L, {0}, {1}) && LuaScriptMgr.CheckParamsType(L, typeof({2}), {3}, {4}))\r\n", beginPos, strParams, str, paramInfos.Length + offset, GetCountStr(paramInfos.Length + offset - 1));
+                    sb.AppendFormat("\t\telse if (LuaScriptMgr.CheckTypes(L, 1, {1}) && LuaScriptMgr.CheckParamsType(L, typeof({2}), {3}, {4}))\r\n", beginPos, strParams, str, paramInfos.Length + offset, GetCountStr(paramInfos.Length + offset - 1));
                 }
                 else
                 {
@@ -2004,16 +2004,15 @@ public static class ToLuaExport
     }
 
     //生成 CheckTypes() 里面的参数列表
-    static string GenParamTypes(ParameterInfo[] p, bool isStatic)
-    //static string GenParamTypes(ParameterInfo[] p)
+    static string GenParamTypes(ParameterInfo[] p, bool isStatic)    
     {
         StringBuilder sb = new StringBuilder();
         List<Type> list = new List<Type>();
 
-        //if (!isStatic)
-        //{
-        //    list.Add(type);
-        //}
+        if (!isStatic)
+        {
+            list.Add(type);
+        }
 
         for (int i = 0; i < p.Length; i++)
         {
