@@ -1,10 +1,12 @@
-﻿使用luac虚拟机的同学需要注意：使用cstolua 时候需要自己手动更改部分Event.lua脚本。luajit vm的xpcall不同于luac vm
+﻿1. 使用luac虚拟机的同学需要注意：使用cstolua 时候需要自己手动更改部分Event.lua脚本。luajit vm的xpcall不同于luac vm
 		if nil == self.obj then
 			flag, msg = xpcall(self.func, traceback, ...)						
 		else		
 			flag, msg = xpcall(self.func, traceback, self.obj, ...)		
 		end
 使用注释掉的代码替换上面几行
+
+2. 在打开工程后会自动生成一些wrap文件。
 
 2015.6.11 1.9.8
 修复泛型类导出时Enumerator问题
