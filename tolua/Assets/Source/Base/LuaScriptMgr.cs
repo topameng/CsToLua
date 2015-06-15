@@ -263,6 +263,26 @@ public class LuaScriptMgr
     //    LuaDLL.lua_settop(L, 0);
     //}    
 
+    void InitLayers(IntPtr L)
+    {
+        LuaTable layers = GetLuaTable("Layer");        
+        layers.push(L);
+
+        for (int i = 0; i < 32; i++)
+        {
+            string str = LayerMask.LayerToName(i);
+
+            if (str != string.Empty)
+            {
+                LuaDLL.lua_pushstring(L, str);
+                Push(L, i);
+                LuaDLL.lua_rawset(L, -3);
+            }
+        }
+
+        LuaDLL.lua_settop(L, 0);
+    }
+
     void Bind()
     {
         IntPtr L = lua.L;
@@ -380,6 +400,8 @@ public class LuaScriptMgr
 //        DoFile("strict.lua");
 //#endif
         DoFile("Golbal.lua");
+        InitLayers(lua.L);
+
         unpackVec3 = GetLuaReference("Vector3.Get");
         unpackVec2 = GetLuaReference("Vector2.Get");
         unpackVec4 = GetLuaReference("Vector4.Get");

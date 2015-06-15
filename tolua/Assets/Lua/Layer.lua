@@ -1,18 +1,12 @@
 
-local Layer = 
+Layer = 
 {
 	Default			= 0,
 	TransparentFX 	= 1,
-	Ignore_Raycast 	= 2,
+	Ignore Raycast 	= 2,
 	
 	Water 		= 4,
 	UI 			= 5,
-	
-	Player 		= 8,	
-	Monster 	= 9,
-	Ground		= 10,
-	Obstacle	= 11,	
-	Dead		= 12,
 }
 
 LayerMask = 
@@ -27,10 +21,9 @@ LayerMask.__call = function(t,v)
 end
 
 function LayerMask.New(value)
-	local layer = {}
-	setmetatable(layer, LayerMask)
-	value = value and value or 0
-	layer.value = value
+	local layer = {value = 0}
+	layer.value = value and value or 0
+	setmetatable(layer, LayerMask)	
 	return layer
 end
 
