@@ -399,7 +399,7 @@ public class LuaScriptMgr
 //#if UNITY_EDITOR && !LUA_ZIP
 //        DoFile("strict.lua");
 //#endif
-        DoFile("Golbal.lua");
+        DoFile("Global.lua");
         InitLayers(lua.L);
 
         unpackVec3 = GetLuaReference("Vector3.Get");

@@ -1,12 +1,12 @@
 
 Layer = 
 {
-	Default			= 0,
-	TransparentFX 	= 1,
-	Ignore Raycast 	= 2,
+	["Default"]			= 0,
+	["TransparentFX"] 	= 1,
+	["Ignore Raycast"] 	= 2,
 	
-	Water 		= 4,
-	UI 			= 5,
+	["Water"] 			= 4,
+	["UI"] 				= 5,
 }
 
 LayerMask = 
