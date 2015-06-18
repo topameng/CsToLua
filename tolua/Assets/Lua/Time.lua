@@ -42,7 +42,7 @@ function Time:SetFixedDelta(time)
 	self.deltaTime = time
 end
 
-function Time.SetTimeScale(scale)
-	Time.timeScale	= scale
+function Time:SetTimeScale(scale)
+	self.timeScale = scale
 	UnityEngine.Time.timeScale = scale
 end
