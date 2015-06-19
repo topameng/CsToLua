@@ -9,7 +9,7 @@ public class ScriptsFromFile_02 : MonoBehaviour
     {
         //只是展示如何加载文件。不是推荐这么做
         LuaState l = new LuaState();
-        string path = Application.dataPath + "/Example/04_ScriptsFromFile/ScriptsFromFile02.lua";        
+        string path = Application.dataPath + "/uLua/Example/04_ScriptsFromFile/ScriptsFromFile02.lua";        
         l.DoFile(path);
     }
 
