@@ -264,7 +264,7 @@ public static class LuaBinding
     };
 
 
-    [MenuItem("Lua/Gen Lua Wrap Files", false, 11)]
+    [MenuItem("Lua/Gen Lua Wrap Files", false, 1)]
     public static void Binding()
     {
         if (!Application.isPlaying)
@@ -306,7 +306,7 @@ public static class LuaBinding
         AssetDatabase.Refresh();        
     }
 
-    [MenuItem("Lua/Gen LuaBinder File", false, 12)]
+    [MenuItem("Lua/Gen LuaBinder File", false, 3)]
     static void GenLuaBinder()
     {
         StringBuilder sb = new StringBuilder();
@@ -370,7 +370,7 @@ public static class LuaBinding
         return new DelegateType(t);
     }
 
-    [MenuItem("Lua/Gen Lua Delegates", false, 14)]
+    [MenuItem("Lua/Gen Lua Delegates", false, 2)]
     static void GenLuaDelegates()
     {
         ToLuaExport.Clear();
@@ -386,6 +386,94 @@ public static class LuaBinding
         ToLuaExport.GenDelegates(list);
 
         Debug.Log("Create lua delegate over");
+    }
+
+    static void CopyLuaToOut(string dir)
+    {
+        string[] files = Directory.GetFiles(Application.dataPath + "/Lua/" + dir, "*.lua", SearchOption.TopDirectoryOnly);
+        string outDir = Application.dataPath + "/Lua/Out/" + dir + "/";
+
+        if (!File.Exists(outDir))
+        {
+            Directory.CreateDirectory(outDir);
+        }
+
+        for (int i = 0; i < files.Length; i++)
+        {
+            string fname = Path.GetFileName(files[i]);
+            FileUtil.CopyFileOrDirectory(files[i], outDir + fname + ".bytes");
+        }
+    }
+
+    static string GetOS()
+    {
+#if UNITY_STANDALONE
+        return "Win";
+#elif UNITY_ANDROID
+        return "Android";
+#elif UNITY_IPHONE
+        return "IOS";
+#endif
+
+    }
+
+    static void CreateDir(string dir)
+    {        
+        if (!Directory.Exists(dir))
+        {
+            Directory.CreateDirectory(dir);
+        }
+    }
+
+    static void BuildLuaBundle(string dir)
+    {
+        BuildAssetBundleOptions options = BuildAssetBundleOptions.CollectDependencies | BuildAssetBundleOptions.CompleteAssets | BuildAssetBundleOptions.DeterministicAssetBundle;
+
+        string[] files = Directory.GetFiles("Assets/Lua/Out/" + dir, "*.lua.bytes");
+        List<Object> list = new List<Object>();
+        string bundleName = dir == null ? "Lua.unity3d" : "Lua_" + dir + ".unity3d";
+
+        CreateDir(Application.dataPath + "/Bundle/");
+        CreateDir(string.Format("{0}/{1}/", Application.persistentDataPath, GetOS()));
+
+        for (int i = 0; i < files.Length; i++)
+        {
+            Object obj = AssetDatabase.LoadMainAssetAtPath(files[i]);
+            list.Add(obj);
+        }
+
+        if (files.Length > 0)
+        {            
+            string output = string.Format("{0}/Bundle/" + bundleName, Application.dataPath);
+            BuildPipeline.BuildAssetBundle(null, list.ToArray(), output, options, EditorUserBuildSettings.activeBuildTarget);
+            string output1 = string.Format("{0}/{1}/" + bundleName, Application.persistentDataPath, GetOS());
+            File.Delete(output1);
+            File.Copy(output, output1);
+            AssetDatabase.Refresh();
+        }
+    }
+
+    [MenuItem("Lua/Build Lua without jit", false, 4)]
+    public static void BuildLuaNoJit()
+    {        
+        string dir = Application.dataPath + "/Lua/Out/";
+
+        if (!Directory.Exists(dir))
+        {
+            Directory.CreateDirectory(dir);
+        }
+
+        string[] files = Directory.GetFiles(dir, "*.lua.bytes", SearchOption.AllDirectories);
+
+        for (int i = 0; i < files.Length; i++)
+        {
+            FileUtil.DeleteFileOrDirectory(files[i]);
+        }
+
+        CopyLuaToOut(null);
+        AssetDatabase.Refresh();
+        BuildLuaBundle(null);
+        UnityEngine.Debug.Log("编译lua without jit结束");
     }
 
     [MenuItem("Lua/Gen u3d Wrap Files", false, 15)]
