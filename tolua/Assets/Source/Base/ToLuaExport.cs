@@ -93,6 +93,8 @@ public static class ToLuaExport
     public static string extendName = "";
     public static Type extendType = null;
 
+    public static HashSet<Type> eventSet = new HashSet<Type>();
+
     public static List<string> memberFilter = new List<string>
     {
         "AnimationClip.averageDuration",
@@ -149,7 +151,7 @@ public static class ToLuaExport
         propList.Clear();
         ambig = ObjAmbig.NetObj;
         wrapClassName = "";
-        libClassName = "";
+        libClassName = "";        
     }
 
     private static MetaOp GetOp(string name)
@@ -1160,9 +1162,9 @@ public static class ToLuaExport
             else if (param.ParameterType.IsSubclassOf(typeof(System.MulticastDelegate)))
             {
                 sb.AppendFormat("{0}{1} {2} = null;\r\n", head, str, arg);
-                sb.AppendFormat("{0}LuaTypes type = LuaDLL.lua_type(L, {1});\r\n", head, j + offset);
+                sb.AppendFormat("{0}LuaTypes funcType{1} = LuaDLL.lua_type(L, {1});\r\n", head, j);
                 sb.AppendLine();
-                sb.AppendLine(head + "if (type != LuaTypes.LUA_TFUNCTION)");
+                sb.AppendFormat("{0}if (funcType{1} != LuaTypes.LUA_TFUNCTION)\r\n", head, j);
                 sb.AppendLine(head + "{");
                 
                 if (beCheckTypes)
@@ -1179,7 +1181,7 @@ public static class ToLuaExport
                 sb.AppendFormat("{0}\t{1} = ", head, arg);
 
                 GenDelegateBody(param.ParameterType, head + "\t", true);
-                sb.AppendLine(head + "}\r\n");
+                sb.AppendLine(head + "}\r\n");                
             }
             else if (param.ParameterType == typeof(LuaTable))
             {
@@ -2312,6 +2314,7 @@ public static class ToLuaExport
 
     static void GenDelegateBody(Type t, string head, bool haveState)
     {
+        eventSet.Add(t);
         MethodInfo mi = t.GetMethod("Invoke");
         ParameterInfo[] pi = mi.GetParameters();            
         int n = pi.Length;
@@ -2334,11 +2337,11 @@ public static class ToLuaExport
             return;
         }
 
-        sb.AppendFormat("(arg0");
+        sb.AppendFormat("(param0");
 
         for (int i = 1; i < n; i++)
         {
-            sb.AppendFormat(", arg{0}", i);
+            sb.AppendFormat(", param{0}", i);
         }
 
         sb.AppendFormat(") =>\r\n{0}{{\r\n{0}", head);
@@ -2352,7 +2355,7 @@ public static class ToLuaExport
         for (int i = 0; i < n; i++)
         {
             string push = GetPushFunction(pi[i].ParameterType);
-            sb.AppendFormat("{2}\tLuaScriptMgr.{0}(L, arg{1});\r\n", push, i, head);
+            sb.AppendFormat("{2}\tLuaScriptMgr.{0}(L, param{1});\r\n", push, i, head);
         }
         sb.AppendFormat("{1}\tfunc.PCall(top, {0});\r\n", n, head);
 
@@ -2469,8 +2472,8 @@ public static class ToLuaExport
         }
         else if (typeof(System.Delegate).IsAssignableFrom(t))
         {
-            sb.AppendLine("\t\tLuaTypes type = LuaDLL.lua_type(L, 3);\r\n");
-            sb.AppendLine("\t\tif (type != LuaTypes.LUA_TFUNCTION)");
+            sb.AppendLine("\t\tLuaTypes funcType = LuaDLL.lua_type(L, 3);\r\n");
+            sb.AppendLine("\t\tif (funcType != LuaTypes.LUA_TFUNCTION)");
             sb.AppendLine("\t\t{");
             sb.AppendFormat("\t\t\t{0}.{1} = ({2})LuaScriptMgr.GetNetObject(L, 3, typeof({2}));\r\n", o, name, GetTypeStr(t));
             sb.AppendLine("\t\t}\r\n\t\telse");

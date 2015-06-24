@@ -29,11 +29,11 @@ public static class DelegateFactory
 
 	public static Delegate Action_GameObject(LuaFunction func)
 	{
-		Action<GameObject> d = (arg0) =>
+		Action<GameObject> d = (param0) =>
 		{
 			int top = func.BeginPCall();
 			IntPtr L = func.GetLuaState();
-			LuaScriptMgr.Push(L, arg0);
+			LuaScriptMgr.Push(L, param0);
 			func.PCall(top, 1);
 			func.EndPCall(top);
 		};
