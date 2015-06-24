@@ -1157,6 +1157,30 @@ public static class ToLuaExport
                     sb.AppendFormat("{2}LuaFunction {0} = LuaScriptMgr.GetLuaFunction(L, {1});\r\n", arg, j + offset, head);
                 }
             }
+            else if (typeof(System.Delegate).IsAssignableFrom(param.ParameterType))
+            {
+                sb.AppendFormat("{0}{1} {2} = null;\r\n", head, str, arg);
+                sb.AppendFormat("{0}LuaTypes type = LuaDLL.lua_type(L, {1});\r\n", head, j + offset);
+                sb.AppendLine();
+                sb.AppendLine(head + "if (type != LuaTypes.LUA_TFUNCTION)");
+                sb.AppendLine(head + "{");
+                
+                if (beCheckTypes)
+                {
+                    sb.AppendFormat("{3} {1} = ({0})LuaScriptMgr.GetLuaObject(L, {2});\r\n", str, arg, j + offset, head + "\t");
+                }
+                else
+                {
+                    sb.AppendFormat("{3} {1} = ({0})LuaScriptMgr.GetNetObject(L, {2}, typeof({0}));\r\n", str, arg, j + offset, head + "\t");
+                }
+
+                sb.AppendFormat("{0}}}\r\n{0}else\r\n{0}{{\r\n", head);                
+                sb.AppendFormat("{0}\tLuaFunction func = LuaScriptMgr.GetLuaFunction(L, {1});\r\n", head, j + offset);
+                sb.AppendFormat("{0}\t{1} = ", head, arg);
+
+                GenDelegateBody(param.ParameterType, head + "\t", true);
+                sb.AppendLine(head + "}\r\n");
+            }
             else if (param.ParameterType == typeof(LuaTable))
             {
                 if (beCheckTypes)
@@ -2451,7 +2475,7 @@ public static class ToLuaExport
             sb.AppendFormat("\t\t\t{0}.{1} = ({2})LuaScriptMgr.GetNetObject(L, 3, typeof({2}));\r\n", o, name, GetTypeStr(t));
             sb.AppendLine("\t\t}\r\n\t\telse");
             sb.AppendLine("\t\t{");
-            sb.AppendLine("\t\t\tLuaFunction func = LuaScriptMgr.GetLuaFunction(L, 3);");
+            sb.AppendLine("\t\t\tLuaFunction func = LuaScriptMgr.ToLuaFunction(L, 3);");
             sb.AppendFormat("\t\t\t{0}.{1} = ", o, name);
             GenDelegateBody(t, "\t\t\t", true);
             sb.AppendLine("\t\t}");
