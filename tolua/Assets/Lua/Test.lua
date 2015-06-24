@@ -1,5 +1,5 @@
 --按namespace区分类型定义
-require "Golbal"
+require "Global"
 
 --测试极端条件性能
 local go = GameObject.New()
