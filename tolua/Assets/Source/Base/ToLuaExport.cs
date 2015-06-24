@@ -1157,7 +1157,7 @@ public static class ToLuaExport
                     sb.AppendFormat("{2}LuaFunction {0} = LuaScriptMgr.GetLuaFunction(L, {1});\r\n", arg, j + offset, head);
                 }
             }
-            else if (typeof(System.Delegate).IsAssignableFrom(param.ParameterType))
+            else if (param.ParameterType.IsSubclassOf(typeof(System.MulticastDelegate)))
             {
                 sb.AppendFormat("{0}{1} {2} = null;\r\n", head, str, arg);
                 sb.AppendFormat("{0}LuaTypes type = LuaDLL.lua_type(L, {1});\r\n", head, j + offset);
