@@ -423,8 +423,7 @@ function Quaternion:SetIdentity()
 	self.w = 1
 end
 
-function Quaternion.Slerp(from, to, t)	
-	t = clamp(t, 0, 1)
+local function UnclampedSlerp(from, to, t)		
 	local cosAngle = Quaternion.Dot(from, to)
 	
     if cosAngle < 0 then    
@@ -447,6 +446,12 @@ function Quaternion.Slerp(from, to, t)
     end   	
 end
 
+
+function Quaternion.Slerp(from, to, t)	
+	t = clamp(t, 0, 1)
+	return UnclampedSlerp(from, to, t)
+end
+
 function Quaternion.RotateTowards(from, to, maxDegreesDelta)   	
 	local angle = Quaternion.Angle(from, to)
 	
@@ -454,8 +459,8 @@ function Quaternion.RotateTowards(from, to, maxDegreesDelta)
 		return to
 	end
 	
-	local t = min(1, maxDegreesDelta / num)
-	return Quaternion.Slerp(from, to, t)
+	local t = min(1, maxDegreesDelta / angle)
+	return UnclampedSlerp(from, to, t)
 end
 
 local function Approximately(f0, f1)

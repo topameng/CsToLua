@@ -96,7 +96,7 @@ end
 
 function Bounds:Contains(p)
 	local min = self:GetMin()
-	local max = self.GetMax()
+	local max = self:GetMax()
 	
 	if p.x < min.x or p.y < min.y or p.z < min.z or p.x > max.x or p.y > max.y or p.z > max.z then
 		return false
