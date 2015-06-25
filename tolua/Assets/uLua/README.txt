@@ -1,171 +1,171 @@
-2015.6.25 1.9.9
-º¯Êý²ÎÊýÖ§³Ölua function ×ª event
-¼ÓÈë¼¸¸öÀý×Ó³ÌÐò
-ÔÚc#ÖÐ³õÊ¼»¯ layer
-luaÎÄ¼þÊ¹ÓÃutf8±àÂë
+ï»¿2015.6.25 1.9.9
+å‡½æ•°å‚æ•°æ”¯æŒlua function è½¬ event
+åŠ å…¥å‡ ä¸ªä¾‹å­ç¨‹åº
+åœ¨c#ä¸­åˆå§‹åŒ– layer
+luaæ–‡ä»¶ä½¿ç”¨utf8ç¼–ç 
 
 2015.6.11 1.9.8
-ÐÞ¸´·ºÐÍÀàµ¼³öÊ±EnumeratorÎÊÌâ
-Êý×éÊôÐÔÖ§³ÖtableÊý×é¸³Öµ
-Ìí¼ÓÀý×Ó³ÌÐò¡£
+ä¿®å¤æ³›åž‹ç±»å¯¼å‡ºæ—¶Enumeratoré—®é¢˜
+æ•°ç»„å±žæ€§æ”¯æŒtableæ•°ç»„èµ‹å€¼
+æ·»åŠ ä¾‹å­ç¨‹åºã€‚
 
 2015.6.3 1.9.7
-ÖØÔØº¯ÊýÉú³É´úÂëÓÅ»¯£¬¼õÉÙ²»±ØÒªµÄÀàÐÍ¼ì²é¡£ËÙ¶ÈÂÔÓÐÌáÉý
-Ö§³ÖÀàÐÍÌØÊâ»¯´¦Àí¡£¿É×Ô¼ºÀ©Õ¹µ¼³öº¯Êý£¬Ò²¿ÉÈÓµô×Ô¼º²»ÏëÓÃµÄº¯Êý¡£ÔÝÊ±Ö»Ö§³Öº¯Êý¡£
-¼õÉÙ°ó¶¨ÎÄ¼þÕ¼ÓÃµÄÄÚ´æ £¨¸ÐÐ»ÖÓÎ³²âÊÔ·´À¡£©
-Æô¶¯Ê±×Ô¶¯µ¼³öÀàÐÍ£¨¸ÐÐ»´óCÌáÐÑ£¬ËäÈ»¼ÓµÄÍíÁËµã£©
-BaseÀàÐÍÃ»ÓÐ×¢²áÊ±½«ÓÐ¾¯¸æÌáÐÑ¡£
-¿ÉÒÔÈÓµôºÁÎÞÓÃ´¦µÄÀà±ÈÈç Motion
-fix LuaFunction ·µ»ØÖµbug
-fix pb.c ios arm ±ß½ç¶ÔÆëÎÊÌâ
+é‡è½½å‡½æ•°ç”Ÿæˆä»£ç ä¼˜åŒ–ï¼Œå‡å°‘ä¸å¿…è¦çš„ç±»åž‹æ£€æŸ¥ã€‚é€Ÿåº¦ç•¥æœ‰æå‡
+æ”¯æŒç±»åž‹ç‰¹æ®ŠåŒ–å¤„ç†ã€‚å¯è‡ªå·±æ‰©å±•å¯¼å‡ºå‡½æ•°ï¼Œä¹Ÿå¯æ‰”æŽ‰è‡ªå·±ä¸æƒ³ç”¨çš„å‡½æ•°ã€‚æš‚æ—¶åªæ”¯æŒå‡½æ•°ã€‚
+å‡å°‘ç»‘å®šæ–‡ä»¶å ç”¨çš„å†…å­˜ ï¼ˆæ„Ÿè°¢é’Ÿçº¬æµ‹è¯•åé¦ˆï¼‰
+å¯åŠ¨æ—¶è‡ªåŠ¨å¯¼å‡ºç±»åž‹ï¼ˆæ„Ÿè°¢å¤§Cæé†’ï¼Œè™½ç„¶åŠ çš„æ™šäº†ç‚¹ï¼‰
+Baseç±»åž‹æ²¡æœ‰æ³¨å†Œæ—¶å°†æœ‰è­¦å‘Šæé†’ã€‚
+å¯ä»¥æ‰”æŽ‰æ¯«æ— ç”¨å¤„çš„ç±»æ¯”å¦‚ Motion
+fix LuaFunction è¿”å›žå€¼bug
+fix pb.c ios arm è¾¹ç•Œå¯¹é½é—®é¢˜
 
-ÒòÎªÖ§³ÖÁËÌØ»¯´¦Àí£¬²»ÔÚÐèÒªÊÖ¶¯ÐÞ¸Ä¼¸¸ö»ùÀàµ¼³ö´úÂëÁË¡£
-so Æô¶¯»á×Ô¶¯Éú³ÉÒ»²¿·Ö³£ÓÃ´úÂë¡£µ±È»Äã»¹¿ÉÒÔÍ¨¹ý²Ëµ¥À´Éú³É£¬»òÕß°ÑÄãÌì²ÅµÄÏë·¨¼ÓÈëµ½ÌØ»¯´¦ÀíÀïÃæ
+å› ä¸ºæ”¯æŒäº†ç‰¹åŒ–å¤„ç†ï¼Œä¸åœ¨éœ€è¦æ‰‹åŠ¨ä¿®æ”¹å‡ ä¸ªåŸºç±»å¯¼å‡ºä»£ç äº†ã€‚
+so å¯åŠ¨ä¼šè‡ªåŠ¨ç”Ÿæˆä¸€éƒ¨åˆ†å¸¸ç”¨ä»£ç ã€‚å½“ç„¶ä½ è¿˜å¯ä»¥é€šè¿‡èœå•æ¥ç”Ÿæˆï¼Œæˆ–è€…æŠŠä½ å¤©æ‰çš„æƒ³æ³•åŠ å…¥åˆ°ç‰¹åŒ–å¤„ç†é‡Œé¢
 
 2015.5.29 1.9.6
-ÐÞÕýbindluaÃû³Æ¿Õ¼äbug.
-Vector3, Quaternion ¹¦ÄÜÐÞÕý£¬ÐÐÎªÍ¬unity3dÒ»ÖÂ¡£
-(ÐÞÕýVector3 RotateTowards, MoveToward, Quaternion.SetEuler, ToEulerAngles, SetFromToRotation, LookRotationµÈ).
-Quaternion ¼ÓÈëForward º¯Êý£¬Èç¹ûÌáÈ¡ÁËTranform.rotation, ¿É´ÓÐý×ªÖ±½ÓÈ¡forward£¬ ¶ø²»ÐèÒª¿çÓïÑÔ´ÓTransformÌáÈ¡¡£
-¼õÉÙÒ»´Î¿çÓïÑÔ½»»¥
-ÓÅ»¯printº¯Êý
+ä¿®æ­£bindluaåç§°ç©ºé—´bug.
+Vector3, Quaternion åŠŸèƒ½ä¿®æ­£ï¼Œè¡Œä¸ºåŒunity3dä¸€è‡´ã€‚
+(ä¿®æ­£Vector3 RotateTowards, MoveToward, Quaternion.SetEuler, ToEulerAngles, SetFromToRotation, LookRotationç­‰).
+Quaternion åŠ å…¥Forward å‡½æ•°ï¼Œå¦‚æžœæå–äº†Tranform.rotation, å¯ä»Žæ—‹è½¬ç›´æŽ¥å–forwardï¼Œ è€Œä¸éœ€è¦è·¨è¯­è¨€ä»ŽTransformæå–ã€‚
+å‡å°‘ä¸€æ¬¡è·¨è¯­è¨€äº¤äº’
+ä¼˜åŒ–printå‡½æ•°
 
 2015.5.21 1.9.5
-¼ÓÈëÁËBoundsÖµÀàÐÍ
-ÓÅ»¯ÁËLuaInterface´´½¨userdataËÙ¶È
-²¿·Öº¯ÊýÐ´ÈëcÖÐ°üÀ¨index£¬newindexº¯ÊýµÈ£¬¿ÉÌáÉýÊÖ»úÉÏÐ§ÂÊ£¨pcÓÉÓÚjit·Ç·²±íÏÖ²î¾à²»´ó£©
-ÓÅ»¯ÁËPushTouchÐ§ÂÊ¡£
-ÓÅ»¯ÁËÃ¶¾ÙÐ§ÂÊ£¬Ã¶¾ÙÔÚluaÎ¨Ò»ÐÔ£¨²»ÊÇÓëintÖµÇø±ð£¬Õâ¸öÔçÓÐÁË£©¡£
-¼ÓÈëÁËÎ¯ÍÐ±äÁ¿¿ÉÒÔ¸³Öµ LuaFunction£¬²¢ÇÒÃ»ÓÐgc alloc (Èç¹ûÐèÒªÖ§³ÖÎ¯ÍÐ + ²Ù×÷£¬ÐèÒªÁíÍâµ¼³öÎ¯ÍÐ)¸ÐÐ»kingowlÌá¹©
-ÐÞ¸ÄÁËQuaternion.Lerp µÄbug
-ÐÞÕýÒ»¸öÁËios·´Éä±àÒëÎÊÌâ, ¸ÐÐ»Quon
-Ð­Í¬³ö´íÊ±£¬stackÐÅÏ¢¸üÏêÏ¸, ¸ÐÐ»×îºóµÄ½¾°ÁÌáÐÑ
+åŠ å…¥äº†Boundså€¼ç±»åž‹
+ä¼˜åŒ–äº†LuaInterfaceåˆ›å»ºuserdataé€Ÿåº¦
+éƒ¨åˆ†å‡½æ•°å†™å…¥cä¸­åŒ…æ‹¬indexï¼Œnewindexå‡½æ•°ç­‰ï¼Œå¯æå‡æ‰‹æœºä¸Šæ•ˆçŽ‡ï¼ˆpcç”±äºŽjitéžå‡¡è¡¨çŽ°å·®è·ä¸å¤§ï¼‰
+ä¼˜åŒ–äº†PushTouchæ•ˆçŽ‡ã€‚
+ä¼˜åŒ–äº†æžšä¸¾æ•ˆçŽ‡ï¼Œæžšä¸¾åœ¨luaå”¯ä¸€æ€§ï¼ˆä¸æ˜¯ä¸Žintå€¼åŒºåˆ«ï¼Œè¿™ä¸ªæ—©æœ‰äº†ï¼‰ã€‚
+åŠ å…¥äº†å§”æ‰˜å˜é‡å¯ä»¥èµ‹å€¼ LuaFunctionï¼Œå¹¶ä¸”æ²¡æœ‰gc alloc (å¦‚æžœéœ€è¦æ”¯æŒå§”æ‰˜ + æ“ä½œï¼Œéœ€è¦å¦å¤–å¯¼å‡ºå§”æ‰˜)æ„Ÿè°¢kingowlæä¾›
+ä¿®æ”¹äº†Quaternion.Lerp çš„bug
+ä¿®æ­£ä¸€ä¸ªäº†iosåå°„ç¼–è¯‘é—®é¢˜, æ„Ÿè°¢Quon
+ååŒå‡ºé”™æ—¶ï¼Œstackä¿¡æ¯æ›´è¯¦ç»†, æ„Ÿè°¢æœ€åŽçš„éª„å‚²æé†’
 
-ÒÔÇ°¹ØÓÚLuaStringBufferÒ»²¿·ÖÄÚÈÝ¶ªÊ§ÁË£¬²¹ÉÏ£¨¸ÐÐ»¶Ë»ð¹øµÄÃ¨ÌáÐÑ£©
-¼ÓÈëÁË¼ì²â»ùÀàÊÇ·ñwrapµÄÌáÐÑ
+ä»¥å‰å…³äºŽLuaStringBufferä¸€éƒ¨åˆ†å†…å®¹ä¸¢å¤±äº†ï¼Œè¡¥ä¸Šï¼ˆæ„Ÿè°¢ç«¯ç«é”…çš„çŒ«æé†’ï¼‰
+åŠ å…¥äº†æ£€æµ‹åŸºç±»æ˜¯å¦wrapçš„æé†’
 
 2015.4.13 1.9.3
-ÐÞÕýVector2.lua ºÍ Vectoe4.lua ²¿·Öbug
-Object ºÍobject EqualsÅÐ¶ÏÖ§³Önull¶ÔÏó
-IndexArray Ö§³ÖËùÓÐÀàÐÍ£¨¸ÐÐ»ÖÓÎ³ÌáÐÑ£©
+ä¿®æ­£Vector2.lua å’Œ Vectoe4.lua éƒ¨åˆ†bug
+Object å’Œobject Equalsåˆ¤æ–­æ”¯æŒnullå¯¹è±¡
+IndexArray æ”¯æŒæ‰€æœ‰ç±»åž‹ï¼ˆæ„Ÿè°¢é’Ÿçº¬æé†’ï¼‰
 
 2015.4.13 1.9.1
-ÐÞÕýParamsÊý×é²ÎÊýÔÚÖØÔØº¯ÊýÖÐµÄÅÅÐòÎÊÌâ(·ÅÔÚ×îºóÃæ£¬¸ÐÐ»BeTheOne·¢ÏÖ)
-ÐÞÕýColor.lua²ÎÊýÎÊÌâ
+ä¿®æ­£Paramsæ•°ç»„å‚æ•°åœ¨é‡è½½å‡½æ•°ä¸­çš„æŽ’åºé—®é¢˜(æ”¾åœ¨æœ€åŽé¢ï¼Œæ„Ÿè°¢BeTheOneå‘çŽ°)
+ä¿®æ­£Color.luaå‚æ•°é—®é¢˜
 
 2015.4.13 1.9.0
-ÓÅ»¯ Quaternion Slerpº¯Êý¡£
-ÐÞÕýGetArrayObject (¸ÐÐ»ÃôÃôÌØÄ¾¶úÌáÐÑ) ºÍ GetVarTable bug
-CheckTypeÖ§³ÖLuaTableÖµÀàÐÍ
+ä¼˜åŒ– Quaternion Slerpå‡½æ•°ã€‚
+ä¿®æ­£GetArrayObject (æ„Ÿè°¢æ•æ•ç‰¹æœ¨è€³æé†’) å’Œ GetVarTable bug
+CheckTypeæ”¯æŒLuaTableå€¼ç±»åž‹
 
 2015.4.10
-¼ÓÈëÁË¹ýÂËÁÐ±í£¬ÈÓµôÎÞÓÃµÄº¯ÊýºÍÊôÐÔ£¨¸ÐÐ»Master shifuÌá¹©£©£¬ÓÐµãÀÁÒ»Ö±Ã»¼ÓÕâ¸ö¡£Ôì³ÉÁË·´¸´µÄÌáÎÊ¡£
-Ò²¸ÐÐ»¿¥ÇæµÄÄÍÐÄ»Ø´ð
-ÐÞ¸ÄÁËGetUnityObjectºÍGetTrackedObjectº¯Êý£¬ÁÙÊ±ÐÞ¸Ä×ÜÊÇ°éËæbug. sigh
-ÐÞÕýÐ­Í¬ÖÐLuaFunction »ñÈ¡ÎÊÌâ£¬²»Ó°ÏìÐ­Í¬ÖÐÊ¹ÓÃ»Øµ÷º¯Êý¡£¸ÐÐ»×îºóµÄ½¾°ÁÌá¹©µÄ·½·¨
-ÐÞÕýÐ­Í¬ÖÐLuaTable»ñÈ¡ÎÊÌâ
+åŠ å…¥äº†è¿‡æ»¤åˆ—è¡¨ï¼Œæ‰”æŽ‰æ— ç”¨çš„å‡½æ•°å’Œå±žæ€§ï¼ˆæ„Ÿè°¢Master shifuæä¾›ï¼‰ï¼Œæœ‰ç‚¹æ‡’ä¸€ç›´æ²¡åŠ è¿™ä¸ªã€‚é€ æˆäº†åå¤çš„æé—®ã€‚
+ä¹Ÿæ„Ÿè°¢éªæ“Žçš„è€å¿ƒå›žç­”
+ä¿®æ”¹äº†GetUnityObjectå’ŒGetTrackedObjectå‡½æ•°ï¼Œä¸´æ—¶ä¿®æ”¹æ€»æ˜¯ä¼´éšbug. sigh
+ä¿®æ­£ååŒä¸­LuaFunction èŽ·å–é—®é¢˜ï¼Œä¸å½±å“ååŒä¸­ä½¿ç”¨å›žè°ƒå‡½æ•°ã€‚æ„Ÿè°¢æœ€åŽçš„éª„å‚²æä¾›çš„æ–¹æ³•
+ä¿®æ­£ååŒä¸­LuaTableèŽ·å–é—®é¢˜
 
 2015.4.2
-¼ÓÈëÁ½¸öÐÂµÄº¯ÊýGetUnityObjectºÍGetTrackedObjectÓÃÓÚÉú³ÉwrapÎÄ¼þ
-½â¾ölua·ÃÎÊµÄ¶ÔÏóÔÚc#¶ËÒÑ¾­±»É¾³ýÒ²ÄÜÌáÊ¾lua´úÂë´íÎóÎ»ÖÃ
+åŠ å…¥ä¸¤ä¸ªæ–°çš„å‡½æ•°GetUnityObjectå’ŒGetTrackedObjectç”¨äºŽç”Ÿæˆwrapæ–‡ä»¶
+è§£å†³luaè®¿é—®çš„å¯¹è±¡åœ¨c#ç«¯å·²ç»è¢«åˆ é™¤ä¹Ÿèƒ½æç¤ºluaä»£ç é”™è¯¯ä½ç½®
 
 2015.3.16
-½â¾öUnity ¿Õ¶ÔÏó²¢·ÇÕæµÄ.net null ÎÊÌâ, ½â¾öulua¶ÔÏó³ØUnity¿Õ¶ÔÏóÆ¥Åäbug
-¼ÓÈëprotobuf proto-gen-lua µ¼Èëµ¼³öÖ§³Ö
-ÐÞ¸ÄuluaÊ¹ÓÃGCHandle 64Î»ÎÊÌâ
-ÐÞ¸ÄLuaBase¶àstateÏÂÊÍ·Åbug (c# gc¶àÏß³ÌÎÊÌâ)
-LuaFunction Ôö¼Ó¸¨Öúº¯Êý£¬¸¨ÖúÊµÏÖCall()º¯ÊýÓÅ»¯£¨Ê¹ÓÃ¿É±ä²ÎÊý»áÓÐGC Alloc£©
-LuaTable Ôö¼Ó»ñÈ¡º¯Êý
-ObjectTranslator ÕýÈ·Ñ¹ÈëÎªnullµÄUnityEngine.ObjectÅÉÉú¶ÔÏóºÍTrackedReferenceÅÉÉú¶ÔÏó£¨u3dÕâÐ©¶ÔÏó²»ÊÇÕæÕýµÄnull£©¡£
-¼ÓÈëDelegateµ¼ÈëÀàÐÍ£¬Î¯ÍÐ¿ÉÒÔµ÷ÓÃAdd,RemoveµÈº¯Êý
-¼ÓÈëEnumµ¼ÈëÀàÐÍ£¬ÓÅ»¯Ã¶¾Ù´æ´¢
-¼ÓÈëstringµ¼ÈëÀàÐÍ£¬¿ÉÒÔ°Ñ³£ÓÃlua string ×ªÎªc# string±£´æ£¨Èç¶¯»­Ãû³ÆµÈ£©£¬±ÜÃâGC Alloc
-Ö§³ÖUpdate, LateUpdate, FixedUpdateµÈµ÷ÓÃ¡£
-À©Õ¹luaÐ­Í¬£¬¿ÉÒÔÍêÃÀÄ£Äâc#Ð­³Ì
-¼ÓÈëlua Timer Ö§³Ö¶¨Ê±Æ÷
-¼ÓÈëlua Event Ä£Äâc#Î¯ÍÐ²Ù×÷, È«Âß¼­»ùÓÚluaÊÂ¼þ²»ÐèÒªc#Î¯ÍÐ
-¼ÓÈëlua Vector3, Vector2, Vector4, Quaternion, Color, Touch, RaycastHit, Ray, LayerMaskµÈÖµÀàÐÍÖ§³Ö
-ÐÞ¸ÄÁË×Ô¶¯Éú³ÉwrapÎÄ¼þÖÐµÄType[] Êý×é£¬¼õÉÙGC Alloc
-ÐÞ¸ÄÁËluaÖ§³Öc#°ü¹üÀàµÄ __indexºÍ__newindex º¯Êý¡£¼ÓÈëÃ¶¾ÙÀàÐÍ __index º¯Êý
-ÍêÃÀÖ§³Ö¶àstate.°üÀ¨¶àstateÐ­Í¬µÈÎÊÌâ
-¸üÍêÉÆµÄ³ö´íÐÅÏ¢
-¶ÔÓÚº¯Êý²ÎÊýµÄoutÀàÐÍ²ÎÊý£¬ÔÚlua¶Ë¿ÉÒÔÊ¹ÓÃnilÆ¥Åäº¯ÊýÊäÈë²ÎÊý£¬Èç£º
+è§£å†³Unity ç©ºå¯¹è±¡å¹¶éžçœŸçš„.net null é—®é¢˜, è§£å†³uluaå¯¹è±¡æ± Unityç©ºå¯¹è±¡åŒ¹é…bug
+åŠ å…¥protobuf proto-gen-lua å¯¼å…¥å¯¼å‡ºæ”¯æŒ
+ä¿®æ”¹uluaä½¿ç”¨GCHandle 64ä½é—®é¢˜
+ä¿®æ”¹LuaBaseå¤šstateä¸‹é‡Šæ”¾bug (c# gcå¤šçº¿ç¨‹é—®é¢˜)
+LuaFunction å¢žåŠ è¾…åŠ©å‡½æ•°ï¼Œè¾…åŠ©å®žçŽ°Call()å‡½æ•°ä¼˜åŒ–ï¼ˆä½¿ç”¨å¯å˜å‚æ•°ä¼šæœ‰GC Allocï¼‰
+LuaTable å¢žåŠ èŽ·å–å‡½æ•°
+ObjectTranslator æ­£ç¡®åŽ‹å…¥ä¸ºnullçš„UnityEngine.Objectæ´¾ç”Ÿå¯¹è±¡å’ŒTrackedReferenceæ´¾ç”Ÿå¯¹è±¡ï¼ˆu3dè¿™äº›å¯¹è±¡ä¸æ˜¯çœŸæ­£çš„nullï¼‰ã€‚
+åŠ å…¥Delegateå¯¼å…¥ç±»åž‹ï¼Œå§”æ‰˜å¯ä»¥è°ƒç”¨Add,Removeç­‰å‡½æ•°
+åŠ å…¥Enumå¯¼å…¥ç±»åž‹ï¼Œä¼˜åŒ–æžšä¸¾å­˜å‚¨
+åŠ å…¥stringå¯¼å…¥ç±»åž‹ï¼Œå¯ä»¥æŠŠå¸¸ç”¨lua string è½¬ä¸ºc# stringä¿å­˜ï¼ˆå¦‚åŠ¨ç”»åç§°ç­‰ï¼‰ï¼Œé¿å…GC Alloc
+æ”¯æŒUpdate, LateUpdate, FixedUpdateç­‰è°ƒç”¨ã€‚
+æ‰©å±•luaååŒï¼Œå¯ä»¥å®Œç¾Žæ¨¡æ‹Ÿc#åç¨‹
+åŠ å…¥lua Timer æ”¯æŒå®šæ—¶å™¨
+åŠ å…¥lua Event æ¨¡æ‹Ÿc#å§”æ‰˜æ“ä½œ, å…¨é€»è¾‘åŸºäºŽluaäº‹ä»¶ä¸éœ€è¦c#å§”æ‰˜
+åŠ å…¥lua Vector3, Vector2, Vector4, Quaternion, Color, Touch, RaycastHit, Ray, LayerMaskç­‰å€¼ç±»åž‹æ”¯æŒ
+ä¿®æ”¹äº†è‡ªåŠ¨ç”Ÿæˆwrapæ–‡ä»¶ä¸­çš„Type[] æ•°ç»„ï¼Œå‡å°‘GC Alloc
+ä¿®æ”¹äº†luaæ”¯æŒc#åŒ…è£¹ç±»çš„ __indexå’Œ__newindex å‡½æ•°ã€‚åŠ å…¥æžšä¸¾ç±»åž‹ __index å‡½æ•°
+å®Œç¾Žæ”¯æŒå¤šstate.åŒ…æ‹¬å¤šstateååŒç­‰é—®é¢˜
+æ›´å®Œå–„çš„å‡ºé”™ä¿¡æ¯
+å¯¹äºŽå‡½æ•°å‚æ•°çš„outç±»åž‹å‚æ•°ï¼Œåœ¨luaç«¯å¯ä»¥ä½¿ç”¨nilåŒ¹é…å‡½æ•°è¾“å…¥å‚æ•°ï¼Œå¦‚ï¼š
 local flag, hit = Physics.Raycast(self.transform.position, self.dir, nil, 1, self.layerMask)
 
-¼ÓÈëÁËclass, list, set µÈÊý¾Ý½á¹¹
-¼ÓÈë Plane.lua ÓÃÀ´½øÐÐÆ½ÃæÉäÏß¼ì²â
-À©Õ¹ÁËlua math ÊýÑ§¿â£¬¼ÓÈë²¿·Öu3d mathf ¹¦ÄÜ
+åŠ å…¥äº†class, list, set ç­‰æ•°æ®ç»“æž„
+åŠ å…¥ Plane.lua ç”¨æ¥è¿›è¡Œå¹³é¢å°„çº¿æ£€æµ‹
+æ‰©å±•äº†lua math æ•°å­¦åº“ï¼ŒåŠ å…¥éƒ¨åˆ†u3d mathf åŠŸèƒ½
 
 
 2014.12.22
-Í¨¹ýÉ¨ÃèwrapÎÄ¼þÃû£¬×Ô¶¯²úÉúLuaBinder.csÎÄ¼þ
-CheckType ÓÅ»¯(¸ÐÐ»Íí²ÍµÄÌáÐÑ)
-u3d Object Àà×ª system Object. null ±äÁ¿ÎÊÌâ
+é€šè¿‡æ‰«æwrapæ–‡ä»¶åï¼Œè‡ªåŠ¨äº§ç”ŸLuaBinder.csæ–‡ä»¶
+CheckType ä¼˜åŒ–(æ„Ÿè°¢æ™šé¤çš„æé†’)
+u3d Object ç±»è½¬ system Object. null å˜é‡é—®é¢˜
 
-¸ÐÐ»Íí²ÍÍ¬Ñ§·¢ÏÖµÄ2¸öBug
-Lua ¶ÔÏógc¶àÏß³ÌÎÊÌâ
-uLua objectsBackMap u3d ObjectÆ¥Åä´íÎóÎÊÌâ
+æ„Ÿè°¢æ™šé¤åŒå­¦å‘çŽ°çš„2ä¸ªBug
+Lua å¯¹è±¡gcå¤šçº¿ç¨‹é—®é¢˜
+uLua objectsBackMap u3d ObjectåŒ¹é…é”™è¯¯é—®é¢˜
 
 2014.11.26
-luajitÉý¼¶Îª2.0.3°æ±¾,pcÐèÒªvs2012ÔËÐÐ¿â
-¼ÓÈëÃ¶¾ÙÏàµÈÅÐ¶Ï
-¼ÓÈëTableÃû³Æ¹¹Ôìº¯Êý£¬Èçlocal go = GameObject("Light")
-ÐÞ¸ÄÁËµ¼³ö·½Ê½£¬ÏÖÔÚ¿ÉÒÔÖ»Ð´Ò»¸öÀàÐÍ¾ÍÄÜµ¼³öÀàÁË
-µ¼³öÁËunityËùÓÐµÄÀà£¬ÓÐÒ»Ð©ÈÓµôÁË£¬¾ßÌå²Î¼ûBindLua.csÎÄ¼þ
-É¾³ýÁËÄ³Ð©Ó°Ïìbuildº¯Êý£¬Ó¦¸ÃÊÇÊôÓÚÄÚ²¿»òÕß±à¼­Æ÷Ïà¹Øº¯Êý
-ÐÞ¸ÄÁË×¢²á·½Ê½£¬ÏÖÔÚËùÓÐÀàÐÍ×¢²áË³ÐòÎÞ¹Ø£¬
-×¢ÒâÈç¹ûÄ³¸ö»ùÀàÃ»ÓÐµ¼³ö£¬ÅÉÉúÀà·ÃÎÊ»ùÀàº¯Êý»á³ö´í
-¼ÓÈëÁËlua xml¿â.
-¼ÓÈënamespace¿ØÖÆ£¬ÈçGameObjectÎ»ÓÚUnityEngine¿Õ¼ä
-ÐÞ¸´ÁËLuaBaseÅÉÉúÀàµÄlua refÐ¹Â©ÎÊÌâ.
+luajitå‡çº§ä¸º2.0.3ç‰ˆæœ¬,pcéœ€è¦vs2012è¿è¡Œåº“
+åŠ å…¥æžšä¸¾ç›¸ç­‰åˆ¤æ–­
+åŠ å…¥Tableåç§°æž„é€ å‡½æ•°ï¼Œå¦‚local go = GameObject("Light")
+ä¿®æ”¹äº†å¯¼å‡ºæ–¹å¼ï¼ŒçŽ°åœ¨å¯ä»¥åªå†™ä¸€ä¸ªç±»åž‹å°±èƒ½å¯¼å‡ºç±»äº†
+å¯¼å‡ºäº†unityæ‰€æœ‰çš„ç±»ï¼Œæœ‰ä¸€äº›æ‰”æŽ‰äº†ï¼Œå…·ä½“å‚è§BindLua.csæ–‡ä»¶
+åˆ é™¤äº†æŸäº›å½±å“buildå‡½æ•°ï¼Œåº”è¯¥æ˜¯å±žäºŽå†…éƒ¨æˆ–è€…ç¼–è¾‘å™¨ç›¸å…³å‡½æ•°
+ä¿®æ”¹äº†æ³¨å†Œæ–¹å¼ï¼ŒçŽ°åœ¨æ‰€æœ‰ç±»åž‹æ³¨å†Œé¡ºåºæ— å…³ï¼Œ
+æ³¨æ„å¦‚æžœæŸä¸ªåŸºç±»æ²¡æœ‰å¯¼å‡ºï¼Œæ´¾ç”Ÿç±»è®¿é—®åŸºç±»å‡½æ•°ä¼šå‡ºé”™
+åŠ å…¥äº†lua xmlåº“.
+åŠ å…¥namespaceæŽ§åˆ¶ï¼Œå¦‚GameObjectä½äºŽUnityEngineç©ºé—´
+ä¿®å¤äº†LuaBaseæ´¾ç”Ÿç±»çš„lua refæ³„æ¼é—®é¢˜.
 
 2014.11.10
-ÏòluaÑ¹ÈëÊý×é²ÎÊýÇ±ÔÚµÄÄÚ´æÐ¹Â©ÎÊÌâ
-GetNetObject ¶Ô¶ÁÈ¡µÄlua²ÎÊý½øÐÐÀàÐÍÆ¥Åä¼ì²â
-¼ÓÈëGetTypeObject¶ÁÈ¡TypeÀàÐÍ
-°ÑÑ¹Èëµ½luaµÄÃ¶¾Ù±äÁ¿×ª±äÎªuserdata,ÏÖÔÚÖØÔØº¯ÊýÍêÃÀÇø·ÖdoubleºÍenumÀàÐÍ
-Ã¶¾ÙÀàÐÍ¼ÓÈë IntToEnum º¯Êý£¬°ÑÒ»¸öintÖµ×ª»»Îªµ±Ç°ÀàÐÍÃ¶¾Ù
-¼ÓÈëÄ£°æÀàÐÍµ¼³öÖ§³Ö£¬Èçµ¼³öDictionary<int,string>ÀàÐÍ
+å‘luaåŽ‹å…¥æ•°ç»„å‚æ•°æ½œåœ¨çš„å†…å­˜æ³„æ¼é—®é¢˜
+GetNetObject å¯¹è¯»å–çš„luaå‚æ•°è¿›è¡Œç±»åž‹åŒ¹é…æ£€æµ‹
+åŠ å…¥GetTypeObjectè¯»å–Typeç±»åž‹
+æŠŠåŽ‹å…¥åˆ°luaçš„æžšä¸¾å˜é‡è½¬å˜ä¸ºuserdata,çŽ°åœ¨é‡è½½å‡½æ•°å®Œç¾ŽåŒºåˆ†doubleå’Œenumç±»åž‹
+æžšä¸¾ç±»åž‹åŠ å…¥ IntToEnum å‡½æ•°ï¼ŒæŠŠä¸€ä¸ªintå€¼è½¬æ¢ä¸ºå½“å‰ç±»åž‹æžšä¸¾
+åŠ å…¥æ¨¡ç‰ˆç±»åž‹å¯¼å‡ºæ”¯æŒï¼Œå¦‚å¯¼å‡ºDictionary<int,string>ç±»åž‹
 
 2014.11.3
-Ï¸·ÖPushº¯Êý£¬¶ÔÓÚÊý×éÌá¹©Ò»ÖÖÍ¨ÓÃµÄÊý×émetatable£¬
-¼õÉÙulua¶ÔÓÚÊý×émetatable¸öÊý·ºÀÄÎÊÌâ
-¼ÓÈëÀàc#Ð­Í¬Ö§³Ö£¬Àý×Ó¼ûTest.lua
+ç»†åˆ†Pushå‡½æ•°ï¼Œå¯¹äºŽæ•°ç»„æä¾›ä¸€ç§é€šç”¨çš„æ•°ç»„metatableï¼Œ
+å‡å°‘uluaå¯¹äºŽæ•°ç»„metatableä¸ªæ•°æ³›æ»¥é—®é¢˜
+åŠ å…¥ç±»c#ååŒæ”¯æŒï¼Œä¾‹å­è§Test.lua
 
 2014.10.22
-¸üÏ¸µÄÇÐ·ÖLuaScriptMgr.Push º¯Êý£¬Ö÷ÒªÕë¶ÔSystem.objectÖØÔØº¯Êý
-Ïû³ý´Ëº¯ÊýÇ±ÔÚµÄbug
-ËùÓÐÀàÐÍ¼ÓÈëGetClassTypeº¯Êý£¬ÏÖÔÚ¿ÉÒÔ·Ç³£±ãÀûµÄ»ñÈ¡ÀàÐÍ¡£
-Èç£ºgameObject.GetComponent(UICamera.GetClassType())
+æ›´ç»†çš„åˆ‡åˆ†LuaScriptMgr.Push å‡½æ•°ï¼Œä¸»è¦é’ˆå¯¹System.objecté‡è½½å‡½æ•°
+æ¶ˆé™¤æ­¤å‡½æ•°æ½œåœ¨çš„bug
+æ‰€æœ‰ç±»åž‹åŠ å…¥GetClassTypeå‡½æ•°ï¼ŒçŽ°åœ¨å¯ä»¥éžå¸¸ä¾¿åˆ©çš„èŽ·å–ç±»åž‹ã€‚
+å¦‚ï¼šgameObject.GetComponent(UICamera.GetClassType())
 
 2014.10.17
-Ìæ»»dll, ¼ÓÈëlua protobuf¿â
+æ›¿æ¢dll, åŠ å…¥lua protobufåº“
 
 2014.10.8
-¼ÓÈëÃ¶¾ÙÀàÐÍµÄµ¼³ö
-ÓÅ»¯LuaScriptMgr PushResultº¯Êý¡£Í¨¹ýÖØÔØº¯ÊýÏû³ýswitch
-ÖØÔØº¯ÊýÖÐ²ÎÊýÊýÁ¿Î¨Ò»µÄ£¬string×ª»»·Å¿í
+åŠ å…¥æžšä¸¾ç±»åž‹çš„å¯¼å‡º
+ä¼˜åŒ–LuaScriptMgr PushResultå‡½æ•°ã€‚é€šè¿‡é‡è½½å‡½æ•°æ¶ˆé™¤switch
+é‡è½½å‡½æ•°ä¸­å‚æ•°æ•°é‡å”¯ä¸€çš„ï¼Œstringè½¬æ¢æ”¾å®½
 
 2014.9.30
-stringÀàÐÍCheckType¼ÓÉÏÁËuserdata
-·ÇÖØÔØº¯Êýstring¿ÉÒÔÆ¥ÅäËùÓÐÀàÐÍ
-ÖØÔØº¯Êý±ØÐë×Ô¼ºÓÃtostring×ª»»ÎªstringÀàÐÍ.
-ÒòÎªobjectÒ²¿ÉÒÔ×ª»»ËùÓÐÀàÐÍ£¬Æ¥ÅäÈÝÒ×³öÎÊÌâ
+stringç±»åž‹CheckTypeåŠ ä¸Šäº†userdata
+éžé‡è½½å‡½æ•°stringå¯ä»¥åŒ¹é…æ‰€æœ‰ç±»åž‹
+é‡è½½å‡½æ•°å¿…é¡»è‡ªå·±ç”¨tostringè½¬æ¢ä¸ºstringç±»åž‹.
+å› ä¸ºobjectä¹Ÿå¯ä»¥è½¬æ¢æ‰€æœ‰ç±»åž‹ï¼ŒåŒ¹é…å®¹æ˜“å‡ºé—®é¢˜
 
 2014.9.29
-LuaFunction¹¹Ôìº¯ÊýÖÐluastateÎ´¸³ÖµÎÊÌâ
-¸ÐÐ»ChiuanÌá¹©
+LuaFunctionæž„é€ å‡½æ•°ä¸­luastateæœªèµ‹å€¼é—®é¢˜
+æ„Ÿè°¢Chiuanæä¾›
 
 2014.9.28
-¼ÓÈëÁË¶Ô¹¹Ôìº¯Êý¿É±ä²ÎÊýµÄÖ§³Ö
-¼ÓÈëÁËobject¿ÉÒÔ×ª»»ËùÓÐ²ÎÊýÎÊÌâ¡£ÖØÔØº¯Êý·ÇobjectÀàÐÍÓÅÏÈ±È½Ï
-ÐÞ¸´ÁËparams²ÎÊýÎª0µÄbug
-count - 0 ÕýÈ·ÊäÈëÎª count
+åŠ å…¥äº†å¯¹æž„é€ å‡½æ•°å¯å˜å‚æ•°çš„æ”¯æŒ
+åŠ å…¥äº†objectå¯ä»¥è½¬æ¢æ‰€æœ‰å‚æ•°é—®é¢˜ã€‚é‡è½½å‡½æ•°éžobjectç±»åž‹ä¼˜å…ˆæ¯”è¾ƒ
+ä¿®å¤äº†paramså‚æ•°ä¸º0çš„bug
+count - 0 æ­£ç¡®è¾“å…¥ä¸º count
 
 2014.9.26
-ÐÞ¸ÄÁË__indexº¯Êý¼Ó¿ìÁËË÷Òý¹ý³Ì,ÐÔÄÜÓÐºÜºÃµÄÌáÉý
-ÐÞ¸ÄÁËLuaScriptMgrÖ§³Ö¶àluastate
-ÐÞ¸´ÁËÐ­Í¬¶ÑÕ»²»¶ÔµÄbug
+ä¿®æ”¹äº†__indexå‡½æ•°åŠ å¿«äº†ç´¢å¼•è¿‡ç¨‹,æ€§èƒ½æœ‰å¾ˆå¥½çš„æå‡
+ä¿®æ”¹äº†LuaScriptMgræ”¯æŒå¤šluastate
+ä¿®å¤äº†ååŒå †æ ˆä¸å¯¹çš„bug
 
 Lua + LuaJIT + LuaInterface
 
