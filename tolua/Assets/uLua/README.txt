@@ -1,3 +1,9 @@
+2015.6.25 1.9.9
+函数参数支持lua function 转 event
+加入几个例子程序
+在c#中初始化 layer
+lua文件使用utf8编码
+
 2015.6.11 1.9.8
 修复泛型类导出时Enumerator问题
 数组属性支持table数组赋值
