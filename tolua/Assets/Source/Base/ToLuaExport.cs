@@ -1162,9 +1162,9 @@ public static class ToLuaExport
             else if (param.ParameterType.IsSubclassOf(typeof(System.MulticastDelegate)))
             {
                 sb.AppendFormat("{0}{1} {2} = null;\r\n", head, str, arg);
-                sb.AppendFormat("{0}LuaTypes funcType{1} = LuaDLL.lua_type(L, {1});\r\n", head, j);
+                sb.AppendFormat("{0}LuaTypes funcType{1} = LuaDLL.lua_type(L, {1});\r\n", head, j + offset);
                 sb.AppendLine();
-                sb.AppendFormat("{0}if (funcType{1} != LuaTypes.LUA_TFUNCTION)\r\n", head, j);
+                sb.AppendFormat("{0}if (funcType{1} != LuaTypes.LUA_TFUNCTION)\r\n", head, j + offset);
                 sb.AppendLine(head + "{");
                 
                 if (beCheckTypes)
