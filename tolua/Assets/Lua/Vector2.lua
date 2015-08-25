@@ -6,12 +6,17 @@
 --      as listed at <url: http://www.opensource.org/licenses/bsd-license.php >.
 --------------------------------------------------------------------------------
 
+local sqrt = math.sqrt
+local setmetatable = setmetatable
+local rawset = rawset
+local rawget = rawget
+
 Vector2 = 
 {
-	x = 0,
+--[[	x = 0,
 	y = 0,		
 	
-	class = "Vector2",
+	class = "Vector2",--]]
 }
 
 setmetatable(Vector2, Vector2)
@@ -33,9 +38,8 @@ Vector2.__index = function(t,k)
 end
 
 function Vector2.New(x, y)
-	local v = {x = 0, y = 0}
-	setmetatable(v, Vector2)
-	v:Set(x,y)
+	local v = {x = x or 0, y = y or 0}
+	setmetatable(v, Vector2)	
 	return v
 end
 
@@ -75,8 +79,17 @@ function Vector2:SetNormalize()
 	return self
 end
 
+function Vector2.Dot(lhs, rhs)
+	return lhs.x * rhs.x + lhs.y * rhs.y
+end
+
+function Vector2.Angle(from, to)
+	return acos(clamp(Vector2.dot(from:Normalize(), to:Normalize()), -1, 1)) * 57.29578
+end
+
+
 function Vector2.Magnitude(v2)
-	return math.sqrt(v2.x * v2.x + v2.y * v2.y)
+	return sqrt(v2.x * v2.x + v2.y * v2.y)
 end
 
 function Vector2:Div(d)
