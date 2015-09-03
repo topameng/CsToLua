@@ -8,6 +8,17 @@
 
 2. 在打开工程后会自动生成一些wrap文件。
 
+2015.9.3 2.0
+能够导出自定义类型涉及的所有委托类型
+Vector2 add Dot Angle 函数
+分离LuaAttribute为独立文件
+
+﻿2015.6.25 1.9.9
+函数参数支持lua function 转 event
+加入几个例子程序
+在c#中初始化 layer
+lua文件使用utf8编码
+
 2015.6.11 1.9.8
 修复泛型类导出时Enumerator问题
 数组属性支持table数组赋值
