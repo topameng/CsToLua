@@ -15,6 +15,8 @@ using UnityEngine.Rendering;
 [InitializeOnLoad]
 public static class LuaBinding
 {
+    static bool beAutoGen = false;
+
     static LuaBinding()
     {        
         string dir = Application.dataPath + "/Source/LuaWrap/";
@@ -27,10 +29,15 @@ public static class LuaBinding
         string[] files = Directory.GetFiles(dir);
 
         if (files.Length <= 0)
-        {            
-            GenLuaDelegates();
-            Binding();
-            GenLuaBinder();
+        {
+            if (EditorUtility.DisplayDialog("自动生成", "点击确定自动注册常用unity类和委托， 也可通过菜单完成此功能", "确定", "取消"))
+            {
+                beAutoGen = true;
+                Binding();
+                GenLuaDelegates();
+                GenLuaBinder();
+                beAutoGen = false;
+            }
         }
     }
 
@@ -171,8 +178,7 @@ public static class LuaBinding
         ////_GT(typeof(Dictionary<int,string>)).SetWrapName("DictInt2Str").SetLibName("DictInt2Str"),
         
         //custom    
-        _GT(typeof(Debugger)),
-        _GT(typeof(DelegateFactory)),
+        _GT(typeof(Debugger)),        
         //_GT(typeof(SocketClient)),        
         //_GT(typeof(UIBase)),                                   
         //_GT(typeof(UnGfx)),                                                                                             
@@ -286,22 +292,7 @@ public static class LuaBinding
             ToLuaExport.Generate(null);
         }
 
-        StringBuilder sb = new StringBuilder();
-
-        for (int i = 0; i < list.Length; i++)
-        {
-            sb.AppendFormat("\t\t{0}Wrap.Register();\r\n", list[i].wrapName);
-        }
-
         EditorApplication.isPlaying = false;
-        //StringBuilder sb1 = new StringBuilder();
-
-        //for (int i = 0; i < binds.Length; i++)
-        //{
-        //    sb1.AppendFormat("\t\t{0}Wrap.Register(L);\r\n", binds[i].wrapName);
-        //}
-
-        //GenLuaBinder();
         Debug.Log("Generate lua binding files over");
         AssetDatabase.Refresh();        
     }
@@ -370,21 +361,96 @@ public static class LuaBinding
         return new DelegateType(t);
     }
 
+    static HashSet<Type> GetCustomDelegateTypes()
+    {
+        BindType[] list = binds;
+        HashSet<Type> set = new HashSet<Type>();
+        BindingFlags binding = BindingFlags.Public | BindingFlags.Static | BindingFlags.IgnoreCase | BindingFlags.Instance;
+
+        for (int i = 0; i < list.Length; i++)
+        {
+            Type type = list[i].type;
+            FieldInfo[] fields = type.GetFields(BindingFlags.GetField | BindingFlags.SetField | binding);
+            PropertyInfo[] props = type.GetProperties(BindingFlags.GetProperty | BindingFlags.SetProperty | binding);
+            MethodInfo[] methods = null;
+
+            if (type.IsInterface)
+            {
+                methods = type.GetMethods();
+            }
+            else
+            {
+                methods = type.GetMethods(BindingFlags.Instance | binding);
+            }
+
+            for (int j = 0; j < fields.Length; j++)
+            {
+                Type t = fields[j].FieldType;
+
+                if (typeof(System.Delegate).IsAssignableFrom(t))
+                {
+                    set.Add(t);
+                }
+            }
+
+            for (int j = 0; j < props.Length; j++)
+            {
+                Type t = props[j].PropertyType;
+
+                if (typeof(System.Delegate).IsAssignableFrom(t))
+                {
+                    set.Add(t);
+                }
+            }
+
+            for (int j = 0; j < methods.Length; j++)
+            {
+                MethodInfo m = methods[j];
+                ParameterInfo[] pifs = m.GetParameters();
+
+                for (int k = 0; k < pifs.Length; k++)
+                {
+                    Type t = pifs[k].ParameterType;
+
+                    if (typeof(System.MulticastDelegate).IsAssignableFrom(t))
+                    {
+                        set.Add(t);
+                    }
+                }
+            }
+
+        }
+
+        return set;
+    }
+
     [MenuItem("Lua/Gen Lua Delegates", false, 2)]
     static void GenLuaDelegates()
     {
         ToLuaExport.Clear();
+        List<DelegateType> list = new List<DelegateType>();
 
-        DelegateType[] list = new DelegateType[]
-        {
+        list.AddRange(new DelegateType[] {
             _DT(typeof(Action<GameObject>)),
-            //_DT(typeof(Action<GameObject, int, string>)),
-            //_DT(typeof(Action<int, int, int, List<int>>)),
-            //_DT(typeof(UIEventListener.VoidDelegate)).SetName("VoidDelegate"),            
-        };
+            _DT(typeof(Action)),
+            _DT(typeof(UnityEngine.Events.UnityAction)),         
+        });
 
-        ToLuaExport.GenDelegates(list);
+        HashSet<Type> set = beAutoGen ? ToLuaExport.eventSet : GetCustomDelegateTypes();                
+        List<Type> typeList = new List<Type>();
 
+        foreach (Type t in set)
+        {
+            if (null == list.Find((p) => { return p.type == t; }))
+            {
+                list.Add(_DT(t));
+            }
+        }
+
+        ToLuaExport.GenDelegates(list.ToArray());
+        set.Clear();
+        ToLuaExport.Clear();
+        AssetDatabase.Refresh();
         Debug.Log("Create lua delegate over");
     }
 

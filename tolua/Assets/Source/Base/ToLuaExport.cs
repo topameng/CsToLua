@@ -112,8 +112,7 @@ public static class ToLuaExport
         "Texture2D.alphaIsTransparency",
         "WWW.movie",
         "WebCamTexture.MarkNonReadable",
-        "WebCamTexture.isReadable",
-		// i don't why below 2 functions missed in iOS platform
+        "WebCamTexture.isReadable",		
 		"Graphic.OnRebuildRequested",
 		"Text.OnRebuildRequested",
         //NGUI
