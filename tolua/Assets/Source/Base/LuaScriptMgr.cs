@@ -1967,6 +1967,7 @@ public class LuaScriptMgr
         {
             sf = st.GetFrame(pos++);
             file = sf.GetFileName();
+            file = Path.GetFileName(file);
         } while (!file.Contains("Wrap"));
 
         int index1 = file.LastIndexOf('\\');
