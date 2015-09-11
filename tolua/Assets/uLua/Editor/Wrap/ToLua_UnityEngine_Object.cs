@@ -10,7 +10,7 @@ public class ToLua_UnityEngine_Object
 		if (count == 1)
 		{
 			Object arg0 = (Object)LuaScriptMgr.GetLuaObject(L, 1);
-            LuaScriptMgr.__gc(L);
+			LuaScriptMgr.__gc(L);
 			Object.Destroy(arg0);
 			return 0;
 		}
@@ -18,8 +18,7 @@ public class ToLua_UnityEngine_Object
 		{
 			Object arg0 = (Object)LuaScriptMgr.GetLuaObject(L, 1);
 			float arg1 = (float)LuaScriptMgr.GetNumber(L, 2);
-            LuaScriptMgr.__gc(L);
-			Object.Destroy(arg0,arg1);
+			Object.Destroy(arg0, arg1);
 			return 0;
 		}
 		else
@@ -36,7 +35,7 @@ public class ToLua_UnityEngine_Object
 		if (count == 1)
 		{
 			Object arg0 = (Object)LuaScriptMgr.GetLuaObject(L, 1);
-            LuaScriptMgr.__gc(L);
+			LuaScriptMgr.__gc(L);
 			Object.DestroyImmediate(arg0);
 			return 0;
 		}
@@ -44,7 +43,6 @@ public class ToLua_UnityEngine_Object
 		{
 			Object arg0 = (Object)LuaScriptMgr.GetLuaObject(L, 1);
 			bool arg1 = LuaScriptMgr.GetBoolean(L, 2);
-            LuaScriptMgr.__gc(L);
 			Object.DestroyImmediate(arg0,arg1);
 			return 0;
 		}
@@ -63,7 +61,7 @@ public class ToLua_UnityEngine_Object
 		if (count == 1)
 		{
 			Object arg0 = (Object)LuaScriptMgr.GetLuaObject(L, 1);
-            LuaScriptMgr.__gc(L);
+			LuaScriptMgr.__gc(L);
 			Object.DestroyObject(arg0);
 			return 0;
 		}
@@ -71,7 +69,6 @@ public class ToLua_UnityEngine_Object
 		{
 			Object arg0 = (Object)LuaScriptMgr.GetLuaObject(L, 1);
 			float arg1 = (float)LuaScriptMgr.GetNumber(L, 2);
-            LuaScriptMgr.__gc(L);
 			Object.DestroyObject(arg0,arg1);
 			return 0;
 		}
