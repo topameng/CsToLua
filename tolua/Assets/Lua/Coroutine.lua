@@ -36,7 +36,7 @@ function coroutine.start(f, ...)
 	end
 end
 
-function coroutine.wait(t, co, ...)
+function coroutine.wait(time, co, ...)
 	local args = {...}
 	co = co or running()		
 		
@@ -50,12 +50,36 @@ function coroutine.wait(t, co, ...)
 		end
 	end
 	
-	local timer = CoTimer.New(action, t, 1)
+	local timer = CoTimer.New(action, time, 1)
 	timer:Start()
 	return yield()
 end
 
-function coroutine.step(t, co, ...)
+function coroutine.www(www, co)	
+	co = co or running()	
+	local timer = nil	
+	
+	local action = function()		
+		if not www.isDone then
+			return
+		end
+
+		timer:Stop()
+		local flag, msg = resume(co)
+	
+		if not flag then				
+			msg = debug.traceback(co, msg)				
+			Debugger.LogError("coroutine error:{0}", msg)		
+			return	
+		end		
+	end
+			
+	timer = FrameTimer.New(action, 1, -1)
+	timer:Start()
+	return yield()
+end
+
+function coroutine.step(count, co, ...)
 	local args = {...}
 	co = co or running()		
 	
@@ -69,7 +93,7 @@ function coroutine.step(t, co, ...)
 		end		
 	end
 			
-	local timer = FrameTimer.New(action, t or 1, 1)
+	local timer = FrameTimer.New(action, count or 1, 1)
 	timer:Start()
 	return yield()
 end
