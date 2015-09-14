@@ -1968,10 +1968,10 @@ public class LuaScriptMgr
             sf = st.GetFrame(pos++);
             file = sf.GetFileName();
             file = Path.GetFileName(file);
-        } while (!file.Contains("Wrap"));
+        } while (!file.Contains("Wrap."));
 
         int index1 = file.LastIndexOf('\\');
-        int index2 = file.LastIndexOf("Wrap");
+        int index2 = file.LastIndexOf("Wrap.");
         string className = file.Substring(index1 + 1, index2 - index1 - 1);
         return string.Format("{0}.{1}", className, sf.GetMethod().Name);                
     }
