@@ -44,6 +44,7 @@ public class CallLuaFunction_02 : MonoBehaviour {
         int top = func.BeginPCall();
         IntPtr L = func.GetLuaState();
         LuaScriptMgr.Push(L, 123456);
+        func.PCall(top, 1);
         int num = (int)LuaScriptMgr.GetNumber(L, -1);
         func.EndPCall(top);
         return num;
