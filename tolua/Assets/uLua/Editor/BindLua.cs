@@ -406,6 +406,12 @@ public static class LuaBinding
             for (int j = 0; j < methods.Length; j++)
             {
                 MethodInfo m = methods[j];
+
+                if (m.IsGenericMethod)
+                {                    
+                    continue;
+                }
+
                 ParameterInfo[] pifs = m.GetParameters();
 
                 for (int k = 0; k < pifs.Length; k++)
@@ -433,7 +439,7 @@ public static class LuaBinding
         list.AddRange(new DelegateType[] {
             _DT(typeof(Action<GameObject>)),
             _DT(typeof(Action)),
-            _DT(typeof(UnityEngine.Events.UnityAction)),         
+            _DT(typeof(UnityEngine.Events.UnityAction)),                     
         });
 
         HashSet<Type> set = beAutoGen ? ToLuaExport.eventSet : GetCustomDelegateTypes();                
