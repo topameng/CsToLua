@@ -81,3 +81,27 @@ function coroutine.step(t, co, ...)
 	timer:Start()
 	return yield()
 end
+
+function coroutine.www(www, co)			
+	co = co or running()			
+	local timer = nil			
+			
+	local action = function()				
+		if not www.isDone then		
+			return		
+		end		
+		
+		timer:Stop()		
+		local flag, msg = resume(co)		
+			
+		if not flag then						
+			msg = debug.traceback(co, msg)						
+			error(msg)			
+			return			
+		end				
+	end		
+					
+	timer = FrameTimer.New(action, 1, -1)		
+ 	timer:Start()
+ 	return yield()
+ end
