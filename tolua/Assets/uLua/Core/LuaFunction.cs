@@ -71,7 +71,9 @@ namespace LuaInterface
                 string err = LuaDLL.lua_tostring(L, -1);                                
                 LuaDLL.lua_settop(L, oldTop - 1);                                
                 if (err == null) err = "Unknown Lua Error";
-                throw new LuaScriptException(err, "");                              
+                Debugger.LogError(err);
+                LuaDLL.lua_settop(L, oldTop - 1);
+                return null;
             }
 
             object[] ret = returnTypes != null ? translator.popValues(L, oldTop, returnTypes) : translator.popValues(L, oldTop);
@@ -135,8 +137,9 @@ namespace LuaInterface
             {                
                 string err = LuaDLL.lua_tostring(L, -1);
                 LuaDLL.lua_settop(L, oldTop - 1);                
-                if (err == null) err = "Unknown Lua Error";
-                throw new LuaScriptException(err, "");
+                if (err == null) err = "Unknown Lua Error";                
+                Debugger.LogError(err);
+                return false;
             }
 
             return true;
