@@ -1,4 +1,8 @@
-﻿1. 使用luac虚拟机的同学需要注意：使用cstolua 时候需要自己手动更改部分Event.lua脚本。luajit vm的xpcall不同于luac vm
+﻿使用CSToLua 的游戏框架框架
+SimpleFramework https://github.com/jarjin/SimpleFramework_NGUI
+Hugula 游戏框架 https://github.com/tenvick/hugular_cstolua
+
+1. 使用luac虚拟机的同学需要注意：使用cstolua 时候需要自己手动更改部分Event.lua脚本。luajit vm的xpcall不同于luac vm
 		if nil == self.obj then
 			flag, msg = xpcall(self.func, traceback, ...)						
 		else		
@@ -12,6 +16,9 @@
 能够导出自定义类型涉及的所有委托类型
 Vector2 add Dot Angle 函数
 分离LuaAttribute为独立文件
+泛型函数不导出参数上的泛型委托
+协同bug
+
 
 ﻿2015.6.25 1.9.9
 函数参数支持lua function 转 event
