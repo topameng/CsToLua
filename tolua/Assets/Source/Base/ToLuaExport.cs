@@ -1934,7 +1934,11 @@ public static class ToLuaExport
             {
                 if (nameSpace == "UnityEngine")
                 {
-                    usingList.Add("UnityEngine");                    
+                    usingList.Add("UnityEngine");
+                }
+                else if (nameSpace == "UnityEngine.EventSystems")
+                {
+                    usingList.Add("UnityEngine.EventSystems");
                 }
 
                 if (str == "UnityEngine.Object")
