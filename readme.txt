@@ -2,7 +2,6 @@
 
 ﻿使用CSToLua 的游戏框架框架
 SimpleFramework https://github.com/jarjin/SimpleFramework_NGUI
-Hugula 游戏框架 https://github.com/tenvick/hugular_cstolua
 
 1. 使用luac虚拟机的同学需要注意：使用cstolua 时候需要自己手动更改部分Event.lua脚本。luajit vm的xpcall不同于luac vm
 		if nil == self.obj then
